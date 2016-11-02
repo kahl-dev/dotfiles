@@ -8,6 +8,7 @@
     ~/.dotfiles: ''
     ~/.gitconfig: gitconfig
     ~/.zshrc: zshrc
+    ~/.zsh: zsh
     ~/.vimrc: vimrc
 
 - shell:

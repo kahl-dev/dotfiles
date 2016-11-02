@@ -57,6 +57,14 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
+# Aliases
+source $HOME/.zsh/aliases
+
+# Allow local customizations in the ~/.zshrc-local 
+if [ -f ~/.zshrc-local ]; then
+    source $HOME/.zshrc-local
+fi
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
