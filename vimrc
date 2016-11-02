@@ -9,8 +9,8 @@ set expandtab               " tabs are spaces
 " }}}
 
 " UI Config {{{
-set number              " show line numbers
-set cursorline          " highlight current line
+set number                  " show line numbers
+set cursorline              " highlight current line
 " }}}
 
 " Movement {{{
