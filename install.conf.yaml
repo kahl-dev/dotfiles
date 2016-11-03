@@ -6,8 +6,8 @@
 
 - link:
     ~/.dotfiles: ''
-    ~/.gitconfig: gitconfig
-    ~/.gitignore_global: gitignore_global
+    ~/.gitconfig: git/gitconfig
+    ~/.gitignore_global: git/gitignore_global
     ~/.gittemplate: git/template
     ~/.zshrc: zshrc
     ~/.zsh: zsh
