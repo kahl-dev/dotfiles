@@ -8,6 +8,7 @@
     ~/.dotfiles: ''
     ~/.gitconfig: gitconfig
     ~/.gitignore_global: gitignore_global
+    ~/.gittemplate: git/template
     ~/.zshrc: zshrc
     ~/.zsh: zsh
     ~/.vimrc: vimrc
