@@ -9,8 +9,8 @@
     ~/.gitconfig: git/gitconfig
     ~/.gitignore_global: git/gitignore_global
     ~/.gittemplate: git/template
-    ~/.zshrc: zshrc
-    ~/.zsh: zsh
+    ~/.oh-my-zsh: zsh/oh-my-zsh
+    ~/.zshrc: zsh/zshrc
     ~/.vim: vim/vim
     ~/.vimrc: vim/vimrc
 
