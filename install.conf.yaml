@@ -11,7 +11,8 @@
     ~/.gittemplate: git/template
     ~/.zshrc: zshrc
     ~/.zsh: zsh
-    ~/.vimrc: vimrc
+    ~/.vim: vim/vim
+    ~/.vimrc: vim/vimrc
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
