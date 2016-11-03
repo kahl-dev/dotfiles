@@ -5,10 +5,12 @@ endif
 " Colors {{{
 syntax enable               " enable syntax processing
 
+" Add solarized theme
 syntax enable
 set background=dark
 colorscheme solarized
 
+" Set solarized theme for airline plugin
 let g:airline_theme='solarized'
 let g:airline#extensions#tabline#enabled = 1
 set laststatus=2
@@ -26,8 +28,8 @@ set cursorline              " highlight current line
 " }}}
 
 " Searching {{{
-set incsearch           " search as characters are entered
-set hlsearch            " highlight matches
+set incsearch               " search as characters are entered
+set hlsearch                " highlight matches
 " }}}
 
 " Movement {{{
@@ -40,18 +42,19 @@ nnoremap B ^
 nnoremap E $
 
 " move among buffers with CTRL
-map <C-J> :bnext<CR>
-map <C-K> :bprev<CR>
+nnoremap <C-j> :bnext<CR>
+nnoremap <C-k> :bprev<CR>
+
+" toggle nerdtree
+nnoremap <C-n> :NERDTreeToggle<CR>
+
 " }}}
 
 " Leader Shortcuts {{{
-let mapleader=","       " leader is comma
+let mapleader="<"           " leader is comma
 
 " toggle gundo
 nnoremap <leader>u :GundoToggle<CR>
-
-" toggle nerdtree
-nnoremap <leader>w :NERDTree<CR>
 
 " turn off search highlight
 nnoremap <leader><space> :nohlsearch<CR>
