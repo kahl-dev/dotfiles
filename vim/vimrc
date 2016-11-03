@@ -4,6 +4,14 @@ endif
 
 " Colors {{{
 syntax enable               " enable syntax processing
+
+syntax enable
+set background=dark
+colorscheme solarized
+
+let g:airline_theme='solarized'
+let g:airline#extensions#tabline#enabled = 1
+set laststatus=2
 " }}}
 
 " Spaces & Tabs {{{
@@ -30,6 +38,10 @@ nnoremap k gk
 " move to beginning/end of line
 nnoremap B ^
 nnoremap E $
+
+" move among buffers with CTRL
+map <C-J> :bnext<CR>
+map <C-K> :bprev<CR>
 " }}}
 
 " Leader Shortcuts {{{
