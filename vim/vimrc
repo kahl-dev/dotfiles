@@ -27,8 +27,11 @@ nnoremap B ^
 nnoremap E $
 " }}}
 
-" Plugin comands {{{
-nnoremap <F5> :GundoToggle<CR>
+" Leader Shortcuts {{{
+let mapleader=","       " leader is comma
+
+" toggle gundo
+nnoremap <leader>u :GundoToggle<CR>
 " }}}
 
 " CtrlP settings {{{
