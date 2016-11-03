@@ -17,6 +17,11 @@ set number                  " show line numbers
 set cursorline              " highlight current line
 " }}}
 
+" Searching {{{
+set incsearch           " search as characters are entered
+set hlsearch            " highlight matches
+" }}}
+
 " Movement {{{
 " move vertically by visual line
 nnoremap j gj
@@ -32,6 +37,9 @@ let mapleader=","       " leader is comma
 
 " toggle gundo
 nnoremap <leader>u :GundoToggle<CR>
+
+" turn off search highlight
+nnoremap <leader><space> :nohlsearch<CR>
 " }}}
 
 " CtrlP settings {{{
