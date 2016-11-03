@@ -31,6 +31,8 @@ Plugin 'valloric/YouCompleteMe'
 
 Plugin 'townk/vim-autoclose'
 
+Plugin 'easymotion/vim-easymotion'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
