@@ -21,6 +21,16 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 
+Plugin 'scrooloose/nerdcommenter'
+
+Plugin 'majutsushi/tagbar'
+
+Plugin 'nathanaelkane/vim-indent-guides'
+
+Plugin 'valloric/YouCompleteMe'
+
+Plugin 'townk/vim-autoclose'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
