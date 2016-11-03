@@ -38,6 +38,9 @@ let mapleader=","       " leader is comma
 " toggle gundo
 nnoremap <leader>u :GundoToggle<CR>
 
+" toggle nerdtree
+nnoremap <leader>w :NERDTree<CR>
+
 " turn off search highlight
 nnoremap <leader><space> :nohlsearch<CR>
 " }}}
@@ -46,7 +49,6 @@ nnoremap <leader><space> :nohlsearch<CR>
 let g:ctrlp_match_window = 'bottom,order:ttb'
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_working_path_mode = 0
-let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 " }}}
 
 " Backups {{{
