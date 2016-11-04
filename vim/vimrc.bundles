@@ -27,8 +27,6 @@ Plugin 'majutsushi/tagbar'
 
 Plugin 'nathanaelkane/vim-indent-guides'
 
-Plugin 'valloric/YouCompleteMe'
-
 Plugin 'townk/vim-autoclose'
 
 Plugin 'easymotion/vim-easymotion'
