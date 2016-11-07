@@ -31,6 +31,10 @@ Plugin 'townk/vim-autoclose'
 
 Plugin 'easymotion/vim-easymotion'
 
+Plugin 'tpope/vim-surround'
+
+Plugin 'mileszs/ack.vim'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
