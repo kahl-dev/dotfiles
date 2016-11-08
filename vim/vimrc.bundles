@@ -31,8 +31,6 @@ Plugin 'tpope/vim-surround'
 
 Plugin 'mileszs/ack.vim'
 
-Plugin 'sjbach/lusty'
-
 call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
