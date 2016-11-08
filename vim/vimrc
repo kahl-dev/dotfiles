@@ -1,4 +1,8 @@
 if filereadable(expand("~/.vimrc.bundles"))
+set nocompatible              " be iMproved, required
+set modelines=0
+
+filetype off                  " required
   source ~/.vimrc.bundles
 endif
 
@@ -18,6 +22,7 @@ set laststatus=2
 
 " Spaces & Tabs {{{
 set tabstop=4               " number of visual spaces per TAB
+set shiftwidth=4
 set softtabstop=4           " number of spaces in tab when editing
 set expandtab               " tabs are spaces
 " }}}
@@ -25,6 +30,23 @@ set expandtab               " tabs are spaces
 " UI Config {{{
 set number                  " show line numbers
 set cursorline              " highlight current line
+set clipboard=unnamed       " use system clioboard "
+set hidden                  " display errors "
+set encoding=utf-8          " change output encoding in terminal "
+set scrolloff=10            " lines in view above and under the cursor "
+set autoindent
+set showmode
+set showcmd
+set wildmenu
+set wildmode=list:longest
+set visualbell
+set cursorline              " highlight cusro line "
+set ttyfast
+set ruler
+set backspace=indent,eol,start
+set laststatus=2
+set relativenumber
+set undofile
 " }}}
 
 " Searching {{{
@@ -57,7 +79,7 @@ nnoremap <S-Tab> :bprevious<CR>i"
 " }}}
 
 " Leader Shortcuts {{{
-let mapleader="<"           " leader is comma
+let mapleader=","           " leader is comma
 
 " toggle gundo
 nnoremap <leader>u :GundoToggle<CR>

@@ -1,5 +1,3 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -29,11 +27,11 @@ Plugin 'nathanaelkane/vim-indent-guides'
 
 Plugin 'townk/vim-autoclose'
 
-Plugin 'easymotion/vim-easymotion'
-
 Plugin 'tpope/vim-surround'
 
 Plugin 'mileszs/ack.vim'
+
+Plugin 'sjbach/lusty'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
