@@ -1,8 +1,8 @@
 if filereadable(expand("~/.vimrc.bundles"))
-set nocompatible              " be iMproved, required
-set modelines=0
+    set nocompatible              " be iMproved, required
+    set modelines=0
 
-filetype off                  " required
+    filetype off                  " required
   source ~/.vimrc.bundles
 endif
 
