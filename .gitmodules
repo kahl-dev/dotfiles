@@ -13,3 +13,6 @@
 [submodule "zsh/custom/plugins/zsh-autosuggestions"]
 	path = zsh/custom/plugins/zsh-autosuggestions
 	url = git://github.com/zsh-users/zsh-autosuggestions
+[submodule "zsh/custom/plugins/z"]
+	path = zsh/custom/plugins/z
+	url = https://github.com/rupa/z.git

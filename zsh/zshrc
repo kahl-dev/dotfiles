@@ -57,6 +57,8 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
+source $HOME/dotfiles/zsh/custom/aliases
+
 # Allow local customizations in the ~/.zshrc-local 
 if [ -f ~/.zshrc-local ]; then
     source $HOME/.zshrc-local
@@ -64,6 +66,9 @@ fi
 
 # Change color to a visible one
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=250'
+
+# Enable auto cd
+setopt auto_cd
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -91,5 +96,8 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=250'
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# Include z plugin
+source $HOME/dotfiles/zsh/custom/plugins/z/z.sh
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
