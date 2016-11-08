@@ -97,7 +97,4 @@ setopt auto_cd
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# Include z plugin
-source $HOME/dotfiles/zsh/custom/plugins/z/z.sh
-
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
