@@ -21,9 +21,9 @@ set laststatus=2
 " }}}
 
 " Spaces & Tabs {{{
-set tabstop=4               " number of visual spaces per TAB
-set shiftwidth=4
-set softtabstop=4           " number of spaces in tab when editing
+set tabstop=2               " number of visual spaces per TAB
+set shiftwidth=2
+set softtabstop=2           " number of spaces in tab when editing
 set expandtab               " tabs are spaces
 " }}}
 
