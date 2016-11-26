@@ -106,8 +106,10 @@ if executable('ag')
     let g:ctrlp_match_window = 'bottom,order:ttb'
     let g:ctrlp_switch_buffer = 0
     let g:ctrlp_working_path_mode = 0
-    let g:ctrlp_max_files=0
-    let g:ctrlp_max_depth=40
+    let g:ctrlp_follow_symlinks = 1
+    let g:ctrlp_max_files = 0
+    let g:ctrlp_max_depth = 40
+    let g:ctrlp_max_height = 40
 
     " bind \ (backward slash) to grep shortcut "
     command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
