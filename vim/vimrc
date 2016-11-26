@@ -55,6 +55,8 @@ set hlsearch                " highlight matches
 " }}}
 
 " Movement {{{
+set mouse=n " enable mouse in normal mode "
+
 " move vertically by visual line
 nnoremap j gj
 nnoremap k gk
