@@ -31,6 +31,12 @@ Plugin 'tpope/vim-surround'
 
 Plugin 'mileszs/ack.vim'
 
+Plugin 'tmhedberg/SimpylFold'
+
+Plugin 'bronson/vim-trailing-whitespace'
+
+Plugin 'valloric/youcompleteme'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
