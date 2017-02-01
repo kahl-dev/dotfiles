@@ -13,21 +13,30 @@ fi
 vim -c VundleInstall -c quitall
 vim -c VundleUpdate -c quitall
 
-#
-# Check if Homebrew is installed
-#
-which -s brew
-if [[ $? != 0 ]] ; then
-  # Install Homebrew
-  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  brew install wget
-  brew install the_silver_searcher
-  brew install cmake
-else
-  brew update
+if [ "$(uname)" == "Darwin" ]
+  # Do something under Mac OS X platform
+  then
+
+  #
+  # Check if Homebrew is installed
+  #
+  which -s brew
+  if [[ $? != 0 ]] ; then
+    # Install Homebrew
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    brew install wget
+    brew install the_silver_searcher
+  else
+    brew update
+  fi
+
+  #
+  # Ruby gems
+  #
+  sudo gem install cmake
+
+  # Do something under not OS X
+  else
+    echo "Do somthing"
 fi
 
-#
-# Ruby gems
-#
-sudo gem install cmake
