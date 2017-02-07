@@ -13,9 +13,13 @@ fi
 vim -c VundleInstall -c quitall
 vim -c VundleUpdate -c quitall
 
-if [ "$(uname)" == "Darwin" ]
+if [ "$(uname)" == "Darwin" ] ; then
   # Do something under Mac OS X platform
-  then
+
+  # Remove obsolete dashboard from os x
+  if [ "$(defaults read com.apple.dashboard mcx-disabled)" == 0 ] ; then
+    defaults write com.apple.dashboard mcx-disabled -boolean YES && killall Dock
+  fi
 
   #
   # Check if Homebrew is installed
@@ -33,7 +37,7 @@ if [ "$(uname)" == "Darwin" ]
   #
   # Ruby gems
   #
-  sudo gem install cmake
+  #sudo gem install cmake
 
   # Do something under not OS X
   else
