@@ -27,11 +27,7 @@ set softtabstop=2           " number of spaces in tab when editing
 set expandtab               " tabs are spaces
 set smartindent
 set pastetoggle=<F10>
-if has("patch-7.4.710")
-  set listchars=eol:~,tab:>.,trail:~,extends:>,precedes:<,space:_
-else
-  set listchars=eol:~,tab:>.,trail:~,extends:>,precedes:<
-endif
+set listchars=tab:→\ ,space:.,eol:$,extends:>,trail:-
 " }}}
 
 " UI Config {{{
