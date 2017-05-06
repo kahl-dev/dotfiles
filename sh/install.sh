@@ -48,6 +48,7 @@ if [ "$(uname)" == "Darwin" ] ; then
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     brew install wget
     brew install the_silver_searcher
+    brew install ctags
 
     # Bugfix vim+tmux clipboard
     brew install reattach-to-user-namespace
