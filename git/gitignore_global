@@ -1,8 +1,6 @@
 .DS_Store
 .sass-cache/
-.idea
 .netrwhist
-*.un~
 
 ## vim Vundle
 # ignore everything
