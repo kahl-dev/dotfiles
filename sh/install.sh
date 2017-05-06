@@ -8,6 +8,24 @@ if [ ! -d "~/.iterm2" ]; then
 fi
 
 #
+# Create vim backup swap and undo folder if not exists (Workaround while git can not commit empty folder)
+#
+VIMBACKUPDIR="../vim/backup" 
+if [ ! -d "$VIMBACKUPDIR" ]; then
+  mkdir -p $VIMBACKUPDIR
+fi
+
+VIMSWAPDIR="../vim/swap" 
+if [ ! -d "$VIMSWAPDIR" ]; then
+  mkdir -p $VIMSWAPDIR
+fi
+
+VIMUNDODIR="../vim/undo" 
+if [ ! -d "$VIMUNDODIR" ]; then
+  mkdir -p $VIMUNDODIR
+fi
+
+#
 # Install and update vim vundle plugins
 #
 vim -c VundleInstall -c quitall
