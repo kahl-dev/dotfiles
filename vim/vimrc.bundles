@@ -25,13 +25,11 @@ Plugin 'scrooloose/nerdcommenter'
 
 Plugin 'majutsushi/tagbar'
 
-Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'yggdroot/indentline'
 
 Plugin 'tpope/vim-surround'
 
 Plugin 'mileszs/ack.vim'
-
-Plugin 'tmhedberg/SimpylFold'
 
 Plugin 'bronson/vim-trailing-whitespace'
 
