@@ -358,9 +358,9 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>269 93 606 456 0 0 1920 1178 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>492 176 918 381 0 0 1920 1178 </string>
+	<string>492 321 918 381 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 151 1306 1007 0 0 1920 1178 </string>
+	<string>0 165 1522 1007 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>0 47 1920 1129 0 0 1920 1200 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -591,15 +591,15 @@
 			<key>Cursor Guide Color</key>
 			<dict>
 				<key>Alpha Component</key>
-				<real>0.0481109619140625</real>
+				<real>0.25</real>
 				<key>Blue Component</key>
-				<real>0.99933779239654541</real>
+				<real>1</real>
 				<key>Color Space</key>
 				<string>Calibrated</string>
 				<key>Green Component</key>
-				<real>0.90828609466552734</real>
+				<real>0.91000000000000003</real>
 				<key>Red Component</key>
-				<real>0.64975613355636597</real>
+				<real>0.65000000000000002</real>
 			</dict>
 			<key>Cursor Text Color</key>
 			<dict>
@@ -1361,15 +1361,15 @@
 			<key>Cursor Guide Color</key>
 			<dict>
 				<key>Alpha Component</key>
-				<real>0.0834503173828125</real>
+				<real>0.25</real>
 				<key>Blue Component</key>
-				<real>0.99934029579162598</real>
+				<real>1</real>
 				<key>Color Space</key>
 				<string>Calibrated</string>
 				<key>Green Component</key>
-				<real>0.91002440452575684</real>
+				<real>0.91000000000000003</real>
 				<key>Red Component</key>
-				<real>0.650002121925354</real>
+				<real>0.65000000000000002</real>
 			</dict>
 			<key>Cursor Text Color</key>
 			<dict>
@@ -2844,7 +2844,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-04-18T07:48:54Z</date>
+	<date>2017-05-06T14:30:22Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>Secure Input</key>
