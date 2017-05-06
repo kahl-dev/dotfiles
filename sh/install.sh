@@ -31,7 +31,7 @@ fi
 vim -c VundleInstall -c quitall
 vim -c VundleUpdate -c quitall
 
-if [ "$(uname)" == "Darwin" ] ; then
+if [ "$(uname)" = "Darwin" ]; then
   # Do something under Mac OS X platform
 
   # Remove obsolete dashboard from os x
