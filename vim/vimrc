@@ -9,21 +9,7 @@ filetype plugin on
 
 " Colors {{{
 syntax enable               " enable syntax processing
-
-" Add solarized theme
-set background=dark
-colorscheme solarized
-
-" Set solarized theme for airline plugin
-let g:airline_theme='solarized'
-let g:airline#extensions#tabline#enabled = 1
-set laststatus=2
 " }}}
-
-
-
-
-
 
 " Spaces & Tabs {{{
 set tabstop=2               " number of visual spaces per TAB
@@ -32,7 +18,6 @@ set softtabstop=2           " number of spaces in tab when editing
 set expandtab               " tabs are spaces
 set smartindent
 set pastetoggle=<F10>
-set listchars=tab:→\ ,space:.,eol:$,extends:>,trail:-
 " }}}
 
 " UI Config {{{
@@ -81,27 +66,44 @@ nnoremap E $
 nnoremap <C-j> :bnext<CR>
 nnoremap <C-k> :bprev<CR>
 
-" toggle nerdtree
-nnoremap <C-n> :NERDTreeToggle<CR>
-
 " bind K to grep word under cursor
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
-
-" bind Tab and Shift-Tab to cycle through buffers
-nnoremap <Tab> :bnext<CR>
-nnoremap <S-Tab> :bprevious<CR>i"
-" }}}
 
 " Leader Shortcuts {{{
 let mapleader=","           " leader is comma
 
-" toggle gundo
-nnoremap <leader>u :GundoToggle<CR>
-
 " turn off search highlight
 nnoremap <leader><space> :nohlsearch<CR>
-
 nmap <silent> <leader>n :set relativenumber!<CR>
+" }}}
+
+
+" Backups {{{
+set backupdir=~/.vim/backup//
+set directory=~/.vim/swap//
+set undodir=~/.vim/undo//
+" }}}
+
+" PLUGINS {{{
+
+" Gundo {{{
+nnoremap <leader>u :GundoToggle<CR>
+" }}}
+
+" Nerdtree {{{
+nnoremap <C-n> :NERDTreeToggle<CR>
+" }}}
+
+" Tagbar {{{
+nmap <leader>t  :TagbarToggle<CR>
+" }}}
+
+" Solarized theme && Airline {{{
+set background=dark
+colorscheme solarized
+let g:airline_theme='solarized'
+let g:airline#extensions#tabline#enabled = 1
+set laststatus=2
 " }}}
 
 " Ack/Ag & CtrlP {{{
@@ -129,15 +131,7 @@ if executable('ag')
 endif
 " }}}
 
-" Backups {{{
-set backupdir=~/.vim/backup//
-set directory=~/.vim/swap//
-set undodir=~/.vim/undo//
-" }}}
-
-" PLUGINS {{{
-
-" SYNTASITC {{{
+" Syntastic {{{
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
