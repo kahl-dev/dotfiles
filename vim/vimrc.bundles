@@ -12,30 +12,30 @@ Plugin 'sjl/gundo.vim'
 
 Plugin 'ctrlpvim/ctrlp.vim'
 
-Plugin 'altercation/vim-colors-solarized'
-
 Plugin 'scrooloose/nerdtree'
+
+Plugin 'tpope/vim-unimpaired'
+
+Plugin 'tpope/vim-surround'
+
+Plugin 'tpope/vim-commentary'
+
+Plugin 'altercation/vim-colors-solarized'
 
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 
 Plugin 'scrooloose/syntastic'
 
-Plugin 'scrooloose/nerdcommenter'
-
 Plugin 'majutsushi/tagbar'
 
 Plugin 'yggdroot/indentline'
-
-Plugin 'tpope/vim-surround'
 
 Plugin 'mileszs/ack.vim'
 
 Plugin 'bronson/vim-trailing-whitespace'
 
 Plugin 'mattn/emmet-vim'
-
-Plugin 'tpope/vim-unimpaired'
 
 Plugin 'christoomey/vim-tmux-navigator'
 
