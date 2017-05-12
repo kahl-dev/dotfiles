@@ -23,7 +23,10 @@ set pastetoggle=<F10>
 " UI Config {{{
 set number                  " show line numbers
 set cursorline              " highlight current line
+
+" https://robots.thoughtbot.com/how-to-copy-and-paste-with-tmux-on-mac-os-x
 set clipboard=unnamed       " use system clioboard "
+
 set hidden                  " display errors "
 set encoding=utf-8          " change output encoding in terminal "
 set scrolloff=10            " lines in view above and under the cursor "
@@ -63,11 +66,9 @@ nnoremap B ^
 nnoremap E $
 
 " move among buffers with CTRL
-nnoremap <C-j> :bnext<CR>
-nnoremap <C-k> :bprev<CR>
+"nnoremap <C-j> :bnext<CR>
+"noremap <C-k> :bprev<CR>
 
-" bind K to grep word under cursor
-nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 " Leader Shortcuts {{{
 let mapleader=","           " leader is comma
@@ -117,6 +118,7 @@ set laststatus=2
 " }}}
 
 " Ack/Ag & CtrlP {{{
+" https://robots.thoughtbot.com/faster-grepping-in-vim
 if executable('ag')
     " Use ag over grep "
     set grepprg=ag\ --nogroup\ --nocolor\ --column
@@ -134,6 +136,9 @@ if executable('ag')
     let g:ctrlp_max_files = 0
     let g:ctrlp_max_depth = 40
     let g:ctrlp_max_height = 40
+
+    " bind K to grep word under cursor
+    nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
     " bind \ (backward slash) to grep shortcut "
     command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
