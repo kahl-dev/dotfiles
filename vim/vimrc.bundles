@@ -33,6 +33,10 @@ Plugin 'mileszs/ack.vim'
 
 Plugin 'bronson/vim-trailing-whitespace'
 
+Plugin 'mattn/emmet-vim'
+
+Plugin 'tpope/vim-unimpaired'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
