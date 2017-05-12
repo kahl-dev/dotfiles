@@ -358,9 +358,9 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>269 93 606 456 0 0 1920 1178 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>492 321 918 381 0 0 1920 1178 </string>
+	<string>492 260 918 512 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 165 1522 1007 0 0 1920 1178 </string>
+	<string>0 10 1918 1168 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>0 47 1920 1129 0 0 1920 1200 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -591,15 +591,15 @@
 			<key>Cursor Guide Color</key>
 			<dict>
 				<key>Alpha Component</key>
-				<real>0.25</real>
+				<real>0.3125152587890625</real>
 				<key>Blue Component</key>
-				<real>1</real>
+				<real>0.31764698028564453</real>
 				<key>Color Space</key>
 				<string>Calibrated</string>
 				<key>Green Component</key>
-				<real>0.91000000000000003</real>
+				<real>0.27843138575553894</real>
 				<key>Red Component</key>
-				<real>0.65000000000000002</real>
+				<real>0.090196102857589722</real>
 			</dict>
 			<key>Cursor Text Color</key>
 			<dict>
@@ -644,7 +644,7 @@
 			<key>Idle Code</key>
 			<integer>0</integer>
 			<key>Initial Text</key>
-			<string></string>
+			<string>tmux attach -t base || tmux new -s base</string>
 			<key>Jobs to Ignore</key>
 			<array>
 				<string>rlogin</string>
@@ -1361,15 +1361,15 @@
 			<key>Cursor Guide Color</key>
 			<dict>
 				<key>Alpha Component</key>
-				<real>0.25</real>
+				<real>0.31372549019607843</real>
 				<key>Blue Component</key>
-				<real>1</real>
+				<real>0.31804341077804565</real>
 				<key>Color Space</key>
 				<string>Calibrated</string>
 				<key>Green Component</key>
-				<real>0.91000000000000003</real>
+				<real>0.27938520908355713</real>
 				<key>Red Component</key>
-				<real>0.65000000000000002</real>
+				<real>0.090104743838310242</real>
 			</dict>
 			<key>Cursor Text Color</key>
 			<dict>
@@ -2844,7 +2844,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-05-06T14:30:22Z</date>
+	<date>2017-05-10T20:04:35Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>Secure Input</key>
