@@ -87,6 +87,7 @@ set undodir=~/.vim/undo//
 " PLUGINS {{{
 
 " Unimpaired {{{
+" http://vimcasts.org/episodes/bubbling-text/
 " Bubble single lines
 nmap <C-Up> ddkP
 nmap <C-Down> ddp
