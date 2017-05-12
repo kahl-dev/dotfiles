@@ -126,6 +126,7 @@ set laststatus=2
 
 " Ack/Ag & CtrlP {{{
 " https://robots.thoughtbot.com/faster-grepping-in-vim
+" http://vimawesome.com/plugin/ctrlp-vim-red
 if executable('ag')
     " Use ag over grep "
     set grepprg=ag\ --nogroup\ --nocolor\ --column
