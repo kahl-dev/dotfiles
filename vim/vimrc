@@ -53,6 +53,13 @@ set hlsearch                " highlight matches
 " Movement {{{
 set mouse=n " enable mouse in normal mode "
 
+" http://vimcasts.org/blog/2013/02/habit-breaking-habit-making/
+" Disable arrow keys
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
+
 " Disable unmark after indentation
 vnoremap > >gv
 vnoremap < <gv
