@@ -14,6 +14,8 @@ Plugin 'ctrlpvim/ctrlp.vim'
 
 Plugin 'scrooloose/nerdtree'
 
+Plugin 'valloric/youcompleteme'
+
 Plugin 'tpope/vim-unimpaired'
 
 Plugin 'tpope/vim-surround'

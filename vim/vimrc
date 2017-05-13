@@ -73,9 +73,9 @@ nnoremap B ^
 nnoremap E $
 
 " move among buffers with CTRL
-"nnoremap <C-j> :bnext<CR>
-"noremap <C-k> :bprev<CR>
-
+" http://vim.wikia.com/wiki/Cycle_through_buffers_including_hidden_buffers
+:nnoremap <Tab> :bnext<CR>
+:nnoremap <S-Tab> :bprevious<CR>
 
 " Leader Shortcuts {{{
 let mapleader=","           " leader is comma
