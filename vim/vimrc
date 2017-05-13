@@ -1,144 +1,114 @@
+" Vundle vim plugin manager {{{
 if filereadable(expand("~/.vimrc.bundles"))
-    set nocompatible              " be iMproved, required
-    set modelines=0
-
-    filetype off                  " required
+  set nocompatible
+  set modelines=0
+  filetype off
   source ~/.vimrc.bundles
 endif
 filetype plugin on
-
-" Colors {{{
-syntax enable               " enable syntax processing
 " }}}
+" Default settings {{{
+syntax enable               " Enable syntax processing
 
-" Spaces & Tabs {{{
-set tabstop=2               " number of visual spaces per TAB
+set tabstop=2               " Number of visual spaces per TAB
 set shiftwidth=2
-set softtabstop=2           " number of spaces in tab when editing
-set expandtab               " tabs are spaces
+set softtabstop=2           " Number of spaces in tab when editing
+set expandtab               " Tabs are spaces
 set smartindent
-set pastetoggle=<F10>
-" }}}
+set pastetoggle=<f10>       " Enter special mode for insert code (no indent break)
 
-" UI Config {{{
-set number                  " show line numbers
-set cursorline              " highlight current line
+set number                  " Show line numbers
+set cursorline              " Highlight current line
 
 " https://robots.thoughtbot.com/how-to-copy-and-paste-with-tmux-on-mac-os-x
-set clipboard=unnamed       " use system clioboard "
+set clipboard=unnamed       " Use system clioboard "
 
-set hidden                  " display errors "
-set encoding=utf-8          " change output encoding in terminal "
-set scrolloff=10            " lines in view above and under the cursor "
+set hidden                  " Display errors "
+set encoding=utf-8          " Change output encoding in terminal "
+set scrolloff=10            " Lines in view above and under the cursor "
 set autoindent
 set showmode
 set showcmd
 set wildmenu
 set wildmode=list:longest
 set visualbell
-set cursorline              " highlight cusro line "
+set cursorline              " Highlight cusro line "
 set ttyfast
 set ruler
 set backspace=indent,eol,start
 set laststatus=2
 set relativenumber
 set undofile
-" }}}
 
-" Searching {{{
-set incsearch               " search as characters are entered
-set hlsearch                " highlight matches
-" }}}
+set incsearch               " Search as characters are entered
+set hlsearch                " Highlight matches
 
-" Movement {{{
-set mouse=n " enable mouse in normal mode "
+set mouse=n                 " Enable mouse in normal mode "
+
+  " Backups {{{
+  set backupdir=~/.vim/backup//
+  set directory=~/.vim/swap//
+  set undodir=~/.vim/undo//
+  " }}}
+" }}}
+" Key mappings {{{
 
 " http://vimcasts.org/blog/2013/02/habit-breaking-habit-making/
-" Disable arrow keys
+" Disable arrow keys - muscle memory hjkl
 noremap <Up> <NOP>
 noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
 
-" Disable unmark after indentation
-vnoremap > >gv
-vnoremap < <gv
-
 " move vertically by visual line
 nnoremap j gj
 nnoremap k gk
 
-" move to beginning/end of line
-nnoremap B ^
-nnoremap E $
+nnoremap <tab> za
 
-" move among buffers with CTRL
-" http://vim.wikia.com/wiki/Cycle_through_buffers_including_hidden_buffers
-:nnoremap <Tab> :bnext<CR>
-:nnoremap <S-Tab> :bprevious<CR>
+  " Leader key mappings {{{
+  let mapleader=","
 
-" Editing Your Vimrc {{{
-" http://learnvimscriptthehardway.stevelosh.com/chapters/07.html
+  nnoremap <leader><tab> :bnext<CR>
 
-" Editing vim file
-:nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+  nnoremap <leader>u :GundoToggle<CR>
 
-" Source vim file
-:nnoremap <leader>sv :source $MYVIMRC<cr>
+  nnoremap <leader>t :NERDTreeToggle<CR>
 
+  nnoremap <leader>b :CtrlPBuffer<CR>
+
+    " Editing Your Vimrc {{{
+    " http://learnvimscriptthehardway.stevelosh.com/chapters/07.html
+
+    " Editing vim file
+    :nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+
+    " Source vim file
+    :nnoremap <leader>sv :source $MYVIMRC<cr>
+    " }}}
+  " }}}
 " }}}
-
-" Leader Shortcuts {{{
-let mapleader=","           " leader is comma
-
-" turn off search highlight
-nnoremap <leader><space> :nohlsearch<CR>
-nmap <silent> <leader>n :set relativenumber!<CR>
-" }}}
-
-
-" Backups {{{
-set backupdir=~/.vim/backup//
-set directory=~/.vim/swap//
-set undodir=~/.vim/undo//
-" }}}
-
-" PLUGINS {{{
-
-" Unimpaired {{{
-" http://vimcasts.org/episodes/bubbling-text/
-" Bubble single lines
-nmap <C-Up> ddkP
-nmap <C-Down> ddp
-" Bubble multiple lines
-vmap <C-Up> xkP`[V`]
-vmap <C-Down> xp`[V`]
-" }}}
-
-" Gundo {{{
-nnoremap <leader>u :GundoToggle<CR>
-" }}}
-
-" Nerdtree {{{
-nnoremap <C-n> :NERDTreeToggle<CR>
-" }}}
-
-" Tagbar {{{
-nmap <leader>t  :TagbarToggle<CR>
-" }}}
-
-" Solarized theme && Airline {{{
-set background=dark
-colorscheme solarized
-let g:airline_theme='solarized'
-let g:airline#extensions#tabline#enabled = 1
-set laststatus=2
-" }}}
-
-" Ack/Ag & CtrlP {{{
-" https://robots.thoughtbot.com/faster-grepping-in-vim
-" http://vimawesome.com/plugin/ctrlp-vim-red
-if executable('ag')
+" Plugins {{{
+  " Unimpaired {{{
+  " http://vimcasts.org/episodes/bubbling-text/
+  " Bubble single lines
+  nnoremap <C-Up> ddkP
+  nnoremap <C-Down> ddp
+  " Bubble multiple lines
+  vnoremap <C-Up> xkP`[V`]
+  vnoremap <C-Down> xp`[V`]
+  " }}}
+  " Solarized theme && Airline {{{
+  set background=dark
+  colorscheme solarized
+  let g:airline_theme='solarized'
+  let g:airline#extensions#tabline#enabled = 1
+  set laststatus=2
+  " }}}
+  " Ack/Ag & CtrlP {{{
+  " https://robots.thoughtbot.com/faster-grepping-in-vim
+  " http://vimawesome.com/plugin/ctrlp-vim-red
+  if executable('ag')
     " Use ag over grep "
     set grepprg=ag\ --nogroup\ --nocolor\ --column
 
@@ -156,24 +126,23 @@ if executable('ag')
     let g:ctrlp_max_depth = 40
     let g:ctrlp_max_height = 40
 
+
     " bind K to grep word under cursor
     nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
     " bind \ (backward slash) to grep shortcut "
     command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-    nnoremap \ :Ag<SPACE>
-endif
-" }}}
+    nnoremap \ :ag<space>
+  endif
+  " }}}
+  " Syntastic {{{
+  set statusline+=%#warningmsg#
+  set statusline+=%{SyntasticStatuslineFlag()}
+  set statusline+=%*
 
-" Syntastic {{{
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-" }}}
-
+  let g:syntastic_always_populate_loc_list = 1
+  let g:syntastic_auto_loc_list = 1
+  let g:syntastic_check_on_open = 1
+  let g:syntastic_check_on_wq = 0
+  " }}}
 " }}}
