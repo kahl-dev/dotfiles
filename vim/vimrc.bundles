@@ -29,8 +29,6 @@ Plugin 'vim-airline/vim-airline-themes'
 
 Plugin 'scrooloose/syntastic'
 
-Plugin 'majutsushi/tagbar'
-
 Plugin 'yggdroot/indentline'
 
 Plugin 'mileszs/ack.vim'
