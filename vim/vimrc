@@ -77,6 +77,17 @@ nnoremap E $
 :nnoremap <Tab> :bnext<CR>
 :nnoremap <S-Tab> :bprevious<CR>
 
+" Editing Your Vimrc {{{
+" http://learnvimscriptthehardway.stevelosh.com/chapters/07.html
+
+" Editing vim file
+:nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+
+" Source vim file
+:nnoremap <leader>sv :source $MYVIMRC<cr>
+
+" }}}
+
 " Leader Shortcuts {{{
 let mapleader=","           " leader is comma
 
