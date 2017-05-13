@@ -41,6 +41,8 @@ Plugin 'christoomey/vim-tmux-navigator'
 
 Plugin 'wikitopian/hardmode'
 
+Plugin 'michaeljsmith/vim-indent-object'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
