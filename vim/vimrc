@@ -45,6 +45,9 @@ set hlsearch                " Highlight matches
 
 set mouse=n                 " Enable mouse in normal mode "
 
+autocmd BufWrite * mkview
+autocmd BufRead * silent loadview
+
   " Backups {{{
   set backupdir=~/.vim/backup//
   set directory=~/.vim/swap//

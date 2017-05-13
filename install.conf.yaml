@@ -15,6 +15,7 @@
     ~/.vimrc: vim/vimrc
     ~/.vimrc.bundles: vim/vimrc.bundles
     ~/.tmux.conf: ee/tmux.conf
+    ~/.tern-project: ee/tern-project
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]

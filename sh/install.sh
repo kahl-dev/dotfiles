@@ -25,6 +25,11 @@ if [ ! -d "$VIMUNDODIR" ]; then
   mkdir -p $VIMUNDODIR
 fi
 
+VIMVIEWDIR="../vim/view" 
+if [ ! -d "$VIMVIEWDIR" ]; then
+  mkdir -p $VIMVIEWDIR
+fi
+
 #
 # Install and update vim vundle plugins
 #
