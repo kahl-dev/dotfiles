@@ -4,7 +4,9 @@
   "description": "My dotfiles",
   "dependencies": {
     "js-beautify": "^1.6.14",
-    "jshint": "^2.9.4"
+    "jshint": "^2.9.4",
+    "node": "0.0.0",
+    "npm": "^4.6.1"
   },
   "repository": {
     "type": "git",
