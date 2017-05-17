@@ -105,3 +105,11 @@ export TERM=xterm-256color
 
 unsetopt correct_all
 setopt correct
+
+# Set NPM to global
+NODE_MODULES="${HOME}/.node_modules"
+PATH="$NODE_MODULES/bin:$PATH"
+
+# Unset manpath so we can inherit from /etc/manpath via the `manpath` command
+unset MANPATH # delete if you already modified MANPATH elsewhere in your config
+export MANPATH="$NODE_MODULES/share/man:$(manpath)"

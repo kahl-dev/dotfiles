@@ -13,21 +13,20 @@ Plugin 'sjl/gundo.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 
 Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/syntastic'
 
 Plugin 'valloric/youcompleteme'
 
 Plugin 'tpope/vim-unimpaired'
-
 Plugin 'tpope/vim-surround'
-
 Plugin 'tpope/vim-commentary'
 
 Plugin 'altercation/vim-colors-solarized'
 
+Plugin 'majutsushi/tagbar'
+
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-
-Plugin 'scrooloose/syntastic'
 
 Plugin 'yggdroot/indentline'
 
@@ -44,6 +43,10 @@ Plugin 'wikitopian/hardmode'
 Plugin 'michaeljsmith/vim-indent-object'
 
 Plugin 'pangloss/vim-javascript'
+
+Plugin 'tinymode.vim'
+
+Plugin 'chiel92/vim-autoformat'
 
 call vundle#end()            " required
 filetype plugin indent on    " required

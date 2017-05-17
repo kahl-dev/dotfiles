@@ -45,6 +45,9 @@ set hlsearch                " Highlight matches
 
 set mouse=n                 " Enable mouse in normal mode "
 
+set splitbelow
+set splitright
+
 autocmd BufWrite * mkview
 autocmd BufRead * silent loadview
 
@@ -143,6 +146,7 @@ nnoremap <tab> za
   set statusline+=%{SyntasticStatuslineFlag()}
   set statusline+=%*
 
+  let g:syntastic_javascript_checkers = ['jshint']
   let g:syntastic_always_populate_loc_list = 1
   let g:syntastic_auto_loc_list = 1
   let g:syntastic_check_on_open = 1

@@ -1,0 +1,16 @@
+{
+  "name": "dotfiles",
+  "version": "1.0.0",
+  "description": "My dotfiles",
+  "dependencies": {
+    "js-beautify": "^1.6.14",
+    "jshint": "^2.9.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.louis-net.de:kahl/dotfiles.git"
+  },
+  "keywords": [],
+  "author": "Patrick Kahl <Kahl.Patrick@gmail.com>",
+  "license": "UNLICENSED"
+}

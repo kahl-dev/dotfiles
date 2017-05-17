@@ -4,6 +4,9 @@
 
 - clean: ['~']
 
+- shell:
+  - [mkdir -p node_modules, Create node_modules folder]
+
 - link:
     ~/.dotfiles: ''
     ~/.gitconfig: git/gitconfig
@@ -16,14 +19,20 @@
     ~/.vimrc.bundles: vim/vimrc.bundles
     ~/.tmux.conf: ee/tmux.conf
     ~/.tern-project: ee/tern-project
+    ~/.jshintrc: jshintrc
+    ~/.npmrc: npmrc
+    ~/.node_modules: node_modules
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
     -
-      command: [mkdir -p ~/.vim/backup ~/.vim/swap ~/.vim/undo ~/.vim/view, Create vim tmp folders]
+      command: [npm install -g, Install global node modules]
       stderr: true
-    - [vim -c VundleInstall -c quitall, Install new vim plugins]
-    - [vim -c VundleUpdate -c quitall, Update all vim plugins]
+    -
+      command: [mkdir -p ~/.vim/backup ~/.vim/swap ~/.vim/undo ~/.vim/view, Create vim tmp folders]
+      stdout: true
+    # - [vim -c VundleInstall -c quitall, Install new vim plugins]
+    # - [vim -c VundleUpdate -c quitall, Update all vim plugins]
     -
       command: ./sh/install.sh
       stderr: true
