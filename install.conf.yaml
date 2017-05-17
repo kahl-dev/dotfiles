@@ -19,4 +19,11 @@
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
-    - ./sh/install.sh
+    -
+      command: [mkdir -p ~/.vim/backup ~/.vim/swap ~/.vim/undo ~/.vim/view, Create vim tmp folders]
+      stderr: true
+    - [vim -c VundleInstall -c quitall, Install new vim plugins]
+    - [vim -c VundleUpdate -c quitall, Update all vim plugins]
+    -
+      command: ./sh/install.sh
+      stderr: true
