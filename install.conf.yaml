@@ -31,8 +31,8 @@
     -
       command: [mkdir -p ~/.vim/backup ~/.vim/swap ~/.vim/undo ~/.vim/view, Create vim tmp folders]
       stdout: true
-    # - [vim -c VundleInstall -c quitall, Install new vim plugins]
-    # - [vim -c VundleUpdate -c quitall, Update all vim plugins]
+    - [vim -c VundleInstall -c quitall, Install new vim plugins]
+    - [vim -c VundleUpdate -c quitall, Update all vim plugins]
     -
       command: ./sh/install.sh
       stderr: true
