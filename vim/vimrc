@@ -23,6 +23,9 @@ set cursorline              " Highlight current line
 " https://robots.thoughtbot.com/how-to-copy-and-paste-with-tmux-on-mac-os-x
 set clipboard=unnamed       " Use system clioboard "
 
+set scrolloff=6
+set nolist
+
 set hidden                  " Display errors "
 set encoding=utf-8          " Change output encoding in terminal "
 set scrolloff=10            " Lines in view above and under the cursor "
@@ -132,13 +135,12 @@ nnoremap <tab> za
     let g:ctrlp_max_depth = 40
     let g:ctrlp_max_height = 40
 
-
     " bind K to grep word under cursor
     nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
     " bind \ (backward slash) to grep shortcut "
     command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-    nnoremap \ :ag<space>
+    nnoremap \ :Ag<space>
   endif
   " }}}
   " Syntastic {{{
@@ -148,8 +150,13 @@ nnoremap <tab> za
 
   let g:syntastic_javascript_checkers = ['jshint']
   let g:syntastic_always_populate_loc_list = 1
-  let g:syntastic_auto_loc_list = 1
+  let g:syntastic_auto_loc_list = 0
   let g:syntastic_check_on_open = 1
   let g:syntastic_check_on_wq = 0
+  let g:syntastic_auto_jump = 0
+  hi SpellBad term=reverse ctermbg=darkgreen
+
+  nnoremap <C-S-n> :lnext<CR>
+  nnoremap <C-S-p> :lprev<CR>
   " }}}
 " }}}
