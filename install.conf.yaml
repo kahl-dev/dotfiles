@@ -4,9 +4,6 @@
 
 - clean: ['~']
 
-- shell:
-  - [mkdir -p node_modules, Create node_modules folder]
-
 - link:
     ~/.dotfiles: ''
     ~/.gitconfig: git/gitconfig
@@ -21,13 +18,13 @@
     ~/.tern-project: ee/tern-project
     ~/.jshintrc: jshintrc
     ~/.npmrc: npmrc
-    ~/.node_modules: node_modules
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
+    # Handle NPM and YARN
     -
-      command: [npm install -g, Install global node modules]
-      stderr: true
+      command: ./sh/yarn.sh
+      stdout: true
     -
       command: [mkdir -p ~/.vim/backup ~/.vim/swap ~/.vim/undo ~/.vim/view, Create vim tmp folders]
       stdout: true
