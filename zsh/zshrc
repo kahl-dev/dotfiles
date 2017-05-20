@@ -99,7 +99,7 @@ setopt auto_cd
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 export TERM=xterm-256color
 
@@ -108,8 +108,10 @@ setopt correct
 
 # Set NPM to global
 NODE_MODULES="${HOME}/.node_modules"
-PATH="$NODE_MODULES/bin:$PATH"
+PATH="$PATH:$NODE_MODULES/bin"
 
 # Unset manpath so we can inherit from /etc/manpath via the `manpath` command
 unset MANPATH # delete if you already modified MANPATH elsewhere in your config
 export MANPATH="$NODE_MODULES/share/man:$(manpath)"
+
+export PATH
