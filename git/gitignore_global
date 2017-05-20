@@ -2,13 +2,4 @@
 .sass-cache/
 .netrwhist
 
-## vim Vundle
-# ignore everything
-/vim/vim/bundle/*
-# except Vundle itself
-!/vim/vim/bundle/Vundle.vim
-
-.bundle
-bundle
-
 node_modules

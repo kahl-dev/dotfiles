@@ -13,7 +13,6 @@
     ~/.zshrc: zsh/zshrc
     ~/.vim: vim/vim
     ~/.vimrc: vim/vimrc
-    ~/.vimrc.bundles: vim/vimrc.bundles
     ~/.tmux.conf: ee/tmux.conf
     ~/.tern-project: ee/tern-project
     ~/.jshintrc: jshintrc
