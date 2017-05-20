@@ -26,7 +26,9 @@ Plug 'ctrlpvim/ctrlp.vim'
 " Language syntax & highlighting
 Plug 'jelera/vim-javascript-syntax', { 'autoload': { 'filetypes': ['javascript'] } }
 Plug 'sheerun/vim-polyglot'
-Plug 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic', { 'autoload': { 'filetypes': ['javascript'] } }
+" Plug 'marijnh/tern_for_vim', { 'do': 'cd ~/.vim/plugged/tern_for_vim && npm install', 'autoload': { 'filetypes': ['javascript'] } }
+Plug 'isruslan/vim-es6', { 'autoload': { 'filetypes': ['javascript'] } }
 
 " Helper
 Plug 'Raimondi/delimitMate'
@@ -43,7 +45,7 @@ Plug 'sjl/gundo.vim'
 " Load on nothing
 Plug 'SirVer/ultisnips', { 'on': [] }
 if has('python') || has('python3')
-Plug 'valloric/youcompleteme', { 'on': [], 'do' : '~/.vim/plugged/youcompleteme/ .install.py --gocode-completer --tern-completer' }
+Plug 'valloric/youcompleteme', { 'on': [], 'do': '~/.vim/plugged/youcompleteme/install.py --tern-completer' }
 
 augroup load_us_ycm
   autocmd!
