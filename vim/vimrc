@@ -1,3 +1,116 @@
+let s:darwin = has('mac')
+
+" Plug buffers appear in a new tab
+let g:plug_window = '-tabnew'
+
+" {{{ Plugin Manager (vim-plug)
+" https://github.com/junegunn/vim-plug
+call plug#begin('~/.vim/plugged')
+
+" Styling
+Plug 'altercation/vim-colors-solarized'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'yggdroot/indentline'
+
+" Search
+Plug 'mileszs/ack.vim'
+Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTreeFind'] }
+Plug 'ctrlpvim/ctrlp.vim'
+
+" Language syntax & highlighting
+Plug 'jelera/vim-javascript-syntax', { 'autoload': { 'filetypes': ['javascript'] } }
+Plug 'sheerun/vim-polyglot'
+Plug 'scrooloose/syntastic'
+
+" Helper
+Plug 'Raimondi/delimitMate'
+Plug 'bronson/vim-trailing-whitespace'
+Plug 'mattn/emmet-vim'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-commentary'
+Plug 'sjl/gundo.vim'
+
+" Load on nothing
+Plug 'SirVer/ultisnips', { 'on': [] }
+if has('python') || has('python3')
+Plug 'valloric/youcompleteme', { 'on': [], 'do' : '~/.vim/plugged/youcompleteme/ .install.py --gocode-completer --tern-completer' }
+
+augroup load_us_ycm
+  autocmd!
+  autocmd InsertEnter * call plug#load('ultisnips', 'youcompleteme')
+                     \| autocmd! load_us_ycm
+endif
+
+call plug#end()
+" }}}
+" Plugins setting {{{
+  " Unimpaired {{{
+  " http://vimcasts.org/episodes/bubbling-text/
+  " Bubble single lines
+  nnoremap <C-Up> ddkP
+  nnoremap <C-Down> ddp
+  " Bubble multiple lines
+  vnoremap <C-Up> xkP`[V`]
+  vnoremap <C-Down> xp`[V`]
+  " }}}
+  " Solarized theme && Airline {{{
+  set background=dark
+  colorscheme solarized
+  let g:airline_theme='solarized'
+  let g:airline#extensions#tabline#enabled = 1
+  set laststatus=2
+  " }}}
+  " Ack/Ag & CtrlP {{{
+  " https://robots.thoughtbot.com/faster-grepping-in-vim
+  " http://vimawesome.com/plugin/ctrlp-vim-red
+  if executable('ag')
+    " Use ag over grep "
+    set grepprg=ag\ --nogroup\ --nocolor\ --column
+
+    " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore "
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+    " ag is fast enough that CtrlP doesn't need to cache "
+    let g:ctrlp_use_caching = 0
+
+    let g:ctrlp_match_window = 'bottom,order:ttb'
+    let g:ctrlp_switch_buffer = 0
+    let g:ctrlp_working_path_mode = 0
+    let g:ctrlp_follow_symlinks = 1
+    let g:ctrlp_max_files = 0
+    let g:ctrlp_max_depth = 40
+    let g:ctrlp_max_height = 40
+
+    " bind K to grep word under cursor
+    nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+
+    " bind \ (backward slash) to grep shortcut "
+    command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+    nnoremap \ :Ag<space>
+  endif
+  " }}}
+  " Syntastic {{{
+  set statusline+=%#warningmsg#
+  set statusline+=%{SyntasticStatuslineFlag()}
+  set statusline+=%*
+
+  let g:syntastic_javascript_checkers = ['jshint']
+  let g:syntastic_always_populate_loc_list = 1
+  let g:syntastic_auto_loc_list = 0
+  let g:syntastic_check_on_open = 1
+  let g:syntastic_check_on_wq = 0
+  let g:syntastic_auto_jump = 0
+  hi SpellBad term=reverse ctermbg=darkgreen
+
+  nnoremap <C-S-n> :lnext<CR>
+  nnoremap <C-S-p> :lprev<CR>
+  " }}}
+" }}}
 " Default settings {{{
 syntax enable               " Enable syntax processing
 
@@ -86,68 +199,5 @@ nnoremap <tab> za
     " Source vim file
     :nnoremap <leader>sv :source $MYVIMRC<cr>
     " }}}
-  " }}}
-" }}}
-" Plugins {{{
-  " Unimpaired {{{
-  " http://vimcasts.org/episodes/bubbling-text/
-  " Bubble single lines
-  nnoremap <C-Up> ddkP
-  nnoremap <C-Down> ddp
-  " Bubble multiple lines
-  vnoremap <C-Up> xkP`[V`]
-  vnoremap <C-Down> xp`[V`]
-  " }}}
-  " Solarized theme && Airline {{{
-  set background=dark
-  colorscheme solarized
-  let g:airline_theme='solarized'
-  let g:airline#extensions#tabline#enabled = 1
-  set laststatus=2
-  " }}}
-  " Ack/Ag & CtrlP {{{
-  " https://robots.thoughtbot.com/faster-grepping-in-vim
-  " http://vimawesome.com/plugin/ctrlp-vim-red
-  if executable('ag')
-    " Use ag over grep "
-    set grepprg=ag\ --nogroup\ --nocolor\ --column
-
-    " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore "
-    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-
-    " ag is fast enough that CtrlP doesn't need to cache "
-    let g:ctrlp_use_caching = 0
-
-    let g:ctrlp_match_window = 'bottom,order:ttb'
-    let g:ctrlp_switch_buffer = 0
-    let g:ctrlp_working_path_mode = 0
-    let g:ctrlp_follow_symlinks = 1
-    let g:ctrlp_max_files = 0
-    let g:ctrlp_max_depth = 40
-    let g:ctrlp_max_height = 40
-
-    " bind K to grep word under cursor
-    nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
-
-    " bind \ (backward slash) to grep shortcut "
-    command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-    nnoremap \ :Ag<space>
-  endif
-  " }}}
-  " Syntastic {{{
-  set statusline+=%#warningmsg#
-  set statusline+=%{SyntasticStatuslineFlag()}
-  set statusline+=%*
-
-  let g:syntastic_javascript_checkers = ['jshint']
-  let g:syntastic_always_populate_loc_list = 1
-  let g:syntastic_auto_loc_list = 0
-  let g:syntastic_check_on_open = 1
-  let g:syntastic_check_on_wq = 0
-  let g:syntastic_auto_jump = 0
-  hi SpellBad term=reverse ctermbg=darkgreen
-
-  nnoremap <C-S-n> :lnext<CR>
-  nnoremap <C-S-p> :lprev<CR>
   " }}}
 " }}}
