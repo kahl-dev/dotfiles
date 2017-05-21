@@ -28,7 +28,6 @@ Plug 'jelera/vim-javascript-syntax', { 'autoload': { 'filetypes': ['javascript']
 Plug 'sheerun/vim-polyglot'
 Plug 'scrooloose/syntastic', { 'autoload': { 'filetypes': ['javascript'] } }
 Plug 'marijnh/tern_for_vim', { 'do': 'cd ~/.vim/plugged/tern_for_vim && npm install', 'autoload': { 'filetypes': ['javascript'] } }
-Plug 'isruslan/vim-es6', { 'autoload': { 'filetypes': ['javascript'] } }
 
 " Helper
 Plug 'Raimondi/delimitMate'
