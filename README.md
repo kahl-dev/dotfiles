@@ -47,3 +47,7 @@
 * https://github.com/tpope/vim-commentary
 * https://github.com/tpope/vim-eunuch
 * https://github.com/sjl/gundo.vim
+
+# TODO
+
+* Add fzy installer for enhancd zsh plugin
