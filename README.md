@@ -1,4 +1,18 @@
-# dotfiles
+# ZSH
+
+## PLUGINS
+
+* https://github.com/robbyrussell/oh-my-zsh/wiki/Plugin:git
+* https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/osx
+* https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#sudo
+* https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#vagrant
+* https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#bundler
+* https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#brew
+* https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#npm
+
+* https://github.com/zsh-users/zsh-autosuggestions
+* https://github.com/djui/alias-tips
+* https://github.com/b4b4r07/enhancd
 
 # VIM
 
