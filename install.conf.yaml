@@ -15,7 +15,6 @@
     ~/.vimrc: vim/vimrc
     ~/.tmux.conf: ee/tmux.conf
     ~/.tern-project: ee/tern-project
-    ~/.jshintrc: jshintrc
     ~/.npmrc: npmrc
 
 - shell:
