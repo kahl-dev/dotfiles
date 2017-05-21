@@ -40,6 +40,9 @@ setopt correct
 # Set better color
 export TERM=xterm-256color
 
+#  Set highlight styles for plugin
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=250'
+
 # Add interactive filter and fuzzy search to cd
 source $ZSH_CUSTOM/plugins/enhancd/init.sh
 
