@@ -13,3 +13,6 @@
 [submodule "zsh/custom/plugins/enhancd"]
 	path = zsh/custom/plugins/enhancd
 	url = git@github.com:b4b4r07/enhancd.git
+[submodule "zsh/custom/plugins/zsh-syntax-highlighting"]
+	path = zsh/custom/plugins/zsh-syntax-highlighting
+	url = git@github.com:zsh-users/zsh-syntax-highlighting.git
