@@ -31,6 +31,7 @@ Plug 'marijnh/tern_for_vim', { 'do': 'cd ~/.vim/plugged/tern_for_vim && npm inst
 Plug 'sbdchd/neoformat'
 
 " Helper
+Plug 'gioele/vim-autoswap'
 Plug 'Raimondi/delimitMate'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'mattn/emmet-vim'
@@ -228,37 +229,37 @@ inoremap <C-^> <C-o><C-^>
   " }}}
 " }}}
 " Functions {{{
-" Change dir to git root {{{
-function! s:root()
-  let root = systemlist('git rev-parse --show-toplevel')[0]
-  if v:shell_error
-    echo 'Not in git repo'
-  else
-    execute 'lcd' root
-    echo 'Changed directory to: '.root
-  endif
-endfunction
-command! Root call s:root()
-" }}}
-" AutoSave {{{
-function! s:autosave(enable)
-  augroup autosave
-    autocmd!
-    if a:enable
-      autocmd TextChanged,InsertLeave <buffer>
-            \  if empty(&buftype) && !empty(bufname(''))
-            \|   silent! update
-            \| endif
+  " Change dir to git root {{{
+  function! s:root()
+    let root = systemlist('git rev-parse --show-toplevel')[0]
+    if v:shell_error
+      echo 'Not in git repo'
+    else
+      execute 'lcd' root
+      echo 'Changed directory to: '.root
     endif
-  augroup END
-endfunction
-command! -bang AutoSave call s:autosave(<bang>1)
-" }}}
-" Code formation {{{
-function! s:format()
-  autocmd FileType javascript set formatprg=prettier-eslint\ --stdin\ --single-quote\ true\ --trailing-comma \ es5
-  autocmd BufWritePre *.js :normal gggqG
-endfunction
-command! Format call s:format()
-" }}}
+  endfunction
+  command! Root call s:root()
+  " }}}
+  " AutoSave {{{
+  function! s:autosave(enable)
+    augroup autosave
+      autocmd!
+      if a:enable
+        autocmd TextChanged,InsertLeave <buffer>
+              \  if empty(&buftype) && !empty(bufname(''))
+              \|   silent! update
+              \| endif
+      endif
+    augroup END
+  endfunction
+  command! -bang AutoSave call s:autosave(<bang>1)
+  " }}}
+  " Code formation {{{
+  function! s:format()
+    autocmd FileType javascript set formatprg=prettier-eslint\ --stdin\ --single-quote\ true\ --trailing-comma \ es5
+    autocmd BufWritePre *.js :normal gggqG
+  endfunction
+  command! Format call s:format()
+  " }}}
 " }}}
