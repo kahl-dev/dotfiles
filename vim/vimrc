@@ -28,6 +28,7 @@ Plug 'jelera/vim-javascript-syntax', { 'autoload': { 'filetypes': ['javascript']
 Plug 'sheerun/vim-polyglot'
 Plug 'scrooloose/syntastic', { 'autoload': { 'filetypes': ['javascript'] } }
 Plug 'marijnh/tern_for_vim', { 'do': 'cd ~/.vim/plugged/tern_for_vim && npm install', 'autoload': { 'filetypes': ['javascript'] } }
+Plug 'sbdchd/neoformat'
 
 " Helper
 Plug 'Raimondi/delimitMate'
@@ -106,7 +107,7 @@ call plug#end()
   set statusline+=%{SyntasticStatuslineFlag()}
   set statusline+=%*
 
-  let g:syntastic_javascript_checkers = ['jshint']
+  let g:syntastic_javascript_checkers = ['prettier-eslint']
   let g:syntastic_always_populate_loc_list = 1
   let g:syntastic_auto_loc_list = 0
   let g:syntastic_check_on_open = 1
@@ -116,6 +117,9 @@ call plug#end()
 
   nnoremap <C-S-n> :lnext<CR>
   nnoremap <C-S-p> :lprev<CR>
+  " }}}
+  " Neoformat {{{
+  let g:neoformat_enabled_javascript = ['prettiereslint']
   " }}}
 " }}}
 " Default settings {{{
@@ -157,7 +161,10 @@ set undofile
 set incsearch               " Search as characters are entered
 set hlsearch                " Highlight matches
 
-set mouse=n                 " Enable mouse in normal mode "
+if has('mouse_sgr')
+  set ttymouse=sgr
+endif
+set mouse=a
 
 set splitbelow
 set splitright
@@ -186,6 +193,18 @@ nnoremap k gk
 
 nnoremap <tab> za
 
+" jk | Escaping!
+inoremap jk <Esc>
+xnoremap jk <Esc>
+cnoremap jk <C-c>
+
+" Movement in insert mode
+inoremap <C-h> <C-o>h
+inoremap <C-l> <C-o>a
+inoremap <C-j> <C-o>j
+inoremap <C-k> <C-o>k
+inoremap <C-^> <C-o><C-^>
+
   " Leader key mappings {{{
   let mapleader=","
 
@@ -207,4 +226,39 @@ nnoremap <tab> za
     :nnoremap <leader>sv :source $MYVIMRC<cr>
     " }}}
   " }}}
+" }}}
+" Functions {{{
+" Change dir to git root {{{
+function! s:root()
+  let root = systemlist('git rev-parse --show-toplevel')[0]
+  if v:shell_error
+    echo 'Not in git repo'
+  else
+    execute 'lcd' root
+    echo 'Changed directory to: '.root
+  endif
+endfunction
+command! Root call s:root()
+" }}}
+" AutoSave {{{
+function! s:autosave(enable)
+  augroup autosave
+    autocmd!
+    if a:enable
+      autocmd TextChanged,InsertLeave <buffer>
+            \  if empty(&buftype) && !empty(bufname(''))
+            \|   silent! update
+            \| endif
+    endif
+  augroup END
+endfunction
+command! -bang AutoSave call s:autosave(<bang>1)
+" }}}
+" Code formation {{{
+function! s:format()
+  autocmd FileType javascript set formatprg=prettier-eslint\ --stdin\ --single-quote\ true\ --trailing-comma \ es5
+  autocmd BufWritePre *.js :normal gggqG
+endfunction
+command! Format call s:format()
+" }}}
 " }}}
