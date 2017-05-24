@@ -34,8 +34,10 @@
 * https://github.com/sheerun/vim-polyglot
 * https://github.com/scrooloose/syntastic
 * https://github.com/marijnh/tern_for_vim
+* https://github.com/sbdchd/neoformat
 
 ### Helper
+* https://github.com/gioele/vim-autoswap
 * https://github.com/Raimondi/delimitMate
 * https://github.com/bronson/vim-trailing-whitespace
 * https://github.com/mattn/emmet-vim
@@ -51,3 +53,4 @@
 # TODO
 
 * Add fzy installer for enhancd zsh plugin
+* Maybe a better brew / cask integration
