@@ -17,16 +17,26 @@
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
-    # Handle NPM and YARN
-    -
-      command: ./sh/yarn.sh
+
+      # Configure OSX
+    - command: [./sh/osx.sh]
+      stdin: true
       stdout: true
-    -
-      command: [mkdir -p ~/.vim/backup ~/.vim/swap ~/.vim/undo ~/.vim/view, Create vim tmp folders]
+
+      # Install/Update brew/cask
+    - command: [./sh/brew.sh]
+      stdin: true
       stdout: true
-    -
-      command: [vim +PlugUpdate +qall, Install and update vim packages]
+
+      # Handle NPM
+    - command: ./sh/npm.sh
       stdout: true
-    -
-      command: ./sh/install.sh
+
+    - command: [mkdir -p ~/.vim/backup ~/.vim/swap ~/.vim/undo ~/.vim/view, Create vim tmp folders]
+      stdout: true
+
+    - command: [vim +PlugUpdate +qall, Install and update vim packages]
+      stdout: true
+
+    - command: ./sh/install.sh
       stderr: true
