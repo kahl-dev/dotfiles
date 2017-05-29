@@ -17,19 +17,9 @@ if [ $var = "y" ]; then
   fi
 
   # Install packages
-
-  brew install xdg-utils
-  brew install curl
-  brew install nodejs-legacy
-
-  # Dependency for YouCompleteMe
-  brew install cmake
-
-  # Ag/Ack the better grep
-  brew install the_silver_searcher
-
-  # Nice cd fuzzy search and index (Dependency for zsh plugin)
-  # https://github.com/b4b4r07/enhancd
-  brew install fzy
-
+  for pkg in git npm vim tmux cmake the_silver_searcher fzy; do
+    if ! (brew list -1 | grep -q "^${pkg}\$"); then
+        brew install $pkg
+    fi
+  done
 fi

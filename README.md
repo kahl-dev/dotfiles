@@ -49,6 +49,3 @@
 * https://github.com/sjl/gundo.vim
 
 # TODO
-
-* Add fzy installer for enhancd zsh plugin
-* Maybe a better brew / cask integration
