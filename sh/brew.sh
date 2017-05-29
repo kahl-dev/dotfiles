@@ -10,8 +10,7 @@ read var
 if [ $var = "y" ]; then
 
   # Install or update brew
-  which -s brew
-  if [[ $? != 0 ]] ; then
+  if ! (brew --version > /dev/null); then
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   else
     brew update
@@ -19,29 +18,26 @@ if [ $var = "y" ]; then
   fi
 
   # Install packages
-
-  brew install wget
-  brew install macvim
-
-  # Ag/Ack the better grep
-  brew install the_silver_searcher
-
-  # Nice cd fuzzy search and index (Dependency for zsh plugin)
-  # https://github.com/b4b4r07/enhancd
-  brew install fzy
-
-  # Bugfix vim+tmux clipboard
-  brew install reattach-to-user-namespace
+  for pkg in git node wget vim macvim tmux the_silver_searcher fzy reattach-to-user-namespace; do
+    if ! (brew list -1 | grep -q "^${pkg}\$"); then
+        brew install $pkg
+    fi
+  done
 
   # Cask
-  brew tap caskroom/cask
-  brew install brew-cask
-  brew cask install slack
+  if ! (brew cask --version > /dev/null); then
+    brew tap caskroom/cask
+    brew install brew-cask
+  fi
+
+  # Install cask packages
+  for pkg in slack; do
+    if ! (brew cask list -1 | grep -q "^${pkg}\$"); then
+        brew cask install $pkg
+    fi
+  done
+
+  brew cleanup
 
 fi
 
-if brew info brew-cask | grep "brew-cask" >/dev/null 2>&1 ; then
-  echo FOO
-else
-  echo BAR 
-fi
