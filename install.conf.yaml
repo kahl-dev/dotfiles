@@ -18,8 +18,13 @@
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
 
-      # Configure OSX
+      # Handle osx specific
     - command: [./sh/osx.sh]
+      stdin: true
+      stdout: true
+
+      # Handle linux specific
+    - command: [./sh/linux.sh]
       stdin: true
       stdout: true
 
