@@ -136,8 +136,14 @@ set pastetoggle=<f10>       " Enter special mode for insert code (no indent brea
 set number                  " Show line numbers
 set cursorline              " Highlight current line
 
-" https://robots.thoughtbot.com/how-to-copy-and-paste-with-tmux-on-mac-os-x
-set clipboard=unnamed       " Use system clioboard "
+" yank to clipboard
+if has("clipboard")
+  set clipboard=unnamed " copy to the system clipboard
+
+  if has("unnamedplus") " X11 support
+    set clipboard+=unnamedplus
+  endif
+endif
 
 set scrolloff=6
 set nolist
