@@ -9,7 +9,7 @@ echo Handle Linux things? y/n
 read var
 if [ $var = "y" ]; then
 
-  if brew ls --versions myformula > /dev/null; then
+  if ! (brew --version > /dev/null); then
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install)"
   else
     brew update
@@ -17,7 +17,7 @@ if [ $var = "y" ]; then
   fi
 
   # Install packages
-  for pkg in git npm vim tmux cmake the_silver_searcher fzy; do
+  for pkg in git node vim tmux cmake the_silver_searcher fzy; do
     if ! (brew list -1 | grep -q "^${pkg}\$"); then
         brew install $pkg
     fi
