@@ -18,7 +18,7 @@ if [ $var = "y" ]; then
   fi
 
   # Install packages
-  for pkg in git node wget vim macvim tmux the_silver_searcher fzy reattach-to-user-namespace; do
+  for pkg in z git node wget vim macvim tmux the_silver_searcher fzy reattach-to-user-namespace; do
     if ! (brew list -1 | grep -q "^${pkg}\$"); then
         brew install $pkg
     fi
