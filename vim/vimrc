@@ -120,7 +120,9 @@ call plug#end()
   nnoremap <C-S-p> :lprev<CR>
   " }}}
   " Neoformat {{{
-  let g:neoformat_enabled_javascript = ['prettiereslint']
+  autocmd FileType javascript setlocal formatprg=prettiereslint\ --stdin\ --parser\ flow\ --single-quote\ --trailing-comma\ es5\ --print-width\ 80
+" Use formatprg when available
+  let g:neoformat_try_formatprg = 1
   " }}}
 " }}}
 " Default settings {{{
@@ -263,8 +265,10 @@ inoremap <C-^> <C-o><C-^>
   " }}}
   " Code formation {{{
   function! s:format()
-    autocmd FileType javascript set formatprg=prettier-eslint\ --stdin\ --single-quote\ true\ --trailing-comma \ es5
-    autocmd BufWritePre *.js :normal gggqG
+    augroup fmt
+      autocmd!
+      autocmd BufWritePre *.js Neoformat
+    augroup END
   endfunction
   command! Format call s:format()
   " }}}
