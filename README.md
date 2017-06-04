@@ -6,7 +6,7 @@
 
 ```
 $ cd ~
-$ git clone git@github.com:patrickkahl/dotfiles.git .dotfiles
+$ git clone --recursive git@github.com:patrickkahl/dotfiles.git .dotfiles
 $ cd .dotfiles
 $ ./install
 ```
