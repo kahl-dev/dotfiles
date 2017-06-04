@@ -1,0 +1,44 @@
+[alias]
+    aa      = add -A
+    a       = add
+    co      = checkout
+    cm      = commit -m
+    ca      = commit --amend
+    cma     = commit --amend -m
+    di      = diff
+    m       = merge
+    mnff    = merge --no-ff
+    r       = reset
+    ra      = reset .
+    st      = status -sb
+    p       = push
+    pom     = push origin master
+    poh     = push origin HEAD
+    up      = pull --rebase --autostash
+
+    # Add git lia aliases
+    l       = lia
+    ls      = lia start
+    lc      = lia commit
+    lp      = lia preview
+    lf      = lia finish
+
+[user]
+    name = Patrick Kahl
+    email = Kahl.Patrick@googlemail.com
+
+[credential]
+    helper = cache --timeout 228800
+
+[push]
+    default = simple
+
+[core]
+    excludesfile = ~/.gitignore_global
+
+[init]
+    templatedir = ~/.gittemplate
+
+# Allow local customizations in the .gitconfig_local file
+[include]
+    path = ~/.gitconfig-work
