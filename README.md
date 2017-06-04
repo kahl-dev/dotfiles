@@ -1,6 +1,19 @@
-# ZSH
+# Dotfiles
 
-## PLUGINS
+> This are my dotfiles
+
+## Install
+
+```
+$ cd ~
+$ git clone git@github.com:patrickkahl/dotfiles.git .dotfiles
+$ cd .dotfiles
+$ ./install
+```
+
+## ZSH
+
+### PLUGINS
 * https://github.com/robbyrussell/oh-my-zsh/wiki/Plugin:git
 * https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/osx
 * https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#sudo
@@ -12,29 +25,30 @@
 * https://github.com/djui/alias-tips
 * https://github.com/b4b4r07/enhancd
 
-# VIM
+## VIM
 
-## PLUGINS
+### PLUGINS
 
-### Styling
+#### Styling
 * https://github.com/altercation/vim-colors-solarized
 * https://github.com/vim-airline/vim-airline
 * https://github.com/vim-airline/vim-airline-themes
 * https://github.com/yggdroot/indentline
+* https://github.com/editorconfig/editorconfig-vim
 
-### Searching
+#### Searching
 * https://github.com/mileszs/ack.vim
 * https://github.com/scrooloose/nerdtree
 * https://github.com/ctrlpvim/ctrlp.vim
 
-### Language syntax & highlighting
+#### Language syntax & highlighting
 * https://github.com/jelera/vim-javascript-syntax
 * https://github.com/sheerun/vim-polyglot
 * https://github.com/scrooloose/syntastic
 * https://github.com/marijnh/tern_for_vim
 * https://github.com/sbdchd/neoformat
 
-### Helper
+#### Helper
 * https://github.com/gioele/vim-autoswap
 * https://github.com/Raimondi/delimitMate
 * https://github.com/bronson/vim-trailing-whitespace
@@ -48,4 +62,6 @@
 * https://github.com/tpope/vim-eunuch
 * https://github.com/sjl/gundo.vim
 
-# TODO
+## License
+
+MIT © [Patrick Kahl](https://github.com/patrickkahl)
