@@ -10,7 +10,7 @@ read var
 if [ $var = "y" ]; then
 
   if ! (brew --version > /dev/null); then
-    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install)"
+    git clone https://github.com/Linuxbrew/brew.git ~/.linuxbrew
   else
     brew update
     brew upgrade
