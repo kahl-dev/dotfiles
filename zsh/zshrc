@@ -33,6 +33,12 @@ if [ -f ~/.zshrc-local ]; then
     source $HOME/.zshrc-local
 fi
 
+# Allow work customizations in the ~/.zshrc-work
+if [ -f ~/.zshrc-work ]; then
+    source $HOME/.zshrc-work
+fi
+
+
 # Repair autocorrect
 unsetopt correct_all
 setopt correct
