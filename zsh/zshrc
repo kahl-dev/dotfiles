@@ -59,6 +59,10 @@ source $ZSH_CUSTOM/plugins/enhancd/init.sh
 alias cdtl='cd "$(git rev-parse --show-toplevel)"'
 alias marked='open -a "Marked 2"'
 
+if [ "$(uname 2> /dev/null)" != "Linux" ]; then
+  alias vim='~/.linuxbrew/bin/vim'
+fi
+
 # -----------------------------------------------------------------------------
 # iterm2
 # -----------------------------------------------------------------------------
