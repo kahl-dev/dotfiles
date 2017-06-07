@@ -13,7 +13,8 @@
     ~/.vimrc: vim/vimrc
     ~/.tmux.conf: ee/tmux.conf
     ~/.tern-project: ee/tern-project
-    ~/.npmrc: npmrc
+    ~/.agignore: ee/agignore
+    ~/.npmrc: ee/npmrc
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
