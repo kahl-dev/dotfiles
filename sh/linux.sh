@@ -17,7 +17,7 @@ if [ $var = "y" ]; then
   fi
 
   # Install packages
-  for pkg in z git npm vim tmux cmake the_silver_searcher fzy; do
+  for pkg in z git vim tmux cmake the_silver_searcher fzy; do
     if ! (brew list -1 | grep -q "^${pkg}\$"); then
         brew install $pkg
     fi
