@@ -29,7 +29,10 @@ Plug 'jelera/vim-javascript-syntax', { 'autoload': { 'filetypes': ['javascript']
 Plug 'sheerun/vim-polyglot'
 Plug 'scrooloose/syntastic', { 'autoload': { 'filetypes': ['javascript'] } }
 Plug 'marijnh/tern_for_vim', { 'do': 'cd ~/.vim/plugged/tern_for_vim && npm install', 'autoload': { 'filetypes': ['javascript'] } }
-Plug 'sbdchd/neoformat'
+" Plug 'sbdchd/neoformat'
+Plug 'mitermayer/vim-prettier', {
+	\ 'do': 'npm install',
+	\ 'for': ['javascript', 'css', 'scss'] }
 
 " Helper
 Plug 'gioele/vim-autoswap'
@@ -46,14 +49,17 @@ Plug 'tpope/vim-eunuch'
 Plug 'sjl/gundo.vim'
 
 " Load on nothing
-Plug 'SirVer/ultisnips', { 'on': [] }
 if has('python') || has('python3')
-Plug 'valloric/youcompleteme', { 'on': [], 'do': '~/.vim/plugged/youcompleteme/install.py --tern-completer' }
+
+Plug 'SirVer/ultisnips'
+Plug 'valloric/youCompleteMe', { 'do': './install.py --tern-completer' }
 
 augroup load_us_ycm
   autocmd!
-  autocmd InsertEnter * call plug#load('ultisnips', 'youcompleteme')
+  autocmd InsertEnter * call plug#load('ultisnips', 'youCompleteMe')
                      \| autocmd! load_us_ycm
+augroup END
+
 endif
 
 call plug#end()
@@ -109,7 +115,7 @@ call plug#end()
   set statusline+=%{SyntasticStatuslineFlag()}
   set statusline+=%*
 
-  let g:syntastic_javascript_checkers = ['prettier-eslint']
+  let g:syntastic_javascript_checkers = ['prettier']
   let g:syntastic_always_populate_loc_list = 1
   let g:syntastic_auto_loc_list = 0
   let g:syntastic_check_on_open = 1
@@ -120,11 +126,14 @@ call plug#end()
   nnoremap <C-S-n> :lnext<CR>
   nnoremap <C-S-p> :lprev<CR>
   " }}}
-  " Neoformat {{{
-  autocmd FileType javascript setlocal formatprg=prettiereslint\ --stdin\ --parser\ flow\ --single-quote\ --trailing-comma\ es5\ --print-width\ 80
-" Use formatprg when available
-  let g:neoformat_try_formatprg = 1
+  " vim-prettier {{{
+  let g:prettier#autoformat = 0
+  let g:prettier#config#trailing_comma = 'none'
+  autocmd BufWritePre *.js,*.css,*.scss PrettierAsync
   " }}}
+  " Ultisnips {{{
+  let g:UltiSnipsSnippetDirectories=["UltiSnips", "my-snippets"]
+" }}}
 " }}}
 " Default settings {{{
 syntax enable               " Enable syntax processing
