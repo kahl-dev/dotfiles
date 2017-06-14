@@ -18,7 +18,7 @@ if [ $var = "y" ]; then
   fi
 
   # Install packages
-  for pkg in z git node wget vim macvim tmux the_silver_searcher fzy reattach-to-user-namespace; do
+  for pkg in z git node wget vim macvim tmux the_silver_searcher fzy reattach-to-user-namespace mongodb; do
     if ! (brew list -1 | grep -q "^${pkg}\$"); then
         brew install $pkg
     fi
@@ -31,7 +31,7 @@ if [ $var = "y" ]; then
   fi
 
   # Install cask packages
-  for pkg in slack; do
+  for pkg in slack mongodb-compass; do
     if ! (brew cask list -1 | grep -q "^${pkg}\$"); then
         brew cask install $pkg
     fi
