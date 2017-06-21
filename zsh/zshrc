@@ -19,7 +19,7 @@ ZSH_CUSTOM=$HOME/.dotfiles/zsh/custom
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git gitfast git-extras tmux osx docker sublime screen sudo vagrant bundler brew npm linuxbrew zsh-syntax-highlighting zsh-autosuggestions alias-tips)
+plugins=(git gitfast git-extras osx docker sublime screen sudo vagrant bundler brew npm linuxbrew zsh-syntax-highlighting zsh-autosuggestions alias-tips tmux)
 
 # tmux
 ZSH_TMUX_AUTOSTART=true
@@ -64,10 +64,6 @@ source $ZSH_CUSTOM/plugins/enhancd/init.sh
 # Alias to go to GIT toplevel
 alias cdtl='cd "$(git rev-parse --show-toplevel)"'
 alias marked='open -a "Marked 2"'
-
-if [ "$(uname 2> /dev/null)" = "Linux" ]; then
-  alias vim='~/.linuxbrew/bin/vim'
-fi
 
 # -----------------------------------------------------------------------------
 # iterm2
