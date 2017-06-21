@@ -11,7 +11,8 @@
     ~/.zshrc: zsh/zshrc
     ~/.vim: vim/vim
     ~/.vimrc: vim/vimrc
-    ~/.tmux.conf: ee/tmux.conf
+    ~/.tmux: tmux
+    ~/.tmux.conf: tmux/tmux.conf
     ~/.tern-project: ee/tern-project
     ~/.agignore: ee/agignore
     ~/.npmrc: ee/npmrc
@@ -35,10 +36,13 @@
       stdout: true
 
       # Handle NPM
-    - command: ./sh/npm.sh
-      stdout: true
+    # - command: ./sh/npm.sh
+      # stdout: true
 
     - command: [mkdir -p ~/.vim/backup ~/.vim/swap ~/.vim/undo ~/.vim/view, Create vim tmp folders]
+      stdout: true
+
+    - command: [~/.tmux/plugins/tpm/bin/update_plugins all]
       stdout: true
 
     - command: [vim +PlugUpdate +qall, Install and update vim packages]

@@ -20,3 +20,6 @@
 [submodule "zsh/custom/plugins/linuxbrew"]
 	path = zsh/custom/plugins/linuxbrew
 	url = git@github.com:zpm-zsh/linuxbrew.git
+[submodule "tmux/plugins/tpm"]
+	path = tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm

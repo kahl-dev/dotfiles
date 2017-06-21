@@ -285,7 +285,7 @@ inoremap <C-^> <C-o><C-^>
   " }}}
 " }}}
 " Functions {{{
-  " Change dir to git root {{{
+run '~/.tmux/plugins/tpm/tpm'  " Change dir to git root {{{
   function! s:root()
     let root = systemlist('git rev-parse --show-toplevel')[0]
     if v:shell_error
