@@ -17,3 +17,6 @@
 [submodule "zsh/custom/plugins/zsh-syntax-highlighting"]
 	path = zsh/custom/plugins/zsh-syntax-highlighting
 	url = git@github.com:zsh-users/zsh-syntax-highlighting.git
+[submodule "zsh/custom/plugins/linuxbrew"]
+	path = zsh/custom/plugins/linuxbrew
+	url = git@github.com:zpm-zsh/linuxbrew.git
