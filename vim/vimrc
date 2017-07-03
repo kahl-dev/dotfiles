@@ -29,7 +29,6 @@ Plug 'jelera/vim-javascript-syntax', { 'autoload': { 'filetypes': ['javascript']
 Plug 'sheerun/vim-polyglot'
 Plug 'scrooloose/syntastic', { 'autoload': { 'filetypes': ['javascript'] } }
 Plug 'marijnh/tern_for_vim', { 'do': 'cd ~/.vim/plugged/tern_for_vim && npm install', 'autoload': { 'filetypes': ['javascript'] } }
-" Plug 'sbdchd/neoformat'
 Plug 'mitermayer/vim-prettier', {
 	\ 'do': 'npm install',
 	\ 'for': ['javascript', 'css', 'scss'] }
@@ -132,6 +131,7 @@ call plug#end()
   " vim-prettier {{{
   let g:prettier#autoformat = 0
   let g:prettier#config#trailing_comma = 'none'
+  let g:prettier#config#bracket_spacing = 'true'
   autocmd BufWritePre *.js,*.css,*.scss PrettierAsync
   " }}}
   " Ultisnips {{{
@@ -204,17 +204,31 @@ set scrolloff=10            " Lines in view above and under the cursor "
 set autoindent
 set showmode
 set showcmd
-set wildmenu
-set wildmode=list:longest
 set visualbell
 set cursorline              " Highlight cusro line "
 set ttyfast
 set ruler
 set backspace=indent,eol,start
-set laststatus=2
+ set laststatus=2
 set relativenumber
 set undofile
+set breakindent
 
+" Tab expansion
+set wildmenu
+set wildmode=full
+
+set synmaxcol=200           " Syntaxhighlight 200 lines in load
+
+" vims . repeat with visual mode
+xnoremap . :norm.<CR
+
+" Adjust vim size on resize
+autocmd VimResized * wincmd =
+
+" Search
+set gdefault                " Search is per default global
+set infercase
 set incsearch               " Search as characters are entered
 set hlsearch                " Highlight matches
 
@@ -245,8 +259,8 @@ noremap <Left> <NOP>
 noremap <Right> <NOP>
 
 " move vertically by visual line
-nnoremap j gj
-nnoremap k gk
+nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
+nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
 
 nnoremap <tab> za
 
@@ -285,7 +299,23 @@ inoremap <C-^> <C-o><C-^>
   " }}}
 " }}}
 " Functions {{{
-run '~/.tmux/plugins/tpm/tpm'  " Change dir to git root {{{
+" Spell Check {{{
+let b:myLang=0
+let g:myLangList=["nospell","de_de","en_us"]
+function! ToggleSpell()
+  let b:myLang=b:myLang+1
+  if b:myLang>=len(g:myLangList) | let b:myLang=0 | endif
+  if b:myLang==0
+    setlocal nospell
+  else
+    execute "setlocal spell spelllang=".get(g:myLangList, b:myLang)
+  endif
+  echo "spell checking language:" g:myLangList[b:myLang]
+endfunction
+
+nmap <silent> <F7> :call ToggleSpell()<CR>
+" }}}
+" Change dir to git root {{{
   function! s:root()
     let root = systemlist('git rev-parse --show-toplevel')[0]
     if v:shell_error
