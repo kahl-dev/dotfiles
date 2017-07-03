@@ -64,6 +64,7 @@ source $ZSH_CUSTOM/plugins/enhancd/init.sh
 # Alias to go to GIT toplevel
 alias cdtl='cd "$(git rev-parse --show-toplevel)"'
 alias marked='open -a "Marked 2"'
+alias prettier-js='prettier --single-quote --trailing-comma none --bracket-spacing --jsx-bracket-same-line true --parser flow --write "**/*.js"'
 
 # -----------------------------------------------------------------------------
 # iterm2
