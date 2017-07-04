@@ -15,6 +15,15 @@ COMPLETION_WAITING_DOTS="true"
 # Would you like to use another custom folder than $ZSH/custom?
 ZSH_CUSTOM=$HOME/.dotfiles/zsh/custom
 
+# -----------------------------------------------------------------------------
+# npm || Set global npm settings
+# -----------------------------------------------------------------------------
+NODE_MODULES="${HOME}/.node_modules"
+PATH="$PATH:$NODE_MODULES/bin"
+# Unset manpath so we can inherit from /etc/manpath via the `manpath` command
+unset MANPATH
+export MANPATH="$NODE_MODULES/share/man:$(manpath)"
+
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
@@ -28,8 +37,6 @@ ZSH_TMUX_AUTOQUIT=false
 fi
 
 source $ZSH/oh-my-zsh.sh
-
-# User configuration
 
 # ssh
 export SSH_KEY_PATH="~/.ssh/rsa_id"
@@ -75,15 +82,6 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # rvm
 # -----------------------------------------------------------------------------
 PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
-# -----------------------------------------------------------------------------
-# npm || Set global npm settings
-# -----------------------------------------------------------------------------
-NODE_MODULES="${HOME}/.node_modules"
-PATH="$PATH:$NODE_MODULES/bin"
-# Unset manpath so we can inherit from /etc/manpath via the `manpath` command
-unset MANPATH
-export MANPATH="$NODE_MODULES/share/man:$(manpath)"
 
 # -----------------------------------------------------------------------------
 # Exort paths

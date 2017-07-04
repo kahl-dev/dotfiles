@@ -5,3 +5,4 @@ vim/vim/view/*
 tmux/plugins/*
 tmux/resurrect
 !tmux/plugins/tpm
+npm-debug.log
