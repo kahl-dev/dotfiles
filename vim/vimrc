@@ -132,7 +132,9 @@ call plug#end()
   let g:prettier#autoformat = 0
   let g:prettier#config#trailing_comma = 'none'
   let g:prettier#config#bracket_spacing = 'true'
-  autocmd BufWritePre *.js,*.css,*.scss PrettierAsync
+  augroup AutoPrettier
+    autocmd BufWritePre *.js,*.css,*.scss PrettierAsync
+  augroup END
   " }}}
   " Ultisnips {{{
   let g:UltiSnipsSnippetDirectories=["UltiSnips", "my-snippets"]
@@ -341,13 +343,23 @@ nmap <silent> <F7> :call ToggleSpell()<CR>
   endfunction
   command! -bang AutoSave call s:autosave(<bang>1)
   " }}}
-  " Code formation {{{
-  function! s:format()
-    augroup fmt
-      autocmd!
-      autocmd BufWritePre *.js Neoformat
+  " Toggle auto prettier {{{
+  function! ToggleAutoPrettier()
+    " Switch the toggle variable
+    let g:AutoPrettierToggle = !get(g:, 'AutoPrettierToggle', 1)
+
+    " Reset group
+    augroup AutoPrettier
+        autocmd!
     augroup END
+
+    " Enable if toggled on
+    if g:AutoPrettierToggle
+        augroup AutoPrettier
+          autocmd BufWritePre *.js,*.css,*.scss PrettierAsync
+        augroup END
+    endif
   endfunction
-  command! Format call s:format()
+  command! AutoPrettier call ToggleAutoPrettier()
   "}}}
 " }}}
