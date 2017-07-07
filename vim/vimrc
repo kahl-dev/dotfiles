@@ -362,4 +362,13 @@ nmap <silent> <F7> :call ToggleSpell()<CR>
   endfunction
   command! AutoPrettier call ToggleAutoPrettier()
   "}}}
+  " Toggle numbers {{{
+  function! NumberToggle()
+    " Toggle between no numbers → absolute → relative with absolute on cursor line
+    " https://superuser.com/questions/339593/vim-toggle-number-with-relativenumber
+    :let [&nu, &rnu] = [!&rnu, &nu+&rnu==1]
+  endfunc
+
+  command! ToggleNum call NumberToggle()
+  " }}}
 " }}}
