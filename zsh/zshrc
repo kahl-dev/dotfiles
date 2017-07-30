@@ -75,6 +75,7 @@ alias prettier-js='prettier --single-quote --trailing-comma none --bracket-spaci
 if [ "$(uname 2> /dev/null)" = "Linux" ]; then
   alias vim="${HOME}/.linuxbrew/bin/vim"
 fi
+alias agrep='alias | grep'
 
 # -----------------------------------------------------------------------------
 # iterm2
