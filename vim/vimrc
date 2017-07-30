@@ -367,8 +367,13 @@ nmap <silent> <F7> :call ToggleSpell()<CR>
     " Toggle between no numbers → absolute → relative with absolute on cursor line
     " https://superuser.com/questions/339593/vim-toggle-number-with-relativenumber
     :let [&nu, &rnu] = [!&rnu, &nu+&rnu==1]
+    if (&number == 0)
+      :exe ':IndentLinesDisable'
+    else
+      :exe ':IndentLinesEnable'
+    endif
   endfunc
-
   command! ToggleNum call NumberToggle()
+  nmap <silent> <leader>n :call NumberToggle()<CR>
   " }}}
 " }}}
