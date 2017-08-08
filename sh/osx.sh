@@ -28,4 +28,6 @@ if [ $var = "y" ]; then
 
   # }}}
 
+  ./fonts/install.sh
+
 fi

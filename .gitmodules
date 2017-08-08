@@ -26,3 +26,9 @@
 [submodule "zsh/custom/plugins/zsh-nvm"]
 	path = zsh/custom/plugins/zsh-nvm
 	url = https://github.com/lukechilds/zsh-nvm
+[submodule "fonts"]
+	path = fonts
+	url = https://github.com/powerline/fonts.git
+[submodule "/Users/pdk/.dotfiles/zsh/custom/themes/powerlevel9k"]
+	path = /Users/pdk/.dotfiles/zsh/custom/themes/powerlevel9k
+	url = https://github.com/bhilburn/powerlevel9k.git
