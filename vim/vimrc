@@ -200,6 +200,14 @@ endif
 set scrolloff=6
 set nolist
 
+" Bugfix
+set t_RV=
+
+" Highlight 80 columns background
+if exists('+colorcolumn')
+  let &colorcolumn=join(range(81,999),",")" highlight column > 80
+endif
+
 set hidden                  " Display errors "
 set encoding=utf-8          " Change output encoding in terminal "
 set scrolloff=10            " Lines in view above and under the cursor "
