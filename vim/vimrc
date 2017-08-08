@@ -79,8 +79,9 @@ call plug#end()
   let g:solarized_contrast="high"
   let g:solarized_visibility="high"
   colorscheme solarized
-  let g:airline_theme='solarized'
   let g:airline#extensions#tabline#enabled = 1
+  let g:airline_theme='solarized'
+  let g:airline_powerline_fonts = 1
   set laststatus=2
   " }}}
   " Ack/Ag & CtrlP {{{
