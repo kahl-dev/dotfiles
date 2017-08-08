@@ -31,7 +31,7 @@ if [ $var = "y" ]; then
   fi
 
   # Install cask packages
-  for pkg in slack mongodb-compass osxfuse; do
+  for pkg in slack mongodb-compass osxfuse hyper; do
     if ! (brew cask list -1 | grep -q "^${pkg}\$"); then
         brew cask install $pkg
     fi

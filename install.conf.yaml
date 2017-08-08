@@ -15,6 +15,7 @@
     ~/.tmux.conf: tmux/tmux.conf
     ~/.tern-project: ee/tern-project
     ~/.agignore: ee/agignore
+    ~/.hyper.js: ee/hyper.js
     # ~/.npmrc: ee/npmrc
 
 - shell:
