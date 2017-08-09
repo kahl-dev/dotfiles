@@ -25,7 +25,6 @@ Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'ctrlpvim/ctrlp.vim'
 
 " Language syntax & highlighting
-Plug 'jelera/vim-javascript-syntax', { 'autoload': { 'filetypes': ['javascript'] } }
 Plug 'sheerun/vim-polyglot'
 Plug 'scrooloose/syntastic', { 'autoload': { 'filetypes': ['javascript'] } }
 Plug 'marijnh/tern_for_vim', { 'do': 'cd ~/.vim/plugged/tern_for_vim && npm install', 'autoload': { 'filetypes': ['javascript'] } }
@@ -178,6 +177,9 @@ call plug#end()
 " }}}
 " Default settings {{{
 syntax enable               " Enable syntax processing
+
+set timeoutlen=1000
+set ttimeoutlen=0
 
 set tabstop=2               " Number of visual spaces per TAB
 set shiftwidth=2
