@@ -108,7 +108,8 @@ module.exports = {
   plugins: [
     'hyper-solarized-dark-vibrancy',
     'hyper-tab-icons',
-    'hyperterm-alternatescroll'
+    'hyperterm-alternatescroll',
+    'hyperlinks'
   ],
 
   // in development, you can create a directory under
