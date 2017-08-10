@@ -61,7 +61,7 @@
     - command: [vim +PlugInstall +PlugUpdate +PlugUpgrade +qa, Update vim plugins]
       stdout: true
 
-    - command: [vim +PlugClean +qa, Update vim plugins]
+    - command: [vim +PlugClean! +qa, Update vim plugins]
       stdout: true
 
     - command: ./sh/install.sh
