@@ -6,44 +6,61 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 call plug#begin('~/.vim/plugged')
 
-" Styling
+" Styling {{{
+
 Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'yggdroot/indentline'
 Plug 'editorconfig/editorconfig-vim'
 
-" Search
+" }}}
+" Search {{{
+
 Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'ctrlpvim/ctrlp.vim'
 
-" Language syntax & highlighting
+" }}}
+" Language syntax & highlighting {{{
+
 Plug 'sheerun/vim-polyglot'
-Plug 'scrooloose/syntastic', { 'autoload': { 'filetypes': ['javascript'] } }
-Plug 'marijnh/tern_for_vim', { 'do': 'cd ~/.vim/plugged/tern_for_vim && npm install', 'autoload': { 'filetypes': ['javascript'] } }
+Plug 'scrooloose/syntastic'
+Plug 'marijnh/tern_for_vim',
+  \ { 'do': 'cd ~/.vim/plugged/tern_for_vim && npm install',
+  \ 'autoload': { 'filetypes': ['javascript'] } }
+
 Plug 'mitermayer/vim-prettier', {
 	\ 'do': 'npm install',
 	\ 'for': ['javascript', 'css', 'scss'] }
 
-" Helper
+" }}}
+" Git {{{
+
 Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+
+" }}}
+" Helper {{{
+
 Plug 'gioele/vim-autoswap'
 Plug 'Raimondi/delimitMate'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'mattn/emmet-vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'michaeljsmith/vim-indent-object'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'sjl/gundo.vim'
 
+" }}}
+" Snippet & Autocompletion {{{
 
 Plug 'SirVer/ultisnips'
 Plug 'valloric/youCompleteMe', { 'do': './install.py --tern-completer' }
 
+" }}}
 
 call plug#end()
