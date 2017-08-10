@@ -27,6 +27,7 @@ Plug 'mitermayer/vim-prettier', {
 	\ 'for': ['javascript', 'css', 'scss'] }
 
 " Helper
+Plug 'airblade/vim-gitgutter'
 Plug 'gioele/vim-autoswap'
 Plug 'Raimondi/delimitMate'
 Plug 'bronson/vim-trailing-whitespace'
