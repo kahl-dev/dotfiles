@@ -41,18 +41,9 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'sjl/gundo.vim'
 
-" Load on nothing
-if has('python') || has('python3')
 
 Plug 'SirVer/ultisnips'
 Plug 'valloric/youCompleteMe', { 'do': './install.py --tern-completer' }
 
-augroup load_us_ycm
-  autocmd!
-  autocmd InsertEnter * call plug#load('ultisnips', 'youCompleteMe')
-                     \| autocmd! load_us_ycm
-augroup END
-
-endif
 
 call plug#end()

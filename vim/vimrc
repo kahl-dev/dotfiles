@@ -1,8 +1,3 @@
-let s:darwin = has('mac')
-
-" Plug buffers appear in a new tab
-let g:plug_window = '-tabnew'
-
 " {{{ Plugin Manager (vim-plug)
 if filereadable(expand("~/.vim/vim-plugs.vim"))
   source ~/.vim/vim-plugs.vim
@@ -13,120 +8,10 @@ if filereadable(expand("~/.vim/settings.vim"))
   source ~/.vim/settings.vim
 endif
 " }}}
-" Plugins setting {{{
-  " Unimpaired {{{
-  " http://vimcasts.org/episodes/bubbling-text/
-  " Bubble single lines
-  nnoremap <C-Up> ddkP
-  nnoremap <C-Down> ddp
-  " Bubble multiple lines
-  vnoremap <C-Up> xkP`[V`]
-  vnoremap <C-Down> xp`[V`]
-  " }}}
-  " Solarized theme && Airline {{{
-  set background=dark
-  let g:solarized_termtrans=1
-  let g:solarized_contrast="high"
-  let g:solarized_visibility="high"
-  colorscheme solarized
-  let g:airline#extensions#tabline#enabled = 1
-  let g:airline_theme='solarized'
-  let g:airline_powerline_fonts = 1
-  set laststatus=2
-  " }}}
-  " Ack/Ag & CtrlP {{{
-  " https://robots.thoughtbot.com/faster-grepping-in-vim
-  " http://vimawesome.com/plugin/ctrlp-vim-red
-  if executable('ag')
-    " Use ag over grep "
-    set grepprg=ag\ --nogroup\ --nocolor\ --column
-
-    " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore "
-    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-
-    " ag is fast enough that CtrlP doesn't need to cache "
-    let g:ctrlp_use_caching = 0
-
-    let g:ctrlp_match_window = 'bottom,order:ttb'
-    let g:ctrlp_switch_buffer = 0
-    let g:ctrlp_working_path_mode = 0
-    let g:ctrlp_follow_symlinks = 1
-    let g:ctrlp_max_files = 0
-    let g:ctrlp_max_depth = 40
-    let g:ctrlp_max_height = 40
-
-    " bind K to grep word under cursor
-    nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
-
-    " bind \ (backward slash) to grep shortcut "
-    command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-    nnoremap \ :Ag<space>
-  endif
-  " }}}
-  " Syntastic {{{
-  set statusline+=%#warningmsg#
-  set statusline+=%{SyntasticStatuslineFlag()}
-  set statusline+=%*
-
-  let g:syntastic_javascript_checkers = ['prettier']
-  let g:syntastic_always_populate_loc_list = 1
-  let g:syntastic_auto_loc_list = 0
-  let g:syntastic_check_on_open = 1
-  let g:syntastic_check_on_wq = 0
-  let g:syntastic_auto_jump = 0
-  hi SpellBad term=reverse ctermbg=darkgreen
-
-  nnoremap <C-S-n> :lnext<CR>
-  nnoremap <C-S-p> :lprev<CR>
-  " }}}
-  " vim-prettier {{{
-  let g:prettier#autoformat = 0
-  let g:prettier#config#trailing_comma = 'none'
-  let g:prettier#config#bracket_spacing = 'true'
-  augroup AutoPrettier
-    autocmd BufWritePre *.js,*.css,*.scss PrettierAsync
-  augroup END
-  " }}}
-  " Ultisnips {{{
-  let g:UltiSnipsSnippetDirectories=["UltiSnips", "my-snippets"]
-  function! g:UltiSnips_Complete()
-    call UltiSnips#ExpandSnippet()
-    if g:ulti_expand_res == 0
-      if pumvisible()
-        return "\<C-n>"
-      else
-        call UltiSnips#JumpForwards()
-        if g:ulti_jump_forwards_res == 0
-          return "\<TAB>"
-        endif
-      endif
-    endif
-    return ""
-  endfunction
-
-  function! g:UltiSnips_Reverse()
-    call UltiSnips#JumpBackwards()
-    if g:ulti_jump_backwards_res == 0
-      return "\<C-P>"
-    endif
-
-    return ""
-  endfunction
-
-
-  if !exists("g:UltiSnipsJumpForwardTrigger")
-    let g:UltiSnipsJumpForwardTrigger = "<tab>"
-  endif
-
-  if !exists("g:UltiSnipsJumpBackwardTrigger")
-    let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-  endif
-
-  au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
-  au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
-" }}}
-" }}}
 " Default settings {{{
+" Plug buffers appear in a new tab
+let g:plug_window = '-tabnew'
+
 syntax enable               " Enable syntax processing
 
 set timeoutlen=1000
@@ -138,18 +23,6 @@ set softtabstop=2           " Number of spaces in tab when editing
 set expandtab               " Tabs are spaces
 set smartindent
 set pastetoggle=<f10>       " Enter special mode for insert code (no indent break)
-
-set number                  " Show line numbers
-set cursorline              " Highlight current line
-
-" yank to clipboard
-if has("clipboard")
-  set clipboard=unnamed " copy to the system clipboard
-
-  if has("unnamedplus") " X11 support
-    set clipboard+=unnamedplus
-  endif
-endif
 
 set scrolloff=6
 set nolist
@@ -174,7 +47,6 @@ set ttyfast
 set ruler
 set backspace=indent,eol,start
  set laststatus=2
-set relativenumber
 set undofile
 set breakindent
 
@@ -196,146 +68,16 @@ set infercase
 set incsearch               " Search as characters are entered
 set hlsearch                " Highlight matches
 
-if has('mouse_sgr')
-  set ttymouse=sgr
-endif
-set mouse=a
 
 set splitbelow
 set splitright
 
-autocmd BufWrite * mkview
-autocmd BufRead * silent loadview
 
-  " Backups {{{
-  set backupdir=~/.vim/backup//
-  set directory=~/.vim/swap//
-  set undodir=~/.vim/undo//
-  " }}}
-" }}}
-" Key mappings {{{
 
-" http://vimcasts.org/blog/2013/02/habit-breaking-habit-making/
-" Disable arrow keys - muscle memory hjkl
-noremap <Up> <NOP>
-noremap <Down> <NOP>
-noremap <Left> <NOP>
-noremap <Right> <NOP>
-
-" move vertically by visual line
-nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
-nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
-
-nnoremap <tab> za
-
-" jk | Escaping!
-inoremap jk <Esc>
-xnoremap jk <Esc>
-cnoremap jk <C-c>
-
-" Movement in insert mode
-inoremap <C-h> <C-o>h
-inoremap <C-l> <C-o>a
-inoremap <C-j> <C-o>j
-inoremap <C-k> <C-o>k
-inoremap <C-^> <C-o><C-^>
-
-  " Leader key mappings {{{
   let mapleader=","
 
   nnoremap <leader><tab> :bnext<CR>
 
-  nnoremap <leader>u :GundoToggle<CR>
 
-  nnoremap <leader>t :NERDTreeToggle<CR>
 
-  nnoremap <leader>b :CtrlPBuffer<CR>
 
-    " Editing Your Vimrc {{{
-    " http://learnvimscriptthehardway.stevelosh.com/chapters/07.html
-
-    " Editing vim file
-    :nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-
-    " Source vim file
-    :nnoremap <leader>sv :source $MYVIMRC<cr>
-    " }}}
-  " }}}
-" }}}
-" Functions {{{
-" Spell Check {{{
-let b:myLang=0
-let g:myLangList=["nospell","de_de","en_us"]
-function! ToggleSpell()
-  let b:myLang=b:myLang+1
-  if b:myLang>=len(g:myLangList) | let b:myLang=0 | endif
-  if b:myLang==0
-    setlocal nospell
-  else
-    execute "setlocal spell spelllang=".get(g:myLangList, b:myLang)
-  endif
-  echo "spell checking language:" g:myLangList[b:myLang]
-endfunction
-
-nmap <silent> <F7> :call ToggleSpell()<CR>
-" }}}
-" Change dir to git root {{{
-  function! s:root()
-    let root = systemlist('git rev-parse --show-toplevel')[0]
-    if v:shell_error
-      echo 'Not in git repo'
-    else
-      execute 'lcd' root
-      echo 'Changed directory to: '.root
-    endif
-  endfunction
-  command! Root call s:root()
-  " }}}
-  " AutoSave {{{
-  function! s:autosave(enable)
-    augroup autosave
-      autocmd!
-      if a:enable
-        autocmd TextChanged,InsertLeave <buffer>
-              \  if empty(&buftype) && !empty(bufname(''))
-              \|   silent! update
-              \| endif
-      endif
-    augroup END
-  endfunction
-  command! -bang AutoSave call s:autosave(<bang>1)
-  " }}}
-  " Toggle auto prettier {{{
-  function! ToggleAutoPrettier()
-    " Switch the toggle variable
-    let g:AutoPrettierToggle = !get(g:, 'AutoPrettierToggle', 1)
-
-    " Reset group
-    augroup AutoPrettier
-        autocmd!
-    augroup END
-
-    " Enable if toggled on
-    if g:AutoPrettierToggle
-        augroup AutoPrettier
-          autocmd BufWritePre *.js,*.css,*.scss PrettierAsync
-        augroup END
-    endif
-  endfunction
-  command! AutoPrettier call ToggleAutoPrettier()
-  "}}}
-  " Toggle numbers {{{
-  function! NumberToggle()
-    " Toggle between no numbers → absolute → relative with absolute on cursor line
-    " https://superuser.com/questions/339593/vim-toggle-number-with-relativenumber
-    :let [&nu, &rnu] = [!&rnu, &nu+&rnu==1]
-    if (&number == 0)
-      :exe ':IndentLinesDisable'
-    else
-      :exe ':IndentLinesEnable'
-    endif
-  endfunc
-  command! ToggleNum call NumberToggle()
-  nmap <silent> <leader>n :call NumberToggle()<CR>
-  " }}}
-" }}}
