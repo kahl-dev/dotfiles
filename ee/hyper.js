@@ -106,7 +106,7 @@ module.exports = {
   //   `@company/project`
   //   `project#1.0.1`
   plugins: [
-    'hyper-solarized-dark-vibrancy',
+    'hyper-solarized-dark',
     'hyper-tab-icons',
     'hyperterm-alternatescroll',
     'hyperlinks'
