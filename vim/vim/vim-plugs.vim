@@ -32,7 +32,7 @@ Plug 'marijnh/tern_for_vim',
 
 Plug 'mitermayer/vim-prettier', {
 	\ 'do': 'npm install',
-	\ 'for': ['javascript', 'css', 'scss'] }
+	\ 'for': ['javascript', 'javascript.jxa','css', 'scss'] }
 
 " }}}
 " Git {{{

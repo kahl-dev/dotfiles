@@ -4,6 +4,7 @@ let g:prettier#config#bracket_spacing = 'true'
 
 " Enable auto prettier on execute on load
 augroup AutoPrettier
+  autocmd!
   autocmd BufWritePre *.js,*.css,*.scss PrettierAsync
 augroup END
 
