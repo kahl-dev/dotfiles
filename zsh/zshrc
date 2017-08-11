@@ -1,121 +1,19 @@
-# Git pull dotfiles repo recursive
-git -C $HOME/.dotfiles pull --rebase --recurse-submodules
-
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.dotfiles/zsh/oh-my-zsh
 
-# Set name of the theme to load. Optionally, if you set this to "random"
-# it'll load a random theme each time that oh-my-zsh is loaded.
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="powerlevel9k/powerlevel9k"
-
-# Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-COMPLETION_WAITING_DOTS="true"
-
 # Would you like to use another custom folder than $ZSH/custom?
 ZSH_CUSTOM=$HOME/.dotfiles/zsh/custom
-
-# -----------------------------------------------------------------------------
-# npm || Set global npm settings
-# -----------------------------------------------------------------------------
-NODE_MODULES="${HOME}/.node_modules"
-PATH="$PATH:$NODE_MODULES/bin"
-# Unset manpath so we can inherit from /etc/manpath via the `manpath` command
-unset MANPATH
-export MANPATH="$NODE_MODULES/share/man:$(manpath)"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git gitfast git-extras osx docker sublime screen sudo vagrant bundler brew npm linuxbrew zsh-syntax-highlighting zsh-autosuggestions zsh-nvm alias-tips tmux)
+plugins=(git)
 
-# tmux
-ZSH_TMUX_AUTOSTART=true
-if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
-ZSH_TMUX_AUTOQUIT=false
-fi
+for file in $(find ${HOME}/.dotfiles/zsh/settings -type f); do
+  source "$file";
+done
 
 source $ZSH/oh-my-zsh.sh
 
-# ssh
-export SSH_KEY_PATH="~/.ssh/rsa_id"
-
-# Allow local customizations in the ~/.zshrc-local
-if [ -f ~/.zshrc-local ]; then
-    source $HOME/.zshrc-local
-fi
-
-# Allow work customizations in the ~/.zshrc-work
-if [ -f ~/.zshrc-work ]; then
-    source $HOME/.zshrc-work
-fi
-
-#  Set highlight styles for plugin
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=250'
-
-
-# Repair autocorrect
-unsetopt correct_all
-setopt correct
-
-# Set better color
-export TERM=xterm-256color
-
-# Add interactive filter and fuzzy search to cd
-source $ZSH_CUSTOM/plugins/enhancd/init.sh
-
-# -----------------------------------------------------------------------------
-# aliases
-# -----------------------------------------------------------------------------
-# place this after nvm initialization!
-autoload -U add-zsh-hook
-load-nvmrc() {
-  local node_version="$(nvm version)"
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$node_version" ]; then
-      nvm use
-    fi
-  elif [ "$node_version" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
-  fi
-}
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
-
-# -----------------------------------------------------------------------------
-# aliases
-# -----------------------------------------------------------------------------
-# Alias to go to GIT toplevel
-alias cdtl='cd "$(git rev-parse --show-toplevel)"'
-alias marked='open -a "Marked 2"'
-alias prettier-js='prettier --single-quote --trailing-comma none --bracket-spacing --jsx-bracket-same-line true --parser flow --write "**/*.js"'
-if [ "$(uname 2> /dev/null)" = "Linux" ]; then
-  alias vim="${HOME}/.linuxbrew/bin/vim"
-fi
-alias agrep='alias | grep'
-
-# -----------------------------------------------------------------------------
-# iterm2
-# -----------------------------------------------------------------------------
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-# -----------------------------------------------------------------------------
-# rvm
-# -----------------------------------------------------------------------------
-PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
-# -----------------------------------------------------------------------------
-# Exort paths
-# -----------------------------------------------------------------------------
 export PATH
