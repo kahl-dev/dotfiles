@@ -149,6 +149,9 @@ let mapleader=","
 
 " toggle to next buffer
 nnoremap <leader><tab> :bnext<CR>
+call submode#enter_with('bnext', 'n', '', '<leader><tab>', ':bnext<CR>')
+call submode#leave_with('bnext', 'n', '', '<Esc>')
+call submode#map('bnext', 'n', '', '<tab>', ':bnext<CR>')
 
 " edit vimrc/zshrc and load vimrc bindings
 nnoremap <leader>ev :vsp $MYVIMRC<CR>

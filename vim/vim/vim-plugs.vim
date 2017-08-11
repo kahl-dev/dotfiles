@@ -43,6 +43,7 @@ Plug 'tpope/vim-fugitive'
 " }}}
 " Helper {{{
 
+Plug 'kana/vim-submode'
 Plug 'gioele/vim-autoswap'
 Plug 'Raimondi/delimitMate'
 Plug 'bronson/vim-trailing-whitespace'
