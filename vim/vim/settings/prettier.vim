@@ -5,6 +5,7 @@ let g:prettier#config#bracket_spacing = 'true'
 " Enable auto prettier on execute on load
 augroup AutoPrettier
   autocmd!
+  au BufRead,BufNewFile *.js set filetype=javascript
   autocmd BufWritePre *.js,*.css,*.scss PrettierAsync
 augroup END
 
@@ -15,14 +16,15 @@ function! ToggleAutoPrettier()
 
   " Reset group
   augroup AutoPrettier
-      autocmd!
+    autocmd!
+    au BufRead,BufNewFile *.js set filetype=javascript
   augroup END
 
   " Enable if toggled on
   if g:AutoPrettierToggle
-      augroup AutoPrettier
-        autocmd BufWritePre *.js,*.css,*.scss PrettierAsync
-      augroup END
+    augroup AutoPrettier
+      autocmd BufWritePre *.js,*.css,*.scss PrettierAsync
+    augroup END
   endif
 endfunction
 
