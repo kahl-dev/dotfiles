@@ -7,13 +7,6 @@ alias agrep='alias | grep'
 # npm list without dependencies
 alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
 
-# linux only
-if [ "$(uname 2> /dev/null)" = "Linux" ]; then
-
-  # use newer vim instead
-  alias vim="${HOME}/.linuxbrew/bin/vim"
-fi
-
 # os x only
 if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
 
