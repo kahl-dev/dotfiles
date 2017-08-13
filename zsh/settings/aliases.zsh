@@ -1,7 +1,23 @@
+# go to git root dir
 alias cdtl='cd "$(git rev-parse --show-toplevel)"'
-alias marked='open -a "Marked 2"'
-alias prettier-js='prettier --single-quote --trailing-comma none --bracket-spacing --jsx-bracket-same-line true --parser flow --write "**/*.js"'
+
+# grep all aliases
+alias agrep='alias | grep'
+
+# npm list without dependencies
+alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
+
+# linux only
 if [ "$(uname 2> /dev/null)" = "Linux" ]; then
+
+  # use newer vim instead
   alias vim="${HOME}/.linuxbrew/bin/vim"
 fi
-alias agrep='alias | grep'
+
+# os x only
+if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
+
+  # add markdownreader app
+  alias marked='open -a "Marked 2"'
+fi
+
