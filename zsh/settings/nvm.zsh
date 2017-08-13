@@ -1,3 +1,6 @@
+export NVM_DIR=~/.nvm
+source ~/.nvm/nvm.sh
+
 # place this after nvm initialization!
 autoload -U add-zsh-hook
 load-nvmrc() {
