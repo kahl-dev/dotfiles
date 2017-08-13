@@ -25,9 +25,8 @@ osxcask=(slack mongodb-compass osxfuse hyper)
 # Execute if not osx
 if [ "$(uname)" = "Darwin" ]; then
 
-  echo Do you want to install/update/upgrade brew and brew cask on os x? y/n
-  read var
-  if [ $var = "y" ]; then
+  read -p "Do you want to install/update/upgrade brew and brew cask on os x? [y/n] : " isosx
+  if [ $isosx = "y" ]; then
 
     # Install or update brew
     if ! (brew --version > /dev/null); then
@@ -44,6 +43,7 @@ if [ "$(uname)" = "Darwin" ]; then
     # Cask
     if ! (brew cask --version > /dev/null); then
       brew tap caskroom/cask
+      brew tap caskroom/fonts
       brew install brew-cask
     fi
 
@@ -58,10 +58,9 @@ fi
 # Execute if not linux
 if [ "$(uname)" = "Linux" ]; then
 
-  echo Do you want to install/update/upgrade linuxbrew on linux? y/n
-  echo Handle Linux things? y/n
-  read var
-  if [ $var = "y" ]; then
+
+  read -p "Do you want to install/update/upgrade linuxbrew on linux? [y/n] : " islinux
+  if [ $islinux = "y" ]; then
 
     if ! (brew --version > /dev/null); then
       git clone https://github.com/Linuxbrew/brew.git ~/.linuxbrew
