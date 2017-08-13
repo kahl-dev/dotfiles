@@ -107,9 +107,12 @@ module.exports = {
   //   `project#1.0.1`
   plugins: [
     'hyper-solarized-dark',
+    'hyper-blink',
     'hyper-tab-icons',
     'hyperterm-alternatescroll',
-    'hyperlinks'
+    'hypercwd',
+    'hyperlinks',
+    'hyper-search'
   ],
 
   // in development, you can create a directory under
