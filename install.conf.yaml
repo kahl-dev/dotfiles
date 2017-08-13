@@ -29,11 +29,6 @@
       stdin: true
       stdout: true
 
-      # Handle linux specific
-    - command: [./sh/linux.sh]
-      stdin: true
-      stdout: true
-
       # Install/Update brew/cask
     - command: [./sh/brew.sh]
       stdin: true
