@@ -50,13 +50,8 @@
     - command: [~/.tmux/plugins/tpm/bin/clean_plugins, Remove old plugins]
       stdout: true
 
-    - command: [vim +PlugInstall +qa, Install vim plugins]
-      stdout: true
-
-    - command: [vim +PlugInstall +PlugUpdate +PlugUpgrade +qa, Update vim plugins]
-      stdout: true
-
-    - command: [vim +PlugClean! +qa, Update vim plugins]
+    - command: [vim +PlugInstall! +PlugUpdate! +PlugUpgrade! +PlugClean! +qa, Handle vim plugins]
+      stdin: true
       stdout: true
 
     - command: ./sh/install.sh
