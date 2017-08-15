@@ -16,4 +16,7 @@ done
 
 source $ZSH/oh-my-zsh.sh
 
+#  Set highlight styles for plugin
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=250'
+
 export PATH
