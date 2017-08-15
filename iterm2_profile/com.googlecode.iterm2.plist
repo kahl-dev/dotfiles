@@ -362,9 +362,9 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>269 93 606 469 0 0 1920 1178 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>840 173 918 507 0 0 1920 1178 </string>
+	<string>64 277 918 452 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>77 387 1170 741 0 0 1920 1178 </string>
+	<string>960 4 954 1174 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>482 449 730 527 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -563,7 +563,7 @@
 			<key>Blur</key>
 			<true/>
 			<key>Blur Radius</key>
-			<real>14.532361778846152</real>
+			<real>0.10000000000000001</real>
 			<key>Bold Color</key>
 			<dict>
 				<key>Blue Component</key>
@@ -595,7 +595,7 @@
 			<key>Cursor Guide Color</key>
 			<dict>
 				<key>Alpha Component</key>
-				<real>0.25</real>
+				<real>0.0590362548828125</real>
 				<key>Blue Component</key>
 				<real>1</real>
 				<key>Color Space</key>
@@ -1121,7 +1121,7 @@
 			<key>Terminal Type</key>
 			<string>xterm-256color</string>
 			<key>Transparency</key>
-			<real>0.093964945529339552</real>
+			<real>0.061735408727309087</real>
 			<key>Triggers</key>
 			<array/>
 			<key>Unlimited Scrollback</key>
@@ -2090,7 +2090,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-08-13T01:50:05Z</date>
+	<date>2017-08-14T16:16:13Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>Secure Input</key>
