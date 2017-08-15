@@ -92,6 +92,7 @@ set relativenumber                " show relative numbers
 set cursorline                    " highlight cursor line
 set scrolloff=10                  " min numbers above and below cursor
 set cmdheight=2                   " command window height to 2
+set pastetoggle=<F10>             " toggle paste mode
 autocmd VimResized * wincmd =     " Adjust vim size on resize
 
 " }}}
@@ -100,6 +101,7 @@ autocmd VimResized * wincmd =     " Adjust vim size on resize
 set tabstop=2                     " number of visual spaces per TAB
 set softtabstop=2                 " number of spaces in tab when editing
 set expandtab                     " tabs are spaces
+
 
 " }}}
 " Mappings {{{
