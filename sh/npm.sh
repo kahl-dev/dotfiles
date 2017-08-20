@@ -1,10 +1,6 @@
 #!/bin/bash
 
-# Update npm
-# npm i -g npm
-
 npm i -g prettier
-# npm i -g prettier-eslint-cli
 
 if [ "$(uname)" = "Darwin" ]; then
 
@@ -14,9 +10,9 @@ if [ "$(uname)" = "Darwin" ]; then
   # Alfred workflows
   npm i -g alfred-coolors
   npm i -g alfred-fkill
-
-  # npm i -g alfred-notifier
-  # npm i -g alfred-updater
-  # npm i -g alfy
+  npm i -g alfred-messages
+  npm i -g alfred-notifier
+  npm i -g alfred-updater
+  npm i -g alfred-emoj
 
 fi
