@@ -4,6 +4,9 @@
 
 - clean: ['~']
 
+- shell:
+    - [mkdir -p ~/.ssh/config.d]
+
 - link:
     ~/.gitconfig: git/gitconfig
     ~/.gitignore_global: git/gitignore_global
@@ -16,7 +19,7 @@
     ~/.tern-project: ee/tern-project
     ~/.agignore: ee/agignore
     ~/.hyper.js: ee/hyper.js
-    # ~/.npmrc: ee/npmrc
+    ~/.ssh/config: ee/ssh-config
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]

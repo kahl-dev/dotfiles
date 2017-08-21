@@ -1,0 +1,9 @@
+Include config.d/*
+
+Host *
+  AddKeysToAgent yes
+  ServerAliveInterval 60
+  Compression yes
+  ForwardAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_rsa
