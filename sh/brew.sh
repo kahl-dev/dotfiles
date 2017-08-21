@@ -44,6 +44,8 @@ if [ "$(uname)" = "Darwin" ]; then
     brew cleanup
   fi
 
+  sh $DOTFILES/sh/mas.sh
+
 fi
 
 # Execute if not linux

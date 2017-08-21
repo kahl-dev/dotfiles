@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo Handle homebrew/cask/linuxbrew [Enter: y/n]
+echo Handle homebrew/cask/linuxbrew and app store [Enter: y/n]
 read brew
 if [ "$brew" = "y" ]; then
   sh $DOTFILES/sh/brew.sh
