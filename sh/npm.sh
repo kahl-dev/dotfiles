@@ -1,18 +1,12 @@
 #!/bin/bash
 
-npm i -g prettier
+npm i -g --quiet prettier
 
 if [ "$(uname)" = "Darwin" ]; then
 
-  # Alfred development
-  npm i -g generator-alfred
+  packages="generator-alfred alfred-coolors alfred-fkill alfred-messages alfred-notifier alfred-updater alfred-emoj"
 
-  # Alfred workflows
-  npm i -g alfred-coolors
-  npm i -g alfred-fkill
-  npm i -g alfred-messages
-  npm i -g alfred-notifier
-  npm i -g alfred-updater
-  npm i -g alfred-emoj
+  # Alfred development
+  npm install $packages --global --quiet
 
 fi

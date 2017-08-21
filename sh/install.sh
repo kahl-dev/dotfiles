@@ -1,8 +1,27 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-#
-# Check if iterm2 scripts are installed
-#
-# if [ ! -d ~/.iterm2 ] || [ ! -f ~/.iterm2_shell_integration.zsh ]; then
-#   curl -L https://iterm2.com/misc/install_shell_integration.sh | bash
-# fi
+echo Handle homebrew/cask/linuxbrew [Enter: y/n]
+read brew
+if [ "$brew" = "y" ]; then
+  sh $DOTFILES/sh/brew.sh
+fi
+
+echo Handle node packages [Enter: y/n]
+read npm
+if [ "$npm" = "y" ]; then
+  sh $DOTFILES/sh/npm.sh
+fi
+
+echo Handle tmux [Enter: y/n]
+read tmux
+if [ "$tmux" = "y" ]; then
+  ~/.tmux/plugins/tpm/bin/install_plugins
+  ~/.tmux/plugins/tpm/bin/update_plugins all
+  ~/.tmux/plugins/tpm/bin/clean_plugins
+fi
+
+echo Handle vim [Enter: y/n]
+read vim
+if [ "$vim" = "y" ]; then
+  vim +PlugInstall! +PlugUpdate! +PlugUpgrade! +PlugClean! +qa
+fi

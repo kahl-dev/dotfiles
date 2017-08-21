@@ -6,3 +6,4 @@ tmux/plugins/*
 tmux/resurrect
 !tmux/plugins/tpm
 npm-debug.log
+!.gitkeep

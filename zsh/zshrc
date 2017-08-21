@@ -1,8 +1,9 @@
+export DOTFILES=$HOME/.dotfiles
 # Path to your oh-my-zsh installation.
-export ZSH=$HOME/.dotfiles/zsh/oh-my-zsh
+export ZSH=$DOTFILES/zsh/oh-my-zsh
 
 # Would you like to use another custom folder than $ZSH/custom?
-ZSH_CUSTOM=$HOME/.dotfiles/zsh/custom
+ZSH_CUSTOM=$DOTFILES/zsh/custom
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -10,7 +11,7 @@ ZSH_CUSTOM=$HOME/.dotfiles/zsh/custom
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
 
-for file in $(find ${HOME}/.dotfiles/zsh/settings -type f); do
+for file in $(find $DOTFILES/zsh/settings -type f); do
   source "$file";
 done
 
