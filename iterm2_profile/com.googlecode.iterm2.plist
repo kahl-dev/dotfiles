@@ -362,9 +362,9 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>269 93 606 469 0 0 1920 1178 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>64 277 918 452 0 0 1920 1178 </string>
+	<string>633 161 918 452 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>960 4 954 1174 0 0 1920 1178 </string>
+	<string>11 14 1898 1149 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>482 449 730 527 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -555,7 +555,7 @@
 				<real>1</real>
 			</dict>
 			<key>Blend</key>
-			<real>0.30000001192092896</real>
+			<real>0.050000000000000003</real>
 			<key>Blink Allowed</key>
 			<false/>
 			<key>Blinking Cursor</key>
@@ -563,7 +563,7 @@
 			<key>Blur</key>
 			<true/>
 			<key>Blur Radius</key>
-			<real>0.10000000000000001</real>
+			<real>15.080829631979693</real>
 			<key>Bold Color</key>
 			<dict>
 				<key>Blue Component</key>
@@ -966,6 +966,8 @@
 			<true/>
 			<key>Normal Font</key>
 			<string>DroidSansMonoForPowerlineNerdFontC- 14</string>
+			<key>Only The Default BG Color Uses Transparency</key>
+			<true/>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -1121,7 +1123,7 @@
 			<key>Terminal Type</key>
 			<string>xterm-256color</string>
 			<key>Transparency</key>
-			<real>0.061735408727309087</real>
+			<real>0.036412201239999435</real>
 			<key>Triggers</key>
 			<array/>
 			<key>Unlimited Scrollback</key>
@@ -2090,7 +2092,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-08-14T16:16:13Z</date>
+	<date>2017-08-23T16:01:40Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>Secure Input</key>
@@ -2146,7 +2148,7 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.1.beta.6</string>
+	<string>3.1.beta.7</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>0</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>
