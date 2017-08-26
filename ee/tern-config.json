@@ -1,5 +1,9 @@
 {
-    "plugins": {
-        "node": {}
-    }
+  "libs": ["browser", "ecma6", "jquery"],
+  "plugins": {
+    "node": {},
+    "complete_strings": {},
+    "es_modules": {},
+    "webpack": {}
+  }
 }

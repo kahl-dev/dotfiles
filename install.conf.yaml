@@ -16,7 +16,7 @@
     ~/.vimrc: vim/vimrc
     ~/.tmux: tmux
     ~/.tmux.conf: tmux/tmux.conf
-    ~/.tern-project: ee/tern-project
+    ~/.tern-config: ee/tern-config.json
     ~/.agignore: ee/agignore
     ~/.hyper.js: ee/hyper.js
     ~/.ssh/config: ee/ssh-config

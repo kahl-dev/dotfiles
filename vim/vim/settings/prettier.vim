@@ -6,7 +6,11 @@ let g:prettier#config#bracket_spacing = 'true'
 augroup AutoPrettier
   autocmd!
   au BufRead,BufNewFile *.js set filetype=javascript
-  autocmd BufWritePre *.js,*.json,*.css,*.scss PrettierAsync
+  if version <= 800
+    autocmd BufWritePre *.js,*.json,*.css,*.scss,*.less,*.graphql Prettier
+  els
+    autocmd BufWritePre *.js,*.json,*.css,*.scss,*.less,*.graphql PrettierAsync
+  endif
 augroup END
 
 " Toggle prettier auto execute on save
@@ -23,7 +27,11 @@ function! ToggleAutoPrettier()
   " Enable if toggled on
   if g:AutoPrettierToggle
     augroup AutoPrettier
-      autocmd BufWritePre *.js,*.json,*.css,*.scss PrettierAsync
+      if v:version < 8
+        autocmd BufWritePre *.js,*.json,*.css,*.scss,*.less,*.graphql Prettier
+      els
+        autocmd BufWritePre *.js,*.json,*.css,*.scss,*.less,*.graphql PrettierAsync
+      endif
     augroup END
   endif
 endfunction

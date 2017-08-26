@@ -28,12 +28,12 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'scrooloose/syntastic'
 Plug 'marijnh/tern_for_vim',
-  \ { 'do': 'cd ~/.vim/plugged/tern_for_vim && npm install',
+  \ { 'do': 'npm install'
   \ 'autoload': { 'filetypes': ['javascript'] } }
 
 Plug 'mitermayer/vim-prettier', {
 	\ 'do': 'npm install',
-	\ 'for': ['javascript', 'javascript.jxa','css', 'scss'] }
+	\ 'for': ['javascript', 'javascript.jxa', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
 
 " }}}
 " Git {{{
@@ -61,7 +61,7 @@ Plug 'sjl/gundo.vim'
 " Snippet & Autocompletion {{{
 
 Plug 'SirVer/ultisnips'
-Plug 'valloric/youCompleteMe', { 'do': './install.py --tern-completer' }
+Plug 'valloric/YouCompleteMe', { 'do': './install.py --tern-completer' }
 
 " }}}
 
