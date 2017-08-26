@@ -28,7 +28,7 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'scrooloose/syntastic'
 Plug 'marijnh/tern_for_vim',
-  \ { 'do': 'npm install'
+  \ { 'do': 'npm install',
   \ 'autoload': { 'filetypes': ['javascript'] } }
 
 Plug 'mitermayer/vim-prettier', {
