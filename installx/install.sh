@@ -57,9 +57,7 @@ if [ "$(uname)" = "Linux" ]; then
   read islinux
   if [ $islinux = "y" ]; then
 
-    if ! (brew --version > /dev/null); then
-      git clone https://github.com/Linuxbrew/brew.git ~/.linuxbrew
-    else
+    if (brew --version > /dev/null); then
       brew update
       brew upgrade
     fi
