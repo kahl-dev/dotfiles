@@ -364,7 +364,7 @@
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>633 161 918 452 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>11 14 1898 1149 0 0 1920 1178 </string>
+	<string>11 11 1898 1155 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>482 449 730 527 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -2074,7 +2074,7 @@
 	<key>Print In Black And White</key>
 	<true/>
 	<key>PromptOnQuit</key>
-	<true/>
+	<false/>
 	<key>QuitWhenAllWindowsClosed</key>
 	<false/>
 	<key>RightCommand</key>
@@ -2092,7 +2092,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-08-23T16:01:40Z</date>
+	<date>2017-08-24T17:05:15Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>Secure Input</key>
