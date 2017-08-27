@@ -44,8 +44,8 @@ Plug 'tpope/vim-fugitive'
 " }}}
 " Helper {{{
 
+Plug '907th/vim-auto-save'
 Plug 'andrewradev/switch.vim'
-Plug 'gioele/vim-autoswap'
 Plug 'Raimondi/delimitMate'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'mattn/emmet-vim'

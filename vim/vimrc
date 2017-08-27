@@ -63,11 +63,6 @@ let javaScript_fold=1             " enable js folding
 autocmd BufWrite * mkview
 autocmd BufRead * silent loadview
 
-" Handle backups
-set undofile
-set backupdir=~/.vim/backup//
-set directory=~/.vim/swap//
-set undodir=~/.vim/undo//
 
 " yank to clipboard
 if has("clipboard")
