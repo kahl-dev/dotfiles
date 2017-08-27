@@ -6,6 +6,7 @@
 
 - shell:
     - [mkdir -p ~/.ssh/config.d]
+    - [rm ~/.nvm/default-packages]
 
 - link:
     ~/.gitconfig: git/gitconfig
@@ -19,6 +20,7 @@
     ~/.tern-config: ee/tern-config.json
     ~/.agignore: ee/agignore
     ~/.hyper.js: ee/hyper.js
+    ~/.nvm/default-packages : npm-nvm/default-packages
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
