@@ -19,7 +19,6 @@
     ~/.tern-config: ee/tern-config.json
     ~/.agignore: ee/agignore
     ~/.hyper.js: ee/hyper.js
-    ~/.ssh/config: ee/ssh-config
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
