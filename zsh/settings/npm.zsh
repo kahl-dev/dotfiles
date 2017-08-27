@@ -7,4 +7,4 @@ PATH="$PATH:$NODE_MODULES/bin"
 unset MANPATH
 export MANPATH="$NODE_MODULES/share/man:$(manpath)"
 
-Plugins+=(npm);
+Plugins+=(npm zsh-better-npm-completion);
