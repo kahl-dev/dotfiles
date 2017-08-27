@@ -211,7 +211,10 @@ defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0
 
 # Save screenshots to the desktop
-mkdir ${HOME}/Desktop/screenshots/ 
+screenshots=${HOME}/Desktop/screenshots/ 
+if [ ! -d "$screenshots" ]; then
+mkdir $screenshots
+fi
 defaults write com.apple.screencapture location -string "${HOME}/Desktop/screenshots/"
 
 # Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)
@@ -557,7 +560,7 @@ defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
 ###############################################################################
 
 # Hide Spotlight tray-icon (and subsequent helper)
-sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
+# sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
 # Disable Spotlight indexing for any volume that gets mounted and has not yet
 # been indexed before.
 # Use `sudo mdutil -i off "/Volumes/foo"` to stop indexing any volume.
