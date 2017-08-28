@@ -23,5 +23,5 @@ fi
 echo Handle vim [Enter: y/n]
 read vim
 if [ "$vim" = "y" ]; then
-  vim +PlugInstall! +PlugUpdate! +PlugUpgrade! +PlugClean! +qa
+  vim +PlugClean! +PlugInstall! +PlugUpdate! +PlugUpgrade +qa
 fi
