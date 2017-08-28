@@ -5,6 +5,9 @@ export ZSH=$DOTFILES/zsh/oh-my-zsh
 # Would you like to use another custom folder than $ZSH/custom?
 ZSH_CUSTOM=$DOTFILES/zsh/custom
 
+# Array with functions to execute after zsh init
+after_init=()
+
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
@@ -21,3 +24,9 @@ source $ZSH/oh-my-zsh.sh
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=250'
 
 export PATH
+
+# Init functions in array
+for func_name in "${after_init[@]}"
+do
+    $func_name
+done
