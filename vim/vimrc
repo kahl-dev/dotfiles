@@ -80,6 +80,8 @@ set cmdheight=2                   " command window height to 2
 set pastetoggle=<F10>             " toggle paste mode
 autocmd VimResized * wincmd =     " Adjust vim size on resize
 
+set directory^=$HOME/.vim/tmp//
+
 " }}}
 " Indentation options {{{
 

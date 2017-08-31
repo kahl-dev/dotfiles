@@ -21,15 +21,16 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'FelikZ/ctrlp-py-matcher'
 
 " }}}
 " Language syntax & highlighting {{{
 
 Plug 'sheerun/vim-polyglot'
 Plug 'scrooloose/syntastic'
-Plug 'marijnh/tern_for_vim',
-  \ { 'do': 'npm install',
-  \ 'autoload': { 'filetypes': ['javascript'] } }
+" Plug 'marijnh/tern_for_vim',
+"   \ { 'do': 'npm install',
+"   \ 'autoload': { 'filetypes': ['javascript'] } }
 
 Plug 'mitermayer/vim-prettier', {
 	\ 'do': 'npm install',
@@ -44,7 +45,6 @@ Plug 'tpope/vim-fugitive'
 " }}}
 " Helper {{{
 
-Plug '907th/vim-auto-save'
 Plug 'andrewradev/switch.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'bronson/vim-trailing-whitespace'
