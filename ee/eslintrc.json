@@ -1,0 +1,13 @@
+{
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+  "plugins": [
+    "html"
+  ],
+  "extends": "airbnb",
+  "rules": {
+    "no-console": 1
+  }
+}
