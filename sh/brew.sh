@@ -20,7 +20,7 @@ iPkg() {
 }
 
 allbrew=(z git vim tmux the_silver_searcher fzy cmake)
-osxbrew=(wget macvim reattach-to-user-namespace mongodb sshfs mas)
+osxbrew=(wget macvim reattach-to-user-namespace mongodb sshfs mas tree)
 linuxbrew=(gcc)
 osxcask=(font-droidsansmono-nerd-font alfred slack mongodb-compass osxfuse hyper skype quitter sublime-text google-chrome 1password near-lock skype-for-business skitch spillo istat-menus iterm2 firefox appcleaner marked daisydisk vlc steam tunnelblick dropbox bartender little-snitch opera sizeup tuck)
 
