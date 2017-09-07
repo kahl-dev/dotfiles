@@ -3,11 +3,10 @@
     "es6": true,
     "browser": true
   },
-  "plugins": [
-    "html"
-  ],
-  "extends": "airbnb",
+  "plugins": ["html", "prettier"],
+  "extends": ["airbnb", "prettier"],
   "rules": {
-    "no-console": 1
+    "prettier/prettier": "error",
+    "no-console": "warn"
   }
 }

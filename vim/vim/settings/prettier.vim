@@ -1,5 +1,5 @@
 let g:prettier#autoformat = 0
-let g:prettier#config#trailing_comma = 'none'
+let g:prettier#config#trailing_comma = 'es5'
 let g:prettier#config#bracket_spacing = 'true'
 
 " Enable auto prettier on execute on load
