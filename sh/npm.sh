@@ -4,7 +4,7 @@
 
 if [ "$(uname)" = "Darwin" ]; then
 
-  packages="generator-alfred alfred-coolors alfred-fkill alfred-messages alfred-notifier alfred-updater alfred-emoj prettier eslint-config-airbnb eslint-plugin-jsx-a11y@5 eslint-plugin-react eslint-plugin-import eslint-plugin-html eslint-config-prettier eslint"
+  packages="generator-alfred alfred-fkill alfred-messages alfred-notifier alfred-updater alfred-tyme alfred-bitly alfred-youtube alfred-vimawesome prettier eslint-config-airbnb eslint-plugin-jsx-a11y@5 eslint-plugin-react eslint-plugin-import eslint-plugin-html eslint-config-prettier eslint"
 
   # Alfred development
   npm install $packages --global
