@@ -22,15 +22,13 @@ Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'FelikZ/ctrlp-py-matcher'
+Plug 'jasoncodes/ctrlp-modified.vim'
 
 " }}}
 " Language syntax & highlighting {{{
 
 Plug 'sheerun/vim-polyglot'
 Plug 'scrooloose/syntastic'
-" Plug 'marijnh/tern_for_vim',
-"   \ { 'do': 'npm install',
-"   \ 'autoload': { 'filetypes': ['javascript'] } }
 
 Plug 'mitermayer/vim-prettier', {
 	\ 'do': 'npm install',

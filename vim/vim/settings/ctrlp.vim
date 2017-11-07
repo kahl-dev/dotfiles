@@ -30,3 +30,4 @@ if executable("ag")
 endif
 
 nnoremap <leader>b :CtrlPBuffer<CR>
+nnoremap <Leader>m :CtrlPModified<CR>
