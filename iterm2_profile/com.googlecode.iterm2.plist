@@ -364,9 +364,9 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>269 93 606 469 0 0 1920 1178 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>1060 1732 1018 447 940 1200 1920 1178 </string>
+	<string>78 726 918 381 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>1909 1212 938 1155 940 1200 1920 1178 </string>
+	<string>11 11 1898 1155 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>482 449 730 527 0 0 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -474,16 +474,12 @@
 			</dict>
 			<key>Ansi 4 Color</key>
 			<dict>
-				<key>Alpha Component</key>
-				<real>1</real>
 				<key>Blue Component</key>
-				<real>0.82352941176470584</real>
-				<key>Color Space</key>
-				<string>sRGB</string>
+				<real>0.78231418132781982</real>
 				<key>Green Component</key>
-				<real>0.54509803921568623</real>
+				<real>0.46265947818756104</real>
 				<key>Red Component</key>
-				<real>0.14901960784313725</real>
+				<real>0.12754884362220764</real>
 			</dict>
 			<key>Ansi 5 Color</key>
 			<dict>
@@ -567,7 +563,7 @@
 			<key>Blinking Cursor</key>
 			<true/>
 			<key>Blur</key>
-			<true/>
+			<false/>
 			<key>Blur Radius</key>
 			<real>15.627462722081217</real>
 			<key>Bold Color</key>
@@ -973,7 +969,7 @@
 			<key>Normal Font</key>
 			<string>DroidSansMonoForPowerlineNerdFontC- 14</string>
 			<key>Only The Default BG Color Uses Transparency</key>
-			<true/>
+			<false/>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -1129,7 +1125,7 @@
 			<key>Terminal Type</key>
 			<string>xterm-256color</string>
 			<key>Transparency</key>
-			<real>0.11616513588466949</real>
+			<real>0.0</real>
 			<key>Triggers</key>
 			<array/>
 			<key>Unlimited Scrollback</key>
@@ -2138,7 +2134,7 @@
 	<key>UseBorder</key>
 	<false/>
 	<key>UseColorfgbgFallback</key>
-	<false/>
+	<true/>
 	<key>UseCompactLabel</key>
 	<true/>
 	<key>UseLionStyleFullscreen</key>
