@@ -13,8 +13,8 @@
     ~/.gitignore_global: git/gitignore_global
     ~/.gittemplate: git/template
     ~/.zshrc: zsh/zshrc
-    ~/.vim: vim/vim
-    ~/.vimrc: vim/vimrc
+    ~/.vim: editor/vim/vim
+    ~/.vimrc: editor/vim/vimrc
     ~/.tmux: tmux
     ~/.tmux.conf: tmux/tmux.conf
     ~/.tern-config: ee/tern-config.json
