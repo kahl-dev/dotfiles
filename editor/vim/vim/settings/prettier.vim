@@ -1,6 +1,8 @@
 let g:prettier#autoformat = 0
 let g:prettier#config#trailing_comma = 'es5'
 let g:prettier#config#bracket_spacing = 'true'
+let g:prettier#exec_cmd_async = 1
+let g:prettier#exec_cmd_path = $NVM_BIN . "/prettier"
 
 " Enable auto prettier on execute on load
 augroup AutoPrettier
