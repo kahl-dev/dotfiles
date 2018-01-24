@@ -24,6 +24,7 @@
     ~/.eslintrc: ee/eslintrc.json
     ~/.prettierrc: ee/prettierrc.json
     ~/.ssh/config: ee/ssh-config
+    ~/.npmrc: ee/npmrc
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
