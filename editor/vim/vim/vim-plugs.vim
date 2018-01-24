@@ -32,7 +32,7 @@ Plug 'scrooloose/syntastic'
 
 Plug 'mitermayer/vim-prettier', {
 	\ 'do': 'npm install',
-	\ 'for': ['javascript', 'javascript.jxa', 'typescript', 'css', 'less', 'scss', 'graphql'] }
+	\ 'for': ['javascript', 'javascript.jxa', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
 
 " }}}
 " Git {{{
