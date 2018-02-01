@@ -1,3 +1,0 @@
-plugins+=(zsh-syntax-highlighting)
-
-
