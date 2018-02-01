@@ -1,9 +1,11 @@
 [submodule "dotbot"]
 	path = dotbot
 	url = https://github.com/anishathalye/dotbot
+  ignore = dirty
 [submodule "zsh/oh-my-zsh"]
 	path = zsh/oh-my-zsh
 	url = git://github.com/robbyrussell/oh-my-zsh.git
+  ignore = dirty
 [submodule "zsh/custom/plugins/zsh-autosuggestions"]
 	path = zsh/custom/plugins/zsh-autosuggestions
 	url = git://github.com/zsh-users/zsh-autosuggestions
@@ -11,24 +13,32 @@
 [submodule "zsh/custom/plugins/alias-tips"]
 	path = zsh/custom/plugins/alias-tips
 	url = https://github.com/djui/alias-tips
+  ignore = dirty
 [submodule "zsh/custom/plugins/enhancd"]
 	path = zsh/custom/plugins/enhancd
 	url = git@github.com:b4b4r07/enhancd.git
+  ignore = dirty
 [submodule "zsh/custom/plugins/zsh-syntax-highlighting"]
 	path = zsh/custom/plugins/zsh-syntax-highlighting
 	url = git@github.com:zsh-users/zsh-syntax-highlighting.git
+  ignore = dirty
 [submodule "zsh/custom/plugins/linuxbrew"]
 	path = zsh/custom/plugins/linuxbrew
 	url = git@github.com:zpm-zsh/linuxbrew.git
+  ignore = dirty
 [submodule "tmux/plugins/tpm"]
 	path = tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
+  ignore = dirty
 [submodule "zsh/custom/plugins/zsh-nvm"]
 	path = zsh/custom/plugins/zsh-nvm
 	url = https://github.com/lukechilds/zsh-nvm
+  ignore = dirty
 [submodule "zsh/custom/themes/powerlevel9k"]
 	path = zsh/custom/themes/powerlevel9k
 	url = https://github.com/bhilburn/powerlevel9k.git
+  ignore = dirty
 [submodule "zsh/custom/plugins/zsh-better-npm-completion"]
 	path = zsh/custom/plugins/zsh-better-npm-completion
 	url = https://github.com/lukechilds/zsh-better-npm-completion
+  ignore = dirty
