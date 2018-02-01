@@ -86,6 +86,7 @@ set directory^=$HOME/.vim/tmp//
 " Indentation options {{{
 
 set tabstop=2                     " number of visual spaces per TAB
+set shiftwidth=2                  " number of space characters inserted for indentation
 set softtabstop=2                 " number of spaces in tab when editing
 set expandtab                     " tabs are spaces
 
