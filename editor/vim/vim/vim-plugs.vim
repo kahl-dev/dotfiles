@@ -8,7 +8,7 @@ call plug#begin('~/.vim/plugged')
 
 " Styling {{{
 
-Plug 'altercation/vim-colors-solarized'
+Plug 'chriskempson/base16-vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'yggdroot/indentline'
