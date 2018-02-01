@@ -38,4 +38,4 @@ fi
 source ~/.zshrc
 nvm install node
 
-sh $DOTFILES/sh/osx.sh
+# sh $DOTFILES/sh/osx.sh
