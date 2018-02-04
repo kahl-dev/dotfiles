@@ -1,5 +1,0 @@
-{
-  "brew": {
-    "default": ["z", "git", "vim", "tmux", "the_silver_searcher", "fzy"]
-  }
-}

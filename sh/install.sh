@@ -11,17 +11,3 @@ read npm
 if [ "$npm" = "y" ]; then
   sh $DOTFILES/sh/npm.sh
 fi
-
-echo Handle tmux [Enter: y/n]
-read tmux
-if [ "$tmux" = "y" ]; then
-  ~/.tmux/plugins/tpm/bin/install_plugins
-  ~/.tmux/plugins/tpm/bin/update_plugins all
-  ~/.tmux/plugins/tpm/bin/clean_plugins
-fi
-
-echo Handle vim [Enter: y/n]
-read vim
-if [ "$vim" = "y" ]; then
-  vim +PlugClean! +PlugInstall! +PlugUpdate! +PlugUpgrade +qa
-fi

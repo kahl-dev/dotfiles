@@ -1,0 +1,6 @@
+- shell:
+    - [rm ~/.nvm/default-packages]
+
+- link:
+    ~/.nvm/default-packages : npm-nvm/default-packages
+    ~/.npmrc: ee/npmrc
