@@ -28,11 +28,7 @@ Plug 'jasoncodes/ctrlp-modified.vim'
 " Language syntax & highlighting {{{
 
 Plug 'sheerun/vim-polyglot'
-Plug 'scrooloose/syntastic'
-
-Plug 'mitermayer/vim-prettier', {
-	\ 'do': 'npm install',
-	\ 'for': ['javascript', 'javascript.jxa', 'typescript', 'css', 'less', 'scss', 'json', 'graphql'] }
+Plug 'w0rp/ale'
 
 " }}}
 " Git {{{
