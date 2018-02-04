@@ -23,7 +23,6 @@
     ~/.nvm/default-packages : npm-nvm/default-packages
     ~/.eslintrc: ee/eslintrc.json
     ~/.prettierrc: ee/prettierrc.json
-    ~/.ssh/config: ee/ssh-config
     ~/.npmrc: ee/npmrc
 
 - shell:
