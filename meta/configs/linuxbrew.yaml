@@ -1,0 +1,10 @@
+- shell:
+  - command: if ! $(brew --version > /dev/null); then git clone https://github.com/Linuxbrew/brew.git ~/.linuxbrew; fi
+
+- brewfile:
+    - brew/Basebrew
+    - brew/Linuxbrew
+
+- shell:
+    - command: if $(brew --version > /dev/null); then brew update && brew upgrade; fi
+

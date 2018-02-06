@@ -1,0 +1,64 @@
+tap "caskroom/cask"
+tap "caskroom/fonts"
+brew "mas"
+
+# gaming
+cask "steam"
+
+# multimedia
+cask "spotify"
+cask "vlc"
+mas "PiPifier", id: 1160374471
+
+# tools
+brew "mongodb"
+brew "reattach-to-user-namespace"
+brew "sshfs"
+brew "tree"
+brew "wget"
+cask "1password"
+cask "alfred"
+cask "appcleaner"
+cask "bartender"
+cask "daisydisk"
+cask "dropbox"
+cask "font-droidsansmono-nerd-font"
+cask "istat-menus"
+cask "little-snitch"
+cask "muse"
+cask "osxfuse"
+cask "paragon-ntfs"
+cask "quitter"
+cask "sizeup"
+cask "spillo"
+cask "tunnelblick"
+mas "Airmail 3", id: 918858936
+mas "Bandwidth+", id: 490461369
+mas "Tyme2", id: 1063996724
+
+# chats & socialmedia
+cask "skype"
+cask "skype-for-business"
+cask "slack"
+mas "Tweetbot", id: 557168941
+
+# browser
+cask "firefox"
+cask "google-chrome"
+cask "google-chrome-canary"
+cask "opera"
+
+# development
+cask "iterm2"
+brew "macvim"
+cask "mongodb-compass"
+cask "visual-studio-code"
+mas "Marked 2", id: 890031187
+mas "Xcode", id: 497799835
+
+# image
+cask "adobe-photoshop-cs6"
+cask "skitch"
+mas "Affinity Photo", id: 824183456
+mas "GIPHY Capture. The GIF Maker", id: 668208984
+mas "Pixelmator", id: 407963104

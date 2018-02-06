@@ -1,7 +1,9 @@
 agignore
 eslint
 git
-nvm-npm
+nvm
+osxbrew
+osxnpm
 prettier
 ssh
 tern

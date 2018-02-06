@@ -1,0 +1,6 @@
+- shell:
+    - command: zsh -ic "nvm install node"
+    - command: [rm ~/.nvm/default-packages]
+
+- link:
+    ~/.nvm/default-packages : npm-nvm/default-packages

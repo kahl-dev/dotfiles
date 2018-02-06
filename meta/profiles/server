@@ -1,0 +1,11 @@
+agignore
+eslint
+git
+nvm
+linuxbrew
+prettier
+ssh
+tern
+tmux
+vim
+zsh
