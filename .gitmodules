@@ -46,3 +46,7 @@
 	path = meta/dotbot-brew
 	url = git@github.com:d12frosted/dotbot-brew.git
   ignore = dirty
+[submodule "zsh/custom/plugins/base16-shell"]
+	path = zsh/custom/plugins/base16-shell
+	url = git@github.com:chriskempson/base16-shell.git
+  ignore = dirty
