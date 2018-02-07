@@ -1,11 +1,10 @@
 - link:
-    ~/.vim: editor/vim/vim
-    ~/.vimrc: editor/vim/vimrc
+    ~/.vim: .vim
+    ~/.vimrc: .vim/vimrc
 
 - shell:
-    -
-      command: vim +PlugClean! +PlugInstall +PlugUpdate +PlugUpgrade +qa
-      stdin: true
+    - command: git submodule update --init --recursive .vim/pack/bundle/start/YouCompleteMe
       stdout: true
-      stderr: true
-
+    -
+      command: ./.vim/pack/bundle/start/YouCompleteMe/install.py --tern-completer
+      stdout: true
