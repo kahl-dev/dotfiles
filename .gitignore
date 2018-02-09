@@ -1,4 +1,4 @@
-editor/vim/vim/tmp/*
+.vim/tmp/*
 tmux/plugins/*
 tmux/resurrect
 !tmux/plugins/tpm
