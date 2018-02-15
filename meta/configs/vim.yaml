@@ -1,6 +1,6 @@
 - link:
-    ~/.vim: editor/vim/vim
-    ~/.vimrc: editor/vim/vimrc
+    ~/.vim: .vim
+    ~/.vimrc: .vim/vimrc
 
 - shell:
     -
