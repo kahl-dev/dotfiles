@@ -6,55 +6,8 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 call plug#begin('~/.vim/plugged')
 
-" Styling {{{
-
-Plug 'chriskempson/base16-vim'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'yggdroot/indentline'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'ryanoasis/vim-devicons'
-
-" }}}
-" Search {{{
-
-Plug 'mileszs/ack.vim'
-Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTreeFind'] }
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'FelikZ/ctrlp-py-matcher'
-Plug 'jasoncodes/ctrlp-modified.vim'
-
-" }}}
-" Language syntax & highlighting {{{
-
-Plug 'sheerun/vim-polyglot'
-Plug 'w0rp/ale'
-
-" }}}
-" Git {{{
-
-Plug 'airblade/vim-gitgutter'
-Plug 'tpope/vim-fugitive'
-
-" }}}
-" Helper {{{
-
-Plug 'andrewradev/switch.vim'
-Plug 'Raimondi/delimitMate'
-Plug 'bronson/vim-trailing-whitespace'
-Plug 'mattn/emmet-vim'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'michaeljsmith/vim-indent-object'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-eunuch'
-Plug 'sjl/gundo.vim'
-
-" }}}
 " Snippet & Autocompletion {{{
 
-Plug 'SirVer/ultisnips'
 Plug 'valloric/YouCompleteMe', { 'do': './install.py --tern-completer' }
 
 " }}}

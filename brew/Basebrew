@@ -1,6 +1,6 @@
 brew "z"
 brew "git"
-brew "vim"
+brew "vim", args:["with-python3"]
 brew "tmux"
 brew "the_silver_searcher"
 brew "fzy"

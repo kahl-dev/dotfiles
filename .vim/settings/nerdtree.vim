@@ -1,1 +1,1 @@
-nnoremap <leader>t :NERDTreeToggle<CR>
+nnoremap <leader>t :packadd nerdtree \| :NERDTreeToggle<CR>
