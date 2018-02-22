@@ -32,6 +32,7 @@ cask "quitter"
 cask "sizeup"
 cask "spillo"
 cask "tunnelblick"
+cask "usage"
 mas "Airmail 3", id: 918858936
 mas "Bandwidth+", id: 490461369
 mas "Tyme2", id: 1063996724
@@ -40,6 +41,7 @@ mas "Tyme2", id: 1063996724
 cask "skype"
 cask "skype-for-business"
 cask "slack"
+cask "whatsapp"
 mas "Tweetbot", id: 557168941
 
 # browser
