@@ -1,5 +1,5 @@
 # linux only
-if [ "$(uname 2> /dev/null)" = "Linux" ]; then
+if [ "$(uname 2> /dev/null)" = "Linux" ] && [ -d "$HOME/.linuxbrew" ]; then
 
   plugins+=(linuxbrew)
 
