@@ -17,3 +17,5 @@ if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
   alias marked='open -a "Marked 2"'
 fi
 
+# open better manual/help than man
+alias help='tldr'
