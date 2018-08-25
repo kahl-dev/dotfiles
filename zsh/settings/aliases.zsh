@@ -19,3 +19,6 @@ fi
 
 # open better manual/help than man
 alias help='tldr'
+
+# Use bat instead of cat
+alias cat='bat'
