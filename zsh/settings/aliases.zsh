@@ -7,6 +7,9 @@ alias agrep='alias | grep'
 # npm list without dependencies
 alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
 
+# git update submodules recursive
+alias gsur="git submodule update --recursive --remote"
+
 # os x only
 if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
 
