@@ -3,7 +3,7 @@ brew "git"
 brew "vim", args:["with-python3"]
 brew "tmux"
 brew "the_silver_searcher"
-brew "fzy"
+brew "fzf"
 brew "cmake"
 brew "nvm"
 brew "bat"
