@@ -9,4 +9,4 @@ function! s:root()
   endif
 endfunction
 
-command! CustomGitRoot call s:root()
+command! GitRoot call s:root()
