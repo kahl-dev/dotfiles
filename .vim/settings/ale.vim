@@ -35,3 +35,16 @@ let g:ale_pattern_options = {
 
 let g:airline#extensions#ale#enabled = 1
 let g:ale_fix_on_save = 1
+
+" Change dir to git root
+function! s:ALEToggleFixOnSave()
+  if g:ale_fix_on_save
+    let g:ale_fix_on_save = 0
+  else
+    let g:ale_fix_on_save = 1
+  endif
+
+  echo 'Change ale_fix_on_save to: '.g:ale_fix_on_save
+endfunction
+
+command! ALEToggleFixOnSave call s:ALEToggleFixOnSave()
