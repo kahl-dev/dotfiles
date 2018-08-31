@@ -17,8 +17,14 @@ if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
   alias marked='open -a "Marked 2"'
 fi
 
-# open better manual/help than man
-alias help='tldr'
+if which tldr &> /dev/null; then
 
-# Use bat instead of cat
-alias cat='bat'
+  # open better manual/help than man
+  alias help='tldr'
+fi
+
+if which bat &> /dev/null; then
+
+  # Use bat instead of cat
+  alias cat='bat'
+fi
