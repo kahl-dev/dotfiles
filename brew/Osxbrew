@@ -59,6 +59,7 @@ cask "mongodb-compass"
 cask "visual-studio-code"
 mas "Marked 2", id: 890031187
 mas "Xcode", id: 497799835
+brew "speedtest-cli"
 
 # image
 cask "adobe-photoshop-cs6"
