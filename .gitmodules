@@ -158,3 +158,6 @@
 	path = vim/pack/bundle/start/supertab
 	url = git@github.com:ervandew/supertab.git
   ignore = dirty
+[submodule "vim/pack/bundle/start/nerdcommenter"]
+	path = vim/pack/bundle/start/nerdcommenter
+	url = git@github.com:scrooloose/nerdcommenter.git
