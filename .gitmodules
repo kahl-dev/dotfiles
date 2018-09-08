@@ -142,10 +142,6 @@
 	path = vim/pack/bundle/start/vim-unimpaired
 	url = git@github.com:tpope/vim-unimpaired.git
   ignore = dirty
-[submodule "vim/pack/bundle/start/vim-commentary"]
-	path = vim/pack/bundle/start/vim-commentary
-	url = git@github.com:tpope/vim-commentary.git
-  ignore = dirty
 [submodule "vim/pack/bundle/start/vim-eunuch"]
 	path = vim/pack/bundle/start/vim-eunuch
 	url = git@github.com:tpope/vim-eunuch.git
