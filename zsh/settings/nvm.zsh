@@ -12,4 +12,4 @@ nvmInit() {
 
 # after_init+=(nvmInit)
 
-alias loadnvm='nvm && nvmInit'
+alias loadnvm='nvm > /dev/null && nvmInit > /dev/null'
