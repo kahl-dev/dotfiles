@@ -21,6 +21,7 @@ for file in $(find $DOTFILES/zsh/settings -type f); do
   source "$file";
 done
 
+ZSH_DISABLE_COMPFIX="true"
 source $ZSH/oh-my-zsh.sh
 
 #  Set highlight styles for plugin
