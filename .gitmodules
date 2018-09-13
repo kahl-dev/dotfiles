@@ -8,7 +8,7 @@
   ignore = dirty
 [submodule "zsh/custom/plugins/alias-tips"]
 	path = zsh/custom/plugins/alias-tips
-	url = https://github.com/djui/alias-tips
+	url = git@github.com:djui/alias-tips.git
   ignore = dirty
 [submodule "zsh/custom/plugins/enhancd"]
 	path = zsh/custom/plugins/enhancd
@@ -24,19 +24,19 @@
   ignore = dirty
 [submodule "tmux/plugins/tpm"]
 	path = tmux/plugins/tpm
-	url = https://github.com/tmux-plugins/tpm
+	url = git@github.com:tmux-plugins/tpm.git
   ignore = dirty
 [submodule "zsh/custom/plugins/zsh-nvm"]
 	path = zsh/custom/plugins/zsh-nvm
-	url = https://github.com/lukechilds/zsh-nvm
+	url = git@github.com:lukechilds/zsh-nvm.git
   ignore = dirty
 [submodule "zsh/custom/themes/powerlevel9k"]
 	path = zsh/custom/themes/powerlevel9k
-	url = https://github.com/bhilburn/powerlevel9k.git
+	url = git@github.com:bhilburn/powerlevel9k.git
   ignore = dirty
 [submodule "zsh/custom/plugins/zsh-better-npm-completion"]
 	path = zsh/custom/plugins/zsh-better-npm-completion
-	url = https://github.com/lukechilds/zsh-better-npm-completion
+	url = git@github.com:lukechilds/zsh-better-npm-completion.git
   ignore = dirty
 [submodule "meta/dotbot"]
 	path = meta/dotbot
