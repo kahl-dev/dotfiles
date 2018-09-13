@@ -126,10 +126,6 @@
 	path = vim/pack/bundle/start/emmet-vim
 	url = git@github.com:mattn/emmet-vim.git
   ignore = dirty
-[submodule "vim/pack/bundle/start/vim-tmux-navigator"]
-	path = vim/pack/bundle/start/vim-tmux-navigator
-	url = git@github.com:christoomey/vim-tmux-navigator.git
-  ignore = dirty
 [submodule "vim/pack/bundle/start/vim-indent-object"]
 	path = vim/pack/bundle/start/vim-indent-object
 	url = git@github.com:michaeljsmith/vim-indent-object.git
