@@ -13,3 +13,4 @@ if [ "$(uname 2> /dev/null)" = "Linux" ] && [ -d "$HOME/.linuxbrew" ]; then
   fi
 fi
 
+export PATH="/usr/local/sbin:$PATH"
