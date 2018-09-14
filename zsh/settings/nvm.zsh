@@ -13,3 +13,4 @@ nvmInit() {
 # after_init+=(nvmInit)
 
 alias loadnvm='nvm > /dev/null && nvmInit > /dev/null'
+alias npmdp='npm install -g yarn grunt prettier vue-cli tldr diff-so-fancy'
