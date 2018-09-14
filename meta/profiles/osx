@@ -3,7 +3,6 @@ eslint
 git
 nvm
 osxbrew
-osxnpm
 prettier
 ssh
 tern

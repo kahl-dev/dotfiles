@@ -1,4 +1,0 @@
-- shell:
-    - command: zsh -ic "nvm use system && $DOTFILES/sh/npm.sh"
-      stdout: true
-
