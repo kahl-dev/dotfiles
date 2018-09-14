@@ -6,6 +6,7 @@ alias agrep='alias | grep'
 
 # npm list without dependencies
 alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
+alias npmLsg="npm ls -g --depth=0 "$@" 2>/dev/null"
 
 # git update submodules recursive
 alias gsur="git submodule update --recursive --remote"
