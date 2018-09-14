@@ -130,8 +130,10 @@ inoremap <C-j> <C-o>j
 inoremap <C-k> <C-o>k
 inoremap <C-^> <C-o><C-^>
 
+nnoremap <leader>h :noh<CR>
+
 " vims . repeat with visual mode
-xnoremap . :norm.<CR
+xnoremap . :norm.<CR>
 
 " highlight last inserted text
 nnoremap gV `[v`]

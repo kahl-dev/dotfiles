@@ -14,4 +14,4 @@ nvmInit() {
 
 alias loadnvm='nvm > /dev/null && nvmInit > /dev/null'
 alias npmid='npm install -g yarn grunt prettier vue-cli tldr diff-so-fancy yo generator-alfred'
-alias npmida='npm install -g alfred-tyme alfred-bitly alfred-updater alfred-notifier alfred-polyglot alfred-fkill'
+alias npmida='npm install -g alfred-tyme alfred-bitly alfred-updater alfred-notifier alfred-polyglot alfred-fkill alfred-coolors alfred-npms alfred-hl'

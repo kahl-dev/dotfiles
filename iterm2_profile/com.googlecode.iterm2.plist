@@ -5,7 +5,7 @@
 	<key>AdjustWindowForFontSizeChange</key>
 	<true/>
 	<key>AllowClipboardAccess</key>
-	<false/>
+	<true/>
 	<key>AnimateDimming</key>
 	<false/>
 	<key>AppleAntiAliasingThreshold</key>
@@ -281,9 +281,9 @@
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>530 477 620 392 0 0 1680 1028 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>372 84 1016 512 0 0 1680 1028 </string>
+	<string>711 490 918 512 0 0 1680 1028 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>13 14 1655 999 0 0 1680 1050 </string>
+	<string>13 13 1655 1002 0 0 1680 1028 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>13 17 1659 1011 0 0 1680 1028 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -1447,7 +1447,7 @@
 			<key>Idle Code</key>
 			<integer>0</integer>
 			<key>Initial Text</key>
-			<string></string>
+			<string>tmux attach || tmux new -s main</string>
 			<key>Jobs to Ignore</key>
 			<array>
 				<string>rlogin</string>
@@ -2119,7 +2119,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-09-12T19:04:26Z</date>
+	<date>2018-09-13T21:46:22Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>
