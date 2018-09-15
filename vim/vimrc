@@ -151,6 +151,13 @@ nnoremap <leader>sv :source $MYVIMRC<CR>
 
 " }}}
 " }}}
+" {{{ Check python version if available
+if has("python")
+    python import vim; from sys import version_info as v; vim.command('let python_version=%d' % (v[0] * 100 + v[1]))
+else
+    let python_version=0
+endif
+" }}}
 " {{{ Plugin Manager (vim-plug)
 if filereadable(expand("~/.vim/vim-plugs.vim"))
   source ~/.vim/vim-plugs.vim

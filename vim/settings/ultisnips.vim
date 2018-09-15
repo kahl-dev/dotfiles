@@ -1,4 +1,6 @@
 " Ultisnips
+if python_version > 0
+
 let g:UltiSnipsSnippetDirectories=["UltiSnips", "my-snippets"]
 function! g:UltiSnips_Complete()
   call UltiSnips#ExpandSnippet()
@@ -33,6 +35,9 @@ if !exists("g:UltiSnipsJumpBackwardTrigger")
 endif
 
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger
+
   \ . " <C-R>=g:UltiSnips_Complete()<cr>"
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger
   \ . " <C-R>=g:UltiSnips_Reverse()<cr>"
+
+endif
