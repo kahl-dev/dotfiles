@@ -1,7 +1,11 @@
 if executable('fzf')
 " FZF {{{
 
-execute 'set rtp+='.fnamemodify(systemlist('greadlink -f $(which fzf)')[0], ':h:h')
+if has("mac")
+  set rtp+=/usr/local/opt/fzf
+elseif has("unix")
+  execute 'set rtp+='.fnamemodify(systemlist('greadlink -f $(which fzf)')[0], ':h:h')
+endif
 
 nnoremap <silent> <C-f>f :FZF -m<cr>
 nnoremap <silent> <C-f>g :GFiles<cr>
