@@ -1,6 +1,5 @@
 - search for a replacement for youcompleteme
 - bugfix tmux bar color
-- bring brew python on centos(uberspace) to work
 
 projects:
 
