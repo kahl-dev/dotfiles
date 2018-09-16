@@ -1,0 +1,8 @@
+brew "z"
+brew "git"
+brew "tmux"
+brew "the_silver_searcher"
+brew "fzf"
+brew "cmake"
+brew "gcc"
+brew "coreutils"
