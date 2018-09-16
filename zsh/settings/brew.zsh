@@ -6,11 +6,7 @@ if [ "$(uname 2> /dev/null)" = "Linux" ] && [ -d "$HOME/.linuxbrew" ]; then
   export INFOPATH="$(brew --prefix)/share/info:$INFOPATH"
   HOMEBREW_BUILD_FROM_SOURCE=1
 
-  if [ -f $HOME/bin/vim/src/vim ]; then
-    alias vim="$HOME/bin/vim/src/vim"
-  else
-    alias vim="${HOME}/.linuxbrew/bin/vim"
-  fi
+  #alias vim="${HOME}/.linuxbrew/bin/vim"
 fi
 
 export PATH="/usr/local/sbin:$PATH"
