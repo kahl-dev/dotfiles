@@ -23,6 +23,8 @@
     lp      = lia preview
     lf      = lia finish
 
+    update  = !git pull && git submodule update --init --recursive
+
 [user]
     name = Patrick Kahl
     email = Kahl.Patrick@googlemail.com
