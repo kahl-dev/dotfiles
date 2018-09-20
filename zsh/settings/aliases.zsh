@@ -29,3 +29,5 @@ if which bat &> /dev/null; then
   # Use bat instead of cat
   alias cat='bat'
 fi
+
+alias theme='echo $BASE16_THEME'
