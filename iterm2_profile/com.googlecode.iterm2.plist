@@ -69,6 +69,13 @@
 			<key>Text</key>
 			<string></string>
 		</dict>
+		<key>0x66-0x140000</key>
+		<dict>
+			<key>Action</key>
+			<integer>23</integer>
+			<key>Text</key>
+			<string></string>
+		</dict>
 		<key>0x72-0x100000</key>
 		<dict>
 			<key>Action</key>
@@ -281,9 +288,9 @@
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>530 477 620 392 0 0 1680 1028 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>711 490 918 512 0 0 1680 1028 </string>
+	<string>782 1739 796 486 -122 1050 1920 1178 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>13 13 1655 1002 0 0 1680 1028 </string>
+	<string>0 0 1865 1106 -122 1050 1920 1200 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>13 17 1659 1011 0 0 1680 1028 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -2101,7 +2108,7 @@
 	<key>Print In Black And White</key>
 	<true/>
 	<key>PromptOnQuit</key>
-	<false/>
+	<true/>
 	<key>QuitWhenAllWindowsClosed</key>
 	<false/>
 	<key>RightCommand</key>
@@ -2119,7 +2126,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-09-13T21:46:22Z</date>
+	<date>2018-09-20T06:47:51Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>
@@ -2179,7 +2186,7 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.2.1beta4</string>
+	<string>3.2.1beta5</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>0</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>
