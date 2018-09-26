@@ -1,33 +1,34 @@
+tap "homebrew/cask-versions"
 tap "caskroom/cask"
 tap "caskroom/fonts"
-brew "mas"
+#brew "mas"
 
 # gaming
-cask "steam"
+#cask "steam"
 
 # multimedia
 cask "spotify"
 cask "vlc"
-mas "PiPifier", id: 1160374471
+#mas "PiPifier", id: 1160374471
 
 # tools
 brew "mongodb"
 brew "reattach-to-user-namespace"
-brew "sshfs"
-brew "tree"
+#brew "tree"
 brew "wget"
 cask "cyberduck"
 cask "1password"
 cask "alfred"
 cask "appcleaner"
 cask "bartender"
-cask "daisydisk"
+#cask "daisydisk"
 cask "dropbox"
 cask "font-droidsansmono-nerd-font"
 cask "istat-menus"
 cask "little-snitch"
 cask "muse"
 cask "osxfuse"
+brew "sshfs"
 cask "paragon-ntfs"
 cask "quitter"
 cask "sizeup"
@@ -35,16 +36,19 @@ cask "spillo"
 cask "tunnelblick"
 cask "usage"
 cask "google-backup-and-sync"
-mas "Airmail 3", id: 918858936
-mas "Bandwidth+", id: 490461369
-mas "Tyme2", id: 1063996724
+#mas "Airmail 3", id: 918858936
+#mas "Tyme2", id: 1063996724
+cask "tripmode"
+cask "caffeine"
+#mas "colorsnapper"
+cask "teamviewer"
 
 # chats & socialmedia
 cask "skype"
 cask "skype-for-business"
 cask "slack"
 cask "whatsapp"
-mas "Tweetbot", id: 557168941
+#mas "Tweetbot", id: 557168941
 
 # browser
 cask "firefox"
@@ -57,13 +61,12 @@ cask "iterm2"
 brew "macvim"
 cask "mongodb-compass"
 cask "visual-studio-code"
-mas "Marked 2", id: 890031187
-mas "Xcode", id: 497799835
+#mas "Marked 2", id: 890031187
+#mas "Xcode", id: 497799835
 brew "speedtest-cli"
 
 # image
-cask "adobe-photoshop-cs6"
-cask "skitch"
-mas "Affinity Photo", id: 824183456
-mas "GIPHY Capture. The GIF Maker", id: 668208984
-mas "Pixelmator", id: 407963104
+#cask "skitch"
+#mas "Affinity Photo", id: 824183456
+#mas "GIPHY Capture. The GIF Maker", id: 668208984
+#mas "Pixelmator", id: 407963104
