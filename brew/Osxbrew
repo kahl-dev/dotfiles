@@ -42,6 +42,7 @@ cask "tripmode"
 cask "caffeine"
 #mas "colorsnapper"
 cask "teamviewer"
+cask "numi"
 
 # chats & socialmedia
 cask "skype"
