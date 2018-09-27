@@ -1,13 +1,16 @@
 #! /bin/zsh
 
-if 'test -n "$SSH_CLIENT"'
-then
+# Only do on ssh
+if test -n $SSH_CLIENT; then
 
-iterm="${HOME}/.iterm2_shell_integration.zsh"
+  iterm="${HOME}/.iterm2_shell_integration.zsh"
 
-if test -e $iterm \
-  curl -L https://iterm2.com/shell_integration/zsh -o $iterm
+  # Load script if not exists
+  if ! test -e $iterm; then
+    curl -L https://iterm2.com/shell_integration/zsh -o $iterm
+  fi
 
-source $iterm
+  # Load script
+  source $iterm
 
 fi
