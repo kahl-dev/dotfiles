@@ -260,10 +260,15 @@
 	</data>
 	<key>NSTableView Supports v2 KeyBingingTable</key>
 	<true/>
+	<key>NSToolbar Configuration com.apple.NSColorPanel</key>
+	<dict>
+		<key>TB Is Shown</key>
+		<integer>1</integer>
+	</dict>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>397 259 796 486 0 0 1680 1027 </string>
+	<string>519 408 918 512 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>23 25 1530 976 0 0 1680 1027 </string>
+	<string>23 24 1634 979 0 0 1680 1027 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -906,7 +911,7 @@
 			<key>Normal Font</key>
 			<string>DroidSansMonoNerdFontComplete- 11</string>
 			<key>Only The Default BG Color Uses Transparency</key>
-			<true/>
+			<false/>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -1068,7 +1073,7 @@
 			<key>Thin Strokes</key>
 			<integer>3</integer>
 			<key>Transparency</key>
-			<real>0.11044773159898477</real>
+			<real>0.10984097398477158</real>
 			<key>Triggers</key>
 			<array/>
 			<key>Unicode Version</key>
@@ -1096,7 +1101,7 @@
 			<key>Visual Bell</key>
 			<true/>
 			<key>Window Type</key>
-			<integer>0</integer>
+			<integer>12</integer>
 			<key>Working Directory</key>
 			<string>/Users/pdk</string>
 		</dict>
@@ -1744,7 +1749,7 @@
 			<key>Normal Font</key>
 			<string>DroidSansMonoNerdFontComplete- 11</string>
 			<key>Only The Default BG Color Uses Transparency</key>
-			<true/>
+			<false/>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
