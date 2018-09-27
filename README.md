@@ -13,14 +13,14 @@ $ ./install-profile osx
 
 ## Apps to install manually
 
-PixelSnap
-Microsoft Office
-Adobe Cloud
-Parallels
+PixelSnap  
+Microsoft Office  
+Adobe Cloud  
+Parallels  
 
 ## Settings to set manualy
 
-System Preferences -> Keyboard -> Modifier Keys -> Caps Look -> Control
+System Preferences -> Keyboard -> Modifier Keys -> Caps Look -> Control  
 System Preferences -> Monitor -> Scaled -> More space
 
 ## Alfred Workflows
