@@ -1,6 +1,27 @@
-# Alias to go to GIT toplevel
+# Go to git root dir
 alias cdtl='cd "$(git rev-parse --show-toplevel)"'
 
-alias marked='open -a "Marked 2"'
+# Grep all aliases
+alias agrep='alias | grep'
 
-alias tmuxb='tmux attach -t base || tmux new -s base'
+# Git update submodules recursive
+alias gsur="git submodule update --recursive --remote"
+
+# Os x only
+if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
+
+  # Add markdownreader app
+  alias marked='open -a "Marked 2"'
+fi
+
+# Open better manual/help than man
+if which tldr >/dev/null 2>&1; then alias help='tldr'; fi
+
+# Use bat instead of cat
+if which bat >/dev/null 2>&1; then alias cat='bat'; fi
+
+# Echo current base16 theme
+alias theme='echo $BASE16_THEME'
+
+# Attach or create tmux base session
+alias tmuxm='tmux attach -t base || tmux new -s base'
