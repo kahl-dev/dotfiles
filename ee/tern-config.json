@@ -1,9 +1,15 @@
 {
-  "libs": ["browser", "ecma6", "jquery"],
+  "libs": [
+    "browser",
+    "ecmascript",
+    "jquery"
+  ],
   "plugins": {
     "node": {},
     "complete_strings": {},
     "es_modules": {},
-    "webpack": {}
+    "webpack": {},
+    "modules": {},
+    "requirejs": {}
   }
 }

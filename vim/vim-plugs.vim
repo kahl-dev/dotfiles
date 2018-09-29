@@ -8,7 +8,7 @@ call plug#begin('~/.vim/plugged')
 
 " Snippet & Autocompletion {{{
 
-Plug 'valloric/YouCompleteMe', { 'do': './install.py --tern-completer' }
+Plug 'valloric/YouCompleteMe', { 'do': './install.py --js-completer' }
 
 " }}}
 
