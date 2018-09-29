@@ -24,6 +24,7 @@ set showcmd                       " show partial commands in last screen line
 set hlsearch                      " highlight search
 set splitbelow                    " on window split put below
 set splitright                    " on window split put on right sote
+set winwidth=110                  " force minimun window width
 
 " }}}
 " Usability options {{{
@@ -66,6 +67,7 @@ endif
 
 set lazyredraw                    " redraw only when we need to
 set autoread                      " reload files changed outside vim
+set incsearch                     " start search on type
 set ignorecase                    " case insensitive search
 set smartcase                     " insensitive search except using capital once
 set autoindent                    " copy indent of current for new line
@@ -123,6 +125,8 @@ inoremap jk <Esc>
 xnoremap jk <Esc>
 cnoremap jk <C-c>
 
+command! W :w
+
 " Movement in insert mode
 inoremap <C-h> <C-o>h
 inoremap <C-l> <C-o>a
@@ -130,7 +134,7 @@ inoremap <C-j> <C-o>j
 inoremap <C-k> <C-o>k
 inoremap <C-^> <C-o><C-^>
 
-nnoremap <leader>h :noh<CR>
+nnoremap <CR> :nohlsearch<cr>
 
 " vims . repeat with visual mode
 xnoremap . :norm.<CR>
