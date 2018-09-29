@@ -174,3 +174,6 @@
 	path = zsh/custom/plugins/zsh-interactive-cd
 	url = git@github.com:changyuheng/zsh-interactive-cd.git
   ignore = dirty
+[submodule "vim/pack/bundle/start/restore_view.vim"]
+	path = vim/pack/bundle/start/restore_view.vim
+	url = git@github.com:vim-scripts/restore_view.vim.git
