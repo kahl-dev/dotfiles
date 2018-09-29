@@ -150,10 +150,6 @@
 	path = vim/pack/bundle/start/supertab
 	url = git@github.com:ervandew/supertab.git
   ignore = dirty
-[submodule "vim/pack/bundle/start/nerdcommenter"]
-	path = vim/pack/bundle/start/nerdcommenter
-	url = git@github.com:scrooloose/nerdcommenter.git
-  ignore = dirty
 [submodule "zsh/custom/plugins/typo3-zsh-plugin"]
 	path = zsh/custom/plugins/typo3-zsh-plugin
 	url = git@gitlab.louis-net.de:typo3_ext/typo3-zsh-plugin.git
