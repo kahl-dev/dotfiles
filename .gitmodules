@@ -173,3 +173,8 @@
 [submodule "vim/pack/bundle/start/restore_view.vim"]
 	path = vim/pack/bundle/start/restore_view.vim
 	url = git@github.com:vim-scripts/restore_view.vim.git
+  ignore = dirty
+[submodule "vim/pack/bundle/start/tcomment_vim"]
+	path = vim/pack/bundle/start/tcomment_vim
+	url = git@github.com:tomtom/tcomment_vim.git
+  ignore = dirty
