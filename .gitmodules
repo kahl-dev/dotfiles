@@ -173,3 +173,7 @@
 [submodule "vim/pack/bundle/start/supertab"]
 	path = vim/pack/bundle/start/supertab
 	url = git@github.com:ervandew/supertab.git
+  ignore = dirty
+[submodule "vim/pack/bundle/start/vim-snippets"]
+	path = vim/pack/bundle/start/vim-snippets
+	url = git@github.com:honza/vim-snippets.git
