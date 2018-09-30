@@ -11,24 +11,39 @@ $ cd .dotfiles
 $ ./install-profile osx
 ```
 
-## Apps to install manually
+## Applications and tools
+All necessary applications and tools are installed with the installation script.
 
-PixelSnap  
-Microsoft Office  
-Adobe Cloud  
-Parallels  
+The following must be installed manually.  
+* PixelSnap  
+* Microsoft Office  
+* Adobe Cloud  
+* Parallels
 
-## Settings to set manualy
+## OS X Settings
 
-System Preferences -> Keyboard -> Modifier Keys -> Caps Look -> Control  
-System Preferences -> Monitor -> Scaled -> More space
+This script will set all my favorite OS X settings
+```
+$ .~/.dotfiles/sh/osx.sh
+```
+
+The following must be set manually  
+* System Preferences -> Keyboard -> Modifier Keys -> Caps Look -> Control  
+* System Preferences -> Monitor -> Scaled -> More space
 
 ## Alfred Workflows
 
-[AppCleaner](https://github.com/aiyodk/Alfred-Extensions/blob/master/AlfredApp_2.x/AppCleaner/AppCleaner.alfredworkflow)
-[Search Browser tabs](http://www.packal.org/workflow/search-browser-tabs)
-[Pinboard](https://github.com/spamwax/alfred-pinboard-rs)
-[Numi](http://www.packal.org/workflow/numi)
+Run this npm alias to install all required Alfred workflows
+```
+$ npmida
+```
+
+The following must be installed manually  
+* [AppCleaner](https://github.com/aiyodk/Alfred-Extensions/blob/master/AlfredApp_2.x/AppCleaner/AppCleaner.alfredworkflow)  
+* [Search Browser tabs](http://www.packal.org/workflow/search-browser-tabs)  
+* [Pinboard](https://github.com/spamwax/alfred-pinboard-rs)  
+* [Numi](http://www.packal.org/workflow/numi)  
+* [Translate](http://www.packal.org/workflow/translate)
 
 ## License
 
