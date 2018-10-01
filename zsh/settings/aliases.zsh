@@ -5,7 +5,7 @@ alias cdtl='cd "$(git rev-parse --show-toplevel)"'
 alias agrep='alias | grep'
 
 # Git update submodules recursive
-alias gsur="git submodule update --recursive --remote"
+alias gsur="git submodule update --remote --merge --init"
 
 # Os x only
 if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
