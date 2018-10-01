@@ -6,5 +6,4 @@
 
 - shell:
     - command: if $(brew --version > /dev/null); then brew update && brew upgrade; fi
-    - command: $(brew --prefix)/opt/fzf/install
-
+    - command: printf "%s\n" y y n | $(brew --prefix)/opt/fzf/install
