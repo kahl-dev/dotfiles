@@ -142,10 +142,6 @@
 	path = vim/pack/bundle/start/ultisnips
 	url = git@github.com:SirVer/ultisnips.git
   ignore = dirty
-[submodule "zsh/custom/plugins/typo3-zsh-plugin"]
-	path = zsh/custom/plugins/typo3-zsh-plugin
-	url = git@gitlab.louis-net.de:typo3_ext/typo3-zsh-plugin.git
-  ignore = dirty
 [submodule "vim/pack/bundle/start/vim-tmux-navigator"]
 	path = vim/pack/bundle/start/vim-tmux-navigator
 	url = git@github.com:christoomey/vim-tmux-navigator.git
