@@ -1,7 +1,24 @@
-snippet template "Vue template"
+snippet template "Full Template Vue" b
+
 <template>
 	<${1:div}>
 		$2
 	</$1>
+
 </template>
+
+<style lang="scss">
+</style>
+
+<script>
+export default {
+  data() {
+    return {}
+  }
+}
+</script>
+endsnippet
+
+snippet import "Import component" b
+import $1 from "~components/$1"
 endsnippet
