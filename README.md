@@ -43,7 +43,8 @@ The following must be installed manually
 * [Search Browser tabs](http://www.packal.org/workflow/search-browser-tabs)  
 * [Pinboard](https://github.com/spamwax/alfred-pinboard-rs)  
 * [Numi](http://www.packal.org/workflow/numi)  
-* [Translate](http://www.packal.org/workflow/translate)
+* [Translate](http://www.packal.org/workflow/translate)  
+* [defaultbrowser-alfred-workflow](https://github.com/stuartcryan/defaultbrowser-alfred-workflow)
 
 ## License
 
