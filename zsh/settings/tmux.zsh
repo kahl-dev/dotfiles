@@ -1,6 +1,12 @@
 if which tmux &> /dev/null; then
   plugins+=(tmux)
 
+  # Attach or create tmux base session
+  alias tmuxm='tmux attach -t base || tmux new -s base'
+
+  # Update ssh session for tmux
+  alias tmuxssh="eval $(tmux show-env -s |grep '^SSH_')"
+
   # TODO: Check which server
   #if [ "$(uname 2> /dev/null)" = "Linux" ]; then
   #  # Launch SSH agent if not running
@@ -12,8 +18,8 @@ if which tmux &> /dev/null; then
   #  export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
   #fi
 
-  # [[ $TMUX = "" ]] && export TERM="xterm-256color"
-  # [[ $TMUX != "" ]] && export TERM="screen-256color"
+  [[ $TMUX = "" ]] && export TERM="xterm-256color"
+  [[ $TMUX != "" ]] && export TERM="screen-256color"
 
   # ZSH_TMUX_AUTOSTART=true
   # if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
