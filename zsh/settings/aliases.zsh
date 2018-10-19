@@ -22,9 +22,3 @@ if which bat >/dev/null 2>&1; then alias cat='bat'; fi
 
 # Echo current base16 theme
 alias theme='echo $BASE16_THEME'
-
-# Attach or create tmux base session
-alias tmuxm='tmux attach -t base || tmux new -s base'
-
-# Update ssh session for tmux
-alias tmuxssh="eval $(tmux show-env -s |grep '^SSH_')"
