@@ -22,7 +22,7 @@ if which fzf &> /dev/null; then
   # Add enhanced
   # https://github.com/b4b4r07/enhancd
   initEnhanced() {
-    # source $ZSH_CUSTOM/plugins/enhancd/init.sh
+    source $ZSH_CUSTOM/plugins/enhancd/init.sh
   }
 
   after_init+=(initEnhanced)
