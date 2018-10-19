@@ -18,8 +18,8 @@ if which tmux &> /dev/null; then
   #  export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
   #fi
 
-  # [[ $TMUX = "" ]] && export TERM="xterm-256color"
-  # [[ $TMUX != "" ]] && export TERM="screen-256color"
+  [[ $TMUX = "" ]] && export TERM="xterm-256color"
+  [[ $TMUX != "" ]] && export TERM="screen-256color"
 
   # ZSH_TMUX_AUTOSTART=true
   # if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
