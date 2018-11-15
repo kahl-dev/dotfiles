@@ -3,13 +3,8 @@
   "vim.useSystemClipboard": true,
   "vim.insertModeKeyBindings": [
     {
-      "before": [
-        "j",
-        "k"
-      ],
-      "after": [
-        "<Esc>"
-      ]
+      "before": ["j", "k"],
+      "after": ["<Esc>"]
     }
   ],
   "workbench.colorTheme": "Base16 Dark Ocean",
@@ -30,5 +25,7 @@
       "autoFix": true
     }
   ],
-  "editor.lineNumbers": "relative"
+  "editor.lineNumbers": "relative",
+  "terminal.integrated.rendererType": "dom",
+  "editor.formatOnSave": true
 }
