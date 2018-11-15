@@ -1,6 +1,7 @@
 tap "homebrew/cask-versions"
 tap "caskroom/cask"
 tap "caskroom/fonts"
+tab "colindean/fonts-nonfree"
 #brew "mas"
 
 # gaming
@@ -24,6 +25,7 @@ cask "bartender"
 #cask "daisydisk"
 cask "dropbox"
 cask "font-droidsansmono-nerd-font"
+cask "font-microsoft-office"
 cask "istat-menus"
 cask "little-snitch"
 cask "muse"
