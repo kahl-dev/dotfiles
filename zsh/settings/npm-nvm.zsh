@@ -1,7 +1,25 @@
-npm() {
+lazynvm() {
+  export NVM_DIR="$HOME/.nvm"
+  export PATH=$NVM_DIR/versions/node/global/bin:$PATH
+  export MANPATH=$NVM_DIR/versions/node/global/share/man:$MANPATH
 
-  # Remove this function
+  if [[ -f /usr/local/opt/nvm/nvm.sh ]]; then
+    . /usr/local/opt/nvm/nvm.sh
+  elif [[ -f $NVM_DIR/nvm.sh ]]; then
+    . $NVM_DIR/nvm.sh
+  fi
+}
+
+# Check if 'nvm' is a command in $PATH
+nvm() {
   unfunction "$0"
+  lazynvm()
+  nvm "$@"
+}
+
+npm() {
+  unfunction "$0"
+  lazynvm()
 
   NODE_MODULES="${HOME}/.node_modules"
   PATH="$PATH:$NODE_MODULES/bin"
@@ -10,11 +28,23 @@ npm() {
   unset MANPATH
   export MANPATH="$NODE_MODULES/share/man:$(manpath)"
 
-  source $ZSH/plugins/npm/npm.plugin.zsh
-  source $ZSH_CUSTOM/plugins/zsh-better-npm-completion/zsh-better-npm-completion.plugin.zsh
-
-  nvm "$@"
+  npm "$@"
 }
+
+node() {
+  unfunction "$0"
+  lazynvm()
+  node $@
+}
+
+npx() {
+  unfunction "$0"
+  lazynvm()
+  npx $@
+}
+
+# nvm completion
+. $(brew --prefix)/etc/bash_completion.d/nvm
 
 # npm list without dependencies
 alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
