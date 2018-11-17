@@ -86,10 +86,6 @@
 	path = vim/pack/bundle/opt/ale
 	url = git@github.com:w0rp/ale.git
   ignore = dirty
-[submodule "vim/pack/bundle/start/vim-gitgutter"]
-	path = vim/pack/bundle/start/vim-gitgutter
-	url = git@github.com:airblade/vim-gitgutter.git
-  ignore = dirty
 [submodule "vim/pack/bundle/start/vim-fugitive"]
 	path = vim/pack/bundle/start/vim-fugitive
 	url = git@github.com:tpope/vim-fugitive.git
@@ -157,3 +153,6 @@
 [submodule "vim/pack/bundle/start/supertab"]
 	path = vim/pack/bundle/start/supertab
 	url = git@github.com:ervandew/supertab.git
+[submodule "vim/pack/bundle/start/vim-signify"]
+	path = vim/pack/bundle/start/vim-signify
+	url = git@github.com:mhinz/vim-signify.git
