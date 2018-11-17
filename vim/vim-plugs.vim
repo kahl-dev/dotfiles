@@ -8,7 +8,8 @@ call plug#begin('~/.vim/plugged')
 
 " Snippet & Autocompletion {{{
 
-Plug 'valloric/YouCompleteMe', { 'do': './install.py --js-completer' }
+Plug 'Valloric/YouCompleteMe', { 'on': [], 'do': './install.py --js-completer' }
+command! Ycm call plug#load('YouCompleteMe') | call youcompleteme#Enable() | YcmCompleter
 
 " }}}
 
