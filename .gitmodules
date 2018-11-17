@@ -95,7 +95,7 @@
 	url = git@github.com:sheerun/vim-polyglot.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/ale"]
-	path = vim/pack/bundle/start/ale
+	path = vim/pack/bundle/opt/ale
 	url = git@github.com:w0rp/ale.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-gitgutter"]
