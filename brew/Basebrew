@@ -1,5 +1,6 @@
 brew "z"
-brew "git"
+brew "git", args:["without-completions"]
+brew "git-extras"
 brew "vim", args:["with-python3"]
 brew "tmux"
 brew "the_silver_searcher"
