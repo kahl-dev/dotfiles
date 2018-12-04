@@ -84,8 +84,69 @@ set cmdheight=2                   " command window height to 2
 set pastetoggle=<F10>             " toggle paste mode
 autocmd VimResized * wincmd =     " Adjust vim size on resize
 
-set directory^=$HOME/.vim/tmp//
+" }}}
+" Undo/Backups {{{
+" If a path ends in '//' then the swap file name is
+" built from the entire path. No more issues between projects.
 
+" Change swap directory.
+if isdirectory($HOME . '/.vim/tmp/swap') == 0
+    call mkdir($HOME . '/.vim/tmp/swap', 'p')
+endif
+set directory=~/.vim/tmp/swap//
+
+" Change backup directory.
+if isdirectory($HOME . '/.vim/tmp/backup') == 0
+    call mkdir($HOME . '/.vim/tmp/backup', 'p')
+endif
+set backupdir=~/.vim/tmp/backup//
+
+if exists('+undofile')
+    " Change undo directory.
+    if isdirectory($HOME . '/.vim/tmp/undo') == 0
+        call mkdir($HOME . '/.vim/tmp/undo', 'p')
+    endif
+    set undodir=~/.vim/tmp/undo//
+end
+
+" Handle swap prompt
+
+if has("autocmd")
+    augroup AutoSwap
+        autocmd!
+        autocmd! SwapExists * call _HandleSwap(expand('<afile>:p'))
+    augroup END
+endif
+
+function! _HandleSwap(filename)
+    " If the swap file is old, delete. If it is new, recover.
+    if getftime(v:swapname) < getftime(a:filename)
+        let v:swapchoice = 'e'
+        call _EchoSwapMessage("Deleted older swapfile.")
+    else
+        let v:swapchoice = 'r'
+        call _EchoSwapMessage("Detected newer swapfile, recovering.")
+    endif
+endfunc
+
+function! _EchoSwapMessage(message)
+    if has("autocmd")
+        augroup EchoSwapMessage
+            autocmd!
+            " Echo the message after entering a file, useful for
+            " when we're entering a file (like on SwapExists)
+            " and our echo will be eaten.
+            autocmd BufWinEnter * echohl WarningMsg
+            exec 'autocmd BufWinEnter * echon "\r'.printf("%-60s", a:message).'"'
+            autocmd BufWinEnter * echohl NONE
+
+            " Remove these auto commands so that they don't run on entering the next buffer.
+            autocmd BufWinEnter * augroup EchoSwapMessage
+            autocmd BufWinEnter * autocmd!
+            autocmd BufWinEnter * augroup END
+        augroup END
+    endif
+endfunction
 " }}}
 " Indentation options {{{
 
