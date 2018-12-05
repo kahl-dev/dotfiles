@@ -2,10 +2,10 @@ if which tmux &> /dev/null; then
   plugins+=(tmux)
 
   # Attach or create tmux base session
-  alias tmuxm='tmux attach -t base || tmux new -s base'
+  alias tmuxm='tmux attach -t main || tmux new -s main'
 
   # Update ssh session for tmux
-  alias tmuxssh="eval $(tmux show-env -s |grep '^SSH_')"
+  alias tmuxssh='eval $(tmux show-env -s |grep "^SSH_")'
 
   # TODO: Check which server
   #if [ "$(uname 2> /dev/null)" = "Linux" ]; then
