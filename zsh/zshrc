@@ -17,7 +17,7 @@ after_init=()
 # Add wisely, as too many plugins slow down shell startup.
 plugins=()
 
-for file in $(find $DOTFILES/zsh/settings -type f); do
+for file in $(find $DOTFILES/zsh/settings -type f | sort -n); do
   source "$file";
 done
 
