@@ -1,8 +1,8 @@
 # linux only
 if [ "$(uname 2> /dev/null)" = "Linux" ] && [ -d "$HOME/.linuxbrew" ]; then
 
-  export PATH="$HOME/.linuxbrew/bin:$PATH"
-  export MANPATH="$(brew --prefix)/share/man:$MANPATH"
+  PATH="$HOME/.linuxbrew/bin:$PATH"
+  MANPATH="$(brew --prefix)/share/man:$MANPATH"
   export INFOPATH="$(brew --prefix)/share/info:$INFOPATH"
   HOMEBREW_BUILD_FROM_SOURCE=1
 

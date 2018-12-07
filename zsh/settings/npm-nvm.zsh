@@ -1,53 +1,24 @@
 lazynvm() {
-  export NVM_DIR="$HOME/.nvm"
-  export PATH=$NVM_DIR/versions/node/global/bin:$PATH
-  export MANPATH=$NVM_DIR/versions/node/global/share/man:$MANPATH
-
   if [[ -f /usr/local/opt/nvm/nvm.sh ]]; then
-    . /usr/local/opt/nvm/nvm.sh
-  elif [[ -f $NVM_DIR/nvm.sh ]]; then
-    . $NVM_DIR/nvm.sh
+    source /usr/local/opt/nvm/nvm.sh
+  elif [[ -f $(brew --prefix nvm)/nvm.sh ]]; then
+    source $(brew --prefix nvm)/nvm.sh
   fi
 }
 
-# Check if 'nvm' is a command in $PATH
-nvm() {
-  unfunction "$0"
-  lazynvm()
-  nvm "$@"
-}
+MANPATH=$NVM_DIR/versions/node/global/share/man:$MANPATH
+PATH=$NVM_DIR/versions/node/global/bin:$PATH
+export NVM_DIR=$HOME/.nvm
+node() { unfunction node npm npx && lazynvm && `whence -p node` $* }
+npm() { unfunction node npm npx && lazynvm && `whence -p npm` $* }
+npx() { unfunction node npm npx && lazynvm && `whence -p npx` $* }
+nvm() { lazynvm && nvm $* }
 
 NODE_MODULES="${HOME}/.node_modules"
-PATH="$PATH:$NODE_MODULES/bin"
+PATH=$NODE_MODULES/bin:$PATH
 
 # Unset manpath so we can inherit from /etc/manpath via the `manpath` command
-unset MANPATH
-export MANPATH="$NODE_MODULES/share/man:$(manpath)"
-
-npm() {
-  unfunction "$0"
-  lazynvm()
-
-  npm "$@"
-}
-
-yarn() {
-  unfunction "$0"
-  lazynvm()
-  yarn $@
-}
-
-node() {
-  unfunction "$0"
-  lazynvm()
-  node $@
-}
-
-npx() {
-  unfunction "$0"
-  lazynvm()
-  npx $@
-}
+MANPATH=$NODE_MODULES/share/man:$MANPATH
 
 # nvm completion
 . $(brew --prefix)/etc/bash_completion.d/nvm

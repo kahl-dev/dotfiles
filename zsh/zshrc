@@ -17,6 +17,9 @@ after_init=()
 # Add wisely, as too many plugins slow down shell startup.
 plugins=()
 
+unset MANPATH
+MANPATH=$(manpath)
+
 for file in $(find $DOTFILES/zsh/settings -type f | sort -n); do
   source "$file";
 done
@@ -27,6 +30,8 @@ source $ZSH/oh-my-zsh.sh
 #  Set highlight styles for plugin
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=250'
 
+export MANPATH
+export NODE_MODULES
 export PATH
 
 # Init functions in array
