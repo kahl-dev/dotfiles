@@ -1,3 +1,5 @@
+execute 'packadd ale'
+
 let g:ale_fixers = {
   \   '*':          [ 'remove_trailing_lines', 'trim_whitespace' ],
   \   'javascript': [ 'prettier', 'eslint'],
@@ -17,7 +19,6 @@ let g:ale_pattern_options = {
 let g:airline#extensions#ale#enabled = 1
 let g:ale_fix_on_save = 1
 let g:ale_cache_executable_check_failures = 1
-:packadd ale
 
 " Change dir to git root
 function! s:ALEToggleFixOnSave()
