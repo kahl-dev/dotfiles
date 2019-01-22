@@ -155,3 +155,6 @@
 [submodule "vim/pack/bundle/start/xml.vim"]
 	path = vim/pack/bundle/start/xml.vim
 	url = git@github.com:othree/xml.vim.git
+[submodule "vim/pack/bundle/start/ale"]
+	path = vim/pack/bundle/start/ale
+	url = git@github.com:w0rp/ale.git
