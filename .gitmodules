@@ -156,3 +156,6 @@
 [submodule "vim/pack/bundle/start/vim-signify"]
 	path = vim/pack/bundle/start/vim-signify
 	url = git@github.com:mhinz/vim-signify.git
+[submodule "vim/pack/bundle/start/xml.vim"]
+	path = vim/pack/bundle/start/xml.vim
+	url = git@github.com:othree/xml.vim.git
