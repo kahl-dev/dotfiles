@@ -42,7 +42,8 @@ function! s:ALEToggleFixOnSave()
     let g:ale_fix_on_save = 1
   endif
 
-  echo 'Change ale_fix_on_save to: '.g:ale_fix_on_save
+  echo 'Toggle ale fix on save to: '.g:ale_fix_on_save
 endfunction
 
 command! ALEToggleFixOnSave call s:ALEToggleFixOnSave()
+nnoremap <leader>a :ALEToggleFixOnSave<CR>
