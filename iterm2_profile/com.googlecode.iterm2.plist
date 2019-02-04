@@ -268,11 +268,11 @@
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>530 476 620 392 0 0 1680 1027 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>519 438 918 512 0 0 1680 1027 </string>
+	<string>-731 1530 1016 512 -1212 900 1920 1177 </string>
 	<key>NSWindow Frame UKCrashReporter</key>
 	<string>0 443 592 584 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>23 21 1634 984 0 0 1680 1027 </string>
+	<string>-1189 927 1874 1124 -1212 900 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>-1192 927 1879 1124 -1212 900 1920 1177 </string>
 	<key>New Bookmarks</key>
@@ -669,13 +669,6 @@
 					<key>Text</key>
 					<string>[1;2A</string>
 				</dict>
-				<key>0xf700-0x240000</key>
-				<dict>
-					<key>Action</key>
-					<integer>10</integer>
-					<key>Text</key>
-					<string>[1;5A</string>
-				</dict>
 				<key>0xf700-0x260000</key>
 				<dict>
 					<key>Action</key>
@@ -696,13 +689,6 @@
 					<integer>10</integer>
 					<key>Text</key>
 					<string>[1;2B</string>
-				</dict>
-				<key>0xf701-0x240000</key>
-				<dict>
-					<key>Action</key>
-					<integer>10</integer>
-					<key>Text</key>
-					<string>[1;5B</string>
 				</dict>
 				<key>0xf701-0x260000</key>
 				<dict>
@@ -915,7 +901,7 @@
 			<key>Non-ASCII Ligatures</key>
 			<false/>
 			<key>Normal Font</key>
-			<string>DroidSansMonoNerdFontComplete- 11</string>
+			<string>DroidSansMonoNerdFontComplete- 12</string>
 			<key>Only The Default BG Color Uses Transparency</key>
 			<false/>
 			<key>Option Key Sends</key>
@@ -1079,7 +1065,7 @@
 			<key>Thin Strokes</key>
 			<integer>3</integer>
 			<key>Transparency</key>
-			<real>0.10984097398477158</real>
+			<real>0.061603743654822331</real>
 			<key>Triggers</key>
 			<array/>
 			<key>Unicode Version</key>
@@ -1753,7 +1739,7 @@
 			<key>Non-ASCII Ligatures</key>
 			<false/>
 			<key>Normal Font</key>
-			<string>DroidSansMonoNerdFontComplete- 12</string>
+			<string>DroidSansMonoNerdFontComplete- 13</string>
 			<key>Only The Default BG Color Uses Transparency</key>
 			<false/>
 			<key>Option Key Sends</key>
@@ -1917,7 +1903,7 @@
 			<key>Thin Strokes</key>
 			<integer>3</integer>
 			<key>Transparency</key>
-			<real>0.11044773159898477</real>
+			<real>0.065422747461928943</real>
 			<key>Triggers</key>
 			<array/>
 			<key>Unicode Version</key>
@@ -2038,7 +2024,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-01-16T10:50:35Z</date>
+	<date>2019-02-03T02:52:11Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>
