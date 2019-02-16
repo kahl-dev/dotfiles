@@ -34,6 +34,17 @@
 
   // VIM
   "vim.leader": ",",
+  "vim.normalModeKeyBindings": [
+    {
+      "before": ["<leader>", "tab"],
+      "after": [],
+      "commands": [
+        {
+          "command": "workbench.action.nextEditor"
+        }
+      ]
+    }
+  ],
   "vim.useSystemClipboard": true,
   "vim.insertModeKeyBindings": [
     {
@@ -59,9 +70,7 @@
     {
       "before": ["<CR>"],
       "commands": [":nohlsearch<cr>"]
-    }
-  ],
-  "vim.normalModeKeyBindingsNonRecursive": [
+    },
     {
       "before": [":"],
       "commands": ["workbench.action.showCommands"]
@@ -76,6 +85,5 @@
     "statusBar.noFolderBackground": "#8FBCBB",
     "statusBar.debuggingBackground": "#8FBCBB",
     "statusBar.foreground": "#434C5E"
-  },
-  "vim.debug.loggingLevel": "debug"
+  }
 }
