@@ -5,7 +5,7 @@ if which fzf &> /dev/null; then
   if which fd &> /dev/null; then
 
     # Setting fd as the default source for fzf
-    export FZF_DEFAULT_COMMAND='fd --type f'
+    export FZF_DEFAULT_COMMAND='fd --hidden --exclude '.git' --type f'
   fi
 
   initFzf() {
