@@ -23,9 +23,11 @@ MANPATH=$NODE_MODULES/share/man:$MANPATH
 # nvm completion
 . $(brew --prefix)/etc/bash_completion.d/nvm
 
+npm config set prefix $(nvm which 11)/../../
+
 # npm list without dependencies
 alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
 alias npmLsg="npm ls -g --depth=0 "$@" 2>/dev/null"
 
-alias npmid='npm install -g yarn yarn-completions grunt prettier vue-cli tldr diff-so-fancy yo generator-alfred eslint eslint-plugin-vue serve'
-alias npmida='npm install -g alfred-tyme alfred-bitly alfred-updater alfred-notifier alfred-polyglot alfred-fkill alfred-coolors alfred-npms alfred-hl'
+alias npmid='npm install -g yarn yarn-completions npm-check grunt prettier vue-cli tldr diff-so-fancy yo generator-alfred eslint eslint-plugin-vue serve'
+alias npmida='npm install -g alfred-tyme alfred-bitly alfred-updater alfred-notifier alfred-polyglot alfred-fkill alfred-coolors alfred-hl'
