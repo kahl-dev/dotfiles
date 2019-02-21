@@ -12,6 +12,8 @@ if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
 
   # Add markdownreader app
   alias marked='open -a "Marked 2"'
+
+  alias vim='mvim -v'
 fi
 
 # Open better manual/help than man
