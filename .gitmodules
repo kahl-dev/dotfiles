@@ -154,3 +154,6 @@
 [submodule "vim/pack/bundle/start/ale"]
 	path = vim/pack/bundle/start/ale
 	url = git@github.com:w0rp/ale.git
+[submodule "vim/pack/bundle/start/base16-shell"]
+	path = vim/pack/bundle/start/base16-shell
+	url = git@github.com:chriskempson/base16-shell.git
