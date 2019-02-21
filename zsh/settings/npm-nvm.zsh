@@ -23,7 +23,11 @@ MANPATH=$NODE_MODULES/share/man:$MANPATH
 # nvm completion
 . $(brew --prefix)/etc/bash_completion.d/nvm
 
-npm config set prefix $(nvm which 11)/../../
+if [ $(hostname) = "typo3-dev" ]; then
+  npm config set prefix $(nvm which 6)/../../
+else
+  npm config set prefix $(nvm which 11)/../../
+fi
 
 # npm list without dependencies
 alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
