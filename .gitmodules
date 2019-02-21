@@ -153,3 +153,6 @@
 [submodule "zsh/custom/plugins/base16-shell"]
 	path = zsh/custom/plugins/base16-shell
 	url = git@github.com:chriskempson/base16-shell.git
+[submodule "vim/pack/bundle/start/base16-vim"]
+	path = vim/pack/bundle/start/base16-vim
+	url = git@github.com:danielwe/base16-vim.git
