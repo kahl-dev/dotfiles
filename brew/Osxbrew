@@ -48,6 +48,7 @@ cask "caffeine"
 #mas "colorsnapper"
 cask "teamviewer"
 cask "numi"
+cask "nightowl"
 
 # chats & socialmedia
 cask "skype"
