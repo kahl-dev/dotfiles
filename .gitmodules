@@ -156,3 +156,6 @@
 [submodule "vim/pack/bundle/start/base16-vim"]
 	path = vim/pack/bundle/start/base16-vim
 	url = git@github.com:danielwe/base16-vim.git
+[submodule "vim/pack/bundle/start/vim-easymotion"]
+	path = vim/pack/bundle/start/vim-easymotion
+	url = git@github.com:easymotion/vim-easymotion.git
