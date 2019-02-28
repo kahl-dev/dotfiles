@@ -159,3 +159,6 @@
 [submodule "vim/pack/bundle/start/vim-easymotion"]
 	path = vim/pack/bundle/start/vim-easymotion
 	url = git@github.com:easymotion/vim-easymotion.git
+[submodule "vim/pack/bundle/start/tabnine-vim"]
+	path = vim/pack/bundle/start/tabnine-vim
+	url = git@github.com:zxqfl/tabnine-vim.git
