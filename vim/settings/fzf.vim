@@ -11,6 +11,7 @@ nnoremap <silent> <C-f>f :FZF -m<cr>
 nnoremap <silent> <C-f>g :GFiles<cr>
 nnoremap <silent> <C-f>s :GFiles?<cr>
 nnoremap <silent> <C-f>b :Buffers<cr>
+nnoremap <silent> <leader>bb :Buffers<cr>
 nnoremap <silent> <C-f>l :Lines<cr>
 nnoremap <silent> <C-f>h :History<cr>
 nnoremap <silent> <C-f>u :Snippets<cr>

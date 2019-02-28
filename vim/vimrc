@@ -66,6 +66,8 @@ if has("clipboard")
 endif
 
 set lazyredraw                    " redraw only when we need to
+set synmaxcol=128
+syntax sync minlines=128
 set autoread                      " reload files changed outside vim
 set incsearch                     " start search on type
 set ignorecase                    " case insensitive search
@@ -78,7 +80,7 @@ set t_vb=                         " reset terminal code for visual bell
 set t_RV=                         " fix first line on load // bugfix for hyper
 set number                        " show line numbers
 set relativenumber                " show relative numbers
-set cursorline                    " highlight cursor line
+" set cursorline                    " highlight cursor line
 set scrolloff=10                  " min numbers above and below cursor
 set cmdheight=2                   " command window height to 2
 set pastetoggle=<F10>             " toggle paste mode
@@ -222,7 +224,10 @@ nnoremap gV `[v`]
 let mapleader=","
 
 " toggle to next buffer
-nnoremap <leader><tab> :bnext<CR>
+" nnoremap <leader><tab> :bnext<CR>
+" https://stackoverflow.com/questions/5559029/quickly-switching-buffers-in-vim-normal-mode#answer-43399389
+nnoremap <leader>bb :buffers<cr>:b<space>
+nnoremap <leader><tab> :b#<cr>
 
 " edit vimrc/zshrc and load vimrc bindings
 nnoremap <leader>ev :vsp $MYVIMRC<CR>
