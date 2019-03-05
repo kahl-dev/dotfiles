@@ -6,19 +6,20 @@ lazynvm() {
   fi
 }
 
+export NVM_DIR=$HOME/.nvm
 MANPATH=$NVM_DIR/versions/node/global/share/man:$MANPATH
 PATH=$NVM_DIR/versions/node/global/bin:$PATH
-export NVM_DIR=$HOME/.nvm
+
 node() { unfunction node npm npx && lazynvm && `whence -p node` $* }
 npm() { unfunction node npm npx && lazynvm && `whence -p npm` $* }
 npx() { unfunction node npm npx && lazynvm && `whence -p npx` $* }
 nvm() { lazynvm && nvm $* }
 
-# NODE_MODULES="${HOME}/.node_modules"
-# PATH=$NODE_MODULES/bin:$PATH
+NODE_MODULES="${HOME}/.node_modules"
+PATH=$NODE_MODULES/bin:$PATH
 
 # Unset manpath so we can inherit from /etc/manpath via the `manpath` command
-# MANPATH=$NODE_MODULES/share/man:$MANPATH
+MANPATH=$NODE_MODULES/share/man:$MANPATH
 
 # nvm completion
 . $(brew --prefix)/etc/bash_completion.d/nvm
