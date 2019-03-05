@@ -71,6 +71,7 @@ cask "visual-studio-code"
 #mas "Marked 2", id: 890031187
 #mas "Xcode", id: 497799835
 brew "speedtest-cli"
+cask "sequel-pro"
 
 # image
 #cask "skitch"
