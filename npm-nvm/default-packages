@@ -1,4 +1,6 @@
 yarn
+yarn-completions
+npm-check
 grunt
 prettier
 vue-cli
@@ -6,3 +8,6 @@ tldr
 diff-so-fancy
 yo
 generator-alfred
+eslint
+eslint-plugin-vue
+serve
