@@ -17,7 +17,7 @@ let g:ale_fixers = {
 \}
 
 " Fix files on save
-let g:ale_fix_on_save = 0
+let g:ale_fix_on_save = 1
 
 " Do not lint or fix minified files.
 let g:ale_pattern_options = {
