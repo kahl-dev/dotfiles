@@ -26,10 +26,6 @@
 	path = zsh/custom/plugins/zsh-nvm
 	url = git@github.com:lukechilds/zsh-nvm.git
   ignore = dirty
-[submodule "zsh/custom/themes/powerlevel9k"]
-	path = zsh/custom/themes/powerlevel9k
-	url = git@github.com:bhilburn/powerlevel9k.git
-  ignore = dirty
 [submodule "zsh/custom/plugins/zsh-better-npm-completion"]
 	path = zsh/custom/plugins/zsh-better-npm-completion
 	url = git@github.com:lukechilds/zsh-better-npm-completion.git
@@ -162,3 +158,6 @@
 [submodule "vim/pack/bundle/start/tabnine-vim"]
 	path = vim/pack/bundle/start/tabnine-vim
 	url = git@github.com:zxqfl/tabnine-vim.git
+[submodule "zsh/custom/themes/powerlevel9k"]
+	path = zsh/custom/themes/powerlevel9k
+	url = git@github.com:bhilburn/powerlevel9k.git
