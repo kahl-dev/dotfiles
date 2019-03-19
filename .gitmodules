@@ -137,27 +137,36 @@
 [submodule "vim/pack/bundle/start/supertab"]
 	path = vim/pack/bundle/start/supertab
 	url = git@github.com:ervandew/supertab.git
+  ignore = dirty
 [submodule "vim/pack/bundle/start/vim-signify"]
 	path = vim/pack/bundle/start/vim-signify
 	url = git@github.com:mhinz/vim-signify.git
+  ignore = dirty
 [submodule "vim/pack/bundle/start/xml.vim"]
 	path = vim/pack/bundle/start/xml.vim
 	url = git@github.com:othree/xml.vim.git
+  ignore = dirty
 [submodule "vim/pack/bundle/start/ale"]
 	path = vim/pack/bundle/start/ale
 	url = git@github.com:w0rp/ale.git
+  ignore = dirty
 [submodule "zsh/custom/plugins/base16-shell"]
 	path = zsh/custom/plugins/base16-shell
 	url = git@github.com:chriskempson/base16-shell.git
+  ignore = dirty
 [submodule "vim/pack/bundle/start/base16-vim"]
 	path = vim/pack/bundle/start/base16-vim
 	url = git@github.com:danielwe/base16-vim.git
+  ignore = dirty
 [submodule "vim/pack/bundle/start/vim-easymotion"]
 	path = vim/pack/bundle/start/vim-easymotion
 	url = git@github.com:easymotion/vim-easymotion.git
+  ignore = dirty
 [submodule "vim/pack/bundle/start/tabnine-vim"]
 	path = vim/pack/bundle/start/tabnine-vim
 	url = git@github.com:zxqfl/tabnine-vim.git
+  ignore = dirty
 [submodule "zsh/custom/themes/powerlevel9k"]
 	path = zsh/custom/themes/powerlevel9k
 	url = git@github.com:bhilburn/powerlevel9k.git
+  ignore = dirty
