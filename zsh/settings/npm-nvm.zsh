@@ -21,8 +21,10 @@ PATH=$NODE_MODULES/bin:$PATH
 # Unset manpath so we can inherit from /etc/manpath via the `manpath` command
 MANPATH=$NODE_MODULES/share/man:$MANPATH
 
+
 # nvm completion
 . $(brew --prefix)/etc/bash_completion.d/nvm
+source $(brew --prefix nvm)/nvm.sh
 
 # if [ $(hostname) = "typo3-dev" ]; then
 #   npm config set prefix $(nvm which 6)/../../
