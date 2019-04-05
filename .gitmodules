@@ -106,10 +106,6 @@
 	path = vim/pack/bundle/start/gundo.vim
 	url = git@github.com:sjl/gundo.vim.git
   ignore = dirty
-[submodule "vim/pack/bundle/start/ultisnips"]
-	path = vim/pack/bundle/start/ultisnips
-	url = git@github.com:SirVer/ultisnips.git
-  ignore = dirty
 [submodule "vim/pack/bundle/start/vim-tmux-navigator"]
 	path = vim/pack/bundle/start/vim-tmux-navigator
 	url = git@github.com:christoomey/vim-tmux-navigator.git
@@ -133,10 +129,6 @@
 [submodule "vim/pack/bundle/start/tcomment_vim"]
 	path = vim/pack/bundle/start/tcomment_vim
 	url = git@github.com:tomtom/tcomment_vim.git
-  ignore = dirty
-[submodule "vim/pack/bundle/start/supertab"]
-	path = vim/pack/bundle/start/supertab
-	url = git@github.com:ervandew/supertab.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-signify"]
 	path = vim/pack/bundle/start/vim-signify
