@@ -1,7 +1,7 @@
 if which tmux &> /dev/null; then
   plugins+=(tmux)
 
-  ZSH_TMUX_AUTOSTART=true
+  # ZSH_TMUX_AUTOSTART=true
 
   # Attach or create tmux base session
   alias tmuxm='tmux attach -t main || tmux new -s main'
