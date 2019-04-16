@@ -2,7 +2,8 @@
 # https://github.com/junegunn/fzf
 if which fzf &> /dev/null; then
 
-  export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude ".git"'
+  export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!{.git,node_modules}/*"'
+
 
   initFzf() {
     [ ! -f ~/.fzf.zsh ] && $(brew --prefix)/opt/fzf/install
