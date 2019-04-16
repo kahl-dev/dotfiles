@@ -67,7 +67,6 @@ endif
 
 set lazyredraw                    " redraw only when we need to
 set synmaxcol=128
-syntax sync minlines=128
 set autoread                      " reload files changed outside vim
 set incsearch                     " start search on type
 set ignorecase                    " case insensitive search
@@ -85,6 +84,11 @@ set scrolloff=10                  " min numbers above and below cursor
 set cmdheight=2                   " command window height to 2
 set pastetoggle=<F10>             " toggle paste mode
 autocmd VimResized * wincmd =     " Adjust vim size on resize
+
+augroup vimrc
+   autocmd!
+   autocmd BufWinEnter,Syntax * syn sync minlines=50 maxlines=50
+ augroup END
 
 " }}}
 " Undo/Backups {{{
