@@ -94,6 +94,10 @@ if which fzf &> /dev/null; then
       done
     }
 
+    f_add() {
+      git ls-files -m -o --exclude-standard | fzf -m --print0 | xargs -0 -o -t git add
+    }
+
     f() {
       local cmd=$1
       "f_$cmd"
