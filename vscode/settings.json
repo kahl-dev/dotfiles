@@ -72,18 +72,22 @@
       "commands": [":nohlsearch<cr>"]
     },
     {
-      "before": [":"],
-      "commands": ["workbench.action.showCommands"]
-    },
-    {
       "before": ["Z", "Z"],
       "commands": [":wq"]
+    },
+    {
+      "before": [":", "w"],
+      "commands": ["workbench.action.files.save"]
     }
   ],
+  "workbench.editor.enablePreview": false,
   "workbench.colorCustomizations": {
     "statusBar.background": "#8FBCBB",
     "statusBar.noFolderBackground": "#8FBCBB",
     "statusBar.debuggingBackground": "#8FBCBB",
     "statusBar.foreground": "#434C5E"
-  }
+  },
+  "terminal.external.osxExec": "iTerm.app",
+  "terminal.integrated.shellArgs.osx": [],
+  "window.zoomLevel": 0
 }
