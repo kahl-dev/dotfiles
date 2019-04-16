@@ -7,7 +7,12 @@ elseif has("unix")
   execute 'set rtp+='.fnamemodify(systemlist('greadlink -f $(which fzf)')[0], ':h:h')
 endif
 
-nnoremap <silent> <C-f>f :FZF -m<cr>
+
+" Likewise, Files command with preview window
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+nnoremap <silent> <C-f>f :Files<cr>
 nnoremap <silent> <C-f>g :GFiles<cr>
 nnoremap <silent> <C-f>s :GFiles?<cr>
 nnoremap <silent> <C-f>b :Buffers<cr>
@@ -50,6 +55,13 @@ command! -bang -nargs=* Ag
   \                 <bang>0 ? fzf#vim#with_preview('up:60%')
   \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
   \                 <bang>0)
+
+let $BAT_THEME = 'Monokai Extended'
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep('rg --column --no-heading --line-number --color=always '.shellescape(<q-args>),
+  \ 1,
+  \ fzf#vim#with_preview(),
+  \ <bang>0)
 
 " }}}
 endif
