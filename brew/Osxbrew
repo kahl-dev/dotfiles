@@ -13,6 +13,7 @@ cask "vlc"
 #mas "PiPifier", id: 1160374471
 
 # tools
+brew "ripgrep"
 brew "mongodb"
 brew "reattach-to-user-namespace"
 #brew "tree"

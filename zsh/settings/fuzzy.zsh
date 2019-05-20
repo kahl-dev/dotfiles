@@ -2,8 +2,12 @@
 # https://github.com/junegunn/fzf
 if which fzf &> /dev/null; then
 
-  export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!{.git,node_modules}/*"'
+  if which rg &> /dev/null; then
+    export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!{.git,node_modules}/*"'
 
+  elif which ag &> /dev/null; then
+    export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
+  fi
 
   initFzf() {
     [ ! -f ~/.fzf.zsh ] && $(brew --prefix)/opt/fzf/install

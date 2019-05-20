@@ -1,11 +1,10 @@
 brew "z"
-brew "git", args:["without-completions"]
+brew "git"
 brew "git-extras"
-brew "vim", args:["with-python3"]
+brew "vim"
 brew "tmux"
 brew "the_silver_searcher"
 brew "fzf"
-brew "ripgrep"
 brew "cmake"
 brew "nvm"
 brew "bat"

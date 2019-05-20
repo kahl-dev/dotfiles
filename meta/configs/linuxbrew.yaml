@@ -1,5 +1,5 @@
 - shell:
-  - command: if ! $(brew --version > /dev/null); then git clone https://github.com/Linuxbrew/brew.git ~/.linuxbrew; fi
+  - command: if ! $(which brew > /dev/null); then . $DOTFILES/sh/linuxbrew.sh; fi
 
 - brewfile:
     - brew/Basebrew

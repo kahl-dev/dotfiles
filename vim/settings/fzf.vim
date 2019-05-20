@@ -4,7 +4,7 @@ if executable('fzf')
 if has("mac")
   set rtp+=/usr/local/opt/fzf
 elseif has("unix")
-  execute 'set rtp+='.fnamemodify(systemlist('greadlink -f $(which fzf)')[0], ':h:h')
+  set rtp+=/home/kahl/.linuxbrew/opt/fzf
 endif
 
 let g:fzf_action = {
