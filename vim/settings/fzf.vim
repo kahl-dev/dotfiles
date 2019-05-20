@@ -16,19 +16,19 @@ let g:fzf_action = {
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 
-nnoremap <silent> <C-f>f :Files<cr>
-nnoremap <silent> <C-f>b :Buffers<cr>
-nnoremap <silent> <C-f>l :Lines<cr>
-nnoremap <silent> <C-f>h :FZFMru<cr>
-nnoremap <silent> <C-f>t :Filetypes<cr>
+nnoremap <silent> <leader>ff :Files<cr>
+nnoremap <silent> <leader>fb :Buffers<cr>
+nnoremap <silent> <leader>fl :Lines<cr>
+nnoremap <silent> <leader>fh :FZFMru<cr>
+nnoremap <silent> <leader>ft :Filetypes<cr>
 
-nnoremap <silent> <C-g>f :GFiles<cr>
-nnoremap <silent> <C-g>b :BCommits<cr>
-nnoremap <silent> <C-g>c :Commits<cr>
-nnoremap <silent> <C-f>s :GFiles?<cr>
+nnoremap <silent> <leader>gf :GFiles<cr>
+nnoremap <silent> <leader>gb :BCommits<cr>
+nnoremap <silent> <leader>gc :Commits<cr>
+nnoremap <silent> <leader>fs :GFiles?<cr>
 
-nnoremap <silent> <C-f>a :Ag!<cr>
-nnoremap <silent> <C-f>r :Rg<cr>
+nnoremap <silent> <leader>fa :Ag!<cr>
+nnoremap <silent> <leader>fr :Rg<cr>
 
 command! FZFMru call fzf#run({
 \ 'source':  reverse(s:all_files()),
@@ -55,4 +55,8 @@ command! -bang -nargs=* Ag
   \                 <bang>0)
 
 " }}}
+
+command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
+  \ {'source': 'find '.(empty(<f-args>) ? '.' : <f-args>).' -type d',
+  \  'sink': 'cd'}))
 endif
