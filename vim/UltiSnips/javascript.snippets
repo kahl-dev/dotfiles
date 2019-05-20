@@ -1,21 +1,21 @@
 # Outputs a message to the Web Console.
-snippet console.log "console.log(...)" b
-console.log($0);
+snippet cl "console.log(...)" b
+console.log($0)
 endsnippet
 
 # Displays an interactive list of the properties of the specified JavaScript
 # object. The output is presented as a hierarchical listing with disclosure
 # triangles that let you see the contents of child objects.
-snippet console.dir "console.dir(object);" b
-console.dir($0);
+snippet cd "console.dir(object);" b
+console.dir($0)
 endsnippet
 
 # Creates a new inline group in the Web Console log. This indents following
 # console messages by an additional level, until console.groupEnd() is called.
-snippet console.group "console.group([label]);" b
-console.group('$1');
+snippet cg "console.group([label]);" b
+console.group('$1')
 $2
-console.groupEnd('$1');
+console.groupEnd('$1')
 endsnippet
 
 # Creates a new inline group in the Web Console. Unlike console.group(),
@@ -23,22 +23,22 @@ endsnippet
 # disclosure button next to it to expand it, revealing the entries created in
 # the group.
 snippet console.groupCollapsed "console.groupCollapsed([label]);" b
-console.groupCollapsed('$1');
+console.groupCollapsed('$1')
 $2
-console.groupEnd('$1');
+console.groupEnd('$1')
 endsnippet
 
 # Outputs a stack trace to the Web Console.
 snippet console.trace "console.trace();" b
-console.trace();
+console.trace()
 endsnippet
 
 # Starts a timer you can use to track how long an operation takes. You give
 # each timer a unique name, and may have up to 10,000 timers running on a given
 # page. When you call console.timeEnd() with the same name, the browser will
 # output the time, in milliseconds, that elapsed since the timer was started.
-snippet console.time "console.time(label);"
-console.time('$1');
+snippet ct "console.time(label);"
+console.time('$1')
 $2
-console.timeEnd('$1');
+console.timeEnd('$1')
 endsnippet

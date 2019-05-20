@@ -210,11 +210,11 @@ cnoremap jk <C-c>
 command! W :w
 
 " Movement in insert mode
-inoremap <C-h> <C-o>h
-inoremap <C-l> <C-o>a
-inoremap <C-j> <C-o>j
-inoremap <C-k> <C-o>k
-inoremap <C-^> <C-o><C-^>
+" inoremap <C-h> <C-o>h
+" inoremap <C-l> <C-o>a
+" inoremap <C-j> <C-o>j
+" inoremap <C-k> <C-o>k
+" inoremap <C-^> <C-o><C-^>
 
 nnoremap <CR> :nohlsearch<cr>
 
@@ -227,16 +227,17 @@ nnoremap gV `[v`]
 " set leader key
 let mapleader=","
 
-" toggle to next buffer
-" nnoremap <leader><tab> :bnext<CR>
-" https://stackoverflow.com/questions/5559029/quickly-switching-buffers-in-vim-normal-mode#answer-43399389
-nnoremap <leader>bb :buffers<cr>:b<space>
-nnoremap <leader><tab> :b#<cr>
+" edit vimrc/zshrc and jload vimrc bindings
+nnoremap <leader>ve :vsp $MYVIMRC<CR>
+nnoremap <leader>vs :source $MYVIMRC<CR>
 
-" edit vimrc/zshrc and load vimrc bindings
-nnoremap <leader>ev :vsp $MYVIMRC<CR>
-nnoremap <leader>ez :vsp ~/.zshrc<CR>
-nnoremap <leader>sv :source $MYVIMRC<CR>
+nnoremap <C-n> :bn<CR>
+nnoremap <C-p> :bp<CR>
+
+" }}}
+" File types {{{
+
+autocmd FileType vue UltiSnipsAddFiletypes javascript
 
 " }}}
 " }}}
