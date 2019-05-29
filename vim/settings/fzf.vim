@@ -25,7 +25,7 @@ nnoremap <silent> <leader>ft :Filetypes<cr>
 nnoremap <silent> <leader>gf :GFiles<cr>
 nnoremap <silent> <leader>gb :BCommits<cr>
 nnoremap <silent> <leader>gc :Commits<cr>
-nnoremap <silent> <leader>fs :GFiles?<cr>
+nnoremap <silent> <leader>gs :GFiles?<cr>
 
 nnoremap <silent> <leader>fa :Ag!<cr>
 nnoremap <silent> <leader>fr :Rg<cr>
