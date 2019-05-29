@@ -165,3 +165,9 @@
 [submodule "vim/pack/bundle/start/ultisnip"]
 	path = vim/pack/bundle/start/ultisnip
 	url = git@github.com:SirVer/ultisnips.git
+[submodule "vim/pack/bundle/start/FastFold"]
+	path = vim/pack/bundle/start/FastFold
+	url = git@github.com:Konfekt/FastFold.git
+[submodule "vim/pack/bundle/start/vim-stay"]
+	path = vim/pack/bundle/start/vim-stay
+	url = git@github.com:zhimsel/vim-stay.git
