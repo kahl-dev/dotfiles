@@ -6,7 +6,7 @@ lazynvm() {
   fi
 }
 
-export NVM_DIR=$HOME/.nvm
+# export NVM_DIR=$HOME/.nvm
 MANPATH=$NVM_DIR/versions/node/global/share/man:$MANPATH
 PATH=$NVM_DIR/versions/node/global/bin:$PATH
 
@@ -15,22 +15,19 @@ npm() { unfunction node npm npx && lazynvm && `whence -p npm` $* }
 npx() { unfunction node npm npx && lazynvm && `whence -p npx` $* }
 nvm() { lazynvm && nvm $* }
 
-NODE_MODULES="${HOME}/.node_modules"
-PATH=$NODE_MODULES/bin:$PATH
-
-# Unset manpath so we can inherit from /etc/manpath via the `manpath` command
-MANPATH=$NODE_MODULES/share/man:$MANPATH
-
-
 # nvm completion
 . $(brew --prefix)/etc/bash_completion.d/nvm
-source $(brew --prefix nvm)/nvm.sh
+# source $(brew --prefix nvm)/nvm.sh
 
-# if [ $(hostname) = "typo3-dev" ]; then
-#   npm config set prefix $(nvm which 6)/../../
-# else
-#   npm config set prefix $(nvm which 11)/../../
-# fi
+# Set default nvm alias as global npm prefix
+# to prevent loading nvm on shell init
+if [[ -f ~/.nvm/alias/default ]]; then
+  cat ~/.nvm/alias/default | while read line
+  do
+    VERSION="$line"
+    NPM_CONFIG_PREFIX=~/.nvm/versions/node/$VERSION
+  done
+fi
 
 # npm list without dependencies
 alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
