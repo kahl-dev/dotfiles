@@ -276,7 +276,7 @@
 	<key>NSWindow Frame UKCrashReporter</key>
 	<string>-1212 1636 592 584 -1212 1050 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 0 1680 1027 0 0 1680 1027 </string>
+	<string>-1115 1077 1874 1124 -1138 1050 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>-1920 1021 650 426 -1920 411 1920 1177 </string>
 	<key>New Bookmarks</key>
@@ -469,7 +469,7 @@
 			<key>Automatically Log</key>
 			<false/>
 			<key>BM Growl</key>
-			<true/>
+			<false/>
 			<key>Background Color</key>
 			<dict>
 				<key>Blue Component</key>
@@ -921,7 +921,7 @@
 			<key>Screen</key>
 			<integer>-1</integer>
 			<key>Scrollback Lines</key>
-			<integer>0</integer>
+			<integer>10000</integer>
 			<key>Scrollback With Status Bar</key>
 			<false/>
 			<key>Scrollback in Alternate Screen</key>
@@ -1077,7 +1077,7 @@
 			<key>Unicode Version</key>
 			<integer>8</integer>
 			<key>Unlimited Scrollback</key>
-			<true/>
+			<false/>
 			<key>Use Bold Font</key>
 			<true/>
 			<key>Use Bright Bold</key>
@@ -1097,7 +1097,7 @@
 			<key>Vertical Spacing</key>
 			<real>1</real>
 			<key>Visual Bell</key>
-			<true/>
+			<false/>
 			<key>Window Type</key>
 			<integer>12</integer>
 			<key>Working Directory</key>
@@ -1909,7 +1909,7 @@
 			<key>Tags</key>
 			<array/>
 			<key>Terminal Type</key>
-			<string>xterm-256color</string>
+			<string>xterm-256color-italic</string>
 			<key>Thin Strokes</key>
 			<integer>3</integer>
 			<key>Transparency</key>
@@ -1969,7 +1969,7 @@
 	<key>NoSyncLastTipTime</key>
 	<real>576668201.981547</real>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>19</integer>
+	<integer>23</integer>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
@@ -1982,6 +1982,17 @@
 	<false/>
 	<key>NoSyncRecordedVariables</key>
 	<dict>
+		<key>0</key>
+		<array>
+			<dict>
+				<key>isTerminal</key>
+				<true/>
+				<key>name</key>
+				<string></string>
+				<key>nonterminalContext</key>
+				<integer>0</integer>
+			</dict>
+		</array>
 		<key>1</key>
 		<array>
 			<dict>
@@ -2141,6 +2152,14 @@
 				<true/>
 				<key>name</key>
 				<string>tmuxStatusLeft</string>
+				<key>nonterminalContext</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
+				<true/>
+				<key>name</key>
+				<string>tmuxWindowTitleEval</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
 			</dict>
@@ -2343,6 +2362,14 @@
 				<key>isTerminal</key>
 				<true/>
 				<key>name</key>
+				<string>id</string>
+				<key>nonterminalContext</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
+				<true/>
+				<key>name</key>
 				<string>currentTab.currentSession.tty</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
@@ -2466,7 +2493,7 @@
 				<key>isTerminal</key>
 				<true/>
 				<key>name</key>
-				<string>currentSession.pid</string>
+				<string>currentSession</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
 			</dict>
@@ -2490,7 +2517,7 @@
 				<key>isTerminal</key>
 				<true/>
 				<key>name</key>
-				<string>currentSession</string>
+				<string>currentSession.path</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
 			</dict>
@@ -2501,6 +2528,14 @@
 				<string>window</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
+				<false/>
+				<key>name</key>
+				<string>window</string>
+				<key>nonterminalContext</key>
+				<integer>16</integer>
 			</dict>
 			<dict>
 				<key>isTerminal</key>
@@ -2530,7 +2565,7 @@
 				<key>isTerminal</key>
 				<true/>
 				<key>name</key>
-				<string>currentSession.path</string>
+				<string>currentSession.pid</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
 			</dict>
@@ -2641,7 +2676,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-05-22T19:18:26Z</date>
+	<date>2019-06-03T12:09:05Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SUUpdateRelaunchingMarker</key>
@@ -2719,7 +2754,7 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.3.0beta3</string>
+	<string>3.3.0beta9</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>0</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>

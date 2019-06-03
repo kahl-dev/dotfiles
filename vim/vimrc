@@ -26,6 +26,10 @@ set splitbelow                    " on window split put below
 set splitright                    " on window split put on right sote
 set winwidth=110                  " force minimun window width
 
+let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+set termguicolors
+
 " }}}
 " Usability options {{{
 
