@@ -1,14 +1,9 @@
 lazynvm() {
-  if [[ -f /usr/local/opt/nvm/nvm.sh ]]; then
-    source /usr/local/opt/nvm/nvm.sh
-  elif [[ -f $(brew --prefix nvm)/nvm.sh ]]; then
-    source $(brew --prefix nvm)/nvm.sh
-  fi
+  source $(brew --prefix nvm)/nvm.sh
 }
 
-# export NVM_DIR=$HOME/.nvm
+export NVM_DIR=$HOME/.nvm
 MANPATH=$NVM_DIR/versions/node/global/share/man:$MANPATH
-PATH=$NVM_DIR/versions/node/global/bin:$PATH
 
 node() { unfunction node npm npx && lazynvm && `whence -p node` $* }
 npm() { unfunction node npm npx && lazynvm && `whence -p npm` $* }
@@ -26,6 +21,7 @@ if [[ -f ~/.nvm/alias/default ]]; then
   do
     VERSION="$line"
     NPM_CONFIG_PREFIX=~/.nvm/versions/node/$VERSION
+    PATH=$NPM_CONFIG_PREFIX/bin:$PATH
   done
 fi
 
