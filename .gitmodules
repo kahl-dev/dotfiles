@@ -39,27 +39,27 @@
 	url = git@github.com:d12frosted/dotbot-brew.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-airline"]
-	path = vim/pack/bundle/start/vim-airline
+	path = vim/pack/bundle/opt/vim-airline
 	url = git@github.com:vim-airline/vim-airline.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-airline-themes"]
-	path = vim/pack/bundle/start/vim-airline-themes
+	path = vim/pack/bundle/opt/vim-airline-themes
 	url = git@github.com:vim-airline/vim-airline-themes.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/indentLine"]
-	path = vim/pack/bundle/start/indentLine
+	path = vim/pack/bundle/opt/indentLine
 	url = git@github.com:Yggdroot/indentLine.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/editorconfig-vim"]
-	path = vim/pack/bundle/start/editorconfig-vim
+	path = vim/pack/bundle/opt/editorconfig-vim
 	url = git@github.com:editorconfig/editorconfig-vim.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-devicons"]
-	path = vim/pack/bundle/start/vim-devicons
+	path = vim/pack/bundle/opt/vim-devicons
 	url = git@github.com:ryanoasis/vim-devicons.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/ack.vim"]
-	path = vim/pack/bundle/start/ack.vim
+	path = vim/pack/bundle/opt/ack.vim
 	url = git@github.com:mileszs/ack.vim.git
   ignore = dirty
 [submodule "vim/pack/bundle/opt/nerdtree"]
@@ -67,51 +67,51 @@
 	url = git@github.com:scrooloose/nerdtree.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-polyglot"]
-	path = vim/pack/bundle/start/vim-polyglot
+	path = vim/pack/bundle/opt/vim-polyglot
 	url = git@github.com:sheerun/vim-polyglot.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-fugitive"]
-	path = vim/pack/bundle/start/vim-fugitive
+	path = vim/pack/bundle/opt/vim-fugitive
 	url = git@github.com:tpope/vim-fugitive.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/delimitMate"]
-	path = vim/pack/bundle/start/delimitMate
+	path = vim/pack/bundle/opt/delimitMate
 	url = git@github.com:Raimondi/delimitMate.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-trailing-whitespace"]
-	path = vim/pack/bundle/start/vim-trailing-whitespace
+	path = vim/pack/bundle/opt/vim-trailing-whitespace
 	url = git@github.com:bronson/vim-trailing-whitespace.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/emmet-vim"]
-	path = vim/pack/bundle/start/emmet-vim
+	path = vim/pack/bundle/opt/emmet-vim
 	url = git@github.com:mattn/emmet-vim.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-indent-object"]
-	path = vim/pack/bundle/start/vim-indent-object
+	path = vim/pack/bundle/opt/vim-indent-object
 	url = git@github.com:michaeljsmith/vim-indent-object.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-surround"]
-	path = vim/pack/bundle/start/vim-surround
+	path = vim/pack/bundle/opt/vim-surround
 	url = git@github.com:tpope/vim-surround.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-unimpaired"]
-	path = vim/pack/bundle/start/vim-unimpaired
+	path = vim/pack/bundle/opt/vim-unimpaired
 	url = git@github.com:tpope/vim-unimpaired.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-eunuch"]
-	path = vim/pack/bundle/start/vim-eunuch
+	path = vim/pack/bundle/opt/vim-eunuch
 	url = git@github.com:tpope/vim-eunuch.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/gundo.vim"]
-	path = vim/pack/bundle/start/gundo.vim
+	path = vim/pack/bundle/opt/gundo.vim
 	url = git@github.com:sjl/gundo.vim.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-tmux-navigator"]
-	path = vim/pack/bundle/start/vim-tmux-navigator
+	path = vim/pack/bundle/opt/vim-tmux-navigator
 	url = git@github.com:christoomey/vim-tmux-navigator.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/fzf.vim"]
-	path = vim/pack/bundle/start/fzf.vim
+	path = vim/pack/bundle/opt/fzf.vim
 	url = git@github.com:junegunn/fzf.vim.git
   ignore = dirty
 [submodule "zsh/custom/plugins/enhancd"]
@@ -123,23 +123,23 @@
 	url = git@github.com:changyuheng/zsh-interactive-cd.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/restore_view.vim"]
-	path = vim/pack/bundle/start/restore_view.vim
+	path = vim/pack/bundle/opt/restore_view.vim
 	url = git@github.com:vim-scripts/restore_view.vim.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/tcomment_vim"]
-	path = vim/pack/bundle/start/tcomment_vim
+	path = vim/pack/bundle/opt/tcomment_vim
 	url = git@github.com:tomtom/tcomment_vim.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-signify"]
-	path = vim/pack/bundle/start/vim-signify
+	path = vim/pack/bundle/opt/vim-signify
 	url = git@github.com:mhinz/vim-signify.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/xml.vim"]
-	path = vim/pack/bundle/start/xml.vim
+	path = vim/pack/bundle/opt/xml.vim
 	url = git@github.com:othree/xml.vim.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/ale"]
-	path = vim/pack/bundle/start/ale
+	path = vim/pack/bundle/opt/ale
 	url = git@github.com:w0rp/ale.git
   ignore = dirty
 [submodule "zsh/custom/plugins/base16-shell"]
@@ -147,15 +147,15 @@
 	url = git@github.com:chriskempson/base16-shell.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/base16-vim"]
-	path = vim/pack/bundle/start/base16-vim
+	path = vim/pack/bundle/opt/base16-vim
 	url = git@github.com:danielwe/base16-vim.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/vim-easymotion"]
-	path = vim/pack/bundle/start/vim-easymotion
+	path = vim/pack/bundle/opt/vim-easymotion
 	url = git@github.com:easymotion/vim-easymotion.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/tabnine-vim"]
-	path = vim/pack/bundle/start/tabnine-vim
+	path = vim/pack/bundle/opt/tabnine-vim
 	url = git@github.com:zxqfl/tabnine-vim.git
   ignore = dirty
 [submodule "zsh/custom/themes/powerlevel9k"]
@@ -163,11 +163,11 @@
 	url = git@github.com:bhilburn/powerlevel9k.git
   ignore = dirty
 [submodule "vim/pack/bundle/start/ultisnip"]
-	path = vim/pack/bundle/start/ultisnip
+	path = vim/pack/bundle/opt/ultisnip
 	url = git@github.com:SirVer/ultisnips.git
 [submodule "vim/pack/bundle/start/FastFold"]
-	path = vim/pack/bundle/start/FastFold
+	path = vim/pack/bundle/opt/FastFold
 	url = git@github.com:Konfekt/FastFold.git
 [submodule "vim/pack/bundle/start/vim-stay"]
-	path = vim/pack/bundle/start/vim-stay
+	path = vim/pack/bundle/opt/vim-stay
 	url = git@github.com:zhimsel/vim-stay.git

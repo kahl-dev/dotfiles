@@ -1,4 +1,41 @@
 " Default settings {{{
+
+if &loadplugins
+  if has('packages')
+    packadd! FastFold
+    packadd! ack.vim
+    packadd! ale
+    packadd! base16-vim
+    packadd! delimitMate
+    packadd! editorconfig-vim
+    packadd! emmet-vim
+    packadd! fzf.vim
+    packadd! gundo.vim
+    packadd! indentLine
+    " packadd! nerdtree
+    packadd! restore_view.vim
+    packadd! tabnine-vim
+    packadd! tcomment_vim
+    packadd! ultisnip
+    packadd! vim-airline
+    packadd! vim-airline-themes
+    packadd! vim-devicons
+    packadd! vim-easymotion
+    packadd! vim-eunuch
+    packadd! vim-fugitive
+    packadd! vim-indent-object
+    packadd! vim-polyglot
+    packadd! vim-signify
+    packadd! vim-stay
+    packadd! vim-surround
+    packadd! vim-tmux-navigator
+    packadd! vim-trailing-whitespace
+    packadd! vim-unimpaired
+    packadd! xml.vim
+  endif
+endif
+
+
 " Features {{{
 
 filetype indent plugin on         " load filetype-specific indent files"
