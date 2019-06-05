@@ -3,8 +3,6 @@
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="powerlevel9k/powerlevel9k"
 
-export TERM=xterm-256color-italic
-
 POWERLEVEL9K_MODE='awesome-fontconfig'
 #POWERLEVEL9K_MODE='nerdfont-complete'
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
