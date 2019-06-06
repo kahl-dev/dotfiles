@@ -8,3 +8,8 @@ Host *
   UseKeychain yes
   IdentityFile ~/.ssh/id_rsa
   IdentityFile ~/.ssh/googlemail
+
+  RemoteForward 8377 localhost:8377
+  ControlMaster auto
+  ControlPath ~/.ssh/%r@%h:%p
+  ControlPersist 240

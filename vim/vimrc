@@ -271,6 +271,8 @@ nnoremap <leader>vs :source $MYVIMRC<CR>
 nnoremap <C-n> :bn<CR>
 nnoremap <C-p> :bp<CR>
 
+nnoremap <leader>y :call system('nc localhost 8377', @0)<CR>
+
 " }}}
 " File types {{{
 
