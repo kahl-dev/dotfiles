@@ -1,0 +1,1 @@
+PATH="$DOTFILES/bin:$PATH"
