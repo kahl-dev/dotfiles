@@ -13,6 +13,17 @@ if which fzf &> /dev/null; then
     [ ! -f ~/.fzf.zsh ] && $(brew --prefix)/opt/fzf/install
     [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+    # tm - create new tmux session, or switch to existing one. Works from within tmux too. (@bag-man)
+    # `tm` will allow you to select your tmux session via fzf.
+    # `tm irc` will attach to the irc session (if it exists), else it will create it.
+    fts() {
+      [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
+      if [ $1 ]; then
+        tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
+      fi
+      session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
+    }
+
     # ftpane - switch pane (@george-b)
     ftpane() {
       local panes current_window current_pane target target_window target_pane
@@ -45,7 +56,7 @@ if which fzf &> /dev/null; then
     }
 
     # fbr - checkout git branch (including remote branches), sorted by most recent commit, limit 30 last branches
-    f_br() {
+    fgb() {
       local branches branch
       branches=$(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format="%(refname:short)") &&
       branch=$(echo "$branches" |
@@ -54,7 +65,7 @@ if which fzf &> /dev/null; then
     }
 
     # fco_preview - checkout git branch/tag, with a preview showing the commits between the tag/branch and HEAD
-    f_co() {
+    fgc() {
       local tags branches target
       tags=$(
     git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
@@ -74,7 +85,7 @@ if which fzf &> /dev/null; then
     # enter shows you the contents of the stash
     # ctrl-d shows a diff of the stash against your current HEAD
     # ctrl-b checks the stash out as a branch, for easier merging
-    f_stash() {
+    fgs() {
       local out q k sha
       while out=$(
         git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" |
@@ -98,13 +109,8 @@ if which fzf &> /dev/null; then
       done
     }
 
-    f_add() {
+    fga() {
       git ls-files -m -o --exclude-standard | fzf -m --print0 | xargs -0 -o -t git add
-    }
-
-    f() {
-      local cmd=$1
-      "f_$cmd"
     }
   }
 
