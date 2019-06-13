@@ -171,3 +171,6 @@
 [submodule "vim/pack/bundle/start/vim-stay"]
 	path = vim/pack/bundle/opt/vim-stay
 	url = git@github.com:zhimsel/vim-stay.git
+[submodule "vim/pack/bundle/opt/vim-rooter"]
+	path = vim/pack/bundle/opt/vim-rooter
+	url = git@github.com:airblade/vim-rooter.git
