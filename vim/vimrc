@@ -33,6 +33,7 @@ if &loadplugins
     packadd! vim-trailing-whitespace
     packadd! vim-unimpaired
     packadd! xml.vim
+    packadd! vim-autoread
   endif
 endif
 

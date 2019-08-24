@@ -174,3 +174,6 @@
 [submodule "vim/pack/bundle/opt/vim-rooter"]
 	path = vim/pack/bundle/opt/vim-rooter
 	url = git@github.com:airblade/vim-rooter.git
+[submodule "vim/pack/bundle/opt/vim-autoread"]
+	path = vim/pack/bundle/opt/vim-autoread
+	url = git@github.com:djoshea/vim-autoread.git
