@@ -68,7 +68,7 @@ cask "google-chrome-beta"
 
 # development
 cask "iterm2"
-brew "macvim"
+# brew "macvim"
 cask "mongodb-compass"
 cask "visual-studio-code"
 #mas "Marked 2", id: 890031187
