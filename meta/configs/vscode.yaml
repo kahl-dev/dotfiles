@@ -1,3 +1,6 @@
+- shell:
+    - command: code --extensions-dir ~/.dotfiles/vscode/extensions
+    - command: code-insiders --extensions-dir ~/.dotfiles/vscode/extensions
 - link:
     '~/Library/Application Support/Code/User/settings.json': vscode/settings.json
     '~/Library/Application Support/Code/User/snippets': vscode/snippets

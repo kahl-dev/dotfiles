@@ -165,12 +165,28 @@
 [submodule "vim/pack/bundle/start/ultisnip"]
 	path = vim/pack/bundle/opt/ultisnip
 	url = git@github.com:SirVer/ultisnips.git
+  ignore = dirty
 [submodule "vim/pack/bundle/start/FastFold"]
 	path = vim/pack/bundle/opt/FastFold
 	url = git@github.com:Konfekt/FastFold.git
+  ignore = dirty
 [submodule "vim/pack/bundle/start/vim-stay"]
 	path = vim/pack/bundle/opt/vim-stay
 	url = git@github.com:zhimsel/vim-stay.git
+  ignore = dirty
 [submodule "vim/pack/bundle/opt/vim-rooter"]
 	path = vim/pack/bundle/opt/vim-rooter
 	url = git@github.com:airblade/vim-rooter.git
+  ignore = dirty
+[submodule "vscode/extensions/Vim"]
+	path = vscode/extensions/Vim
+	url = git@github.com:VSCodeVim/Vim.git
+  ignore = dirty
+[submodule "vscode/extensions/vetur"]
+	path = vscode/extensions/vetur
+	url = git@github.com:vuejs/vetur.git
+  ignore = dirty
+[submodule "vscode/extensions/vscode-ocean-dark-extended-theme"]
+	path = vscode/extensions/vscode-ocean-dark-extended-theme
+	url = git@github.com:kleber-swf/vscode-ocean-dark-extended-theme.git
+  ignore = dirty

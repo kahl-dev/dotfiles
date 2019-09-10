@@ -71,6 +71,7 @@ cask "iterm2"
 # brew "macvim"
 cask "mongodb-compass"
 cask "visual-studio-code"
+cask "visual-studio-code-insiders"
 #mas "Marked 2", id: 890031187
 #mas "Xcode", id: 497799835
 brew "speedtest-cli"
