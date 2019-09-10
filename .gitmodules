@@ -178,15 +178,6 @@
 	path = vim/pack/bundle/opt/vim-rooter
 	url = git@github.com:airblade/vim-rooter.git
   ignore = dirty
-[submodule "vscode/extensions/Vim"]
-	path = vscode/extensions/Vim
-	url = git@github.com:VSCodeVim/Vim.git
-  ignore = dirty
-[submodule "vscode/extensions/vetur"]
-	path = vscode/extensions/vetur
-	url = git@github.com:vuejs/vetur.git
-  ignore = dirty
-[submodule "vscode/extensions/vscode-ocean-dark-extended-theme"]
-	path = vscode/extensions/vscode-ocean-dark-extended-theme
-	url = git@github.com:kleber-swf/vscode-ocean-dark-extended-theme.git
-  ignore = dirty
+[submodule "vscode/extensions/vscode-gitlens"]
+	path = vscode/extensions/vscode-gitlens
+	url = git@github.com:eamodio/vscode-gitlens.git

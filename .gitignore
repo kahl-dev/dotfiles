@@ -5,3 +5,4 @@ tmux/resurrect
 !tmux/plugins/tpm
 npm-debug.log
 !.gitkeep
+vscode/extensions/*
