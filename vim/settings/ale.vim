@@ -6,10 +6,12 @@ let g:ale_linters = {
 " Only run linters named in ale_linters settings.
 let g:ale_linters_explicit = 1
 
+" 'javascript':   [ 'prettier', 'eslint' ],
+" 'vue':          [ 'prettier', 'eslint' ],
 let g:ale_fixers = {
 \   '*':            [ 'remove_trailing_lines', 'trim_whitespace' ],
-\   'javascript':   [ 'eslint', 'prettier' ],
-\   'vue':          [ 'eslint', 'prettier' ],
+\   'javascript':   [ 'prettier' ],
+\   'vue':          [ 'prettier' ],
 \   'json':         [ 'prettier' ],
 \   'markdown':     [ 'prettier' ],
 \   'css':          [ 'prettier' ],
@@ -18,6 +20,12 @@ let g:ale_fixers = {
 
 " Fix files on save
 let g:ale_fix_on_save = 0
+
+let g:ale_sign_error = "\ue00a"
+let g:ale_sign_warning = "\ue009"
+
+" highlight clear ALEErrorSign
+" highlight clear ALEWarningSign
 
 " Do not lint or fix minified files.
 let g:ale_pattern_options = {
