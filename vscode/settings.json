@@ -18,7 +18,7 @@
     }
   ],
   "editor.lineNumbers": "relative",
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   // PROJECT MANAGER
   "projectManager.sortList": "Name",
   "projectManager.groupList": true,
@@ -26,12 +26,20 @@
     "$home\\Library\\Mobile Documents\\com~apple~CloudDocs\\Develop",
     "$home\\.dotfiles"
   ],
-  "projectManager.git.ignoredFolders": ["dotbot", "meta", "zsh", "tmux"],
+  "projectManager.git.ignoredFolders": [
+    "dotbot",
+    "meta",
+    "zsh",
+    "tmux"
+  ],
   // VIM
   "vim.leader": ",",
   "vim.normalModeKeyBindings": [
     {
-      "before": ["<leader>", "tab"],
+      "before": [
+        "<leader>",
+        "tab"
+      ],
       "after": [],
       "commands": [
         {
@@ -43,19 +51,34 @@
   "vim.useSystemClipboard": true,
   "vim.insertModeKeyBindings": [
     {
-      "before": ["j", "k"],
-      "after": ["<Esc>", "<CR>"]
+      "before": [
+        "j",
+        "k"
+      ],
+      "after": [
+        "<Esc>",
+        "<CR>"
+      ]
     }
   ],
   "vim.visualModeKeyBindings": [
     {
-      "before": ["j", "k"],
-      "after": ["<Esc>", "<CR>"]
+      "before": [
+        "j",
+        "k"
+      ],
+      "after": [
+        "<Esc>",
+        "<CR>"
+      ]
     }
   ],
   "vim.hlsearch": true,
   "vim.statusBarColorControl": true,
-  "vim.statusBarColors.normal": ["#8FBCBB", "#434C5E"],
+  "vim.statusBarColors.normal": [
+    "#8FBCBB",
+    "#434C5E"
+  ],
   "vim.statusBarColors.insert": "#BF616A",
   "vim.statusBarColors.visual": "#B48EAD",
   "vim.statusBarColors.visualline": "#B48EAD",
@@ -63,16 +86,30 @@
   "vim.statusBarColors.replace": "#D08770",
   "vim.normalModeKeyBindingsNonRecursive": [
     {
-      "before": ["<CR>"],
-      "commands": [":nohlsearch<cr>"]
+      "before": [
+        "<CR>"
+      ],
+      "commands": [
+        ":nohlsearch<cr>"
+      ]
     },
     {
-      "before": ["Z", "Z"],
-      "commands": [":wq"]
+      "before": [
+        "Z",
+        "Z"
+      ],
+      "commands": [
+        ":wq"
+      ]
     },
     {
-      "before": [":", "w"],
-      "commands": ["workbench.action.files.save"]
+      "before": [
+        ":",
+        "w"
+      ],
+      "commands": [
+        "workbench.action.files.save"
+      ]
     }
   ],
   "workbench.editor.enablePreview": false,
@@ -85,5 +122,6 @@
   "terminal.external.osxExec": "iTerm.app",
   "terminal.integrated.shellArgs.osx": [],
   "window.zoomLevel": 0,
-  "workbench.settings.editor": "json"
+  "workbench.settings.editor": "json",
+  "workbench.sideBar.location": "right"
 }
