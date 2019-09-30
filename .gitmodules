@@ -181,3 +181,8 @@
 [submodule "vscode/extensions/vscode-gitlens"]
 	path = vscode/extensions/vscode-gitlens
 	url = git@github.com:eamodio/vscode-gitlens.git
+  ignore = dirty
+[submodule "vim/pack/bundle/opt/vim-hardtime"]
+	path = vim/pack/bundle/opt/vim-hardtime
+	url = git@github.com:takac/vim-hardtime.git
+  ignore = dirty
