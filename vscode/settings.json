@@ -23,8 +23,9 @@
   "projectManager.sortList": "Name",
   "projectManager.groupList": true,
   "projectManager.git.baseFolders": [
-    "$home\\Library\\Mobile Documents\\com~apple~CloudDocs\\Develop",
-    "$home\\.dotfiles"
+    "$home\\.dotfiles",
+    "$home\\public_html",
+    "$home\\Sites",
   ],
   "projectManager.git.ignoredFolders": [
     "dotbot",
@@ -123,5 +124,11 @@
   "terminal.integrated.shellArgs.osx": [],
   "window.zoomLevel": 0,
   "workbench.settings.editor": "json",
-  "workbench.sideBar.location": "right"
+  "workbench.sideBar.location": "right",
+  "workbench.startupEditor": "newUntitledFile",
+  "zenMode.fullScreen": false,
+  "zenMode.hideLineNumbers": false,
+  "zenMode.centerLayout": false,
+  "git.suggestSmartCommit": false,
+  "vetur.completion.useScaffoldSnippets": false,
 }
