@@ -15,7 +15,7 @@ if &loadplugins
     packadd! indentLine
     " packadd! nerdtree
     packadd! restore_view.vim
-    packadd! tabnine-vim
+    " packadd! tabnine-vim
     packadd! tcomment_vim
     packadd! ultisnip
     packadd! vim-airline
@@ -34,6 +34,15 @@ if &loadplugins
     packadd! vim-unimpaired
     packadd! xml.vim
     packadd! vim-hardtime
+    packadd! deoplete-ternjs
+    packadd! deoplete-emoji
+
+    packadd! deoplete.nvim
+    packadd! nvim-yarp
+    packadd! vim-hug-neovim-rpc
+    packadd! deoplete-tabnine
+    packadd! tern_for_vim
+
   endif
 endif
 
@@ -290,10 +299,13 @@ nnoremap <leader>y :call system('nc localhost 8377', @0)<CR>
 
 nnoremap <C-s> :syntax sync fromstart<CR>
 
+inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
+inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
+
 " }}}
 " File types {{{
 
-autocmd FileType vue UltiSnipsAddFiletypes javascript
+" autocmd FileType vue UltiSnipsAddFiletypes javascript
 
 " }}}
 " }}}
