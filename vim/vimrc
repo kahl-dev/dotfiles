@@ -42,6 +42,7 @@ if &loadplugins
     packadd! vim-hug-neovim-rpc
     packadd! deoplete-tabnine
     packadd! tern_for_vim
+    " packadd! vim-multiple-cursors
 
   endif
 endif
