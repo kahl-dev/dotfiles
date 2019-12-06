@@ -217,3 +217,6 @@
 [submodule "vim/pack/bundle/opt/vim-multiple-cursors"]
 	path = vim/pack/bundle/opt/vim-multiple-cursors
 	url = git@github.com:terryma/vim-multiple-cursors.git
+[submodule "zsh/custom/themes/powerlevel10k"]
+	path = zsh/custom/themes/powerlevel10k
+	url = git@github.com:romkatv/powerlevel10k.git
