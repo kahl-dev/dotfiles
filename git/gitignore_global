@@ -3,3 +3,5 @@
 .netrwhist
 
 node_modules
+
+**/.tern-port
