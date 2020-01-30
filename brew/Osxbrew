@@ -75,6 +75,7 @@ cask "visual-studio-code-insiders"
 #mas "Xcode", id: 497799835
 brew "speedtest-cli"
 cask "sequel-pro"
+cask "pgadmin4"
 
 # image
 #cask "skitch"
