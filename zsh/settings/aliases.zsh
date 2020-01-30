@@ -30,3 +30,17 @@ alias vi='vim'
 alias ssh="TERM=xterm-256color ssh"
 
 alias clip="nc localhost 8377"
+
+alias falias='alias | fzf'
+
+# fzf tmux
+alias ft="fzf_tmux"
+alias ftp="fzf_tmux_pane"
+
+# fzf git
+alias fgl='fzf_git_log'
+alias fgbr='fzf_git_branch'
+alias fgco='fzf_git_checkout'
+alias fgst='fzf_git_stash'
+alias fga='fzf_git_add'
+
