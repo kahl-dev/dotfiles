@@ -1,3 +1,5 @@
+extends html, javascript, css
+
 snippet template "Markup section" b
 <template>
 	<${1:div}>
@@ -20,81 +22,81 @@ export default {
 </script>
 endsnippet
 
-snippet vdata
+snippet data
 data() {
 	return {
 		$1
-	},
+	}
 },
 endsnippet
 
-snippet vprops
+snippet props
 props: {
 	$1
 },
 endsnippet
 
-snippet vmethods
+snippet methods
 methods: {
 	$0
 },
 endsnippet
 
-snippet vwatchs
+snippet watchs
 watch: {
 	$0
 },
 endsnippet
 
-snippet vwatch
+snippet watch
 ${1:watcher}(${2:newValue}, ${3:oldValue}) {
 	${0:console.log('$1: ', { $2, $3 })}
 },
 endsnippet
 
-snippet vbeforeCreate
+snippet beforeCreate
 beforeCreate() {
 	$0
 },
 endsnippet
 
-snippet vcreated
+snippet created
 created() {
 	$0
 },
 endsnippet
 
-snippet vbeforeMount
+snippet beforeMount
 beforeMount() {
 	$0
 },
 endsnippet
 
-snippet vmounted
+snippet mounted
 mounted() {
 	$0
 },
 endsnippet
 
-snippet vbeforeUpdate
+snippet beforeUpdate
 beforeUpdate() {
 	$0
 },
 endsnippet
 
-snippet vupdated
+snippet updated
 updated() {
 	$0
 },
 endsnippet
 
-snippet vbeforeDestroy
+snippet beforeDestroy
 beforeDestroy() {
 	$0
 },
 endsnippet
 
-snippet vdestroy
+snippet destroy
 destroy() {
 	$0
 },
