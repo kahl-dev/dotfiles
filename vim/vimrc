@@ -1,5 +1,10 @@
 " Default settings {{{
 
+let modules = 'find $DOTFILES/modules/ -type f -name "pre.vim"'
+for fpath in split(system(modules), '\n')
+  exe 'source' fpath
+endfor
+
 if &loadplugins
   if has('packages')
     packadd! vim-rooter
@@ -10,7 +15,6 @@ if &loadplugins
     packadd! delimitMate
     packadd! editorconfig-vim
     packadd! emmet-vim
-    packadd! fzf.vim
     packadd! gundo.vim
     packadd! indentLine
     " packadd! nerdtree
@@ -337,13 +341,8 @@ else
     let python_version=0
 endif
 " }}}
-" {{{ Plugin Manager (vim-plug)
-if filereadable(expand("~/.vim/vim-plugs.vim"))
-  source ~/.vim/vim-plugs.vim
-endif
-" }}}
-" Load settings {{{
-if filereadable(expand("~/.vim/settings.vim"))
-  source ~/.vim/settings.vim
-endif
-" }}}
+
+let modules = 'find $DOTFILES/modules/ -type f -name "*.vim" ! -name "pre.vim"'
+for fpath in split(system(modules), '\n')
+  exe 'source' fpath
+endfor
