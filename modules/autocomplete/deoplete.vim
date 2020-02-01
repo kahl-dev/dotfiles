@@ -22,11 +22,6 @@ else
   call deoplete#custom#source('ternjs', 'rank', 999)
   call deoplete#custom#source('tabnine', 'rank', 998)
 
-  let g:tern_request_timeout = 1
-  let g:tern_request_timeout = 6000
-  let g:tern#command = ["tern"]
-  let g:tern#arguments = ["--persistent"]
-
   " DOKU: https://github.com/carlitux/deoplete-ternjs
   let g:deoplete#sources#ternjs#filetypes = ['jsx','javascript.jsx','vue']
   let g:deoplete#sources#ternjs#types = 1
