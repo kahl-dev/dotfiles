@@ -16,3 +16,5 @@ let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
 
 " Set snippet dir
 let g:UltiSnipsSnippetDirectories = [$HOME.'/.vim/UltiSnips', 'UltiSnips']
+
+command UltiSnipsRefresh call UltiSnips#RefreshSnippets()

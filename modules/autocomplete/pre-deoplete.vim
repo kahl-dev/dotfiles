@@ -16,7 +16,9 @@ if executable('fzf')
 
         " DOKU: https://github.com/carlitux/deoplete-ternjs
         packadd! deoplete-ternjs
-        call system('npm list -g tern || npm install -g tern')
+        " TODO: Find other solution to npm install if not exists; Huge start
+        " up
+        " call system('npm list -g tern || npm install -g tern')
 
         " DOKU: https://github.com/fszymanski/deoplete-emoji
         packadd! deoplete-emoji
