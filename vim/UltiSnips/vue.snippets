@@ -22,82 +22,260 @@ export default {
 </script>
 endsnippet
 
-snippet data
+snippet vdata "Vue Component Data"
 data() {
 	return {
-		$1
+		${1:key}: ${2:value},
 	}
 },
 endsnippet
 
-snippet props
-props: {
-	$1
-},
-endsnippet
-
-snippet methods
+snippet vmethod "vue method"
 methods: {
-	$0
+	${1:name}() {
+		${0},
+	},
 },
 endsnippet
 
-snippet watchs
+snippet vcomputed "computed value"
+computed: {
+	${1:name}() {
+		return this.${2:data} ${0},
+	},
+},
+endsnippet
+
+snippet vbeforecreate "beforeCreate lifecycle method"
+beforeCreate () {
+	${0}
+},
+endsnippet
+
+snippet vcreated "created lifecycle method"
+created () {
+	${0}
+},
+endsnippet
+
+snippet vbeforemount "beforeMount lifecycle method"
+beforeMount () {
+	${0}
+},
+endsnippet
+
+snippet vmounted "mounted lifecycle method"
+mounted () {
+	${0}
+},
+endsnippet
+
+snippet vbeforeupdate "beforeUpdate lifecycle method"
+beforeUpdate () {
+	${0}
+},
+endsnippet
+
+snippet vupdated "updated lifecycle method"
+updated () {
+	${0}
+},
+endsnippet
+
+snippet vbeforedestroy "beforeDestroy lifecycle method"
+beforeDestroy () {
+	${0}
+},
+endsnippet
+
+snippet vdestroyed "destroyed lifecycle method"
+destroyed () {
+	${0}
+},
+endsnippet
+
+snippet vwatcher "vue watcher"
 watch: {
-	$0
+	${1:data}(${2:newValue}, ${3:oldValue}) {
+		${0},
+	},
 },
 endsnippet
 
-snippet watch
-${1:watcher}(${2:newValue}, ${3:oldValue}) {
-	${0:console.log('$1: ', { $2, $3 })}
+snippet vwatcher-options "vue watcher with options"
+watch: {
+	${1:data}: {
+		immediate: ${2:true},
+		deep: ${3:true},
+		handler(${4:newValue}, ${5:oldValue}) {
+			${0}
+		},
+	},
 },
 endsnippet
 
-snippet beforeCreate
-beforeCreate() {
-	$0
+snippet vprops "Vue Props with Default"
+props: {
+	${1:propName}: {
+		type: ${2:Number},
+		default: ${0},
+	},
 },
 endsnippet
 
-snippet created
-created() {
-	$0
+snippet vprop "Vue Prop with Default"
+${1:propName}: {
+	type: ${2:Number},
+	default: ${0},
 },
 endsnippet
 
-snippet beforeMount
-beforeMount() {
-	$0
+snippet vimport "Import one component into another"
+import ${1:New} from '@/components/${1:New}.vue';
+endsnippet
+
+snippet vcomponents "Import one component into another, within export statement"
+components: {
+	${1:New},
 },
 endsnippet
 
-snippet mounted
-mounted() {
-	$0
+snippet vimport-export "import a component and include it in export default"
+import ${1:Name} from '@/components/$1.vue'
+export default {
+	components: {
+		$1,
+	},
+}
+endsnippet
+
+snippet vmapstate:import "map getters inside a vue component"
+import { mapState } from 'vuex'
+endsnippet
+
+snippet vmapstate:computed "map getters inside a vue component"
+...mapState([,
+	${1:'nameOfState'},
+]),
+endsnippet
+
+snippet vmapgetters:import "mapgetters inside a vue component"
+import { mapGetters } from 'vuex'
+endsnippet
+
+snippet vmapgetters:computed "mapgetters inside a vue component"
+...mapGetters([,
+	${1:'nameOfGetter'},
+]),
+endsnippet
+
+snippet vmapmutations:import "mapmutations inside a vue component"
+import { mapMutations } from 'vuex'
+endsnippet
+
+snippet vmapmutations:methods "mapmutations inside a vue component"
+...mapMutations([,
+	${1:'nameOfMutation'},
+]),
+endsnippet
+
+snippet vmapactions:import "mapactions inside a vue component"
+import { mapActions } from 'vuex'
+endsnippet
+
+snippet vmapactions:methods "mapactions inside a vue component"
+...mapActions([
+	${1:'nameOfAction'},
+]),
+endsnippet
+
+snippet vfilter "vue filter"
+filters: {
+	${1:fnName}(${2:value}) {
+		return ${2:value}${0}
+	},
+}
+endsnippet
+
+snippet vmixin "vue mixin"
+const ${1:mixinName} = {
+	mounted() {
+		console.log('hello from mixin!'),
+	},
+}
+endsnippet
+
+snippet vmixin-use "vue use mixin"
+mixins: [${1:mixinName}],
+endsnippet
+
+snippet vc-direct "vue custom directive"
+Vue.directive('${1:directiveName}', {
+	bind(el, binding, vnode) {
+		el.style.${2:arg} = binding.value.${2:arg}
+	},
+});
+endsnippet
+
+snippet vimport-lib "import a library"
+import { ${1:libName} } from '${1:libName}'
+endsnippet
+
+snippet vimport-gsap "component methods options that dispatch an action from vuex store."
+import { TimelineMax, ${1:Ease} } from 'gsap'
+endsnippet
+
+snippet vanimhook-js "transition component js hooks"
+beforeEnter(el) {
+	console.log('beforeEnter')
+},
+enter(el, done) {
+	console.log('enter')
+	done()
+},
+beforeLeave(el) {
+	console.log('beforeLeave')
+},
+leave(el, done) {
+	console.log('leave')
+	done()
 },
 endsnippet
 
-snippet beforeUpdate
-beforeUpdate() {
-	$0
-},
+snippet vcommit "commit to vuex store in methods for mutation"
+${1:mutationName}() {
+	this.\$store.commit('${1:mutationName}', ${2:payload}),
+}
 endsnippet
 
-snippet updated
-updated() {
-	$0
-},
+snippet vdispatch "dispatch to vuex store in methods for action"
+${1:actionName}() {
+	this.\$store.dispatch('${1:actionName}', ${2:payload}),
+}
 endsnippet
 
-snippet beforeDestroy
-beforeDestroy() {
-	$0
-},
+snippet vinc "increment"
+return ${1:this.num} += ${2:1}
 endsnippet
 
-snippet destroy
-destroy() {
-	$0
-},
+snippet vdec "decrement"
+return ${1:this.num} -= ${2:1}
+endsnippet
+
+snippet vtest "unit test component"
+import Vue from 'vue',
+import ${1:HelloWorld} from './components/${1:HelloWorld}',
+
+describe('${1:HelloWorld}.vue', () => {
+	it('${2:should render correct contents}', () => {
+		const Constructor = Vue.extend(${1:HelloWorld}),
+		const vm = new Constructor().$mount(),
+		expect(vm.$el.querySelector('.hello h1').textContent)
+			.to.equal(${3:'Welcome to Your Vue.js App'})
+	}),
+})
+endsnippet
+
+snippet vnf-import:component "Import Nick Furry"
+import { Nf${1:component} } from '@nf/components'
 endsnippet
