@@ -1,9 +1,9 @@
 # Add modules
-for file in $(find $DOTFILES/modules -type f -name "pre*.zsh"); do
+for file in $(find $HOME/.dotfiles/modules -type f -name "pre*.zsh"); do
   source "$file";
 done
 
-export DOTFILES=$HOME/.dotfiles
+export DOTFILES=$HOME/.dotfiles 
 # Path to your oh-my-zsh installation.
 export ZSH=$DOTFILES/zsh/oh-my-zsh
 
