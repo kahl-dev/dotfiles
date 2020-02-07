@@ -11,8 +11,8 @@ vim/tmp/*
 vim/view/*
 
 # Coc
-/coc/*
-!/coc/extensions
-/coc/extensions/*
-!/coc/extensions/package.json
-!/coc/extensions/yarn.lock
+vim/coc/*
+!vim/coc/extensions
+vim/coc/extensions/*
+!vim/coc/extensions/package.json
+!vim/coc/extensions/yarn.lock
