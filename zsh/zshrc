@@ -1,5 +1,5 @@
 # Add modules
-for file in $(find $HOME/.dotfiles/modules -type f -name "pre*.zsh"); do
+for file in $(find $HOME/.dotfiles/modules -type f -name "pre*.zsh" ! -name "_*.zsh"); do
   source "$file";
 done
 
@@ -26,7 +26,7 @@ unset MANPATH
 MANPATH=$(manpath)
 
 # Add modules
-for file in $(find $DOTFILES/modules -type f -name "*.zsh" ! -name "pre*.zsh"); do
+for file in $(find $DOTFILES/modules -type f -name "*.zsh" ! -name "pre*.zsh" ! -name "_*.zsh"); do
   source "$file";
 done
 

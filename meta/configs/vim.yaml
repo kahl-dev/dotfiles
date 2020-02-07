@@ -1,11 +1,12 @@
 - link:
     ~/.vim: vim
     ~/.vimrc: vim/vimrc
+    ~/.config/coc: vim/coc
 
-- shell:
-    -
-      command: vim +PlugClean! +PlugInstall +PlugUpdate! +PlugUpgrade +qa
-      stdin: true
-      stdout: true
-      stderr: true
+# - shell:
+#     -
+#       command: vim +PlugClean! +PlugInstall +PlugUpdate! +PlugUpgrade +qa
+#       stdin: true
+#       stdout: true
+#       stderr: true
 

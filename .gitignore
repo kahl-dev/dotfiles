@@ -1,8 +1,18 @@
-vim/tmp/*
-vim/view/*
 tmux/plugins/*
 tmux/resurrect
 !tmux/plugins/tpm
 npm-debug.log
 !.gitkeep
 vscode/extensions/*
+
+# Vim
+vim/sessions/*
+vim/tmp/*
+vim/view/*
+
+# Coc
+/coc/*
+!/coc/extensions
+/coc/extensions/*
+!/coc/extensions/package.json
+!/coc/extensions/yarn.lock
