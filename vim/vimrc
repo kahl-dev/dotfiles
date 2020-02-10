@@ -1,6 +1,6 @@
 " Default settings {{{
 
-let modules = 'find $DOTFILES/modules -type f -name "pre.vim" ! -name "_*.vim"'
+let modules = 'find $DOTFILES/modules -type f -name "pre.vim" ! -name "_*.vim" | sort -n'
 for fpath in split(system(modules), '\n')
   exe 'source' fpath
 endfor
@@ -319,7 +319,7 @@ else
 endif
 " }}}
 
-let modules = 'find $DOTFILES/modules -type f -name "*.vim" ! -name "pre.vim" ! -name "_*.vim"'
+let modules = 'find $DOTFILES/modules -type f -name "*.vim" ! -name "pre.vim" ! -name "_*.vim" | sort -n'
 for fpath in split(system(modules), '\n')
   exe 'source' fpath
 endfor
