@@ -3,7 +3,7 @@
     "coc-css": ">=1.2.2",
     "coc-emmet": ">=1.1.4",
     "coc-highlight": ">=1.2.5",
-    "coc-html": ">=1.2.1",
+    "coc-html": ">=1.2.3",
     "coc-json": ">=1.2.4",
     "coc-markdownlint": ">=1.1.1",
     "coc-phpls": ">=2.1.7",
@@ -11,6 +11,6 @@
     "coc-tabnine": ">=1.2.2",
     "coc-tsserver": ">=1.4.9",
     "coc-vetur": ">=1.1.7",
-    "coc-yaml": ">=1.0.2"
+    "coc-yaml": ">=1.0.3"
   }
 }
