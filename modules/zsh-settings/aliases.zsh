@@ -28,7 +28,3 @@ alias theme='echo $BASE16_THEME'
 alias vi='vim'
 
 alias ssh="TERM=xterm-256color ssh"
-
-alias clip="nc localhost 8377"
-
-
