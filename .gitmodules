@@ -217,13 +217,17 @@
 [submodule "vim/pack/bundle/opt/vim-multiple-cursors"]
 	path = vim/pack/bundle/opt/vim-multiple-cursors
 	url = git@github.com:terryma/vim-multiple-cursors.git
+  ignore = dirty
 [submodule "zsh/custom/themes/powerlevel10k"]
 	path = zsh/custom/themes/powerlevel10k
 	url = git@github.com:romkatv/powerlevel10k.git
+  ignore = dirty
 [submodule "vim/pack/bundle/opt/coc.nvim"]
 	path = vim/pack/bundle/opt/coc.nvim
 	url = git@github.com:neoclide/coc.nvim.git
 	branch = release
+  ignore = dirty
 [submodule "vim/pack/bundle/opt/terminus"]
 	path = vim/pack/bundle/opt/terminus
 	url = git@github.com:wincent/terminus.git
+  ignore = dirty
