@@ -36,6 +36,7 @@ if &loadplugins
     packadd! vim-unimpaired
     packadd! xml.vim
     packadd! vim-hardtime
+    packadd! terminus
 
     " packadd! vim-multiple-cursors
 

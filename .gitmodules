@@ -224,3 +224,6 @@
 	path = vim/pack/bundle/opt/coc.nvim
 	url = git@github.com:neoclide/coc.nvim.git
 	branch = release
+[submodule "vim/pack/bundle/opt/terminus"]
+	path = vim/pack/bundle/opt/terminus
+	url = git@github.com:wincent/terminus.git
