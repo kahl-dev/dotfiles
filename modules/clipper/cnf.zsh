@@ -1,1 +1,1 @@
-alias clip="nc localhost 9999"
+alias clip="nc -N localhost 9999"
