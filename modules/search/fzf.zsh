@@ -3,7 +3,7 @@
 if which fzf &> /dev/null; then
 
   if which rg &> /dev/null; then
-    export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!{.git,node_modules,.nuxt}/*"'
+    export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!{.git,node_modules,.nuxt,**/node_modules,typo3,typo3_src,typo3temp}/*"'
 
   elif which ag &> /dev/null; then
     export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
