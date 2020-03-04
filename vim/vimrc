@@ -257,9 +257,6 @@ noremap <Right> <NOP>
 nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
 nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
 
-" toggle folding
-nnoremap <tab> za
-
 " jk | Escaping!
 inoremap jk <Esc>
 xnoremap jk <Esc>
