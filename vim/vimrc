@@ -26,7 +26,7 @@ if &loadplugins
     packadd! vim-easymotion
     packadd! vim-eunuch
     packadd! vim-fugitive
-    packadd! vim-indent-object
+    " packadd! vim-indent-object
     packadd! vim-polyglot
     packadd! vim-signify
     packadd! vim-stay

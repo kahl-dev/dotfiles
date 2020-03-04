@@ -86,10 +86,6 @@
 	path = vim/pack/bundle/opt/emmet-vim
 	url = git@github.com:mattn/emmet-vim.git
   ignore = dirty
-[submodule "vim/pack/bundle/start/vim-indent-object"]
-	path = vim/pack/bundle/opt/vim-indent-object
-	url = git@github.com:michaeljsmith/vim-indent-object.git
-  ignore = dirty
 [submodule "vim/pack/bundle/start/vim-surround"]
 	path = vim/pack/bundle/opt/vim-surround
 	url = git@github.com:tpope/vim-surround.git
