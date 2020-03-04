@@ -158,10 +158,6 @@
 	path = zsh/custom/themes/powerlevel9k
 	url = git@github.com:bhilburn/powerlevel9k.git
   ignore = dirty
-[submodule "vim/pack/bundle/start/ultisnip"]
-	path = vim/pack/bundle/opt/ultisnip
-	url = git@github.com:SirVer/ultisnips.git
-  ignore = dirty
 [submodule "vim/pack/bundle/start/FastFold"]
 	path = vim/pack/bundle/opt/FastFold
 	url = git@github.com:Konfekt/FastFold.git
