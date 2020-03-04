@@ -7,24 +7,27 @@ endfor
 
 if &loadplugins
   if has('packages')
-    packadd! vim-rooter
+
     packadd! FastFold
     packadd! ale
     packadd! base16-vim
     packadd! delimitMate
     packadd! editorconfig-vim
-    packadd! emmet-vim
     packadd! gundo.vim
     packadd! indentLine
     packadd! restore_view.vim
     packadd! tcomment_vim
+    packadd! terminus
     packadd! vim-airline
     packadd! vim-airline-themes
     packadd! vim-devicons
     packadd! vim-easymotion
     packadd! vim-eunuch
     packadd! vim-fugitive
+    packadd! vim-hardtime
+    " packadd! vim-multiple-cursors
     packadd! vim-polyglot
+    packadd! vim-rooter
     packadd! vim-signify
     packadd! vim-stay
     packadd! vim-surround
@@ -32,10 +35,6 @@ if &loadplugins
     packadd! vim-trailing-whitespace
     packadd! vim-unimpaired
     packadd! xml.vim
-    packadd! vim-hardtime
-    packadd! terminus
-
-    " packadd! vim-multiple-cursors
 
   endif
 endif
