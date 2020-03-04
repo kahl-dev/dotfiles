@@ -182,10 +182,6 @@
 	path = vim/pack/bundle/opt/vim-hardtime
 	url = git@github.com:takac/vim-hardtime.git
   ignore = dirty
-[submodule "vim/pack/bundle/opt/deoplete.nvim"]
-	path = vim/pack/bundle/opt/deoplete.nvim
-	url = git@github.com:Shougo/deoplete.nvim.git
-  ignore = dirty
 [submodule "vim/pack/bundle/opt/nvim-yarp"]
 	path = vim/pack/bundle/opt/nvim-yarp
 	url = git@github.com:roxma/nvim-yarp.git
@@ -194,21 +190,9 @@
 	path = vim/pack/bundle/opt/vim-hug-neovim-rpc
 	url = git@github.com:roxma/vim-hug-neovim-rpc.git
   ignore = dirty
-[submodule "vim/pack/bundle/opt/deoplete-tabnine"]
-	path = vim/pack/bundle/opt/deoplete-tabnine
-	url = git@github.com:tbodt/deoplete-tabnine.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/deoplete-ternjs"]
-	path = vim/pack/bundle/opt/deoplete-ternjs
-	url = git@github.com:carlitux/deoplete-ternjs.git
-  ignore = dirty
 [submodule "vim/pack/bundle/opt/tern_for_vim"]
 	path = vim/pack/bundle/opt/tern_for_vim
 	url = git@github.com:ternjs/tern_for_vim.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/deoplete-emoji"]
-	path = vim/pack/bundle/opt/deoplete-emoji
-	url = git@github.com:fszymanski/deoplete-emoji.git
   ignore = dirty
 [submodule "vim/pack/bundle/opt/vim-multiple-cursors"]
 	path = vim/pack/bundle/opt/vim-multiple-cursors
