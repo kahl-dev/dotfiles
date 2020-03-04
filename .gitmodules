@@ -150,10 +150,6 @@
 	path = vim/pack/bundle/opt/vim-easymotion
 	url = git@github.com:easymotion/vim-easymotion.git
   ignore = dirty
-[submodule "vim/pack/bundle/start/tabnine-vim"]
-	path = vim/pack/bundle/opt/tabnine-vim
-	url = git@github.com:zxqfl/tabnine-vim.git
-  ignore = dirty
 [submodule "zsh/custom/themes/powerlevel9k"]
 	path = zsh/custom/themes/powerlevel9k
 	url = git@github.com:bhilburn/powerlevel9k.git
