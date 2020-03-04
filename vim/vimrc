@@ -16,17 +16,14 @@ if &loadplugins
     packadd! emmet-vim
     packadd! gundo.vim
     packadd! indentLine
-    " packadd! nerdtree
     packadd! restore_view.vim
     packadd! tcomment_vim
-    packadd! ultisnip
     packadd! vim-airline
     packadd! vim-airline-themes
     packadd! vim-devicons
     packadd! vim-easymotion
     packadd! vim-eunuch
     packadd! vim-fugitive
-    " packadd! vim-indent-object
     packadd! vim-polyglot
     packadd! vim-signify
     packadd! vim-stay
@@ -264,13 +261,6 @@ cnoremap jk <C-c>
 
 command! W :w
 
-" Movement in insert mode
-" inoremap <C-h> <C-o>h
-" inoremap <C-l> <C-o>a
-" inoremap <C-j> <C-o>j
-" inoremap <C-k> <C-o>k
-" inoremap <C-^> <C-o><C-^>
-
 nnoremap <CR> :nohlsearch<cr>
 
 " vims . repeat with visual mode
@@ -292,9 +282,6 @@ nnoremap <C-p> :bp<CR>
 nnoremap <leader>y :call system('nc localhost 8377', @0)<CR>
 
 nnoremap <C-s> :syntax sync fromstart<CR>
-
-inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
-inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
 
 " Do not replace buffer with paste
 xnoremap p "_dP
