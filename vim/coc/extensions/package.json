@@ -7,7 +7,7 @@
     "coc-json": ">=1.2.5",
     "coc-markdownlint": ">=1.1.1",
     "coc-phpls": ">=2.1.7",
-    "coc-snippets": ">=2.1.19",
+    "coc-snippets": ">=2.1.20",
     "coc-tabnine": ">=1.2.2",
     "coc-tsserver": ">=1.4.9",
     "coc-vetur": ">=1.1.7",
