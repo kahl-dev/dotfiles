@@ -6,11 +6,11 @@
     "coc-html": ">=1.2.3",
     "coc-json": ">=1.2.5",
     "coc-markdownlint": ">=1.1.1",
-    "coc-phpls": ">=2.1.7",
-    "coc-snippets": ">=2.1.20",
+    "coc-phpls": ">=2.1.8",
+    "coc-snippets": ">=2.1.21",
     "coc-tabnine": ">=1.2.2",
-    "coc-tsserver": ">=1.4.9",
+    "coc-tsserver": ">=1.4.10",
     "coc-vetur": ">=1.1.7",
-    "coc-yaml": ">=1.0.3"
+    "coc-yaml": ">=1.0.4"
   }
 }
