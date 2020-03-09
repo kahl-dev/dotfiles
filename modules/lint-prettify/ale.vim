@@ -21,11 +21,13 @@ let g:ale_fixers = {
 " Fix files on save
 let g:ale_fix_on_save = 0
 
-let g:ale_sign_error = "\ue00a"
-let g:ale_sign_warning = "\ue009"
-
-" highlight clear ALEErrorSign
-" highlight clear ALEWarningSign
+let g:ale_sign_error = "◉"
+let g:ale_sign_warning = "◉"
+highlight ALEError ctermbg=1 ctermfg=18
+highlight ALEWarning ctermbg=3 ctermfg=18
+highlight ALEInfo ctermbg=4 ctermfg=18
+highlight ALEStyleError ctermbg=5 ctermfg=18
+highlight ALEStyleWarning ctermbg=3 ctermfg=18
 
 " Do not lint or fix minified files.
 let g:ale_pattern_options = {
