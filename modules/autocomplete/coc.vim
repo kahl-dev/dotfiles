@@ -40,7 +40,7 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
 inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
-inoremap <expr> <space> pumvisible() ? "\<C-y>" : "\<tab>"
+inoremap <expr> <C-l> pumvisible() ? "\<C-y>" : "\<tab>"
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
