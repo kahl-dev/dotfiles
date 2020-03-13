@@ -1,3 +1,5 @@
+# zmodload zsh/zprof
+
 # Add modules
 for file in $(find $HOME/.dotfiles/modules -type f -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
   source "$file";
@@ -45,3 +47,5 @@ for func_name in "${after_init[@]}"
 do
     $func_name
 done
+
+# zprof
