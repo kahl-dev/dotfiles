@@ -8,7 +8,7 @@ endfor
 if &loadplugins
   if has('packages')
 
-    packadd! FastFold
+    " packadd! FastFold
     packadd! ale
     packadd! base16-vim
     packadd! delimitMate
