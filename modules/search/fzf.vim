@@ -50,6 +50,7 @@ if executable('fzf')
   nnoremap <silent> <leader>fl :Lines<cr>
   nnoremap <silent> <leader>fh :FZFMru<cr>
   nnoremap <silent> <leader>ft :Filetypes<cr>
+  nnoremap <silent> <leader>fm :Marks<cr>
 
   nnoremap <silent> <leader>gf :GFiles<cr>
   nnoremap <silent> <leader>gb :BCommits<cr>
