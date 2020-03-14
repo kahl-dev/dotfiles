@@ -12,10 +12,10 @@ if &loadplugins
     packadd! ale
     packadd! base16-vim
     packadd! delimitMate
-    packadd! editorconfig-vim
+    " packadd! editorconfig-vim
     packadd! gundo.vim
     packadd! indentLine
-    packadd! restore_view.vim
+    " packadd! restore_view.vim
     packadd! tcomment_vim
     packadd! terminus
     packadd! vim-airline
@@ -26,14 +26,14 @@ if &loadplugins
     packadd! vim-fugitive
     packadd! vim-hardtime
     " packadd! vim-multiple-cursors
-    packadd! vim-polyglot
+    packadd! vim-polyglot " language pack
     packadd! vim-rooter
-    packadd! vim-signify
-    packadd! vim-stay
+    " packadd! vim-signify
+    " packadd! vim-stay
     packadd! vim-surround
     packadd! vim-tmux-navigator
-    packadd! vim-trailing-whitespace
-    packadd! vim-unimpaired
+    " packadd! vim-trailing-whitespace
+    " packadd! vim-unimpaired
     packadd! xml.vim
 
   endif
@@ -131,7 +131,7 @@ autocmd VimResized * wincmd =     " Adjust vim size on resize
 "    autocmd!
 "    autocmd BufWinEnter,Syntax * syn sync minlines=50 maxlines=50
 "  augroup END
- autocmd BufEnter * :syntax sync fromstart
+"  autocmd BufEnter * :syntax sync fromstart
 
 " Auto check file changes
 if ! exists("g:CheckUpdateStarted")
@@ -288,10 +288,8 @@ xnoremap p "_dP
 " play a macro recorded to register q
 :nnoremap <Space> @q
 
-" }}}
-" File types {{{
-
-" autocmd FileType vue UltiSnipsAddFiletypes javascript
+let g:gundo_prefer_python3 = 1
+nnoremap <F5> :GundoToggle<CR>
 
 " }}}
 " }}}
