@@ -1,58 +1,61 @@
 [alias]
-    aa      = add -A
-    a       = add
-    co      = checkout
-    cm      = commit -m
-    ca      = commit --amend
-    cma     = commit --amend -m
-    di      = diff
-    m       = merge
-    mnff    = merge --no-ff
-    r       = reset
-    ra      = reset .
-    st      = status -sb
-    p       = push
-    pom     = push origin master
-    poh     = push origin HEAD
-    up      = pull --rebase --autostash --ignore-submodules
+  aa      = add -A
+  a       = add
+  co      = checkout
+  cm      = commit -m
+  ca      = commit --amend
+  cma     = commit --amend -m
+  di      = diff
+  m       = merge
+  mnff    = merge --no-ff
+  r       = reset
+  ra      = reset .
+  st      = status -sb
+  p       = push
+  pom     = push origin master
+  poh     = push origin HEAD
+  up      = pull --rebase --autostash
 
-    # Add git lia aliases
-    l       = lia
-    ls      = lia start
-    lc      = lia commit
-    lp      = lia preview
-    lf      = lia finish
+  # Add git lia aliases
+  l       = lia
+  ls      = lia start
+  lc      = lia commit
+  lp      = lia preview
+  lf      = lia finish
 
-    update  = !git pull && git submodule update --init --recursive
+  update  = !git pull && git submodule update --init --recursive
 
 [user]
-    name = Patrick Kahl
-    email = Kahl.Patrick@googlemail.com
+  name = Patrick Kahl
+  email = Kahl.Patrick@googlemail.com
 
 [credential]
-    helper = cache --timeout 228800
+  helper = cache --timeout 228800
 
 [push]
-    default = simple
+  default = simple
 
 [core]
-    excludesfile = ~/.gitignore_global
-	  editor = vim
-	pager = diff-so-fancy | less --tabs=4 -RFX
+  excludesfile = ~/.gitignore_global
+  editor = vim
+  pager = diff-so-fancy | less --tabs=4 -RFX
 
 [init]
-    templatedir = ~/.gittemplate
+  templatedir = ~/.gittemplate
 
 # Allow local customizations in the .gitconfig_local file
 [include]
-    path = ~/.gitconfig-local
+  path = ~/.gitconfig-local
 
 [pager]
-	  show = diff-so-fancy | less --tabs=1,5 -RFX
+  show = diff-so-fancy | less --tabs=1,5 -RFX
+
 [submodule]
 	recurse = true
+
 [color]
 	ui = true
+
 [color "diff-highlight"]
 	oldNormal = red bold
 	oldHighlight = red bold 52
