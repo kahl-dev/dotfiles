@@ -14,7 +14,7 @@
     p       = push
     pom     = push origin master
     poh     = push origin HEAD
-    up      = pull --rebase --autostash
+    up      = pull --rebase --autostash --ignore-submodules
 
     # Add git lia aliases
     l       = lia
@@ -38,6 +38,7 @@
 [core]
     excludesfile = ~/.gitignore_global
 	  editor = vim
+	pager = diff-so-fancy | less --tabs=4 -RFX
 
 [init]
     templatedir = ~/.gittemplate
@@ -47,7 +48,13 @@
     path = ~/.gitconfig-local
 
 [pager]
-    diff = diff-so-fancy | less --tabs=1,5 -RFX
-    show = diff-so-fancy | less --tabs=1,5 -RFX
+	  show = diff-so-fancy | less --tabs=1,5 -RFX
 [submodule]
 	recurse = true
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
