@@ -7,28 +7,31 @@ if executable('fzf')
   endif
 
   let g:fzf_action = {
-    \ 'ctrl-t': 'tab split',
     \ 'ctrl-x': 'split',
     \ 'ctrl-v': 'vsplit' }
-
-  " Likewise, Files command with preview window
+  
+  " Files with preview
   command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 
-  nnoremap <silent> <leader>ff :Files<cr>
-  nnoremap <silent> <leader>fb :Buffers<cr>
-  nnoremap <silent> <leader>fl :Lines<cr>
-  nnoremap <silent> <leader>fh :FZFMru<cr>
-  nnoremap <silent> <leader>ft :Filetypes<cr>
+  " Ripgrep with preview
+  command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
 
-  nnoremap <silent> <leader>gf :GFiles<cr>
-  nnoremap <silent> <leader>gb :BCommits<cr>
-  nnoremap <silent> <leader>gc :Commits<cr>
-  nnoremap <silent> <leader>gs :GFiles?<cr>
+  " Advanced ripgrep integration (No Fuzzy)
+  function! RipgrepFzf(query, fullscreen)
+    let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
+    let initial_command = printf(command_fmt, shellescape(a:query))
+    let reload_command = printf(command_fmt, '{q}')
+    let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+    call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+  endfunction
 
-  nnoremap <silent> <leader>fa :Ag!<cr>
-  nnoremap <silent> <leader>fr :Rg<cr>
+  command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
+  " Search all files
   command! FZFMru call fzf#run({
   \ 'source':  reverse(s:all_files()),
   \ 'sink':    'edit',
@@ -42,19 +45,17 @@ if executable('fzf')
     \ map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'bufname(v:val)'))
   endfunction
 
+  nnoremap <silent> <leader>ff :Files<cr>
+  nnoremap <silent> <leader>fb :Buffers<cr>
+  nnoremap <silent> <leader>fl :Lines<cr>
+  nnoremap <silent> <leader>fh :FZFMru<cr>
+  nnoremap <silent> <leader>ft :Filetypes<cr>
 
-  " Augmenting Ag command using fzf#vim#with_preview function
-  " :Ag  - Start fzf with hidden preview window that can be enabled with '?' key
-  " :Ag! - Start fzf in fullscreen and display the preview window above"
-  command! -bang -nargs=* Ag
-    \ call fzf#vim#ag(<q-args>,
-    \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-    \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-    \                 <bang>0)
+  nnoremap <silent> <leader>gf :GFiles<cr>
+  nnoremap <silent> <leader>gb :BCommits<cr>
+  nnoremap <silent> <leader>gc :Commits<cr>
+  nnoremap <silent> <leader>gs :GFiles?<cr>
 
-
-  command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
-    \ {'source': 'find '.(empty(<f-args>) ? '.' : <f-args>).' -type d',
-    \  'sink': 'cd'}))
+  nnoremap <silent> <leader>fr :Rg<cr>
 
 endif
