@@ -9,7 +9,7 @@ if which fzf &> /dev/null; then
     export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
   fi
 
-  export FZF_DEFAULT_OPTS="-m"
+  export FZF_DEFAULT_OPTS='-m'
 
   initFzf() {
     [ ! -f ~/.fzf.zsh ] && $(brew --prefix)/opt/fzf/install

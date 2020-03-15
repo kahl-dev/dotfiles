@@ -1,0 +1,24 @@
+# Disable gitignore
+# --no-ignore
+
+# Follow symlinks
+#--follow
+
+# Allow search hidden files
+--hidden
+
+# Using glob patterns to include/exclude files or folders
+--glob=!*.min.{css,js}
+
+# Because who cares about case!?
+--smart-case
+
+--colors=line:fg:yellow
+--colors=line:style:bold
+--colors=path:fg:green
+--colors=path:style:bold
+--colors=match:fg:black
+--colors=match:bg:yellow
+--colors=match:style:nobold
+
+#alias rg='rg --no-ignore --hidden --follow --glob "!{.git,node_modules,.nuxt,**/node_modules,typo4,typo3_src,typo3temp}/*"'
