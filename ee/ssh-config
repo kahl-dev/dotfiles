@@ -1,4 +1,10 @@
-Include config.d/*
+# Not supported by vscode
+#Include config.d/ssh-config
+Include ~/.dotfiles-local/ssh-config
+
+Host *tmux
+  RemoteCommand tmux new-session -s tmux || tmux attach-session -t tmux
+  RequestTTY yes
 
 Host *
   AddKeysToAgent yes
@@ -7,9 +13,13 @@ Host *
   ForwardAgent yes
   UseKeychain yes
   IdentityFile ~/.ssh/id_rsa
-  IdentityFile ~/.ssh/googlemail
+  # RemoteCommand zsh
 
-  RemoteForward 8377 localhost:8377
+  # Log info
+  LogLevel INFO
+
+  # Multiplexing SSH Over a Single TCP Connection
+  # https://www.digitalocean.com/community/tutorials/how-to-configure-custom-connection-options-for-your-ssh-client#multiplexing-ssh-over-a-single-tcp-connection
   ControlMaster auto
   ControlPath ~/.ssh/%r@%h:%p
   ControlPersist 240
