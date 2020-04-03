@@ -1,2 +1,2 @@
-brew "gcc"
-brew "coreutils"
+# brew "gcc"
+# brew "coreutils"

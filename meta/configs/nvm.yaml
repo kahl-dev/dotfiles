@@ -1,5 +1,5 @@
 - shell:
-    - command: zsh -ic "nvm install node"
+    # - command: zsh -ic "nvm install node"
     - command: [rm ~/.nvm/default-packages]
 
 - link:

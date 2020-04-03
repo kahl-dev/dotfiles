@@ -1,0 +1,14 @@
+{
+  "entries": {
+  },
+  "system": {
+    "linux": {
+      "CentOS Linux release 7.7.1908 (Core)": {
+        "HOMEBREW_VERSION": "2.2.11-86-g1824435",
+        "HOMEBREW_PREFIX": "/home/pdk/.linuxbrew",
+        "Homebrew/linuxbrew-core": "39b4824282e0bb428e66ed022e7ffd16638d3aaa",
+        "GCC": "5.5.0"
+      }
+    }
+  }
+}

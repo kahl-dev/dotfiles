@@ -1,9 +1,12 @@
-- shell:
-  - command: if ! $(which brew > /dev/null); then . $DOTFILES/sh/linuxbrew.sh; fi
+- defaults:
+    shell:
+      stdin: true
+      stdout: true
+      stderr: true
 
-- brewfile:
-    - brew/Basebrew
-    - brew/Linuxbrew
 
 - shell:
-    - command: if $(brew --version > /dev/null); then brew update && brew upgrade; fi
+  - command: if ! $(which brew > /dev/null); then . $HOME/.dotfiles/sh/linuxbrew.sh; fi
+  - command: brew bundle -v --no-upgrade --file brew/Basebrew
+  - command: brew bundle -v --no-upgrade --file brew/Linuxbrew
+  - command: if $(brew --version > /dev/null); then brew update && brew upgrade; fi
