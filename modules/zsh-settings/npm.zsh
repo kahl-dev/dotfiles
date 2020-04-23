@@ -1,8 +1,3 @@
-export NVM_DIR="$HOME/.nvm"
-export NVM_LAZY_LOAD=true
-export NVM_AUTO_USE=true
-plugins+=(zsh-nvm)
-
 # npm list without dependencies
 alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
 alias npmLsg="npm ls -g --depth=0 "$@" 2>/dev/null"

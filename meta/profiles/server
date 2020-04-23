@@ -2,7 +2,7 @@ agignore
 eslint
 git
 linuxbrew
-nvm
+asdf
 prettier
 ssh
 tern

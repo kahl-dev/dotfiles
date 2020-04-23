@@ -1,0 +1,13 @@
+- defaults:
+    shell:
+      stdin: true
+      stdout: true
+      stderr: true
+
+
+- shell:
+  - command: . $HOME/.dotfiles/sh/asdf.sh
+
+- link:
+    ~/.default-npm-packages : ee/default-npm-packages
+    ~/.asdfrc : ee/asdfrc
