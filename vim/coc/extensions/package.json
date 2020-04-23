@@ -1,17 +1,17 @@
 {
   "dependencies": {
-    "coc-css": ">=1.2.2",
+    "coc-css": ">=1.2.3",
     "coc-emmet": ">=1.1.4",
-    "coc-git": ">=1.7.7",
+    "coc-git": ">=1.7.9",
     "coc-highlight": ">=1.2.5",
-    "coc-html": ">=1.2.3",
+    "coc-html": ">=1.2.4",
     "coc-json": ">=1.2.5",
-    "coc-markdownlint": ">=1.1.1",
+    "coc-markdownlint": ">=1.2.0",
     "coc-phpls": ">=2.1.8",
-    "coc-snippets": ">=2.1.22",
+    "coc-snippets": ">=2.1.25",
     "coc-tabnine": ">=1.2.2",
-    "coc-tsserver": ">=1.4.11",
-    "coc-vetur": ">=1.1.9",
+    "coc-tsserver": ">=1.5.1",
+    "coc-vetur": ">=1.1.10",
     "coc-yaml": ">=1.0.4"
   }
 }
