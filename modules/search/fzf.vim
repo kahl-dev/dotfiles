@@ -16,8 +16,11 @@ if executable('fzf')
   let g:fzf_commits_log_options = '--graph --color=always --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset"'
   
   " Files with preview
+  " command! -bang -nargs=? -complete=dir Files
+  "   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+
   command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+    \ call fzf#vim#files(<q-args>, {'options': ['--layout=reverse', '--info=inline', '--preview', '~/.vim/pack/bundle/opt/fzf.vim/bin/preview.sh {}']}, <bang>0)
 
   " Ripgrep with preview
   command! -bang -nargs=* Rg
