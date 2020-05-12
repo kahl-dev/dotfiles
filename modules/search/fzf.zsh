@@ -1,6 +1,6 @@
 # Add fzf fuzzy finder to zsh
 # https://github.com/junegunn/fzf
-if which fzf &> /dev/null; then
+if [ -d "$HOME/.fzf" ]; then
 
   if which rg &> /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files'
@@ -12,7 +12,6 @@ if which fzf &> /dev/null; then
   export FZF_DEFAULT_OPTS='-m'
 
   initFzf() {
-    [ ! -f ~/.fzf.zsh ] && $(brew --prefix)/opt/fzf/install
     [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
     # tm - create new tmux session, or switch to existing one. Works from within tmux too. (@bag-man)

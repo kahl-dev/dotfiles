@@ -1,14 +1,19 @@
 if executable('fzf')
-
-  if has("mac")
-    set rtp+=/usr/local/opt/fzf
-  elseif has("unix")
-    set rtp+=/home/kahl/.linuxbrew/opt/fzf
-  endif
-
+  set rtp+=~/.fzf
   let g:fzf_action = {
     \ 'ctrl-x': 'split',
     \ 'ctrl-v': 'vsplit' }
+
+  let g:fzf_preview_window = 'top:50%'
+  " See `man fzf-tmux` for available options
+  " if exists('$TMUX')
+  "   let g:fzf_layout = { 'tmux': '-p90%,60%' }
+  " else
+    let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.95 } }
+  " endif
+  
+  " [[B]Commits] Customize the options used by 'git log':
+  let g:fzf_commits_log_options = '--graph --color=always --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset"'
   
   " Files with preview
   command! -bang -nargs=? -complete=dir Files

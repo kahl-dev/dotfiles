@@ -1,0 +1,7 @@
+- shell:
+  - 
+    command: ['[ ! -d "$HOME/.fzf" ] && { git clone --depth 1 git@github.com:junegunn/fzf.git ~/.fzf && printf "y\ny\nn\n" | ~/.fzf/install } || { cd ~/.fzf && git pull && printf "y\ny\nn\n" | ./install }']
+    stdin: true
+    stdout: true
+    description: Create or update fzf
+    quiet: true
