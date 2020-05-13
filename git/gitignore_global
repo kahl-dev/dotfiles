@@ -5,3 +5,5 @@
 node_modules
 
 **/.tern-port
+
+.tool-versions
