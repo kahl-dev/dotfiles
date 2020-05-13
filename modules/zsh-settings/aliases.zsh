@@ -25,6 +25,7 @@ if which bat >/dev/null 2>&1; then alias cat='bat'; fi
 # Echo current base16 theme
 alias theme='echo $BASE16_THEME'
 
+if which nvim >/dev/null 2>&1; then alias vim='nvim'; fi
 alias vi='vim'
 
 alias ssh="TERM=xterm-256color ssh"
