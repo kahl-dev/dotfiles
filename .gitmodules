@@ -174,11 +174,6 @@
 	path = zsh/custom/themes/powerlevel10k
 	url = git@github.com:romkatv/powerlevel10k.git
   ignore = dirty
-[submodule "vim/pack/bundle/opt/coc.nvim"]
-	path = vim/pack/bundle/opt/coc.nvim
-	url = git@github.com:neoclide/coc.nvim.git
-	branch = release
-  ignore = dirty
 [submodule "vim/pack/bundle/opt/terminus"]
 	path = vim/pack/bundle/opt/terminus
 	url = git@github.com:wincent/terminus.git
