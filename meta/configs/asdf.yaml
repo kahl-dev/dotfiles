@@ -9,5 +9,6 @@
   - command: . $HOME/.dotfiles/sh/asdf.sh
 
 - link:
+    ~/.tool-versions : ee/tool-versions
     ~/.default-npm-packages : ee/default-npm-packages
     ~/.asdfrc : ee/asdfrc

@@ -11,3 +11,4 @@ brew "highlight"
 # brew "fd"
 # brew "reattach-to-user-namespace"
 brew "ripgrep"
+brew "gnupg" # necessary for asdf
