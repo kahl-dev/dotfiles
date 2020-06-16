@@ -1,6 +1,6 @@
 # brew "z"
 brew "git"
-# brew "git-extras"
+brew "git-extras"
 brew "vim"
 brew "tmux"
 # brew "the_silver_searcher"
