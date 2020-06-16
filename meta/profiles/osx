@@ -1,12 +1,12 @@
 agignore
 eslint
 git
-asdf
+ssh
+zsh
+tmux
+fzf
+vim
 osxbrew
 prettier
-ssh
 tern
-tmux
-vim
 vscode
-zsh
