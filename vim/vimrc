@@ -33,7 +33,7 @@ if &loadplugins
     packadd! vim-surround
     packadd! vim-tmux-navigator
     " packadd! vim-trailing-whitespace
-    " packadd! vim-unimpaired
+    packadd! vim-unimpaired " Used for Text bubble http://vimcasts.org/episodes/bubbling-text/
     packadd! xml.vim
     packadd! vim-highlightedyank
 
@@ -67,6 +67,7 @@ set hlsearch                      " highlight search
 set splitbelow                    " on window split put below
 set splitright                    " on window split put on right sote
 set winwidth=110                  " force minimun window width
+set term=xterm
 
 " }}}
 " Usability options {{{
