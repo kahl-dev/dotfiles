@@ -14,6 +14,8 @@ Host *
   UseKeychain yes
   IdentityFile ~/.ssh/id_rsa
   # RemoteCommand zsh
+  ForwardX11 no
+  ForwardX11Trusted yes
 
   # Log info
   LogLevel INFO
