@@ -20,6 +20,6 @@ Host *
 
   # Multiplexing SSH Over a Single TCP Connection
   # https://www.digitalocean.com/community/tutorials/how-to-configure-custom-connection-options-for-your-ssh-client#multiplexing-ssh-over-a-single-tcp-connection
-  ControlMaster auto
-  ControlPath ~/.ssh/%r@%h:%p
-  ControlPersist 240
+  #ControlMaster auto
+  #ControlPath ~/.ssh/%r@%h:%p
+  #ControlPersist 240
