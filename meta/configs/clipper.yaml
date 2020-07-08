@@ -1,0 +1,11 @@
+- defaults:
+    link:
+      force: true
+    shell:
+      stdout: true
+
+- link:
+    '~/.clipper.json': ee/clipper.json
+
+- shell:
+  - brew services start clipper

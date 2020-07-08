@@ -51,6 +51,7 @@ cask "tripmode"
 #cask "numi"
 #cask "nightowl"
 #cask "gfxCardStatus"
+brew "clipper"
 
 # chats & socialmedia
 #cask "skype"
