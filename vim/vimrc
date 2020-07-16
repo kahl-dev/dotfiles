@@ -21,7 +21,7 @@ if &loadplugins
     packadd! vim-airline
     packadd! vim-airline-themes
     packadd! vim-devicons
-    packadd! vim-easymotion
+    " packadd! vim-easymotion
     packadd! vim-eunuch
     packadd! vim-fugitive
     packadd! vim-hardtime
@@ -286,10 +286,13 @@ nnoremap <C-s> :syntax sync fromstart<CR>
 xnoremap p "_dP
 
 " play a macro recorded to register q
-:nnoremap <Space> @q
+" nnoremap <Space> @q
 
 let g:gundo_prefer_python3 = 1
 nnoremap <F5> :GundoToggle<CR>
+
+" Search and replace term cursor
+nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 
 " }}}
 " }}}
