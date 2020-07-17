@@ -1,3 +1,5 @@
+# Guide: https://www.digitalocean.com/community/tutorials/how-to-configure-custom-connection-options-for-your-ssh-client#multiplexing-ssh-over-a-single-tcp-connection
+
 # Not supported by vscode
 #Include config.d/ssh-config
 Include ~/.dotfiles-local/ssh-config
@@ -14,14 +16,17 @@ Host *
   UseKeychain yes
   IdentityFile ~/.ssh/id_rsa
   # RemoteCommand zsh
-  ForwardX11 no
-  ForwardX11Trusted yes
+  
+  # Be careful this breaks clippe
+  # ForwardX11 no
+  # ForwardX11Trusted yes
 
   # Log info
   LogLevel INFO
 
   # Multiplexing SSH Over a Single TCP Connection
   # https://www.digitalocean.com/community/tutorials/how-to-configure-custom-connection-options-for-your-ssh-client#multiplexing-ssh-over-a-single-tcp-connection
+  # Be careful this breaks clippe
   #ControlMaster auto
   #ControlPath ~/.ssh/%r@%h:%p
   #ControlPersist 240
