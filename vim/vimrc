@@ -87,6 +87,11 @@ set confirm
 " Quickly time out on keycodes, but never time out on mappings
 set notimeout ttimeout ttimeoutlen=200
 
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+set signcolumn=yes
+
+
 " Highlight 80 columns background
 if exists('+colorcolumn')
   let &colorcolumn=join(range(81,999),",")" highlight column > 80
@@ -181,6 +186,7 @@ if isdirectory($HOME . '/.vim/tmp/backup') == 0
     call mkdir($HOME . '/.vim/tmp/backup', 'p')
 endif
 set backupdir=~/.vim/tmp/backup//
+set nowritebackup
 set nobackup
 
 if exists('+undofile')

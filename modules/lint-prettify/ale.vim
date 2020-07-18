@@ -56,4 +56,4 @@ function! s:ALEToggleFixOnSave()
 endfunction
 
 command! ALEToggleFixOnSave call s:ALEToggleFixOnSave()
-nnoremap <leader>a :ALEToggleFixOnSave<CR>
+nnoremap <leader>af :ALEToggleFixOnSave<CR>
