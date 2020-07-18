@@ -115,9 +115,11 @@ set incsearch                     " start search on type
 set ignorecase                    " case insensitive search
 set smartcase                     " insensitive search except using capital once
 set autoindent                    " copy indent of current for new line
+set smartindent
 set ruler                         " show cursor on bottom
 set laststatus=2                  " always display status line
 set visualbell                    " visual bell instead of beeping
+set noerrorbells
 set t_vb=                         " reset terminal code for visual bell
 set t_RV=                         " fix first line on load // bugfix for hyper
 set number                        " show line numbers
@@ -127,6 +129,8 @@ set nocursorline                    " highlight cursor line
 set scrolloff=10                  " min numbers above and below cursor
 set cmdheight=2                   " command window height to 2
 set pastetoggle=<F10>             " toggle paste mode
+set nowrap                        " No line break
+set updatetime=50
 autocmd VimResized * wincmd =     " Adjust vim size on resize
 
 " augroup vimrc
