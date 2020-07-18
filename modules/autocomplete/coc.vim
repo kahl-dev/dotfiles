@@ -54,3 +54,6 @@ function! s:check_back_space() abort
 endfunction
 
 let g:coc_snippet_next = '<tab>'
+
+" https://github.com/neoclide/coc-yank
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>

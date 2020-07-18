@@ -1,5 +1,6 @@
 {
   "emmet.includeLanguages": {
     "vue": "html"
-  }
+  },
+  "yank.highlight.duration": 250
 }

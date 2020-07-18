@@ -178,9 +178,6 @@
 	path = vim/pack/bundle/opt/coc.nvim
 	url = git@github.com:neoclide/coc.nvim.git
   ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-highlightedyank"]
-	path = vim/pack/bundle/opt/vim-highlightedyank
-	url = git@github.com:machakann/vim-highlightedyank.git
 [submodule "vim/pack/bundle/opt/undotree"]
 	path = vim/pack/bundle/opt/undotree
 	url = git@github.com:mbbill/undotree.git
