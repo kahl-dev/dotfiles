@@ -184,3 +184,6 @@
 [submodule "vim/pack/bundle/opt/vim-jsonc"]
 	path = vim/pack/bundle/opt/vim-jsonc
 	url = git@github.com:kevinoid/vim-jsonc.git
+[submodule "vim/pack/bundle/opt/coc-fzf"]
+	path = vim/pack/bundle/opt/coc-fzf
+	url = git@github.com:antoinemadec/coc-fzf.git

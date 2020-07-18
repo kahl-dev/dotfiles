@@ -1,3 +1,9 @@
+" Doc: https://github.com/neoclide/coc.nvim
+" Langserver: https://github.com/neoclide/coc.nvim/wiki/Language-servers
+" FAQ: https://github.com/neoclide/coc.nvim/wiki/F.A.Q
+
+packadd! coc-fzf
+
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
