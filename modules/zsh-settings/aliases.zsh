@@ -19,9 +19,6 @@ fi
 # Open better manual/help than man
 if which tldr >/dev/null 2>&1; then alias help='tldr'; fi
 
-# Use bat instead of cat
-if which bat >/dev/null 2>&1; then alias cat='bat'; fi
-
 # Echo current base16 theme
 alias theme='echo $BASE16_THEME'
 
