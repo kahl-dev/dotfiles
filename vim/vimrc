@@ -13,7 +13,7 @@ if &loadplugins
     packadd! base16-vim
     packadd! delimitMate
     " packadd! editorconfig-vim
-    packadd! gundo.vim
+    packadd! undotree
     packadd! indentLine
     " packadd! restore_view.vim
     packadd! tcomment_vim
@@ -151,17 +151,33 @@ endfunction
 " If a path ends in '//' then the swap file name is
 " built from the entire path. No more issues between projects.
 
+" https://gist.github.com/mllg/5353184
+function Tmpwatch(path, days)
+    let l:path = expand(a:path)
+    if isdirectory(l:path)
+        for file in split(globpath(l:path, "*"), "\n")
+            if localtime() > getftime(file) + 86400 * a:days && delete(file) != 0
+                echo "Tmpwatch(): Error deleting '" . file . "'"
+            endif
+        endfor
+    else
+        echo "Tmpwatch(): Directory '" . l:path . "' not found"
+    endif
+endfunction
+
 " Change swap directory.
 if isdirectory($HOME . '/.vim/tmp/swap') == 0
     call mkdir($HOME . '/.vim/tmp/swap', 'p')
 endif
 set directory=~/.vim/tmp/swap//
+set noswapfile
 
 " Change backup directory.
 if isdirectory($HOME . '/.vim/tmp/backup') == 0
     call mkdir($HOME . '/.vim/tmp/backup', 'p')
 endif
 set backupdir=~/.vim/tmp/backup//
+set nobackup
 
 if exists('+undofile')
     " Change undo directory.
@@ -169,10 +185,16 @@ if exists('+undofile')
         call mkdir($HOME . '/.vim/tmp/undo', 'p')
     endif
     set undodir=~/.vim/tmp/undo//
+    set undofile
+    set undolevels=1000
+    set undoreload=10000
+
+    " remove undo files which have not been modified for 31 days
+    call Tmpwatch(&undodir, 31)
 end
 
-" Handle swap prompt
 
+" Handle swap prompt
 if has("autocmd")
     augroup AutoSwap
         autocmd!
@@ -288,8 +310,12 @@ xnoremap p "_dP
 " play a macro recorded to register q
 " nnoremap <Space> @q
 
-let g:gundo_prefer_python3 = 1
-nnoremap <F5> :GundoToggle<CR>
+" Execute makro in visual selection
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+function! ExecuteMacroOverVisualRange()
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
 
 " Search and replace term cursor
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>/

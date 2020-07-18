@@ -90,10 +90,6 @@
 	path = vim/pack/bundle/opt/vim-eunuch
 	url = git@github.com:tpope/vim-eunuch.git
   ignore = dirty
-[submodule "vim/pack/bundle/opt/gundo.vim"]
-	path = vim/pack/bundle/opt/gundo.vim
-	url = git@github.com:sjl/gundo.vim.git
-  ignore = dirty
 [submodule "vim/pack/bundle/opt/vim-tmux-navigator"]
 	path = vim/pack/bundle/opt/vim-tmux-navigator
 	url = git@github.com:christoomey/vim-tmux-navigator.git
@@ -185,3 +181,6 @@
 [submodule "vim/pack/bundle/opt/vim-highlightedyank"]
 	path = vim/pack/bundle/opt/vim-highlightedyank
 	url = git@github.com:machakann/vim-highlightedyank.git
+[submodule "vim/pack/bundle/opt/undotree"]
+	path = vim/pack/bundle/opt/undotree
+	url = git@github.com:mbbill/undotree.git
