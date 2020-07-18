@@ -35,7 +35,7 @@ if &loadplugins
     " packadd! vim-trailing-whitespace
     packadd! vim-unimpaired " Used for Text bubble http://vimcasts.org/episodes/bubbling-text/
     packadd! xml.vim
-    packadd! vim-highlightedyank
+    packadd! vim-jsonc
 
   endif
 endif

@@ -181,3 +181,6 @@
 [submodule "vim/pack/bundle/opt/undotree"]
 	path = vim/pack/bundle/opt/undotree
 	url = git@github.com:mbbill/undotree.git
+[submodule "vim/pack/bundle/opt/vim-jsonc"]
+	path = vim/pack/bundle/opt/vim-jsonc
+	url = git@github.com:kevinoid/vim-jsonc.git
