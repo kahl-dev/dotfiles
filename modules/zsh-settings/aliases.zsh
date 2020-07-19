@@ -16,9 +16,6 @@ if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
   # alias vim='mvim -v'
 fi
 
-# Open better manual/help than man
-if which tldr >/dev/null 2>&1; then alias help='tldr'; fi
-
 # Echo current base16 theme
 alias theme='echo $BASE16_THEME'
 
