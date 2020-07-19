@@ -2,13 +2,6 @@
 # https://github.com/junegunn/fzf
 if [ -d "$HOME/.fzf" ]; then
 
-  # export FZF_DEFAULT_COMMAND='rg --files'
-  # export FZF_DEFAULT_OPTS='-m'
-
-  if which bat >/dev/null 2>&1; then
-    export FZF_COMPLETION_OPTS="--preview '(bat --theme=\"base16\" --color=always --style=\"numbers,changes,header\" {} || cat {} || tree -C {}) 2> /dev/null | head -200'"
-  fi
-
   export FZF_CTRL_T_OPTS="$FZF_COMPLETION_OPTS"
   export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*" --glob "!node_modules/*"'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"

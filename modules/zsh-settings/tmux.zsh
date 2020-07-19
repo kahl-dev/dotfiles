@@ -1,11 +1,18 @@
-if which tmux &> /dev/null; then
-  plugins+=(tmux)
+# Use bat instead of cat
+initTmux() {
 
-  # ZSH_TMUX_AUTOSTART=true
+  if binaryExists tmux; then
+    plugins+=(tmux)
 
-  # Attach or create tmux base session
-  alias tmuxm='tmux attach -t main || tmux new -s main'
+    # ZSH_TMUX_AUTOSTART=true
 
-  # Update ssh session for tmux
-  alias tmuxssh='eval $(tmux show-env -s |grep "^SSH_")'
-fi
+    # Attach or create tmux base session
+    alias tmuxm='tmux attach -t main || tmux new -s main'
+
+    # Update ssh session for tmux
+    alias tmuxssh='eval $(tmux show-env -s |grep "^SSH_")'
+  fi
+
+}
+
+after_init+=(initTmux)
