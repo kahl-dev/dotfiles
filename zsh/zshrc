@@ -5,6 +5,11 @@ for file in $(find $HOME/.dotfiles/modules -type f -name "pre*.zsh" ! -name "_*.
   source "$file";
 done
 
+# https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script
+binaryExists() {
+  command -v "$1" >/dev/null 2>&1
+}
+
 export DOTFILES=$HOME/.dotfiles 
 # Path to your oh-my-zsh installation.
 export ZSH=$DOTFILES/zsh/oh-my-zsh
