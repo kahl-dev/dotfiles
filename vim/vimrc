@@ -36,10 +36,10 @@ if &loadplugins
     packadd! vim-unimpaired " Used for Text bubble http://vimcasts.org/episodes/bubbling-text/
     packadd! xml.vim
     packadd! vim-jsonc
+    packadd! vim-cheat40
 
   endif
 endif
-
 
 " Features {{{
 
@@ -136,6 +136,7 @@ set cmdheight=2                   " command window height to 2
 set pastetoggle=<F10>             " toggle paste mode
 set nowrap                        " No line break
 set updatetime=50
+set conceallevel=2
 autocmd VimResized * wincmd =     " Adjust vim size on resize
 
 " augroup vimrc

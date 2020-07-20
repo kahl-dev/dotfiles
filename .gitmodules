@@ -187,3 +187,6 @@
 [submodule "vim/pack/bundle/opt/coc-fzf"]
 	path = vim/pack/bundle/opt/coc-fzf
 	url = git@github.com:antoinemadec/coc-fzf.git
+[submodule "vim/pack/bundle/opt/vim-cheat40"]
+	path = vim/pack/bundle/opt/vim-cheat40
+	url = git@github.com:lifepillar/vim-cheat40.git
