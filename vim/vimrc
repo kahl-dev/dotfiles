@@ -135,7 +135,6 @@ endif
 
 set lazyredraw                    " redraw only when we need to
 set redrawtime=10000
-set autoread                      " reload files changed outside vim
 set incsearch                     " start search on type
 set ignorecase                    " case insensitive search
 set smartcase                     " insensitive search except using capital once
@@ -159,26 +158,23 @@ set updatetime=50
 set conceallevel=2
 autocmd VimResized * wincmd =     " Adjust vim size on resize
 
-" check one time after 4s of inactivity in normal mode
-set autoread                                                                                                                                                                                    
-au CursorHold * checktime
+" Autoread will automatically update an open buffer if it has been changed 
+" outside the current edit session, usually by an external program.
+" Blog: https://bluz71.github.io/2017/05/15/vim-tips-tricks.html#autoread
+set autoread
 
-" augroup vimrc
-"    autocmd!
-"    autocmd BufWinEnter,Syntax * syn sync minlines=50 maxlines=50
-"  augroup END
-"  autocmd BufEnter * :syntax sync fromstart
+augroup autoRead
+    autocmd!
+    autocmd CursorHold * silent! checktime
+augroup END
 
-" Auto check file changes
-" if ! exists("g:CheckUpdateStarted")
-"     let g:CheckUpdateStarted=1
-"     call timer_start(1,'CheckUpdate')
-" endif
-" function! CheckUpdate(timer)
-"     silent checktime
-"     call timer_start(50,'CheckUpdate')
-" endfunction
-
+" Computing syntax highlight information on the fly whilst scrolling can be
+" slow in Vim
+" Blog: https://bluz71.github.io/2017/05/15/vim-tips-tricks.html#improve-scroll-performance
+augroup syntaxSyncMinLines
+    autocmd!
+    autocmd Syntax * syntax sync minlines=2000
+augroup END
 
 " }}}
 " Undo/Backups {{{
@@ -311,10 +307,6 @@ noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
 
-" move vertically by visual line
-nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
-nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
-
 " jk | Escaping!
 inoremap jk <Esc>
 xnoremap jk <Esc>
@@ -324,7 +316,13 @@ command! W :w
 
 nnoremap <CR> :nohlsearch<cr>
 
-" vims . repeat with visual mode
+" Smarter j and k navigation
+" Blog: https://bluz71.github.io/2017/05/15/vim-tips-tricks.html#smarter-j-and-k-navigation
+nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
+nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
+
+" Make dot work over visual line selections
+" Blog: https://bluz71.github.io/2017/05/15/vim-tips-tricks.html#make-dot-work-over-visual-line-selections
 xnoremap . :norm.<CR>
 
 " highlight last inserted text
