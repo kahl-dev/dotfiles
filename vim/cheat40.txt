@@ -22,6 +22,14 @@ Tgl cursor cross-hairs   yox           N
 Paste above              =P            N
 Paste below              =p            N
 
+# Fugitive
+Shorthand for :Gstatus   :G            N
+Show :Gstatus help       g?            N
+Stage or unstage         -             N
+Toggle inline diff       =             N
+Display a vdiff          dv            N
+Commit                   cc            N
+
 # Navigation
 Fuzzy open file          :e /f/**/b.js N
 Edit last edited file    «C-^»         N
