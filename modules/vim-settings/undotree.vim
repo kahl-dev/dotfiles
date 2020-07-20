@@ -10,5 +10,7 @@ if &loadplugins
   endif
 endif
 
-
+let g:undotree_HighlightChangedWithSign = 0
+let g:undotree_WindowLayout             = 2
+let g:undotree_SetFocusWhenToggle       = 1
 nnoremap <leader>u :UndotreeToggle<CR>

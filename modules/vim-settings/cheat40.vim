@@ -7,3 +7,4 @@ if &loadplugins
 endif
 
 let g:cheat40_use_default = 0
+nmap <unique> <leader>ß :<c-u>Cheat40<cr>
