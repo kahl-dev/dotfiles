@@ -9,6 +9,7 @@
     "coc-json": ">=1.2.6",
     "coc-markdownlint": ">=1.5.0",
     "coc-marketplace": ">=1.7.0",
+    "coc-pairs": ">=1.2.21",
     "coc-phpls": ">=2.1.8",
     "coc-sh": ">=0.5.1",
     "coc-snippets": ">=2.1.25",
