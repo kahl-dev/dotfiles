@@ -8,35 +8,22 @@ endfor
 if &loadplugins
   if has('packages')
 
-    " packadd! FastFold
-    packadd! ale
-    packadd! base16-vim
-    packadd! delimitMate
-    " packadd! editorconfig-vim
-    packadd! undotree
-    packadd! indentLine
+    " Doc: https://github.com/chriskempson/base16-vim
+    packadd! base16-vim " Add base16 theme
+
+    " packadd! delimitMate
     " packadd! restore_view.vim
     packadd! tcomment_vim
     packadd! terminus
-    packadd! vim-airline
-    packadd! vim-airline-themes
     packadd! vim-devicons
-    " packadd! vim-easymotion
     packadd! vim-eunuch
     packadd! vim-fugitive
     packadd! vim-hardtime
-    " packadd! vim-multiple-cursors
-    packadd! vim-polyglot " language pack
-    packadd! vim-rooter
-    " packadd! vim-signify
-    " packadd! vim-stay
     packadd! vim-surround
     packadd! vim-tmux-navigator
-    " packadd! vim-trailing-whitespace
     packadd! vim-unimpaired " Used for Text bubble http://vimcasts.org/episodes/bubbling-text/
     packadd! xml.vim
     packadd! vim-jsonc
-    packadd! vim-cheat40
 
   endif
 endif

@@ -1,3 +1,14 @@
+" Automatic folds
+" Doc: https://github.com/Konfekt/FastFold
+
+if &loadplugins
+  if has('packages')
+
+    packadd! FastFold
+
+  endif
+endif
+
 " set viewoptions=cursor,folds,slash,unix
 "
 " nmap zuz <Plug>(FastFoldUpdate)

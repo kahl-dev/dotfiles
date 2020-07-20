@@ -1,1 +1,1 @@
-let g:python3_host_prog = '/home/kahl/.linuxbrew/bin/python3'
+" let g:python3_host_prog = '/home/kahl/.linuxbrew/bin/python3'

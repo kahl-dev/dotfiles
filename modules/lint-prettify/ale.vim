@@ -1,3 +1,15 @@
+" Asynchronous Lint Engine
+" Doc: https://github.com/dense-analysis/ale
+
+if &loadplugins
+  if has('packages')
+
+    packadd! ale
+
+  endif
+endif
+
+
 let g:ale_linters = {
 \   'javascript':   [ 'eslint' ],
 \   'vue':          [ 'eslint' ],

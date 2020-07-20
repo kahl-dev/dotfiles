@@ -1,4 +1,17 @@
+" Fuzzy search in vim
+" Doc: https://github.com/junegunn/fzf.vim
+" Doc: https://github.com/junegunn/fzf
+
 if executable('fzf')
+
+  if &loadplugins
+    if has('packages')
+
+      packadd! fzf.vim
+
+    endif
+  endif
+
   set rtp+=~/.fzf
   let g:fzf_action = {
     \ 'ctrl-x': 'split',
