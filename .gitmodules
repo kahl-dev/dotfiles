@@ -190,3 +190,6 @@
 [submodule "vim/pack/bundle/opt/vim-cheat40"]
 	path = vim/pack/bundle/opt/vim-cheat40
 	url = git@github.com:lifepillar/vim-cheat40.git
+[submodule "vim/pack/bundle/opt/clever-f"]
+	path = vim/pack/bundle/opt/clever-f
+	url = git@github.com:rhysd/clever-f.vim.git
