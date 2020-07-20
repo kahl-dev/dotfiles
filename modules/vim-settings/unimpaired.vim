@@ -8,10 +8,3 @@ if &loadplugins
 
   endif
 endif
-
-nmap < [
-nmap > ]
-omap < [
-omap > ]
-xmap < [
-xmap > ]
