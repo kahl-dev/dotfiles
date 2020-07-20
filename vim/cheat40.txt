@@ -49,6 +49,7 @@ File explorer (Netrw)    :Ex           N
 # Search
 Search » for this word   *            *M
 Search « for this word   #            *M
+Search under cursors    <Leader>s      N
 
 Replace char             s             N
 Repeat f/t/F/T »         ;             M
