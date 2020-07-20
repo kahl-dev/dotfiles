@@ -11,9 +11,16 @@ Show yank list           «Spc-y»       N
 }}}
 Remember {{{1
 
+# Highlights
+
+Tgl search highlights    yoh           N
+Tgl relative line num    yor           N
+Tgl line wrapping        yow           N
+Tgl cursor cross-hairs   yox           N
+
 # Paste
-Paste above              >p            N
-Paste below              <p            N
+Paste above              =P            N
+Paste below              =p            N
 
 # Navigation
 Fuzzy open file          :e /f/**/b.js N
