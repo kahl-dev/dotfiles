@@ -11,24 +11,41 @@ if &loadplugins
     " Doc: https://github.com/chriskempson/base16-vim
     packadd! base16-vim " Add base16 theme
 
-    " packadd! restore_view.vim
+    " Doc: https://github.com/christoomey/vim-tmux-navigator
+    packadd! vim-tmux-navigator
+
+    " tcomment provides easy to use, file-type sensible comments for Vim
+    " Doc: https://github.com/tomtom/tcomment_vim
     packadd! tcomment_vim
+
+    " Terminus enhances Vim's and Neovim's integration with the terminal in 
+    " four ways, particularly when using tmux and iTerm or KDE Konsole,
+    " closing the gap between terminal and GUI Vim
+    " Doc: https://github.com/wincent/terminus
     packadd! terminus
+
+    " Add icons to your plugins
+    " Doc: https://github.com/ryanoasis/vim-devicons
     packadd! vim-devicons
-    packadd! vim-eunuch
+
+    " Fugitive is the premier Vim plugin for Git. Or maybe it's the premier 
+    " Git plugin for Vim? 
+    " Doc: https://github.com/tpope/vim-fugitive
     packadd! vim-fugitive
-    packadd! vim-hardtime
 
     " Doc: https://github.com/tpope/vim-surround
     packadd! vim-surround
 
-    " Doc: https://github.com/christoomey/vim-tmux-navigator
-    packadd! vim-tmux-navigator
+    " Vim sugar for the UNIX shell commands that need it the most
+    " Doc: https://github.com/tpope/vim-eunuch
+    packadd! vim-eunuch
 
     " Add repeat possibly for plugins like (souround ...)
     " Doc: https://github.com/tpope/vim-repeat
     packadd! vim-repeat
 
+    " Syntax highlighting for CJSON in Vim
+    " Doc: https://github.com/neoclide/jsonc.vim
     packadd! vim-jsonc
 
   endif

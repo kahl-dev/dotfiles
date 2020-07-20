@@ -66,10 +66,6 @@
 	path = vim/pack/bundle/opt/vim-fugitive
 	url = git@github.com:tpope/vim-fugitive.git
   ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-trailing-whitespace"]
-	path = vim/pack/bundle/opt/vim-trailing-whitespace
-	url = git@github.com:bronson/vim-trailing-whitespace.git
-  ignore = dirty
 [submodule "vim/pack/bundle/opt/vim-surround"]
 	path = vim/pack/bundle/opt/vim-surround
 	url = git@github.com:tpope/vim-surround.git
@@ -97,10 +93,6 @@
 [submodule "zsh/custom/plugins/zsh-interactive-cd"]
 	path = zsh/custom/plugins/zsh-interactive-cd
 	url = git@github.com:changyuheng/zsh-interactive-cd.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/restore_view.vim"]
-	path = vim/pack/bundle/opt/restore_view.vim
-	url = git@github.com:vim-scripts/restore_view.vim.git
   ignore = dirty
 [submodule "vim/pack/bundle/opt/tcomment_vim"]
 	path = vim/pack/bundle/opt/tcomment_vim
