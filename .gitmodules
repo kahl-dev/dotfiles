@@ -145,15 +145,20 @@
 [submodule "vim/pack/bundle/opt/undotree"]
 	path = vim/pack/bundle/opt/undotree
 	url = git@github.com:mbbill/undotree.git
+  ignore = dirty
 [submodule "vim/pack/bundle/opt/vim-jsonc"]
 	path = vim/pack/bundle/opt/vim-jsonc
 	url = git@github.com:kevinoid/vim-jsonc.git
+  ignore = dirty
 [submodule "vim/pack/bundle/opt/vim-cheat40"]
 	path = vim/pack/bundle/opt/vim-cheat40
 	url = git@github.com:lifepillar/vim-cheat40.git
+  ignore = dirty
 [submodule "vim/pack/bundle/opt/clever-f"]
 	path = vim/pack/bundle/opt/clever-f
 	url = git@github.com:rhysd/clever-f.vim.git
+  ignore = dirty
 [submodule "vim/pack/bundle/opt/vim-repeat"]
 	path = vim/pack/bundle/opt/vim-repeat
 	url = https://github.com/tpope/vim-repeat
+  ignore = dirty
