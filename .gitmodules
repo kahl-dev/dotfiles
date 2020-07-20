@@ -165,3 +165,6 @@
 [submodule "vim/pack/bundle/opt/vim-smoothie"]
 	path = vim/pack/bundle/opt/vim-smoothie
 	url = git@github.com:psliwka/vim-smoothie.git
+[submodule "vim/pack/bundle/opt/vim-sleuth"]
+	path = vim/pack/bundle/opt/vim-sleuth
+	url = git@github.com:tpope/vim-sleuth.git

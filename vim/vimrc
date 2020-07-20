@@ -48,7 +48,13 @@ if &loadplugins
     " Doc: https://github.com/neoclide/jsonc.vim
     packadd! vim-jsonc
 
+    " Smooth scroll 
+    " Doc: https://github.com/psliwka/vim-smoothie"
     packadd! vim-smoothie
+
+    " Fully automatic indentation
+    " Doc: https://github.com/tpope/vim-sleuth
+    packadd! vim-sleuth
 
   endif
 endif
