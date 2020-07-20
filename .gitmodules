@@ -162,3 +162,6 @@
 	path = vim/pack/bundle/opt/vim-repeat
 	url = https://github.com/tpope/vim-repeat
   ignore = dirty
+[submodule "vim/pack/bundle/opt/vim-smoothie"]
+	path = vim/pack/bundle/opt/vim-smoothie
+	url = git@github.com:psliwka/vim-smoothie.git

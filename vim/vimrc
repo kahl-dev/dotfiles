@@ -48,6 +48,8 @@ if &loadplugins
     " Doc: https://github.com/neoclide/jsonc.vim
     packadd! vim-jsonc
 
+    packadd! vim-smoothie
+
   endif
 endif
 
