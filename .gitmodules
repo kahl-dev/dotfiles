@@ -164,12 +164,12 @@
 [submodule "vim/pack/bundle/opt/vim-jsonc"]
 	path = vim/pack/bundle/opt/vim-jsonc
 	url = git@github.com:kevinoid/vim-jsonc.git
-[submodule "vim/pack/bundle/opt/coc-fzf"]
-	path = vim/pack/bundle/opt/coc-fzf
-	url = git@github.com:antoinemadec/coc-fzf.git
 [submodule "vim/pack/bundle/opt/vim-cheat40"]
 	path = vim/pack/bundle/opt/vim-cheat40
 	url = git@github.com:lifepillar/vim-cheat40.git
 [submodule "vim/pack/bundle/opt/clever-f"]
 	path = vim/pack/bundle/opt/clever-f
 	url = git@github.com:rhysd/clever-f.vim.git
+[submodule "vim/pack/bundle/opt/vim-repeat"]
+	path = vim/pack/bundle/opt/vim-repeat
+	url = https://github.com/tpope/vim-repeat

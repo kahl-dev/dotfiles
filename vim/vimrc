@@ -19,9 +19,19 @@ if &loadplugins
     packadd! vim-eunuch
     packadd! vim-fugitive
     packadd! vim-hardtime
+
+    " Doc: https://github.com/tpope/vim-surround
     packadd! vim-surround
+
+    " Doc: https://github.com/christoomey/vim-tmux-navigator
     packadd! vim-tmux-navigator
-    packadd! vim-unimpaired " Used for Text bubble http://vimcasts.org/episodes/bubbling-text/
+
+    " Add repeat possibly for plugins like (souround ...)
+    " Doc: https://github.com/tpope/vim-repeat
+    packadd! vim-repeat
+
+    " Autoclose xml
+    " https://github.com/othree/xml.vim
     packadd! xml.vim
     packadd! vim-jsonc
 

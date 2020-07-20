@@ -2,7 +2,6 @@
   "dependencies": {
     "coc-css": ">=1.2.4",
     "coc-emmet": ">=1.1.4",
-    "coc-fzf-preview": ">=0.0.25",
     "coc-git": ">=1.7.13",
     "coc-highlight": ">=1.2.5",
     "coc-html": ">=1.2.4",

@@ -7,7 +7,6 @@ if &loadplugins
   if has('packages')
 
     packadd! coc.nvim
-    packadd! coc-fzf
 
   endif
 endif
