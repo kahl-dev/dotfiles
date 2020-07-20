@@ -53,7 +53,7 @@ endif
 
 " Features {{{
 
-filetype indent plugin on         " load filetype-specific indent files"
+filetype indent plugin on         " load filetype-specific indent files
 syntax on                         " Enable syntax highlighting
 
 " }}}
