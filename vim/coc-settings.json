@@ -10,12 +10,5 @@
    * Yank
    * Doc: https://github.com/neoclide/coc-yank
    */
-  "yank.highlight.duration": 250,
-  /**
-   * Jira
-   * Doc: https://github.com/jberglinds/coc-jira-complete
-   */
-  "jira.workspaceUrl": "https://louis-internet.atlassian.net",
-  "jira.user.email": "kahl@louis.info",
-  "jira.user.apiKey": "gKII0Wgv3VnONHC9lGCaBB2A"
+  "yank.highlight.duration": 250
 }

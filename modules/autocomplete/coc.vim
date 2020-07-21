@@ -169,3 +169,13 @@ endfunc
 
 " Toggle yank list
 nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
+
+let g:coc_user_config = {}
+
+" Jira
+" Doc: https://github.com/jberglinds/coc-jira-complete
+call extend(g:coc_user_config, {
+\    'jira.workspaceUrl': $JIRA_WORKSPACE ,
+\    'jira.user.email': $JIRA_USER_EMAIL,
+\    'jira.user.apiKey': $JIRA_API_KEY,
+\ })
