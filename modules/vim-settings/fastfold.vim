@@ -4,7 +4,7 @@
 if &loadplugins
   if has('packages')
 
-    packadd! FastFold
+    " packadd! FastFold
 
   endif
 endif
