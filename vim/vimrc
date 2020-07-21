@@ -18,7 +18,7 @@ if &loadplugins
     " Doc: https://github.com/tomtom/tcomment_vim
     " packadd! tcomment_vim
 
-    " Terminus enhances Vim's and Neovim's integration with the terminal in 
+    " Terminus enhances Vim's and Neovim's integration with the terminal in
     " four ways, particularly when using tmux and iTerm or KDE Konsole,
     " closing the gap between terminal and GUI Vim
     " Doc: https://github.com/wincent/terminus
@@ -28,8 +28,8 @@ if &loadplugins
     " Doc: https://github.com/ryanoasis/vim-devicons
     packadd! vim-devicons
 
-    " Fugitive is the premier Vim plugin for Git. Or maybe it's the premier 
-    " Git plugin for Vim? 
+    " Fugitive is the premier Vim plugin for Git. Or maybe it's the premier
+    " Git plugin for Vim?
     " Doc: https://github.com/tpope/vim-fugitive
     packadd! vim-fugitive
 
@@ -48,26 +48,9 @@ if &loadplugins
     " Doc: https://github.com/neoclide/jsonc.vim
     packadd! vim-jsonc
 
-    " Smooth scroll 
-    " Doc: https://github.com/psliwka/vim-smoothie"
-    packadd! vim-smoothie
-
     " Fully automatic indentation
     " Doc: https://github.com/tpope/vim-sleuth
     packadd! vim-sleuth
-
-    " Comment stuff out.
-    " Doc: https://github.com/tpope/vim-commentary
-    packadd! vim-commentary
-    " Add more support for vim-commentary
-    " Doc: https://github.com/suy/vim-context-commentstring
-    packadd! vim-context-commentstring
-
-    let g:context#commentstring#table.vue = {
-      \ 'javaScript'  : '//%s',
-      \ 'cssStyle'    : '/*%s*/',
-      \ 'vue_scss'    : '/*%s*/',
-      \}
 
   endif
 endif
@@ -171,7 +154,7 @@ set updatetime=50
 set conceallevel=2
 autocmd VimResized * wincmd =     " Adjust vim size on resize
 
-" Autoread will automatically update an open buffer if it has been changed 
+" Autoread will automatically update an open buffer if it has been changed
 " outside the current edit session, usually by an external program.
 " Blog: https://bluz71.github.io/2017/05/15/vim-tips-tricks.html#autoread
 set autoread
