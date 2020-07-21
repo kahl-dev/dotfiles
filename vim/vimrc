@@ -16,7 +16,7 @@ if &loadplugins
 
     " tcomment provides easy to use, file-type sensible comments for Vim
     " Doc: https://github.com/tomtom/tcomment_vim
-    packadd! tcomment_vim
+    " packadd! tcomment_vim
 
     " Terminus enhances Vim's and Neovim's integration with the terminal in 
     " four ways, particularly when using tmux and iTerm or KDE Konsole,
@@ -55,6 +55,19 @@ if &loadplugins
     " Fully automatic indentation
     " Doc: https://github.com/tpope/vim-sleuth
     packadd! vim-sleuth
+
+    " Comment stuff out.
+    " Doc: https://github.com/tpope/vim-commentary
+    packadd! vim-commentary
+    " Add more support for vim-commentary
+    " Doc: https://github.com/suy/vim-context-commentstring
+    packadd! vim-context-commentstring
+
+    let g:context#commentstring#table.vue = {
+      \ 'javaScript'  : '//%s',
+      \ 'cssStyle'    : '/*%s*/',
+      \ 'vue_scss'    : '/*%s*/',
+      \}
 
   endif
 endif

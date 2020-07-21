@@ -94,10 +94,6 @@
 	path = zsh/custom/plugins/zsh-interactive-cd
 	url = git@github.com:changyuheng/zsh-interactive-cd.git
   ignore = dirty
-[submodule "vim/pack/bundle/opt/tcomment_vim"]
-	path = vim/pack/bundle/opt/tcomment_vim
-	url = git@github.com:tomtom/tcomment_vim.git
-  ignore = dirty
 [submodule "vim/pack/bundle/opt/ale"]
 	path = vim/pack/bundle/opt/ale
 	url = git@github.com:w0rp/ale.git
@@ -170,3 +166,9 @@
 	path = vim/pack/bundle/opt/vim-sleuth
 	url = git@github.com:tpope/vim-sleuth.git
   ignore = dirty
+[submodule "vim/pack/bundle/opt/vim-commentary"]
+	path = vim/pack/bundle/opt/vim-commentary
+	url = git@github.com:tpope/vim-commentary.git
+[submodule "vim/pack/bundle/opt/vim-context-commentstring"]
+	path = vim/pack/bundle/opt/vim-context-commentstring
+	url = git@github.com:suy/vim-context-commentstring.git
