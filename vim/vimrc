@@ -339,16 +339,6 @@ nnoremap <C-s> :syntax sync fromstart<CR>
 " Do not replace buffer with paste
 xnoremap p "_dP
 
-" play a macro recorded to register q
-" nnoremap <Space> @q
-
-" Execute makro in visual selection
-xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
-function! ExecuteMacroOverVisualRange()
-  echo "@".getcmdline()
-  execute ":'<,'>normal @".nr2char(getchar())
-endfunction
-
 " Search and replace term cursor
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 
