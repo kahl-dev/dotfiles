@@ -4,5 +4,4 @@
 
 projects:
 
-- alfred toggle wireless network with node alfy
-- build own alfred tab search 
+- build own alfred tab search
