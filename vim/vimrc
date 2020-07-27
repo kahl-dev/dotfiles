@@ -50,7 +50,7 @@ if &loadplugins
 
     " Fully automatic indentation
     " Doc: https://github.com/tpope/vim-sleuth
-    packadd! vim-sleuth
+    " packadd! vim-sleuth
 
   endif
 endif
