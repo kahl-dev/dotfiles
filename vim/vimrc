@@ -341,6 +341,7 @@ xnoremap p "_dP
 
 " Search and replace term cursor
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
+nnoremap <Leader>S y:%s/<ctrl-r>"/new text/g
 
 " }}}
 " }}}
