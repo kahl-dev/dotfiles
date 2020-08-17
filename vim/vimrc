@@ -31,7 +31,11 @@ if &loadplugins
     " Fugitive is the premier Vim plugin for Git. Or maybe it's the premier
     " Git plugin for Vim?
     " Doc: https://github.com/tpope/vim-fugitive
+    " Doc: https://github.com/shumphrey/fugitive-gitlab.vim
+    " Doc: https://github.com/tpope/vim-rhubarb
     packadd! vim-fugitive
+    packadd! fugitive-gitlab.vim " Add fugitive gitlab support
+    packadd! vim-rhubarb  " Add fugitive github support
 
     " Doc: https://github.com/tpope/vim-surround
     packadd! vim-surround
@@ -341,6 +345,7 @@ xnoremap p "_dP
 
 " Search and replace term cursor
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
+nnoremap <Leader>S y:%s/<ctrl-r>"/new text/g
 
 " }}}
 " }}}
@@ -351,6 +356,11 @@ else
     let python_version=0
 endif
 " }}}
+
+let localVimrc = "~/.vimrc-local"
+if filereadable(expand(localVimrc))
+  exe 'source' localVimrc
+endif
 
 let modules = 'find $DOTFILES/modules -type f -name "*.vim" ! -name "pre.vim" ! -name "_*.vim" | sort -n'
 for fpath in split(system(modules), '\n')
