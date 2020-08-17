@@ -174,3 +174,9 @@
   path = vim/pack/bundle/opt/vim-context-commentstring
   url = git@github.com:suy/vim-context-commentstring.git
   ignore = dirty
+[submodule "vim/pack/bundle/opt/fugitive-gitlab.vim"]
+	path = vim/pack/bundle/opt/fugitive-gitlab.vim
+	url = git@github.com:shumphrey/fugitive-gitlab.vim.git
+[submodule "vim/pack/bundle/opt/vim-rhubarb"]
+	path = vim/pack/bundle/opt/vim-rhubarb
+	url = git@github.com:tpope/vim-rhubarb.git
