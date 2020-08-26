@@ -2,6 +2,8 @@
 - Learn https://github.com/tpope/vim-fugitive
 - https://bluz71.github.io/
 - lorem20 make a lorem ipsum with 20 words
+- remove ohmyzsh / replace antigen / zplug
+- better submodule handling / maybe back to vim-plug?
 
 projects:
 
