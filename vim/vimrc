@@ -28,15 +28,6 @@ if &loadplugins
     " Doc: https://github.com/ryanoasis/vim-devicons
     packadd! vim-devicons
 
-    " Fugitive is the premier Vim plugin for Git. Or maybe it's the premier
-    " Git plugin for Vim?
-    " Doc: https://github.com/tpope/vim-fugitive
-    " Doc: https://github.com/shumphrey/fugitive-gitlab.vim
-    " Doc: https://github.com/tpope/vim-rhubarb
-    packadd! vim-fugitive
-    packadd! fugitive-gitlab.vim " Add fugitive gitlab support
-    packadd! vim-rhubarb  " Add fugitive github support
-
     " Doc: https://github.com/tpope/vim-surround
     packadd! vim-surround
 
@@ -149,7 +140,7 @@ set t_RV=                         " fix first line on load // bugfix for hyper
 set number                        " show line numbers
 set relativenumber                " show relative numbers
 set nocursorcolumn
-set nocursorline                    " highlight cursor line
+set nocursorline                  " highlight cursor line
 set scrolloff=10                  " min numbers above and below cursor
 set cmdheight=2                   " command window height to 2
 set pastetoggle=<F10>             " toggle paste mode

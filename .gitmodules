@@ -177,6 +177,8 @@
 [submodule "vim/pack/bundle/opt/fugitive-gitlab.vim"]
 	path = vim/pack/bundle/opt/fugitive-gitlab.vim
 	url = git@github.com:shumphrey/fugitive-gitlab.vim.git
+  ignore = dirty
 [submodule "vim/pack/bundle/opt/vim-rhubarb"]
 	path = vim/pack/bundle/opt/vim-rhubarb
 	url = git@github.com:tpope/vim-rhubarb.git
+  ignore = dirty
