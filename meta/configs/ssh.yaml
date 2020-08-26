@@ -1,2 +1,11 @@
+- defaults:
+    link:
+      force: true
+    shell:
+      stdout: true
+
+- link:
+    '~/.ssh/rc': ssh/rc
+
 - shell:
     - [mkdir -p ~/.ssh/config.d]
