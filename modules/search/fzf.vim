@@ -8,6 +8,7 @@ if executable('fzf')
     if has('packages')
 
       packadd! fzf.vim
+      packadd! fzf-checkout.vim
 
     endif
   endif
@@ -74,7 +75,8 @@ if executable('fzf')
 
   nnoremap <silent> <leader>gf :GFiles?<cr>
   nnoremap <silent> <leader>gb :BCommits<cr>
-  nnoremap <silent> <leader>gc :Commits<cr>
+  " nnoremap <silent> <leader>gc :Commits<cr>
+  nnoremap <silent> <leader>gc :GCheckout<cr>
 
   nnoremap <silent> <leader>fr :Rg<cr>
 

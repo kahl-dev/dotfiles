@@ -182,3 +182,6 @@
 	path = vim/pack/bundle/opt/vim-rhubarb
 	url = git@github.com:tpope/vim-rhubarb.git
   ignore = dirty
+[submodule "vim/pack/bundle/opt/fzf-checkout.vim"]
+	path = vim/pack/bundle/opt/fzf-checkout.vim
+	url = git@github.com:stsewd/fzf-checkout.vim.git
