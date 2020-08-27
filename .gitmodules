@@ -185,3 +185,4 @@
 [submodule "vim/pack/bundle/opt/fzf-checkout.vim"]
 	path = vim/pack/bundle/opt/fzf-checkout.vim
 	url = git@github.com:stsewd/fzf-checkout.vim.git
+  ignore = dirty
