@@ -47,6 +47,12 @@ if &loadplugins
     " Doc: https://github.com/tpope/vim-sleuth
     " packadd! vim-sleuth
 
+    " Add posibility to share clipboard for vim inside different tmux windows
+    " Doc: https://github.com/tmux-plugins/vim-tmux-focus-events
+    " Ddc: https://github.com/roxma/vim-tmux-clipboard
+    packadd! vim-tmux-focus-events
+    packadd! vim-tmux-clipboard
+
   endif
 endif
 

@@ -186,3 +186,9 @@
 	path = vim/pack/bundle/opt/fzf-checkout.vim
 	url = git@github.com:stsewd/fzf-checkout.vim.git
   ignore = dirty
+[submodule "vim/pack/bundle/opt/vim-tmux-focus-events"]
+	path = vim/pack/bundle/opt/vim-tmux-focus-events
+	url = git@github.com:tmux-plugins/vim-tmux-focus-events.git
+[submodule "vim/pack/bundle/opt/vim-tmux-clipboard"]
+	path = vim/pack/bundle/opt/vim-tmux-clipboard
+	url = git@github.com:roxma/vim-tmux-clipboard.git
