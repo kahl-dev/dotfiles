@@ -38,54 +38,6 @@
   path = meta/dotbot-brew
   url = git@github.com:d12frosted/dotbot-brew.git
   ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-airline"]
-  path = vim/pack/bundle/opt/vim-airline
-  url = git@github.com:vim-airline/vim-airline.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-airline-themes"]
-  path = vim/pack/bundle/opt/vim-airline-themes
-  url = git@github.com:vim-airline/vim-airline-themes.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/indentLine"]
-  path = vim/pack/bundle/opt/indentLine
-  url = git@github.com:Yggdroot/indentLine.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-devicons"]
-  path = vim/pack/bundle/opt/vim-devicons
-  url = git@github.com:ryanoasis/vim-devicons.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/nerdtree"]
-  path = vim/pack/bundle/opt/nerdtree
-  url = git@github.com:scrooloose/nerdtree.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-polyglot"]
-  path = vim/pack/bundle/opt/vim-polyglot
-  url = git@github.com:sheerun/vim-polyglot.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-fugitive"]
-  path = vim/pack/bundle/opt/vim-fugitive
-  url = git@github.com:tpope/vim-fugitive.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-surround"]
-  path = vim/pack/bundle/opt/vim-surround
-  url = git@github.com:tpope/vim-surround.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-unimpaired"]
-  path = vim/pack/bundle/opt/vim-unimpaired
-  url = git@github.com:tpope/vim-unimpaired.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-eunuch"]
-  path = vim/pack/bundle/opt/vim-eunuch
-  url = git@github.com:tpope/vim-eunuch.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-tmux-navigator"]
-  path = vim/pack/bundle/opt/vim-tmux-navigator
-  url = git@github.com:christoomey/vim-tmux-navigator.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/fzf.vim"]
-  path = vim/pack/bundle/opt/fzf.vim
-  url = git@github.com:junegunn/fzf.vim.git
-  ignore = dirty
 [submodule "zsh/custom/plugins/enhancd"]
   path = zsh/custom/plugins/enhancd
   url = git@github.com:b4b4r07/enhancd.git
@@ -94,101 +46,19 @@
   path = zsh/custom/plugins/zsh-interactive-cd
   url = git@github.com:changyuheng/zsh-interactive-cd.git
   ignore = dirty
-[submodule "vim/pack/bundle/opt/ale"]
-  path = vim/pack/bundle/opt/ale
-  url = git@github.com:w0rp/ale.git
-  ignore = dirty
 [submodule "zsh/custom/plugins/base16-shell"]
   path = zsh/custom/plugins/base16-shell
   url = git@github.com:chriskempson/base16-shell.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/base16-vim"]
-  path = vim/pack/bundle/opt/base16-vim
-  url = git@github.com:danielwe/base16-vim.git
   ignore = dirty
 [submodule "zsh/custom/themes/powerlevel9k"]
   path = zsh/custom/themes/powerlevel9k
   url = git@github.com:bhilburn/powerlevel9k.git
   ignore = dirty
-[submodule "vim/pack/bundle/opt/FastFold"]
-  path = vim/pack/bundle/opt/FastFold
-  url = git@github.com:Konfekt/FastFold.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-rooter"]
-  path = vim/pack/bundle/opt/vim-rooter
-  url = git@github.com:airblade/vim-rooter.git
-  ignore = dirty
 [submodule "vscode/extensions/vscode-gitlens"]
   path = vscode/extensions/vscode-gitlens
   url = git@github.com:eamodio/vscode-gitlens.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-hardtime"]
-  path = vim/pack/bundle/opt/vim-hardtime
-  url = git@github.com:takac/vim-hardtime.git
   ignore = dirty
 [submodule "zsh/custom/themes/powerlevel10k"]
   path = zsh/custom/themes/powerlevel10k
   url = git@github.com:romkatv/powerlevel10k.git
   ignore = dirty
-[submodule "vim/pack/bundle/opt/terminus"]
-  path = vim/pack/bundle/opt/terminus
-  url = git@github.com:wincent/terminus.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/coc.nvim"]
-  path = vim/pack/bundle/opt/coc.nvim
-  url = git@github.com:neoclide/coc.nvim.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/undotree"]
-  path = vim/pack/bundle/opt/undotree
-  url = git@github.com:mbbill/undotree.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-jsonc"]
-  path = vim/pack/bundle/opt/vim-jsonc
-  url = git@github.com:kevinoid/vim-jsonc.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-cheat40"]
-  path = vim/pack/bundle/opt/vim-cheat40
-  url = git@github.com:lifepillar/vim-cheat40.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/clever-f"]
-  path = vim/pack/bundle/opt/clever-f
-  url = git@github.com:rhysd/clever-f.vim.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-repeat"]
-  path = vim/pack/bundle/opt/vim-repeat
-  url = https://github.com/tpope/vim-repeat
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-smoothie"]
-  path = vim/pack/bundle/opt/vim-smoothie
-  url = git@github.com:psliwka/vim-smoothie.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-sleuth"]
-  path = vim/pack/bundle/opt/vim-sleuth
-  url = git@github.com:tpope/vim-sleuth.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-commentary"]
-  path = vim/pack/bundle/opt/vim-commentary
-  url = git@github.com:tpope/vim-commentary.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-context-commentstring"]
-  path = vim/pack/bundle/opt/vim-context-commentstring
-  url = git@github.com:suy/vim-context-commentstring.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/fugitive-gitlab.vim"]
-	path = vim/pack/bundle/opt/fugitive-gitlab.vim
-	url = git@github.com:shumphrey/fugitive-gitlab.vim.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-rhubarb"]
-	path = vim/pack/bundle/opt/vim-rhubarb
-	url = git@github.com:tpope/vim-rhubarb.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/fzf-checkout.vim"]
-	path = vim/pack/bundle/opt/fzf-checkout.vim
-	url = git@github.com:stsewd/fzf-checkout.vim.git
-  ignore = dirty
-[submodule "vim/pack/bundle/opt/vim-tmux-focus-events"]
-	path = vim/pack/bundle/opt/vim-tmux-focus-events
-	url = git@github.com:tmux-plugins/vim-tmux-focus-events.git
-[submodule "vim/pack/bundle/opt/vim-tmux-clipboard"]
-	path = vim/pack/bundle/opt/vim-tmux-clipboard
-	url = git@github.com:roxma/vim-tmux-clipboard.git

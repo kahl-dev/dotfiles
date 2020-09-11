@@ -1,14 +1,6 @@
 " Asynchronous Lint Engine
 " Doc: https://github.com/dense-analysis/ale
-
-if &loadplugins
-  if has('packages')
-
-    packadd! ale
-
-  endif
-endif
-
+Plug 'dense-analysis/ale'
 
 let g:ale_linters = {
 \   'javascript':   [ 'eslint' ],

@@ -1,17 +1,14 @@
 " Fuzzy search in vim
 " Doc: https://github.com/junegunn/fzf.vim
 " Doc: https://github.com/junegunn/fzf
+" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 if executable('fzf')
 
-  if &loadplugins
-    if has('packages')
-
-      packadd! fzf.vim
-      packadd! fzf-checkout.vim
-
-    endif
-  endif
+  " Manage branches and tags with fzf.
+  " Doc: https://github.com/stsewd/fzf-checkout.vim
+  Plug 'stsewd/fzf-checkout.vim'
 
   set rtp+=~/.fzf
   let g:fzf_action = {

@@ -2,18 +2,65 @@
 " Doc: https://github.com/neoclide/coc.nvim
 " Langserver: https://github.com/neoclide/coc.nvim/wiki/Language-servers
 " FAQ: https://github.com/neoclide/coc.nvim/wiki/F.A.Q
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
-if &loadplugins
-  if has('packages')
+" Doc: https://github.com/neoclide/coc-css
+Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
 
-    packadd! coc.nvim
+" Doc: https://github.com/neoclide/coc-emmet
+Plug 'neoclide/coc-emmet', {'do': 'yarn install --frozen-lockfile'}
 
-  endif
-endif
+" Doc: https://github.com/neoclide/coc-git
+Plug 'neoclide/coc-git', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/neoclide/coc-highlight
+Plug 'neoclide/coc-highlight', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/neoclide/coc-html
+Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/jberglinds/coc-jira-complete
+Plug 'jberglinds/coc-jira-complete', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/neoclide/coc-json
+Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/fannheyward/coc-markdownlint
+Plug 'fannheyward/coc-markdownlint', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/neoclide/coc-pairs
+Plug 'neoclide/coc-pairs', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/marlonfan/coc-phpls
+Plug 'marlonfan/coc-phpls', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/josa42/coc-sh
+Plug 'josa42/coc-sh', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/neoclide/coc-snippets
+Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/iamcco/coc-svg
+Plug 'iamcco/coc-svg', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/neoclide/coc-tabnine
+Plug 'neoclide/coc-tabnine', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/neoclide/coc-tsserver
+Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/neoclide/coc-vetur
+Plug 'neoclide/coc-vetur', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/neoclide/coc-yaml
+Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
+
+" Doc: https://github.com/neoclide/coc-snippets
+Plug 'neoclide/coc-yank', {'do': 'yarn install --frozen-lockfile'}
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
+" other plugin'before putting this into your config.
 " inoremap <silent><expr> <TAB>
 "       \ pumvisible() ? "\<C-n>" :
 "       \ <SID>check_back_space() ? "\<TAB>" :

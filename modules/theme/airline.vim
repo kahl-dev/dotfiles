@@ -1,11 +1,6 @@
-if &loadplugins
-  if has('packages')
-
-    packadd! vim-airline
-    packadd! vim-airline-themes
-
-  endif
-endif
+" Doc: https://github.com/vim-airline/vim-airline
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'

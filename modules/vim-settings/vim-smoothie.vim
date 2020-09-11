@@ -1,13 +1,6 @@
-" Smooth scroll
+" This (neo)vim plugin makes scrolling nice and smooth.
 " Doc: https://github.com/psliwka/vim-smoothie
-
-if &loadplugins
-  if has('packages')
-
-    packadd! vim-smoothie
-
-  endif
-endif
+Plug 'psliwka/vim-smoothie'
 
 let g:smoothie_no_default_mappings = 1
 silent! nmap <unique> <C-D>      <Plug>(SmoothieDownwards)
