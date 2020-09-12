@@ -14,12 +14,6 @@ call plug#begin('~/.vim/plugged')
     exe 'source' fpath
   endfor
 
-  " When combined with a set of tmux key bindings, the plugin will allow you
-  " to navigate seamlessly between vim and tmux splits using a consistent set
-  " of hotkeys.
-  " Doc: https://github.com/christoomey/vim-tmux-navigator
-  Plug 'christoomey/vim-tmux-navigator'
-
   " Terminus enhances Vim's and Neovim's integration with the terminal in
   " four ways, particularly when using tmux and iTerm or KDE Konsole,
   " closing the gap between terminal and GUI Vim
@@ -47,12 +41,6 @@ call plug#begin('~/.vim/plugged')
   " Syntax highlighting for CJSON in Vim
   " Doc: https://github.com/neoclide/jsonc.vim
   Plug 'neoclide/jsonc.vim'
-
-  " Add posibility to share clipboard for vim inside different tmux windows
-  " Doc: https://github.com/tmux-plugins/vim-tmux-focus-events
-  " Ddc: https://github.com/roxma/vim-tmux-clipboard
-  Plug 'tmux-plugins/vim-tmux-focus-events'
-  Plug 'roxma/vim-tmux-clipboard'
 
 " Features {{{
 
