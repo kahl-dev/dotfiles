@@ -2,7 +2,6 @@
 - Learn https://github.com/tpope/vim-fugitive
 - https://bluz71.github.io/
 - remove ohmyzsh / replace antigen / zplug
-- better submodule handling / maybe back to vim-plug?
 
 projects:
 
