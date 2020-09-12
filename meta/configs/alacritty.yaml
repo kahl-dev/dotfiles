@@ -1,0 +1,6 @@
+- defaults:
+    link:
+      force: true
+
+- link:
+    '~/.config/alacritty/alacritty.yml': ee/alacritty.yml

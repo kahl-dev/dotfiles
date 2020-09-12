@@ -25,6 +25,7 @@ cask "appcleaner"
 cask "bartender"
 #cask "daisydisk"
 #cask "dropbox"
+cask "font-hack-nerd-font"
 cask "font-droidsansmono-nerd-font"
 #cask "font-microsoft-office"
 cask "istat-menus"
@@ -69,6 +70,7 @@ cask "google-chrome-beta"
 
 # development
 cask "iterm2"
+cask 'alacritty'
 #brew "macvim"
 cask "mongodb-compass"
 cask "visual-studio-code"
