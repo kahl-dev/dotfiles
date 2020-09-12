@@ -3,4 +3,4 @@
 " Doc: https://github.com/Yggdroot/indentLine
 Plug 'Yggdroot/indentLine'
 
-let g:indentLine_fileTypeExclude = ['markdown']
+let g:indentLine_fileTypeExclude = ['markdown', 'coc-explorer']

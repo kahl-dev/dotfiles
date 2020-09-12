@@ -10,5 +10,12 @@
    * Yank
    * Doc: https://github.com/neoclide/coc-yank
    */
-  "yank.highlight.duration": 250
+  "yank.highlight.duration": 250,
+  /**
+   * Explorer
+   * Doc: https://github.com/weirongxu/coc-explorer
+   */
+  "explorer.icon.enableNerdfont": true,
+  "explorer.icon.enableVimDevicons": true,
+
 }

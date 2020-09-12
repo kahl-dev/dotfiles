@@ -58,6 +58,11 @@ Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
 " Doc: https://github.com/neoclide/coc-snippets
 Plug 'neoclide/coc-yank', {'do': 'yarn install --frozen-lockfile'}
 
+" Doc:https://github.com/weirongxu/coc-explorer
+Plug 'weirongxu/coc-explorer', {'do': 'yarn install --frozen-lockfile'}
+
+:nmap <leader>e :CocCommand explorer<CR>
+
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin'before putting this into your config.
