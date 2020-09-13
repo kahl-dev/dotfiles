@@ -311,8 +311,7 @@ xnoremap . :norm.<CR>
 nnoremap gV `[v`]
 
 " set leader key
-" let mapleader=","
-let g:mapleader="<Space>"
+let mapleader=","
 
 " edit vimrc/zshrc and jload vimrc bindings
 nnoremap <leader>ve :vsp $MYVIMRC<CR>
