@@ -17,13 +17,13 @@ if executable('fzf')
 
   let g:fzf_preview_window = 'top:50%'
   " See `man fzf-tmux` for available options
-  if exists('$TMUX')
-    let g:fzf_prefer_tmux = 1
-    " let g:fzf_layout = { 'tmux': '-p90%,60%' }
+  " if exists('$TMUX')
+  "   let g:fzf_prefer_tmux = 1
+  "   let g:fzf_layout = { 'tmux': '-p90%,60%' }
+  " else
+    " let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.95 } }
     let g:fzf_layout = { 'down': '~60%' }
-  else
-    let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.95 } }
-  endif
+  " endif
 
   " [[B]Commits] Customize the options used by 'git log':
   let g:fzf_commits_log_options = '--graph --color=always --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset"'
