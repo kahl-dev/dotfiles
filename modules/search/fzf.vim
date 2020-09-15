@@ -21,8 +21,8 @@ if executable('fzf')
   "   let g:fzf_prefer_tmux = 1
   "   let g:fzf_layout = { 'tmux': '-p90%,60%' }
   " else
-    " let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.95 } }
-    let g:fzf_layout = { 'down': '~60%' }
+    let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Todo', 'border': 'sharp' } }
+    " let g:fzf_layout = { 'down': '~60%' }
   " endif
 
   " [[B]Commits] Customize the options used by 'git log':
