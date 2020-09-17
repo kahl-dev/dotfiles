@@ -1,56 +1,76 @@
-# zmodload zsh/zprof
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# fi
 
-# Add modules
-for file in $(find $HOME/.dotfiles/modules -type f -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
-  source "$file";
-done
+### Added by Zinit's installer
+if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
+    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.zinit" && command chmod g-rwX "$HOME/.zinit"
+    command git clone https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
+        print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
+        print -P "%F{160}▓▒░ The clone has failed.%f%b"
+fi
 
 # https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script
 binaryExists() {
   command -v "$1" >/dev/null 2>&1
 }
 
-export DOTFILES=$HOME/.dotfiles 
-# Path to your oh-my-zsh installation.
-export ZSH=$DOTFILES/zsh/oh-my-zsh
+# Add modules
+for file in $(find $HOME/.dotfiles/modules -type f -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
+  source "$file";
+done
 
-# Load the default .profile
-[[ -s "$HOME/.profile" ]] && source "$HOME/.profile"
+export DOTFILES=$HOME/.dotfiles
 
-# Would you like to use another custom folder than $ZSH/custom?
-ZSH_CUSTOM=$DOTFILES/zsh/custom
+source "$HOME/.zinit/bin/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 
-# Array with functions to execute after zsh init
-after_init=()
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+# zinit light-mode for \
+#     zinit-zsh/z-a-rust \
+#     zinit-zsh/z-a-as-monitor \
+#     zinit-zsh/z-a-patch-dl \
+#     zinit-zsh/z-a-bin-gem-node
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=()
+# Powerlevel10k is a theme for Zsh. It emphasizes speed, flexibility and out-of-the-box experience.
+# https://github.com/romkatv/powerlevel10k
+zinit ice depth=1; zinit light romkatv/powerlevel10k
 
-unset MANPATH
-MANPATH=$(manpath)
+# sharkdp/fd
+zinit ice as"command" from"gh-r" mv"fd* -> fd" pick"fd/fd"
+zinit light sharkdp/fd
+
+zinit ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \
+    atpull"%atclone" make pick"src/vim"
+zinit light vim/vim
+
+zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX" nocompile
+zinit light tj/git-extras
+
+zinit ice wait"2" lucid
+zinit load chriskempson/base16-shell
+
+# A Zsh plugin to help remembering those shell aliases and Git aliases you once defined.
+# Doc: https://github.com/djui/alias-tips
+zinit ice wait"2" lucid
+zinit load djui/alias-tips
+
+# diff-so-fancy
+# zinit ice wait"2" lucid as"program" pick"bin/git-dsf"
+# zinit load zdharma/zsh-diff-so-fancy
 
 # Add modules
 for file in $(find $DOTFILES/modules -type f -name "*.zsh" ! -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
   source "$file";
 done
 
-ZSH_DISABLE_COMPFIX="true"
-source $ZSH/oh-my-zsh.sh
+### End of Zinit's installer chunk
 
-#  Set highlight styles for plugin
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=250'
-
-export MANPATH
-export NODE_MODULES
-export PATH
-
-# Init functions in array
-for func_name in "${after_init[@]}"
-do
-    $func_name
-done
-
-# zprof
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

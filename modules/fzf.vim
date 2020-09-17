@@ -1,7 +1,7 @@
 " Fuzzy search in vim
 " Doc: https://github.com/junegunn/fzf.vim
 " Doc: https://github.com/junegunn/fzf
-" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 if executable('fzf')
@@ -10,7 +10,7 @@ if executable('fzf')
   " Doc: https://github.com/stsewd/fzf-checkout.vim
   Plug 'stsewd/fzf-checkout.vim'
 
-  set rtp+=~/.fzf
+  " set rtp+=~/.fzf
   let g:fzf_action = {
     \ 'ctrl-x': 'split',
     \ 'ctrl-v': 'vsplit' }

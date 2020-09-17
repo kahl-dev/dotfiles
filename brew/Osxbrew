@@ -13,7 +13,7 @@ cask "spotify"
 #mas "PiPifier", id: 1160374471
 
 # tools
-brew "node"
+# brew "node"
 #brew "mongodb"
 brew "reattach-to-user-namespace"
 #brew "tree"
@@ -26,7 +26,7 @@ cask "bartender"
 #cask "daisydisk"
 #cask "dropbox"
 cask "font-hack-nerd-font"
-cask "font-droidsansmono-nerd-font"
+# cask "font-droidsansmono-nerd-font"
 #cask "font-microsoft-office"
 cask "istat-menus"
 cask "little-snitch"
@@ -80,6 +80,7 @@ cask "visual-studio-code"
 #brew "speedtest-cli"
 #cask "sequel-pro"
 #cask "pgadmin4"
+cask 'key-codes'
 
 # image
 #cask "skitch"
