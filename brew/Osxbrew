@@ -69,6 +69,7 @@ cask "google-chrome-beta"
 #cask "opera"
 
 # development
+brew 'golang'
 cask "iterm2"
 cask 'alacritty'
 #brew "macvim"

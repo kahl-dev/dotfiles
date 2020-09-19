@@ -1,6 +1,6 @@
 # Go to git root dir
-alias cdtl='cd "$(git rev-parse --show-toplevel)"'
-alias ..='cd ..'
+# alias cdtl='cd "$(git rev-parse --show-toplevel)"'
+# alias ..='cd ..'
 
 # Grep all aliases
 alias agrep='alias | grep'

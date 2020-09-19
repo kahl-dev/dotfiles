@@ -3,14 +3,7 @@
 zinit wait lucid atload'_zsh_autosuggest_start' light-mode for \
     zsh-users/zsh-autosuggestions
 
-# Suggestion Highlight Style
-# ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=4
+ZSH_AUTOSUGGEST_USE_ASYNC=true
 
-# # Disabling suggestion for large buffers
-# ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-
-# # Enable Asynchronous Mode
-# ZSH_AUTOSUGGEST_USE_ASYNC=true
-
-# bindkey '^ ' autosuggest-accept
-# bindkey '^z' autosuggest-toggle
+# ctrl + z; Toggles between enabled/disabled suggestions.
+bindkey '^z' autosuggest-toggle
