@@ -22,6 +22,15 @@ alias vi='vim'
 
 # alias ssh="TERM=xterm-256color ssh"
 
+# Check if main exists and use instead of master
+function git_main_branch() {
+  if [[ -n "$(git branch --list main)" ]]; then
+    echo main
+  else
+    echo master
+  fi
+}
+
 # alias vim="ASDF_NODEJS_VERSION=14.4.0 vim"
 
 alias l="ls -la"
@@ -37,6 +46,13 @@ alias gb='git branch'
 alias gbD='git branch -D'
 alias gbd='git branch -d'
 
+alias gc='git commit -v'
+alias gc!='git commit -v --amend'
+alias gcm='git checkout $(git_main_branch)'
+alias gcb='git checkout -b'
+alias gcmsg='git commit -m'
+alias gcl='git clone --recurse-submodules'
+alias gclean='git clean -id'
 alias gco='git checkout'
 
 alias gd='git diff'
