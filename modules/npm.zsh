@@ -1,9 +1,3 @@
-# @TODO try out
-# Better completion for npm
-# Doc: https://github.com/lukechilds/zsh-better-npm-completion
-zinit ice wait"2" lucid
-zinit load lukechilds/zsh-better-npm-completion
-
 # npm list without dependencies
 alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
 alias npmLsg="npm ls -g --depth=0 "$@" 2>/dev/null"

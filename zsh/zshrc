@@ -42,12 +42,15 @@ zinit light-mode for \
 zinit ice as"command" from"gh-r" mv"fd* -> fd" pick"fd/fd"
 zinit light sharkdp/fd
 
-zinit ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \
-    atpull"%atclone" make pick"src/vim"
-zinit light vim/vim
-
 zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX" nocompile
 zinit light tj/git-extras
+
+zinit snippet OMZL::directories.zsh
+zinit snippet OMZL::key-bindings.zsh
+zinit snippet OMZL::history.zsh
+zinit snippet OMZP::git-extras
+zinit snippet OMZP::git
+zinit snippet OMZP::yarn
 
 # A Zsh plugin to help remembering those shell aliases and Git aliases you once defined.
 # Doc: https://github.com/djui/alias-tips

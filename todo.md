@@ -6,3 +6,7 @@
 projects:
 
 - build own alfred tab search
+
+* alacritty mouse link support
+* allow .. to navigate on dir up
+* use more turbo mode in zinit

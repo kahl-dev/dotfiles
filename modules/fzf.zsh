@@ -3,6 +3,9 @@
 # Doc: https://github.com/Zsh-Packages/fzf
 
 initFzf() {
+  source $ZINIT[PLUGINS_DIR]/fzf/shell/key-bindings.zsh
+  source $ZINIT[PLUGINS_DIR]/fzf/shell/completion.zsh
+
   export FZF_INIT_OPTS='--reverse'
   export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
   export FZF_DEFAULT_COMMAND='rg --files'
@@ -59,9 +62,9 @@ initFzf() {
   alias fgbr='fzf_git_branch'
 }
 
-zinit atload"initFzf" pack"default+keys" for fzf
+zinit atload"initFzf" pack"default" for fzf
 
-zinit ice wait"2" lucid atload"fzfUpdate"
+zinit ice wait"4" lucid atload"fzfUpdate"
 zinit light fnune/base16-fzf
 
 export BASE16_SHELL_HOOKS=$DOTFILES/base16_hooks
@@ -75,5 +78,3 @@ function fzfUpdate {
 # This tool is designed to help you use git more efficiently. It's lightweight and easy to use.
 # Doc: https://github.com/wfxr/forgit
 zinit light wfxr/forgit
-
-# export FZF_COMPLETION_TRIGGER='~~'
