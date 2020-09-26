@@ -69,3 +69,5 @@
 
 [rebase]
 	autoStash = true
+[merge]
+	ff = false
