@@ -16,3 +16,5 @@ vim/coc/*
 vim/coc/extensions/*
 !vim/coc/extensions/package.json
 !vim/coc/extensions/yarn.lock
+
+brew/Basebrew.lock.json
