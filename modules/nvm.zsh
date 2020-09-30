@@ -6,5 +6,9 @@ export NVM_LAZY_LOAD=false
 export NVM_AUTO_USE=true
 export NVM_SYMLINK_CURRENT=true
 
-zinit ice wait"2" lucid
+function initNvm {
+  [ ! -d "$HOME/.nvm/default-packages" ] && cp $DOTFILES/config/default-packages $HOME/.nvm/default-packages
+}
+
+zinit ice wait"2" lucid atload"initNvm"
 zinit load lukechilds/zsh-nvm

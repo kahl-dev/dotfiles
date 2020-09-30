@@ -1,6 +1,5 @@
 yarn
 yarn-completions
-npm-check
 grunt
 prettier
 vue-cli
@@ -17,3 +16,7 @@ eslint-plugin-vue
 serve
 inspect-process
 serverless
+npm-merge-driver
+browser-sync
+gulp-cli
+npm-check-updates
