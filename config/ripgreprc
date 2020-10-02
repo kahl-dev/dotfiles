@@ -21,6 +21,10 @@ web:*.{html,css,scss,js}*
 --glob=!*.min.{css,js}
 --glob=!.git/*
 --glob=!node_modules/*
+--glob=!typo3
+--glob=!typo3_src
+--glob=!tpl
+--glob=!vendor
 
 # Because who cares about case!?
 --smart-case
