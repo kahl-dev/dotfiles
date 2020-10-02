@@ -72,6 +72,9 @@ set splitright                    " on window split put on right sote
 " set winwidth=110                  " force minimun window width
 set term=xterm
 
+let skip_defaults_vim=1
+set viminfo=""
+
 " }}}
 " Usability options {{{
 
