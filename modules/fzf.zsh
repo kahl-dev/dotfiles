@@ -6,7 +6,7 @@ initFzf() {
   source $ZINIT[PLUGINS_DIR]/fzf/shell/key-bindings.zsh
   source $ZINIT[PLUGINS_DIR]/fzf/shell/completion.zsh
 
-  export FZF_INIT_OPTS='--exact --border --cycle --reverse --height "80%"'
+  export FZF_INIT_OPTS='--border --cycle --reverse --height "80%"'
   export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
   export FZF_DEFAULT_COMMAND='rg --files'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
