@@ -10,3 +10,4 @@ projects:
 * alacritty mouse link support
 * allow .. to navigate on dir up
 * use more turbo mode in zinit
+* vim color plugin only for scss/css
