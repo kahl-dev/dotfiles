@@ -24,7 +24,6 @@ web:*.{html,css,scss,js}*
 --glob=!typo3
 --glob=!typo3_src
 --glob=!tpl
---glob=!vendor
 
 # Because who cares about case!?
 --smart-case
