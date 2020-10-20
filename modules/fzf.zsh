@@ -3,8 +3,8 @@
 # Doc: https://github.com/Zsh-Packages/fzf
 
 initFzf() {
-  source $ZINIT[PLUGINS_DIR]/fzf/shell/key-bindings.zsh
-  source $ZINIT[PLUGINS_DIR]/fzf/shell/completion.zsh
+  source $ZINIT[PLUGINS_DIR]/junegunn---fzf/shell/key-bindings.zsh
+  source $ZINIT[PLUGINS_DIR]/junegunn---fzf/shell/completion.zsh
 
   export FZF_INIT_OPTS='--border --cycle --reverse --height "80%"'
   export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
@@ -62,7 +62,12 @@ initFzf() {
   alias fgbr='fzf_git_branch'
 }
 
-zinit atload"initFzf" pack"default" for fzf
+# zinit atload"initFzf" pack"default" for fzf
+zinit lucid as=program pick="$ZPFX/bin/(fzf|fzf-tmux)" \
+    atload"initFzf" \
+    atclone="cp bin/(fzf|fzf-tmux) $ZPFX/bin" \
+    make="PREFIX=$ZPFX install" for \
+        junegunn/fzf
 
 zinit ice wait"4" lucid atload"fzfUpdate"
 zinit light fnune/base16-fzf
