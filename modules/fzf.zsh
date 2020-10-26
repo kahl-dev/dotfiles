@@ -6,6 +6,8 @@ initFzf() {
   source $ZINIT[PLUGINS_DIR]/junegunn---fzf/shell/key-bindings.zsh
   source $ZINIT[PLUGINS_DIR]/junegunn---fzf/shell/completion.zsh
 
+  bindkey "ç" fzf-cd-widget
+
   export FZF_INIT_OPTS='--border --cycle --reverse --height "80%"'
   export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
   export FZF_DEFAULT_COMMAND='rg --files'
