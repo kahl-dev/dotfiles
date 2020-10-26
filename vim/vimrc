@@ -42,6 +42,10 @@ call plug#begin('~/.vim/plugged')
   " Doc: https://github.com/neoclide/jsonc.vim
   Plug 'neoclide/jsonc.vim'
 
+  " This is an EditorConfig plugin for Vim.
+  " Doc: https://github.com/editorconfig/editorconfig-vim
+  Plug 'editorconfig/editorconfig-vim'
+
 " Features {{{
 
 filetype indent plugin on         " load filetype-specific indent files
