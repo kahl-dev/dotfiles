@@ -2,8 +2,8 @@
 " Doc: https://github.com/junegunn/fzf.vim
 " Doc: https://github.com/junegunn/fzf
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+" Plug /home/kahl/.zinit/polaris/bin/fzf
 Plug 'junegunn/fzf.vim'
-" Plug '~/.zinit/polaris/bin/fzf'
 
 " Manage branches and tags with fzf.
 " Doc: https://github.com/stsewd/fzf-checkout.vim
@@ -15,6 +15,7 @@ let g:fzf_action = {
 
 " let g:fzf_commits_log_options = '--exact'
 " let g:fzf_preview_window = ''
+let g:fzf_command_prefix = 'Fzf'
 
 " let g:fzf_preview_window = 'top:50%'
 " See `man fzf-tmux` for available options
@@ -26,16 +27,15 @@ let g:fzf_action = {
   " let g:fzf_layout = { 'down': '~60%' }
 " endif
 
-nnoremap <silent> <leader>ff :Files<cr>
-nnoremap <silent> <leader>fb :Buffers<cr>
-nnoremap <silent> <leader>fl :Lines<cr>
-nnoremap <silent> <leader>fh :FZFMru<cr>
-nnoremap <silent> <leader>ft :Filetypes<cr>
-nnoremap <silent> <leader>fm :Marks<cr>
+nnoremap <silent> <leader>ff :FzfFiles<cr>
+nnoremap <silent> <leader>fb :FzfBuffers<cr>
+nnoremap <silent> <leader>fl :FzfLines<cr>
+nnoremap <silent> <leader>ft :FzfFiletypes<cr>
+nnoremap <silent> <leader>fm :FzfMarks<cr>
 
-nnoremap <silent> <leader>gf :GFiles?<cr>
-nnoremap <silent> <leader>gb :BCommits<cr>
-nnoremap <silent> <leader>gcc :Commits<cr>
-nnoremap <silent> <leader>gco :GCheckout<cr>
+nnoremap <silent> <leader>gf :FzfGFiles?<cr>
+nnoremap <silent> <leader>gcb :FzfBCommits<cr>
+nnoremap <silent> <leader>gcc :FzfCommits<cr>
+nnoremap <silent> <leader>gb :GBranches<cr>
 
-nnoremap <silent> <leader>fr :Rg<cr>
+nnoremap <silent> <leader>fr :FzfRg<cr>
