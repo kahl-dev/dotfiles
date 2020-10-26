@@ -44,7 +44,7 @@ Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
 Plug 'iamcco/coc-svg', {'do': 'yarn install --frozen-lockfile'}
 
 " Doc: https://github.com/neoclide/coc-tabnine
-Plug 'neoclide/coc-tabnine', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-tabnine', {'do': 'yarn install --frozen-lockfile'}
 
 " Doc: https://github.com/neoclide/coc-tsserver
 Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
