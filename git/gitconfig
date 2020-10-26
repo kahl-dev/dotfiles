@@ -46,6 +46,9 @@
 [include]
   path = ~/.gitconfig-local
 
+[pager]
+  # diff = diff-so-fancy | less --tabs=4 -RFXS --pattern '^(Date|added|deleted|modified): '
+
 [submodule]
 	recurse = true
 
