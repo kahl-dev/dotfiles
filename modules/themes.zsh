@@ -7,3 +7,7 @@ zinit light romkatv/powerlevel10k
 # Doc: https://github.com/chriskempson/base16
 zinit ice wait"2" lucid
 zinit load chriskempson/base16-shell
+
+# This ZSH plugin enhances the terminal environment with 256 colors.
+# Doc: https://github.com/chrissicool/zsh-256color
+zinit light "chrissicool/zsh-256color"
