@@ -22,7 +22,7 @@ Host *
   # ForwardX11Trusted yes
 
   # Log info
-  LogLevel INFO
+  LogLevel error
 
   # Multiplexing SSH Over a Single TCP Connection
   # https://www.digitalocean.com/community/tutorials/how-to-configure-custom-connection-options-for-your-ssh-client#multiplexing-ssh-over-a-single-tcp-connection
