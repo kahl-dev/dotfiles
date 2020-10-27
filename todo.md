@@ -12,4 +12,5 @@ projects:
 * use more turbo mode in zinit
 * vim color plugin only for scss/css
 * use system vim if is good version
-* tmux show cpu
+* tmux show cpu/memory maybe only on remote tmux?
+* tmux primary location on new window
