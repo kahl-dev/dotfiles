@@ -3,14 +3,12 @@
 # Doc: https://github.com/Zsh-Packages/fzf
 
 initFzf() {
-  source $ZINIT[PLUGINS_DIR]/junegunn---fzf/shell/key-bindings.zsh
-  source $ZINIT[PLUGINS_DIR]/junegunn---fzf/shell/completion.zsh
-
   bindkey "ç" fzf-cd-widget
 
   export FZF_INIT_OPTS='--border --cycle --reverse --no-height'
   export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
   export FZF_DEFAULT_COMMAND='rg --files'
+  # export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 
@@ -50,7 +48,7 @@ initFzf() {
     local branches branch
     branches=$(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format="%(refname:short)") &&
     branch=$(echo "$branches" |
-    fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+    fzf -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
     git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
   }
 
@@ -67,8 +65,10 @@ initFzf() {
 # zinit atload"initFzf" pack"default" for fzf
 zinit lucid as=program pick="$ZPFX/bin/(fzf|fzf-tmux)" \
     atload"initFzf" \
-    atclone="cp bin/(fzf|fzf-tmux) $ZPFX/bin" \
-    make="PREFIX=$ZPFX install" for \
+    atclone="cp shell/completion.zsh _fzf_completion; \
+      cp bin/(fzf|fzf-tmux) $ZPFX/bin" \
+    src'shell/key-bindings.zsh' \
+    make="!PREFIX=$ZPFX install" for \
         junegunn/fzf
 
 zinit ice wait"4" lucid atload"fzfUpdate"
