@@ -13,9 +13,6 @@ Plug 'neoclide/coc-emmet', {'do': 'yarn install --frozen-lockfile'}
 " Doc: https://github.com/neoclide/coc-git
 Plug 'neoclide/coc-git', {'do': 'yarn install --frozen-lockfile'}
 
-" Doc: https://github.com/neoclide/coc-highlight
-Plug 'neoclide/coc-highlight', {'do': 'yarn install --frozen-lockfile'}
-
 " Doc: https://github.com/neoclide/coc-html
 Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
 
@@ -131,9 +128,6 @@ function! s:show_documentation()
     call CocAction('doHover')
   endif
 endfunction
-
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
