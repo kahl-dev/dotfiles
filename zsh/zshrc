@@ -15,7 +15,9 @@ if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
 fi
 
 # https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script
-_exists() { (( $+commands[$1] )) }
+_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
 
 # Add modules
 for file in $(find $HOME/.dotfiles/modules -type f -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
