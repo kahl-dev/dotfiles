@@ -8,8 +8,6 @@ if _exists nvim; then
   export VISUAL="vim"
 
   alias vim='nvim'
-
-  git config --global core.editor 'nvim'
 else
   function initVim {
     export VIMRUNTIME="$ZINIT[PLUGINS_DIR]/vim---vim/runtime"
