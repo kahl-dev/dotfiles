@@ -63,7 +63,7 @@ initFzf() {
 }
 
 # zinit atload"initFzf" pack"default" for fzf
-zinit lucid as=program pick="$ZPFX/bin/(fzf|fzf-tmux)" \
+zinit wait lucid as=program pick="$ZPFX/bin/(fzf|fzf-tmux)" \
     atload"initFzf" \
     atclone="cp shell/completion.zsh _fzf_completion; \
       cp bin/(fzf|fzf-tmux) $ZPFX/bin" \
@@ -84,4 +84,5 @@ function fzfUpdate {
 
 # This tool is designed to help you use git more efficiently. It's lightweight and easy to use.
 # Doc: https://github.com/wfxr/forgit
+zinit ice wait lucid
 zinit light wfxr/forgit
