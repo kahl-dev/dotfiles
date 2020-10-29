@@ -14,7 +14,8 @@
   p       = push
   pom     = push origin master
   poh     = push origin HEAD
-  up      = pull --rebase --autostash
+  #up      = pull --rebase --autostash
+	up = !git fetch && git rebase --autostash $(git for-each-ref --format \"%(upstream:short)\" $(git symbolic-ref -q HEAD))
 
   # Add git lia aliases
   l       = lia
@@ -24,6 +25,7 @@
   lf      = lia finish
 
   update  = !git pull && git submodule update --init --recursive
+	branchdate = "for-each-ref --count=10 --sort=-committerdate refs/remotes/origin --format=\"%(authordate:short)%09%(objectname:short)%09%(authorname)%09%1B[0;33m%(refname:short)%1B[m%09\""
 
 [user]
   name = Patrick Kahl
