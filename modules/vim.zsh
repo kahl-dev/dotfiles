@@ -9,6 +9,7 @@ if _exists nvim; then
 
   alias vim='nvim'
   
+  mkdir -p ~/.config/nvim
   ln -sf ~/.vim/nvimrc ~/.config/nvim/init.vim
 else
   function initVim {
