@@ -63,8 +63,6 @@ Plug 'weirongxu/coc-explorer', {'do': 'yarn install --frozen-lockfile'}
 
 :nmap <leader>e :CocCommand explorer<CR>
 
-let g:coc_node_path = "$NVM_DIR/latest"
-
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin'before putting this into your config.
