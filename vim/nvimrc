@@ -1,3 +1,6 @@
+" let g:python3_host_prog = expand("$LINUXBREWHOME/bin/python3.8")
+let g:node_host_prog = expand("~/.nvm/latest/bin/node")
+
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath=&runtimepath
 source ~/.vimrc

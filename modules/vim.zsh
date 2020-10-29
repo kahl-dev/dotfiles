@@ -8,6 +8,8 @@ if _exists nvim; then
   export VISUAL="vim"
 
   alias vim='nvim'
+  
+  ln -sf ~/.vim/nvimrc ~/.config/nvim/init.vim
 else
   function initVim {
     export VIMRUNTIME="$ZINIT[PLUGINS_DIR]/vim---vim/runtime"
