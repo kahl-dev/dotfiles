@@ -5,7 +5,7 @@
 - [x] allow .. to navigate on dir up
 - [x] use more turbo mode in zinit
 - [x] vim color plugin only for scss/css
-- [ ] tmux show cpu/memory maybe only on remote tmux?
+- [x] tmux show cpu/memory maybe only on remote tmux?
 - [ ] tmux primary location on new window
 - [ ] better alacritty + tmux (https://arslan.io/2018/02/05/gpu-accelerated-terminal-alacritty/)
 - [ ] transparent ssh tmux in tmux
