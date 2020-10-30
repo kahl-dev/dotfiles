@@ -71,16 +71,9 @@ zinit wait lucid as=program pick="$ZPFX/bin/(fzf|fzf-tmux)" \
     make="!PREFIX=$ZPFX install" for \
         junegunn/fzf
 
-zinit ice wait"4" lucid atload"fzfUpdate"
+zinit ice lucid
 zinit light fnune/base16-fzf
 
-export BASE16_SHELL_HOOKS=$DOTFILES/base16_hooks
-export BASE16_FZF=${ZINIT[PLUGINS_DIR]}/fnune---base16-fzf/bash/
-
-function fzfUpdate {
-  export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
-  source $ZINIT[PLUGINS_DIR]/fnune---base16-fzf/bash/base16-$BASE16_THEME.config
-}
 
 # This tool is designed to help you use git more efficiently. It's lightweight and easy to use.
 # Doc: https://github.com/wfxr/forgit
