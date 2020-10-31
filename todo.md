@@ -8,6 +8,8 @@
 - [x] tmux show cpu/memory maybe only on remote tmux?
 - [ ] better alacritty + tmux (https://arslan.io/2018/02/05/gpu-accelerated-terminal-alacritty/)
 - [x] transparent ssh tmux in tmux
+- [ ] repair tmux on off
+- [ ] tmux show macschine name
 
 - [ ] build own alfred tab search
 - [ ] build typo3-dev forwarding in tampermonkey
