@@ -9,9 +9,6 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
   export BASE16_SHELL_SET_BACKGROUND=false
 fi
 
-zinit ice wait"2" lucid atload"base16ShellUpdate"
-zinit load chriskempson/base16-shell
-
 export BASE16_SHELL_HOOKS=$DOTFILES/base16_hooks
 export BASE16_FZF=${ZINIT[PLUGINS_DIR]}/fnune---base16-fzf/bash/
 
@@ -19,6 +16,9 @@ function base16ShellUpdate {
   export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
   source $ZINIT[PLUGINS_DIR]/fnune---base16-fzf/bash/base16-$BASE16_THEME.config
 }
+
+zinit ice wait"2" lucid atload"base16ShellUpdate"
+zinit load chriskempson/base16-shell
 
 # This ZSH plugin enhances the terminal environment with 256 colors.
 # Doc: https://github.com/chrissicool/zsh-256color
