@@ -35,6 +35,11 @@ The following must be set manually
 - System Preferences -> Keyboard -> Modifier Keys -> Caps Look -> Control
 - System Preferences -> Monitor -> Scaled -> More space
 
+## Remove some tools from autostart
+
+- [FortiClient](https://forum.fortinet.com/tm.aspx?m=97324#msgNum5)
+- [Tunnelblick](https://tunnelblick.net/cLaunchAtLogin.html)
+
 ## Alfred Workflows
 
 Run this npm alias to install all required Alfred workflows
