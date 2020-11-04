@@ -6,11 +6,13 @@
 - [x] use more turbo mode in zinit
 - [x] vim color plugin only for scss/css
 - [x] tmux show cpu/memory maybe only on remote tmux?
-- [ ] better alacritty + tmux (https://arslan.io/2018/02/05/gpu-accelerated-terminal-alacritty/)
+- [x] better alacritty + tmux (https://arslan.io/2018/02/05/gpu-accelerated-terminal-alacritty/)
 - [x] transparent ssh tmux in tmux
 - [x] repair tmux on off
 - [x] tmux show machine name
 - [ ] replace clipper with custome script and add open on browser options
+- [ ] tmux restore session want to rename window
+- [x] Add vi mode to zsh
 
 - [ ] build own alfred tab search
 - [ ] build typo3-dev forwarding in tampermonkey

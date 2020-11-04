@@ -8,7 +8,7 @@ if _exists nvim; then
   export VISUAL="vim"
 
   alias vim='nvim'
-  
+
   mkdir -p ~/.config/nvim
   ln -sf ~/.vim/nvimrc ~/.config/nvim/init.vim
 else
@@ -21,3 +21,7 @@ else
     make"all install" pick"$ZPFX/bin/vim"
   zinit light vim/vim
 fi
+
+# Add vi mode to zsh
+bindkey -v
+bindkey 'jk' vi-cmd-mode
