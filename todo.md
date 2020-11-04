@@ -13,6 +13,7 @@
 - [ ] replace clipper with custome script and add open on browser options
 - [ ] tmux restore session want to rename window
 - [x] Add vi mode to zsh
+- [ ] Add observer to js snippets
 
 - [ ] build own alfred tab search
 - [ ] build typo3-dev forwarding in tampermonkey
