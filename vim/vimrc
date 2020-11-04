@@ -62,9 +62,9 @@ syntax on                         " Enable syntax highlighting
 " for keeping undo history after closing Vim entirely. Vim will complain if you
 " try to quit without saving, and swap files will keep you safe if your computer
 " crashes.
-" set hidden
+set hidden
 
-set nohidden
+" set nohidden
 
 set encoding=utf-8                " set encoding to utf8
 set wildmenu                      " better command-line completion
