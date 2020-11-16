@@ -36,6 +36,6 @@ nnoremap <silent> <leader>fm :FzfMarks<cr>
 nnoremap <silent> <leader>gf :FzfGFiles?<cr>
 nnoremap <silent> <leader>gcb :FzfBCommits<cr>
 nnoremap <silent> <leader>gcc :FzfCommits<cr>
-nnoremap <silent> <leader>gb :GBranches<cr>
+nnoremap <silent> <leader>gb :FzfGBranches<cr>
 
 nnoremap <silent> <leader>fr :FzfRg<cr>
