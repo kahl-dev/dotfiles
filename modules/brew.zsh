@@ -25,6 +25,14 @@ if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
     brew bundle -v --no-upgrade --file "$DOTFILES/brew/Basebrew"
     brew bundle -v --no-upgrade --file "$DOTFILES/brew/Osxbrew"
 
+    # Setup terminfo for alacritty
+    # Blog: https://medium.com/@pezcoder/how-i-migrated-from-iterm-to-alacritty-c50a04705f95#b24e
+    git clone https://github.com/alacritty/alacritty.git
+    cd alacritty
+    sudo tic -xe alacritty,alacritty-direct extra/alacritty.info
+    cd ..
+    rm -rf alacritty
+
     pip3 install pynvim
   fi
 fi
