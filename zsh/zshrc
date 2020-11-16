@@ -27,7 +27,10 @@ done
 export DOTFILES=$HOME/.dotfiles
 
 source "$HOME/.zinit/bin/zinit.zsh"
-.zinit-shade-off $___mode
+
+# Workaround for https://github.com/zdharma/zinit/issues/366
+[[ -v functions[.zinit-shade-off] ]] && .zinit-shade-off "${___mode:-load}"
+
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
@@ -79,4 +82,6 @@ done
 
 autoload -Uz compinit
 compinit
-.zinit-shade-on $___mode
+
+# Workaround for https://github.com/zdharma/zinit/issues/366
+[[ -v functions[.zinit-shade-on] ]] && .zinit-shade-on "${___mode:-load}"
