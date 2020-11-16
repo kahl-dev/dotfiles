@@ -47,7 +47,7 @@ window:
    y: 10
 
   # Spread additional padding evenly around the terminal content.
-  #dynamic_padding: false
+  dynamic_padding: true
 
   # Window decorations
   #
@@ -727,16 +727,16 @@ key_bindings:
   # - { key: F,      mods: Command|Control,    action: ToggleFullscreen }
   # - { key: F,      mods: Command,            action: SearchForward    }
   # - { key: B,      mods: Command,            action: SearchBackward   }
-  - { key: 28,      mods: Alt,        chars: "{" }
-  - { key: 25,      mods: Alt,        chars: "}" }
-  - { key: 37,      mods: Alt,        chars: "@" }
-  - { key: 26,      mods: Alt|Shift,  chars: "\\" }
-  - { key: 26,      mods: Alt,        chars: "|" }
-  # - { key: 45,      mods: Alt, chars: "~" }
-  - { key: 23,      mods: Alt,        chars: "[" }
-  - { key: 22,      mods: Alt,        chars: "]" }
-  - { key: 36,      mods: Command,    action: ToggleFullscreen }
-  - { key: C,       mods: Alt,        chars: "\xe7" }
+  - { key: 28,      mods: Alt,            chars: "{" }
+  - { key: 25,      mods: Alt,            chars: "}" }
+  - { key: 37,      mods: Alt,            chars: "@" }
+  - { key: 26,      mods: Alt|Shift,      chars: "\\" }
+  - { key: 26,      mods: Alt,            chars: "|" }
+  - { key: 23,      mods: Alt,            chars: "[" }
+  - { key: 22,      mods: Alt,            chars: "]" }
+  - { key: 36,      mods: Command,        action: ToggleFullscreen }
+  - { key: C,       mods: Alt,            chars: "\xe7" }
+  - { key: V,       mods: Shift|Control,   action: ToggleViMode }
 
 #debug:
   # Display the time it takes to redraw each frame.
