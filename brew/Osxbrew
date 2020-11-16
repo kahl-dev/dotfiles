@@ -68,6 +68,7 @@ cask "firefox"
 cask "google-chrome-beta"
 #cask "google-chrome-canary"
 #cask "opera"
+cask "microsoft-edge"
 
 # development
 brew 'golang'
