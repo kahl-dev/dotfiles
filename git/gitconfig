@@ -15,7 +15,6 @@
   pom     = push origin master
   poh     = push origin HEAD
   #up      = pull --rebase --autostash
-	up = !git fetch && git rebase --autostash $(git for-each-ref --format \"%(upstream:short)\" $(git symbolic-ref -q HEAD))
 
   # Add git lia aliases
   l       = lia
