@@ -1,4 +1,5 @@
-" Default settings {{{
+" Plugins {{{
+" =============================================================================
 
 " Install plug if not exists
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -9,50 +10,51 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-  let modules = 'find $DOTFILES/modules -type f -name "pre.vim" ! -name "_*.vim" | sort -n'
-  for fpath in split(system(modules), '\n')
-    exe 'source' fpath
-  endfor
+let modules = 'find $DOTFILES/modules -type f -name "pre.vim" ! -name "_*.vim" | sort -n'
+for fpath in split(system(modules), '\n')
+  exe 'source' fpath
+endfor
 
-  " Terminus enhances Vim's and Neovim's integration with the terminal in
-  " four ways, particularly when using tmux and iTerm or KDE Konsole,
-  " closing the gap between terminal and GUI Vim
-  " Doc: https://github.com/wincent/terminus
-  Plug 'wincent/terminus'
+" Terminus enhances Vim's and Neovim's integration with the terminal in
+" four ways, particularly when using tmux and iTerm or KDE Konsole,
+" closing the gap between terminal and GUI Vim
+" Doc: https://github.com/wincent/terminus
+Plug 'wincent/terminus'
 
-  " Add icons to your plugins
-  " Doc: https://github.com/ryanoasis/vim-devicons
-  Plug 'ryanoasis/vim-devicons'
+" Add icons to your plugins
+" Doc: https://github.com/ryanoasis/vim-devicons
+Plug 'ryanoasis/vim-devicons'
 
-  " Surround.vim is all about "surroundings": parentheses, brackets, quotes,
-  " XML tags, and more. The plugin provides mappings to easily delete, change
-  " and add such surroundings in pairs.
-  " Doc: https://github.com/tpope/vim-surround
-  Plug 'tpope/vim-surround'
+" Surround.vim is all about "surroundings": parentheses, brackets, quotes,
+" XML tags, and more. The plugin provides mappings to easily delete, change
+" and add such surroundings in pairs.
+" Doc: https://github.com/tpope/vim-surround
+Plug 'tpope/vim-surround'
 
-  " Vim sugar for the UNIX shell commands that need it the most
-  " Doc: https://github.com/tpope/vim-eunuch
-  Plug 'tpope/vim-eunuch'
+" Vim sugar for the UNIX shell commands that need it the most
+" Doc: https://github.com/tpope/vim-eunuch
+Plug 'tpope/vim-eunuch'
 
-  " Add repeat possibly for plugins like (souround ...)
-  " Doc: https://github.com/tpope/vim-repeat
-  Plug 'tpope/vim-repeat'
+" Add repeat possibly for plugins like (souround ...)
+" Doc: https://github.com/tpope/vim-repeat
+Plug 'tpope/vim-repeat'
 
-  " Syntax highlighting for CJSON in Vim
-  " Doc: https://github.com/neoclide/jsonc.vim
-  Plug 'neoclide/jsonc.vim'
+" Syntax highlighting for CJSON in Vim
+" Doc: https://github.com/neoclide/jsonc.vim
+Plug 'neoclide/jsonc.vim'
 
-  " This is an EditorConfig plugin for Vim.
-  " Doc: https://github.com/editorconfig/editorconfig-vim
-  Plug 'editorconfig/editorconfig-vim'
+" This is an EditorConfig plugin for Vim.
+" Doc: https://github.com/editorconfig/editorconfig-vim
+Plug 'editorconfig/editorconfig-vim'
 
-" Features {{{
 
 filetype indent plugin on         " load filetype-specific indent files
 syntax on                         " Enable syntax highlighting
 
 " }}}
+
 " Must have options {{{
+" =============================================================================
 
 " One such option is the 'hidden' option, which allows you to re-use the same
 " window and switch from an unsaved buffer without saving it first. Also allows
@@ -80,7 +82,9 @@ let skip_defaults_vim=1
 set viminfo=""
 
 " }}}
+
 " Usability options {{{
+" =============================================================================
 
 " Allow backspacing over autoindent, line breaks and start of insert action
 set backspace=indent,eol,start
@@ -166,7 +170,9 @@ augroup syntaxSyncMinLines
 augroup END
 
 " }}}
+
 " Undo/Backups {{{
+" =============================================================================
 " If a path ends in '//' then the swap file name is
 " built from the entire path. No more issues between projects.
 
@@ -252,7 +258,9 @@ function! _EchoSwapMessage(message)
     endif
 endfunction
 " }}}
+
 " Indentation options {{{
+" =============================================================================
 
 set tabstop=2                     " number of visual spaces per TAB
 set shiftwidth=2                  " number of space characters inserted for indentation
@@ -261,7 +269,9 @@ set expandtab                     " tabs are spaces
 
 
 " }}}
+
 " Mappings {{{
+" =============================================================================
 
 " Quit vim also with uppercase q
 :command Q q
@@ -337,8 +347,9 @@ nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 nnoremap <Leader>S y:%s/<ctrl-r>"/new text/g
 
 " }}}
-" }}}
+
 " {{{ Check python version if available
+" =============================================================================
 if has("python")
     python import vim; from sys import version_info as v; vim.command('let python_version=%d' % (v[0] * 100 + v[1]))
 else
@@ -359,6 +370,6 @@ endfor
 call plug#end()
 
 if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
-  source ~/.vimrc_background
+   let base16colorspace=256
+   source ~/.vimrc_background
 endif
