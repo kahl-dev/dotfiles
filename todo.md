@@ -17,6 +17,7 @@
 - [ ] replace cheat40 with simple open README
 - [ ] Find a nice way/keyboard shortcut to toggle folds
 - [ ] Add sensible to vim and remove all doublicate settings (https://github.com/tpope/vim-sensible)
+- [ ] Replace ale with coc to remove dependecie to change node version for vim
 
 - [ ] build own alfred tab search
 - [ ] build typo3-dev forwarding in tampermonkey
