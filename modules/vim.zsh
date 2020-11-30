@@ -25,3 +25,4 @@ fi
 # Add vi mode to zsh
 bindkey -v
 bindkey 'jk' vi-cmd-mode
+export KEYTIMEOUT=1
