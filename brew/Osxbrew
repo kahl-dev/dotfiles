@@ -54,6 +54,8 @@ cask "tripmode"
 #cask "nightowl"
 #cask "gfxCardStatus"
 brew "clipper"
+cask "muzzle"
+cask "google-drive"
 
 # chats & socialmedia
 #cask "skype"
