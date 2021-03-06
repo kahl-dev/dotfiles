@@ -5,7 +5,7 @@
 Include ~/.dotfiles-local/ssh-config
 
 Host *tmux
-  RemoteCommand tmux at -t main || tmux new -s main
+  RemoteCommand tmux at -t tmux || tmux new -s tmux
   RequestTTY yes
 
 Host *
