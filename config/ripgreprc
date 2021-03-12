@@ -24,6 +24,7 @@ web:*.{html,css,scss,js}*
 --glob=!typo3
 --glob=!typo3_src
 --glob=!tpl
+--glob=!**/Resources/Public/Assets/*
 
 # Because who cares about case!?
 --smart-case
