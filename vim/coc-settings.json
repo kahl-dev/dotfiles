@@ -1,4 +1,6 @@
 {
+  "diagnostic.displayByAle": true,
+
   /**
    * Emmt
    * Doc: https://github.com/neoclide/coc-emmet
