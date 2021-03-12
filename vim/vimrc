@@ -141,8 +141,8 @@ set t_vb=                         " reset terminal code for visual bell
 set t_RV=                         " fix first line on load // bugfix for hyper
 set number                        " show line numbers
 set relativenumber                " show relative numbers
-set nocursorcolumn
-set nocursorline                  " highlight cursor line
+set cursorcolumn
+set cursorline                    " highlight cursor line
 set scrolloff=10                  " min numbers above and below cursor
 set cmdheight=2                   " command window height to 2
 set pastetoggle=<F10>             " toggle paste mode
