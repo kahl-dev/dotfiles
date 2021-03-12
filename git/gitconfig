@@ -73,3 +73,6 @@
 
 [merge]
 	ff = false
+
+[diff]
+  renameLimit = 999999
