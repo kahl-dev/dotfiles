@@ -10,7 +10,8 @@ Host *tmux
 
 Host *
   AddKeysToAgent yes
-  ServerAliveInterval 60
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
   Compression yes
   ForwardAgent yes
   UseKeychain yes
