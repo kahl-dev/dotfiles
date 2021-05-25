@@ -1,7 +1,6 @@
 agignore
 eslint
 git
-linuxbrew
 prettier
 ssh
 tern
