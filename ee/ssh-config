@@ -10,12 +10,20 @@ Host *tmux
 
 Host *
   AddKeysToAgent yes
-  ServerAliveInterval 30
-  ServerAliveCountMax 3
-  Compression yes
+  #ServerAliveInterval 30
+  #ServerAliveCountMax 3
+  #Compression yes
   ForwardAgent yes
   UseKeychain yes
   IdentityFile ~/.ssh/id_rsa
+
+
+  Compression  yes
+  TCPKeepAlive yes
+  HashKnownHosts no
+  ServerAliveInterval 60
+  ServerAliveCountMax 10
+
   # RemoteCommand zsh
 
   # Be careful this breaks clippe
