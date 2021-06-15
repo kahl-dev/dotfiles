@@ -46,10 +46,10 @@ initFzf() {
   # fbr - checkout git branch (including remote branches), sorted by most recent commit, limit 30 last branches
   fzf_git_branch() {
     local branches branch
-    branches=$(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format="%(refname:short)") &&
+    branches=$(git branch -a --sort=-committerdate --format="%(refname:short)") &&
     branch=$(echo "$branches" |
     fzf -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
-    git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+    git checkout --track $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
   }
 
   alias falias='alias | fzf'
@@ -59,7 +59,7 @@ initFzf() {
   alias ftp="fzf_tmux_pane"
 
   # fzf git
-  alias fgbr='fzf_git_branch'
+  alias fgco='fzf_git_branch'
 }
 
 # zinit atload"initFzf" pack"default" for fzf
