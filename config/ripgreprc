@@ -5,8 +5,7 @@
 --max-columns-preview
 
 # Add my 'web' type.
---type-add
-web:*.{html,css,scss,js}*
+--type-add=web:*.{html,css,scss,js}*
 
 # Disable gitignore
 # --no-ignore
@@ -19,12 +18,9 @@ web:*.{html,css,scss,js}*
 
 # Using glob patterns to include/exclude files or folders
 --glob=!*.min.{css,js}
---glob=!.git/*
---glob=!node_modules/*
---glob=!typo3
---glob=!typo3_src
 --glob=!tpl
 --glob=!**/Resources/Public/Assets/*
+--glob=!**/typo3conf/ext/kamax/Resources/Public/*
 
 # Because who cares about case!?
 --smart-case
