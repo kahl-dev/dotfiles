@@ -24,7 +24,7 @@
   lf      = lia finish
 
   update  = !git pull && git submodule update --init --recursive
-	branchdate = "for-each-ref --count=10 --sort=-committerdate refs/remotes/origin --format=\"%(authordate:short)%09%(objectname:short)%09%(authorname)%09%1B[0;33m%(refname:short)%1B[m%09\""
+	branchdate = "for-each-ref --count=20 --sort=-committerdate refs/remotes/origin --format=\"%(authordate:short)%09%(objectname:short)%09%(authorname)%09%1B[0;33m%(refname:short)%1B[m%09\""
 
 [user]
   name = Patrick Kahl
@@ -76,3 +76,4 @@
 
 [diff]
   renameLimit = 999999
+  # tool = vimdiff
