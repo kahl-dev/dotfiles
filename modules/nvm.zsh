@@ -10,7 +10,7 @@ export NVM_COMPLETION=true
 function initNvm {
   [ ! -d "$HOME/.nvm/default-packages" ] && cp $DOTFILES/config/default-packages $HOME/.nvm/default-packages
   export NVM_STABLE=~/.nvm/versions/node/$($(nvm which stable) --version)
-  export COC_NODE_PATH=$NVM_STABLE/bin/node
+  export COC_NODE_PATH=$NVM_STABLE
   [[ -f "$NVM_STABLE/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh" ]] && . "$NVM_STABLE/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh"
 }
 
