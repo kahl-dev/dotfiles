@@ -55,7 +55,7 @@ Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
 " Doc: https://github.com/neoclide/coc-snippets
 Plug 'neoclide/coc-yank', {'do': 'yarn install --frozen-lockfile'}
 
-" Doc:https://github.com/weirongxu/coc-explorer
+" Doc: https://github.com/weirongxu/coc-explorer
 Plug 'weirongxu/coc-explorer', {'do': 'yarn install --frozen-lockfile'}
 
 :nmap <leader>e :CocCommand explorer<CR>
@@ -216,12 +216,17 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Toggle yank list
 nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
-let g:coc_user_config = {}
-
 " Jira
 " Doc: https://github.com/jberglinds/coc-jira-complete
-call extend(g:coc_user_config, {
+let g:coc_user_config = {
 \    'jira.workspaceUrl': $JIRA_WORKSPACE ,
 \    'jira.user.email': $JIRA_USER_EMAIL,
 \    'jira.user.apiKey': $JIRA_API_KEY,
-\ })
+\    "diagnostic.displayByAle": v:true,
+\    "emmet.includeLanguages": {
+\      "vue": "html"
+\    },
+\    "yank.highlight.duration": 250,
+\    "explorer.icon.enableNerdfont": v:true,
+\    "explorer.icon.enableVimDevicons": v:true,
+\ }
