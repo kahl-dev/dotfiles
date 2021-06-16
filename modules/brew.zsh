@@ -34,14 +34,14 @@ if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
     rm -rf alacritty
 
 
-    export PATH="$(brew --prefix)/opt/python@3.8/bin:$PATH"
-    export LDFLAGS="-L$(brew --prefix)/opt/python@3.8/lib"
-    export PKG_CONFIG_PATH="$(brew --prefix)/opt/python@3.8/lib/pkgconfig"
+    export PATH="$(brew --prefix)/opt/python3@/bin:$PATH"
+    export LDFLAGS="-L$(brew --prefix)/opt/python3@/lib"
+    export PKG_CONFIG_PATH="$(brew --prefix)/opt/python3@/lib/pkgconfig"
     pip3 install pynvim
   fi
 
-  export PATH="$(brew --prefix)/opt/python@3.8/bin:$PATH"
-  export LDFLAGS="-L$(brew --prefix)/opt/python@3.8/lib"
-  export PKG_CONFIG_PATH="$(brew --prefix)/opt/python@3.8/lib/pkgconfig"
+  export PATH="$(brew --prefix)/opt/python3@/bin:$PATH"
+  export LDFLAGS="-L$(brew --prefix)/opt/python3@/lib"
+  export PKG_CONFIG_PATH="$(brew --prefix)/opt/python3@/lib/pkgconfig"
 
 fi
