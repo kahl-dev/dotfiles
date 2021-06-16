@@ -63,17 +63,15 @@ initFzf() {
 }
 
 # zinit atload"initFzf" pack"default" for fzf
-zinit wait lucid as=program pick="$ZPFX/bin/(fzf|fzf-tmux)" \
+zinit wait lucid as=program pick="bin/(fzf|fzf-tmux)" \
     atload"initFzf" \
-    atclone="cp shell/completion.zsh _fzf_completion; \
-      cp bin/(fzf|fzf-tmux) $ZPFX/bin" \
+    atclone="cp shell/completion.zsh _fzf_completion;" \
     src'shell/key-bindings.zsh' \
     make="!PREFIX=$ZPFX install" for \
         junegunn/fzf
 
 zinit ice lucid
 zinit light fnune/base16-fzf
-
 
 # This tool is designed to help you use git more efficiently. It's lightweight and easy to use.
 # Doc: https://github.com/wfxr/forgit
