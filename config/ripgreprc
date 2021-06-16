@@ -17,10 +17,14 @@
 --hidden
 
 # Using glob patterns to include/exclude files or folders
+--glob=!.git
 --glob=!*.min.{css,js}
 --glob=!tpl
 --glob=!**/Resources/Public/Assets/*
 --glob=!**/typo3conf/ext/kamax/Resources/Public/*
+--glob=!**/*.{sql,php,png}
+--glob=!typo3conf/ext/solr
+--glob=!vendor
 
 # Because who cares about case!?
 --smart-case
