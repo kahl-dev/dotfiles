@@ -14,10 +14,9 @@ let g:fzf_action = {
   \ 'ctrl-v': 'vsplit' }
 
 " let g:fzf_commits_log_options = '--exact'
-" let g:fzf_preview_window = ''
 let g:fzf_command_prefix = 'Fzf'
 
-" let g:fzf_preview_window = 'top:50%'
+let g:fzf_preview_window = ['down:60%']
 " See `man fzf-tmux` for available options
 if exists('$TMUX')
   let g:fzf_prefer_tmux = 1
