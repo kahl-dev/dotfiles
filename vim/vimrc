@@ -267,6 +267,14 @@ set shiftwidth=2                  " number of space characters inserted for inde
 set softtabstop=2                 " number of spaces in tab when editing
 set expandtab                     " tabs are spaces
 
+if has("autocmd")
+
+    " If the filetype is Makefile then we need to use tabs
+    " So do not expand tabs into space.
+    autocmd FileType make   set noexpandtab
+
+endif
+
 
 " }}}
 
@@ -274,7 +282,7 @@ set expandtab                     " tabs are spaces
 " =============================================================================
 
 " Quit vim also with uppercase q
-:command Q q
+:command! Q q
 
 " ~/.vimrc
 " Make Vim recognize XTerm escape sequences for Page and Arrow
