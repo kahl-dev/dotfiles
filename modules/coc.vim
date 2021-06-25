@@ -4,91 +4,67 @@
 " FAQ: https://github.com/neoclide/coc.nvim/wiki/F.A.Q
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
-" Doc: https://github.com/neoclide/coc-css
-Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
+let g:coc_global_extensions = [
+\ 'coc-css',
+\ 'coc-docthis',
+\ 'coc-emmet',
+\ 'coc-git',
+\ 'coc-html',
+\ 'coc-jira-complete',
+\ 'coc-json',
+\ 'coc-markdownlint',
+\ 'coc-pairs',
+\ 'coc-phpls',
+\ 'coc-sh',
+\ 'coc-snippets',
+\ 'coc-svg',
+\ 'coc-tabnine',
+\ 'coc-tsserver',
+\ 'coc-vetur',
+\ 'coc-yaml',
+\ 'coc-yank',
+\ 'coc-explorer'
+\ ]
 
-" Doc: https://github.com/neoclide/coc-emmet
-Plug 'neoclide/coc-emmet', {'do': 'yarn install --frozen-lockfile'}
+nmap <leader>e :CocCommand explorer<CR>
 
-" Doc: https://github.com/neoclide/coc-git
-Plug 'neoclide/coc-git', {'do': 'yarn install --frozen-lockfile'}
+function! s:explorer_cur_dir()
+  let node_info = CocAction('runCommand', 'explorer.getNodeInfo', 0)
+  return fnamemodify(node_info['fullpath'], ':h')
+endfunction
 
-" Doc: https://github.com/neoclide/coc-html
-Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
+function! s:exec_cur_dir(cmd)
+  let dir = s:explorer_cur_dir()
+  execute 'cd ' . dir
+  execute a:cmd
+endfunction
 
-" Doc: https://github.com/jberglinds/coc-jira-complete
-Plug 'jberglinds/coc-jira-complete', {'do': 'yarn install --frozen-lockfile'}
+function! s:init_explorer()
+  set winblend=10
 
-" Doc: https://github.com/neoclide/coc-json
-Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+  " Integration with other plugins
 
-" Doc: https://github.com/fannheyward/coc-markdownlint
-Plug 'fannheyward/coc-markdownlint', {'do': 'yarn install --frozen-lockfile'}
+  " CocList
+  nnoremap <buffer> <Leader>fg :call <SID>exec_cur_dir('CocList -I grep')<CR>
+  nnoremap <buffer> <Leader>fG :call <SID>exec_cur_dir('CocList -I grep -regex')<CR>
+  nnoremap <buffer> <C-p> :call <SID>exec_cur_dir('CocList files')<CR>
 
-" Doc: https://github.com/neoclide/coc-pairs
-Plug 'neoclide/coc-pairs', {'do': 'yarn install --frozen-lockfile'}
+  " vim-floaterm
+  nnoremap <buffer> <Leader>ft :call <SID>exec_cur_dir('FloatermNew --wintype=floating')<CR>
+endfunction
 
-" Doc: https://github.com/marlonfan/coc-phpls
-Plug 'marlonfan/coc-phpls', {'do': 'yarn install --frozen-lockfile'}
+function! s:enter_explorer()
+  if &filetype == 'coc-explorer'
+    " statusline
+    setl statusline=coc-explorer
+  endif
+endfunction
 
-" Doc: https://github.com/josa42/coc-sh
-Plug 'josa42/coc-sh', {'do': 'yarn install --frozen-lockfile'}
-
-" Doc: https://github.com/neoclide/coc-snippets
-Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
-
-" Doc: https://github.com/iamcco/coc-svg
-Plug 'iamcco/coc-svg', {'do': 'yarn install --frozen-lockfile'}
-
-" Doc: https://github.com/neoclide/coc-tabnine
-Plug 'neoclide/coc-tabnine', {'do': 'yarn install --frozen-lockfile'}
-
-" Doc: https://github.com/neoclide/coc-tsserver
-Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
-
-" Doc: https://github.com/neoclide/coc-vetur
-Plug 'neoclide/coc-vetur', {'do': 'yarn install --frozen-lockfile'}
-
-" Doc: https://github.com/neoclide/coc-yaml
-Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
-
-" Doc: https://github.com/neoclide/coc-snippets
-Plug 'neoclide/coc-yank', {'do': 'yarn install --frozen-lockfile'}
-
-" Doc: https://github.com/weirongxu/coc-explorer
-Plug 'weirongxu/coc-explorer', {'do': 'yarn install --frozen-lockfile'}
-
-:nmap <leader>e :CocCommand explorer<CR>
-
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin'before putting this into your config.
-" inoremap <silent><expr> <TAB>
-"       \ pumvisible() ? "\<C-n>" :
-"       \ <SID>check_back_space() ? "\<TAB>" :
-"       \ coc#refresh()
-" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-"
-" function! s:check_back_space() abort
-"   let col = col('.') - 1
-"   return !col || getline('.')[col - 1]  =~# '\s'
-" endfunction
-
-" Use <c-space> to trigger completion.
-" if has('nvim')
-"   inoremap <silent><expr> <c-space> coc#refresh()
-" else
-"   inoremap <silent><expr> <c-@> coc#refresh()
-" endif
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-" if exists('*complete_info')
-"   inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-" else
-"   inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" endif
+augroup CocExplorerCustom
+  autocmd!
+  autocmd BufEnter * call <SID>enter_explorer()
+  autocmd FileType coc-explorer call <SID>init_explorer()
+augroup END
 
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
 inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
@@ -131,18 +107,6 @@ endfunction
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
-
-" Formatting selected code.
-" xmap <leader>f  <Plug>(coc-format-selected)
-" nmap <leader>f  <Plug>(coc-format-selected)
-
-" augroup mygroup
-"   autocmd!
-"   " Setup formatexpr specified filetype(s).
-"   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-"   " Update signature help on jump placeholder.
-"   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-" augroup end
 
 " Applying codeAction to the selected region.
 " Example: `<leader>aap` for current paragraph
@@ -229,4 +193,5 @@ let g:coc_user_config = {
 \    "yank.highlight.duration": 250,
 \    "explorer.icon.enableNerdfont": v:true,
 \    "explorer.icon.enableVimDevicons": v:true,
+\    "snippets.userSnippetsDirectory": $DOTFILES."/vim/UltiSnips"
 \ }
