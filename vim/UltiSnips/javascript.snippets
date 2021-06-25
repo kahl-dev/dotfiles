@@ -42,3 +42,13 @@ console.time('$1')
 $2
 console.timeEnd('$1')
 endsnippet
+
+snippet CustomEvent "dispatch new CustomEvent" b
+document.dispatchEvent(
+	new CustomEvent('lia:$1', {
+		detail: {
+			$2
+		},
+	})
+)
+endsnippet
