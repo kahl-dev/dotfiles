@@ -174,9 +174,6 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 "   return "*\<Plug>(coc-cursors-word):nohlsearch\<CR>"
 " endfunc
 
-" Add yank extension
-" Doc: https://github.com/neoclide/coc-yank
-
 " Toggle yank list
 nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
@@ -190,7 +187,6 @@ let g:coc_user_config = {
 \    "emmet.includeLanguages": {
 \      "vue": "html"
 \    },
-\    "yank.highlight.duration": 250,
 \    "explorer.icon.enableNerdfont": v:true,
 \    "explorer.icon.enableVimDevicons": v:true,
 \    "snippets.userSnippetsDirectory": $DOTFILES."/vim/UltiSnips"
