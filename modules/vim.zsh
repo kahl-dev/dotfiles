@@ -7,7 +7,7 @@ if _exists nvim; then
   export EDITOR="vim"
   export VISUAL="vim"
 
-  alias vim='nvim'
+  alias vim='nvm use default && nvim'
 
   mkdir -p ~/.config/nvim
   ln -sf ~/.vim/nvimrc ~/.config/nvim/init.vim
