@@ -60,7 +60,7 @@ zinit wait lucid for \
       OMZ::plugins/yarn \
       OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh \
       OMZ::plugins/command-not-found/command-not-found.plugin.zsh \
-      OMZ::plugins/git-auto-fetch/git-auto-fetch.plugin.zsh
+      # OMZ::plugins/git-auto-fetch/git-auto-fetch.plugin.zsh
 
 if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
   alias ls='ls -G'
@@ -91,3 +91,7 @@ compinit
 
 # Workaround for https://github.com/zdharma/zinit/issues/366
 # [[ -v functions[.zinit-shade-on] ]] && .zinit-shade-on "${___mode:-load}"
+
+# tabtab source for yarn package
+# uninstall by removing these lines or running `tabtab uninstall yarn`
+[[ -f /home/kahl/.nvm/versions/node/v14.15.5/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh ]] && . /home/kahl/.nvm/versions/node/v14.15.5/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh
