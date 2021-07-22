@@ -12,12 +12,16 @@ fi
 # export BASE16_SHELL_HOOKS=$DOTFILES/base16_hooks
 # export BASE16_FZF=${ZINIT[PLUGINS_DIR]}/fnune---base16-fzf/bash/
 
-# function base16ShellUpdate {
-#   export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
-#   source $ZINIT[PLUGINS_DIR]/fnune---base16-fzf/bash/base16-$BASE16_THEME.config
-# }
+function base16ShellUpdate {
+  # export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
+  # source $ZINIT[PLUGINS_DIR]/fnune---base16-fzf/bash/base16-$BASE16_THEME.config
+  if [ -z "$TMUX" ]
+then
+    tmux -2 attach -t TMUX || tmux new -s TMUX
+fi
+}
 
-zinit ice wait"2" lucid
+zinit ice lucid atload"base16ShellUpdate"
 zinit load chriskempson/base16-shell
 
 # This ZSH plugin enhances the terminal environment with 256 colors.
