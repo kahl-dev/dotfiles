@@ -16,9 +16,9 @@ function base16ShellUpdate {
   # export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
   # source $ZINIT[PLUGINS_DIR]/fnune---base16-fzf/bash/base16-$BASE16_THEME.config
   if [ -z "$TMUX" ]
-then
+  then
     tmux -2 attach -t TMUX || tmux new -s TMUX
-fi
+  fi
 }
 
 zinit ice lucid atload"base16ShellUpdate"
