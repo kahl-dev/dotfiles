@@ -121,7 +121,6 @@
     "statusBar.foreground": "#434C5E"
   },
   "terminal.external.osxExec": "iTerm.app",
-  "terminal.integrated.shellArgs.osx": [],
   "window.zoomLevel": 0,
   "workbench.settings.editor": "json",
   "workbench.sideBar.location": "right",
@@ -131,4 +130,5 @@
   "zenMode.centerLayout": false,
   "git.suggestSmartCommit": false,
   "vetur.completion.useScaffoldSnippets": false,
+  "editor.accessibilitySupport": "off",
 }
