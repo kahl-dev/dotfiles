@@ -18,9 +18,9 @@ function base16ShellUpdate {
   if [ -z "$TMUX" ]
   then
     if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-      tmux attach -t REMOTE || tmux new -s REMOTE
+      cd ~ && tmux attach -t REMOTE || tmux new -s REMOTE
     else
-      tmux attach -t LOCAL || tmux new -s LOCAL
+      cd ~ && tmux attach -t LOCAL || tmux new -s LOCAL
     fi
   fi
 }
