@@ -17,7 +17,11 @@ function base16ShellUpdate {
   # source $ZINIT[PLUGINS_DIR]/fnune---base16-fzf/bash/base16-$BASE16_THEME.config
   if [ -z "$TMUX" ]
   then
-    tmux -2 attach -t TMUX || tmux new -s TMUX
+    if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+      tmux attach -t REMOTE || tmux new -s REMOTE
+    else
+      tmux attach -t LOCAL || tmux new -s LOCAL
+    fi
   fi
 }
 
