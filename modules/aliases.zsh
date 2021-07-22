@@ -30,3 +30,5 @@ function git_main_branch() {
     echo master
   fi
 }
+
+alias dotfiles="vim ~/.dotfiles"
