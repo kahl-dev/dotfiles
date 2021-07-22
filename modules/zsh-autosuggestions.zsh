@@ -5,5 +5,6 @@ zinit wait lucid atload'_zsh_autosuggest_start' light-mode for \
 
 ZSH_AUTOSUGGEST_USE_ASYNC=true
 
-# ctrl + z; Toggles between enabled/disabled suggestions.
-bindkey '^z' autosuggest-toggle
+
+bindkey '^z' autosuggest-toggle # ctrl + z; Toggles between enabled/disabled suggestions.
+bindkey '^f' autosuggest-accept # accept suggestions
