@@ -56,6 +56,7 @@ cask "tripmode"
 brew "clipper"
 cask "muzzle"
 cask "google-drive"
+cask "bettertouchtool"
 
 # chats & socialmedia
 #cask "skype"
