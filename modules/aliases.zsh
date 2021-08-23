@@ -32,3 +32,8 @@ function git_main_branch() {
 }
 
 alias dotfiles="vim ~/.dotfiles"
+
+alias gbrclean='git fetch --prune && git branch -r | awk "{print \$1}" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk "{print \$1}" | xargs git branch -D'
+
+alias ryid='rm -Rf node_modules && yarn install && yarn dev'
+alias ryib='rm -Rf node_modules && yarn install && yarn build'
