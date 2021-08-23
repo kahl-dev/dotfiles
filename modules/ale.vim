@@ -20,6 +20,7 @@ let g:ale_fixers = {
 \   'markdown':     [ 'prettier' ],
 \   'css':          [ 'prettier' ],
 \   'scss':         [ 'prettier' ],
+\   'html':         [ 'prettier' ],
 \}
 
 " Fix files on save
