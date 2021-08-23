@@ -188,6 +188,7 @@ let g:coc_user_config = {
 \      "vue": "html"
 \    },
 \    "explorer.icon.enableNerdfont": v:true,
-\    "explorer.icon.enableVimDevicons": v:true,
+\    "explorer.icon.enabledNerdFont": v:true,
+\    "explorer.icon.source": "vim-devicons",
 \    "snippets.userSnippetsDirectory": $DOTFILES."/vim/UltiSnips"
 \ }
