@@ -17,6 +17,7 @@ let g:ale_fixers = {
 \   'javascript':   [ 'prettier' ],
 \   'vue':          [ 'prettier' ],
 \   'json':         [ 'prettier' ],
+\   'jsonc':        [ 'prettier' ],
 \   'markdown':     [ 'prettier' ],
 \   'css':          [ 'prettier' ],
 \   'scss':         [ 'prettier' ],
