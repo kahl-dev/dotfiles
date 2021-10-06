@@ -1,22 +1,3 @@
 - link:
     ~/.tmux: tmux
     ~/.tmux.conf: tmux/tmux.conf
-
-- shell:
-    -
-      command: ~/.tmux/plugins/tpm/bin/install_plugins
-      stdin: true
-      stdout: true
-      stderr: true
-
-    -
-      command: ~/.tmux/plugins/tpm/bin/update_plugins all
-      stdin: true
-      stdout: true
-      stderr: true
-
-    -
-      command: ~/.tmux/plugins/tpm/bin/clean_plugins
-      stdin: true
-      stdout: true
-      stderr: true

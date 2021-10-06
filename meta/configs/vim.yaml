@@ -1,12 +1,3 @@
 - link:
     ~/.vim: vim
     ~/.vimrc: vim/vimrc
-    ~/.config/coc: vim/coc
-
-- shell:
-    -
-      command: vim +CocUpdateSync +qa
-      stdin: true
-      stdout: true
-      stderr: true
-
