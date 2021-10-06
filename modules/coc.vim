@@ -10,7 +10,6 @@ let g:coc_global_extensions = [
 \ 'coc-emmet',
 \ 'coc-git',
 \ 'coc-html',
-\ 'coc-jira-complete',
 \ 'coc-json',
 \ 'coc-markdownlint',
 \ 'coc-pairs',
@@ -18,13 +17,16 @@ let g:coc_global_extensions = [
 \ 'coc-sh',
 \ 'coc-snippets',
 \ 'coc-svg',
-\ 'coc-tabnine',
 \ 'coc-tsserver',
 \ 'coc-vetur',
 \ 'coc-yaml',
 \ 'coc-yank',
 \ 'coc-explorer'
 \ ]
+
+if $IS_RASPBERRY == 'false'
+  :call add(g:coc_global_extensions, 'coc-tabnine')
+endif
 
 nmap <leader>e :CocCommand explorer<CR>
 
@@ -180,9 +182,6 @@ nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 " Jira
 " Doc: https://github.com/jberglinds/coc-jira-complete
 let g:coc_user_config = {
-\    'jira.workspaceUrl': $JIRA_WORKSPACE ,
-\    'jira.user.email': $JIRA_USER_EMAIL,
-\    'jira.user.apiKey': $JIRA_API_KEY,
 \    "diagnostic.displayByAle": v:true,
 \    "emmet.includeLanguages": {
 \      "vue": "html"
@@ -192,3 +191,10 @@ let g:coc_user_config = {
 \    "explorer.icon.source": "vim-devicons",
 \    "snippets.userSnippetsDirectory": $DOTFILES."/vim/UltiSnips"
 \ }
+
+if $JIRA_WORKSPACE
+  :call add(g:coc_global_extensions, 'coc-jira-complete')
+  g:coc_user_config.'jira.workspaceUrl' = $JIRA_WORKSPACE
+  g:coc_user_config.'jira.user.email' = $JIRA_USER_EMAIL
+  g:coc_user_config.'jira.user.apiKey' = $JIRA_API_KEY
+endif
