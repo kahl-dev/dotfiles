@@ -13,16 +13,16 @@ fi
 # export BASE16_FZF=${ZINIT[PLUGINS_DIR]}/fnune---base16-fzf/bash/
 
 function base16ShellUpdate {
-  # export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
-  # source $ZINIT[PLUGINS_DIR]/fnune---base16-fzf/bash/base16-$BASE16_THEME.config
-  # if [ -z "$TMUX" ]
-  # then
-  #   if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-  #     cd ~ && tmux attach -t REMOTE || tmux new -s REMOTE
-  #   else
-  #     cd ~ && tmux attach -t LOCAL || tmux new -s LOCAL
-  #   fi
-  # fi
+  export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
+  source $ZINIT[PLUGINS_DIR]/fnune---base16-fzf/bash/base16-$BASE16_THEME.config
+  if [ -z "$TMUX" ]
+  then
+    if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+      cd ~ && tmux attach -t REMOTE || tmux new -s REMOTE
+    else
+      # cd ~ && tmux attach -t LOCAL || tmux new -s LOCAL
+    fi
+  fi
 }
 
 zinit ice lucid atload"base16ShellUpdate"
