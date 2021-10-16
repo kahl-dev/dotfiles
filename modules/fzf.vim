@@ -1,6 +1,7 @@
 " Fuzzy search in vim
 " Doc: https://github.com/junegunn/fzf.vim
-Plug '~/.zinit/plugins/junegunn---fzf/'
+" Plug '~/.zinit/plugins/junegunn---fzf/'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 " Manage branches and tags with fzf.
