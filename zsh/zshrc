@@ -19,6 +19,10 @@ _exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
+_not_exists() {
+  ! command -v "$1" &> /dev/null
+}
+
 IS_RASPBERRY=false
 dmesg | grep "Machine model"  &> /dev/null && IS_RASPBERRY=true
 export IS_RASPBERRY
@@ -95,12 +99,10 @@ for file in $(find $HOME/.dotfiles/modules -type f -name "post*.zsh" ! -name "_*
   source "$file";
 done
 
+[ ! -d "$HOME/.local/bin" ] && export PATH=$HOME/bin:$HOME/.local/bin:$PATH
+
 autoload -Uz compinit
 compinit
 
 # Workaround for https://github.com/zdharma/zinit/issues/366
 # [[ -v functions[.zinit-shade-on] ]] && .zinit-shade-on "${___mode:-load}"
-
-# tabtab source for yarn package
-# uninstall by removing these lines or running `tabtab uninstall yarn`
-[[ -f /home/kahl/.nvm/versions/node/v14.15.5/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh ]] && . /home/kahl/.nvm/versions/node/v14.15.5/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh
