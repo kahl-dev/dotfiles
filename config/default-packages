@@ -1,12 +1,9 @@
 yarn
 yarn-completions
-grunt
 prettier
 vue-cli
 tldr
 diff-so-fancy
-yo
-generator-alfred
 babel-eslint
 eslint
 eslint-config-prettier
@@ -14,10 +11,6 @@ eslint-plugin-html
 eslint-plugin-prettier
 eslint-plugin-vue
 serve
-inspect-process
-serverless
-npm-merge-driver
 browser-sync
-gulp-cli
 npm-check-updates
 neovim
