@@ -5,6 +5,11 @@
 #   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 # fi
 
+PROFILE=0
+if ((PROFILE == 1)); then
+    zmodload zsh/zprof
+fi
+
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
     print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
@@ -103,6 +108,12 @@ done
 
 autoload -Uz compinit
 compinit
+
+### Profiling
+if ((PROFILE == 1)); then
+    zprof
+fi
+unset $PROFILE
 
 # Workaround for https://github.com/zdharma/zinit/issues/366
 # [[ -v functions[.zinit-shade-on] ]] && .zinit-shade-on "${___mode:-load}"
