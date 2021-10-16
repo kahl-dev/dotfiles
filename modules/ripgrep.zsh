@@ -5,5 +5,9 @@ function initRipgrep() {
   export RIPGREP_CONFIG_PATH=$DOTFILES/config/ripgreprc
 }
 
-zinit ice atload="initRipgrep" as"command" from"gh-r" mv"ripgrep* -> rg" pick"rg/rg"
-zinit light BurntSushi/ripgrep
+if _not_exists rg; then
+  zinit ice atload="initRipgrep" as"command" from"gh-r" mv"ripgrep* -> rg" pick"rg/rg"
+  zinit light BurntSushi/ripgrep
+else
+  zinit wait'1' lucid atinit'initRipgrep' nocd for /dev/null
+fi
