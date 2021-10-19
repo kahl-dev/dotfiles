@@ -179,8 +179,6 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Toggle yank list
 nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
-" Jira
-" Doc: https://github.com/jberglinds/coc-jira-complete
 let g:coc_user_config = {
 \    "diagnostic.displayByAle": v:true,
 \    "emmet.includeLanguages": {
@@ -192,6 +190,8 @@ let g:coc_user_config = {
 \    "snippets.userSnippetsDirectory": $DOTFILES."/vim/UltiSnips"
 \ }
 
+" Jira
+" Doc: https://github.com/jberglinds/coc-jira-complete
 if $JIRA_WORKSPACE
   :call add(g:coc_global_extensions, 'coc-jira-complete')
   g:coc_user_config.'jira.workspaceUrl' = $JIRA_WORKSPACE
