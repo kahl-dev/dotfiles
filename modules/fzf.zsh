@@ -9,8 +9,8 @@ initFzf() {
   fi
 
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-  source ~/.fzf/shell/completion.zsh
-  source ~/.fzf/shell/key-bindings.zsh
+  # source ~/.fzf/shell/completion.zsh
+  # source ~/.fzf/shell/key-bindings.zsh
 
   bindkey "ç" fzf-cd-widget
 
