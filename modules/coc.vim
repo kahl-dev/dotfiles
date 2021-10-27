@@ -25,7 +25,7 @@ let g:coc_global_extensions = [
 \ ]
 
 if $IS_RASPBERRY == 'false'
-  :call add(g:coc_global_extensions, 'coc-tabnine')
+  let g:coc_global_extensions += ['coc-tabnine']
 endif
 
 nmap <leader>e :CocCommand explorer<CR>
@@ -192,9 +192,9 @@ let g:coc_user_config = {
 
 " Jira
 " Doc: https://github.com/jberglinds/coc-jira-complete
-if $JIRA_WORKSPACE
-  :call add(g:coc_global_extensions, 'coc-jira-complete')
-  g:coc_user_config.'jira.workspaceUrl' = $JIRA_WORKSPACE
-  g:coc_user_config.'jira.user.email' = $JIRA_USER_EMAIL
-  g:coc_user_config.'jira.user.apiKey' = $JIRA_API_KEY
+if exists('$JIRA_WORKSPACE')
+  let g:coc_global_extensions += ['coc-jira-complete']
+  let g:coc_user_config['jira.workspaceUrl'] = $JIRA_WORKSPACE
+  let g:coc_user_config['jira.user.email'] = $JIRA_USER_EMAIL
+  let g:coc_user_config['jira.user.apiKey'] = $JIRA_API_KEY
 endif
