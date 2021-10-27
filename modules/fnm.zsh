@@ -5,9 +5,8 @@ function initFnm() {
   export PATH=$HOME/.fnm:$PATH
   eval "`fnm env`"
 
-  export NODE_STABLE=$FNM_DIR/aliases/latest/bin/node
-  export COC_NODE_PATH=$NODE_STABLE
-  [[ -f "$NODE_STABLE/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh" ]] && . "$NODE_STABLE/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh"
+  export NODE_PATH=$FNM_DIR/aliases/latest
+  [[ -f "$NODE_PATH/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh" ]] && . "$NODE_PATH/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh"
 
   if [ ! -f "$HOME/.config/zsh/completions/_fnm" ]; then
     mkdir -p $HOME/.config/zsh/completions
