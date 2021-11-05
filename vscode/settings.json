@@ -1,5 +1,5 @@
 {
-  "workbench.colorTheme": "Ocean Dark Extended",
+  "workbench.colorTheme": "Night Owl (No Italics)",
   "terminal.integrated.fontFamily": "DroidSansMono Nerd Font",
   "terminal.integrated.rendererType": "dom",
   "eslint.autoFixOnSave": true,
@@ -115,9 +115,9 @@
   ],
   "workbench.editor.enablePreview": false,
   "workbench.colorCustomizations": {
-    "statusBar.background": "#BF616A",
-    "statusBar.noFolderBackground": "#BF616A",
-    "statusBar.debuggingBackground": "#BF616A",
+    "statusBar.background": "#8FBCBB",
+    "statusBar.noFolderBackground": "#8FBCBB",
+    "statusBar.debuggingBackground": "#8FBCBB",
     "statusBar.foreground": "#434C5E",
     "statusBar.debuggingForeground": "#434C5E"
   },
