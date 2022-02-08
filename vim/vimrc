@@ -370,6 +370,11 @@ for fpath in split(system(modules), '\n')
   exe 'source' fpath
 endfor
 
+autocmd VimEnter *
+  \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \|   PlugInstall --sync | q
+  \| endif
+
 call plug#end()
 
 if filereadable(expand("~/.vimrc_background"))
