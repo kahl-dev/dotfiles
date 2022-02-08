@@ -7,13 +7,14 @@ if [ ! -d "$DOTFILES/bin/fzf" ]; then
 fi
 
 if [ -d "$DOTFILES/bin/fzf" ]; then
-  plugins+=(fzf)
-
+  export FZF_BASE="$DOTFILES/bin/fzf"
   export FZF_INIT_OPTS='--border --cycle --reverse --no-height'
   export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
   export FZF_DEFAULT_COMMAND='rg --files'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   export FZF_VIM='~/.fzf'
+
+  plugins+=(fzf)
 
   alias falias='alias | fzf'
 
