@@ -8,5 +8,5 @@ if _exists bat; then
   export BAT_CONFIG_PATH="$DOTFILES/config/bat.conf"
   export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
-  alias cat='bat';
+  # alias cat='bat';
 fi

@@ -3,34 +3,15 @@ if _not_exists fnm; then
 fi
 
 if _exists fnm; then
-  export NODE_PATH=$FNM_DIR/aliases/latest
+  export FNM_DIR="$DOTFILES/bin/fnm"
+
+  if [ ! -d "$FNM_DIR/aliases/lts-latest" ]; then
+    fnm install --lts
+    cat $DOTFILES/config/default-packages | xargs npm install -g
+  fi
+  export NODE_PATH=$FNM_DIR/aliases/lts-latest
   [[ -f "$NODE_PATH/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh" ]] && . "$NODE_PATH/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh"
 
   plugins+=(fnm)
-
-  find-up () {
-    path=$(pwd)
-    while [[ "$path" != "" && ! -e "$path/$1" ]]; do
-        path=${path%/*}
-    done
-    echo "$path"
-  }
-
-  autoload -U add-zsh-hook
-
-  load-nvmrc() {
-    NVM_PATH=$(find-up .nvmrc | tr -d '[:space:]')
-    [ ! $NVM_PATH ] && return
-    DEFAULT_NODE_VERSION=`cat $NVM_PATH/.nvmrc`
-    if [[ -f .nvmrc && -r .nvmrc ]]; then
-      fnm use
-    elif [[ `node -v` != $DEFAULT_NODE_VERSION ]]; then
-      echo Reverting to node from "`node -v`" to "$DEFAULT_NODE_VERSION"
-      fnm use $DEFAULT_NODE_VERSION
-      return
-    fi
-  }
-
-  add-zsh-hook chpwd load-nvmrc
-  load-nvmrc
+  eval "$(fnm env --use-on-cd)"
 fi
