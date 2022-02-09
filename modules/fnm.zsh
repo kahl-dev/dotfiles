@@ -13,5 +13,5 @@ if _exists fnm; then
   [[ -f "$NODE_PATH/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh" ]] && . "$NODE_PATH/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh"
 
   plugins+=(fnm)
-  eval "$(fnm env --use-on-cd)"
+  eval "$(fnm env --use-on-cd --version-file-strategy=recursive)"
 fi
