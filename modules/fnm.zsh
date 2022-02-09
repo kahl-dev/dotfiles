@@ -1,4 +1,4 @@
-if _not_exists fnm; then
+if ! _exists fnm; then
   curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "$DOTFILES/bin/fnm" --skip-shell
 fi
 

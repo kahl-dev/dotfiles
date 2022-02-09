@@ -13,13 +13,9 @@ _exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
-_not_exists() {
-  ! command -v "$1" &> /dev/null
+_raspberry() {
+  _exists raspi-config
 }
-
-# IS_RASPBERRY=false
-# dmesg | grep "Machine model"  &> /dev/null && IS_RASPBERRY=true
-# export IS_RASPBERRY
 
 # Add modules
 for file in $(find $HOME/.dotfiles/modules -type f -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
