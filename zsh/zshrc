@@ -39,3 +39,8 @@ for file in $(find $DOTFILES/modules -type f -name "*.zsh" ! -name "pre*.zsh" ! 
 done
 
 source $ZSH/oh-my-zsh.sh
+
+# Add modules
+for file in $(find $HOME/.dotfiles/modules -type f -name "post*.zsh" ! -name "_*.zsh" | sort -n); do
+  source "$file";
+done

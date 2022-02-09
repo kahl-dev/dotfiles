@@ -1,18 +1,17 @@
 # # Add fzf fuzzy finder to zsh
 # # Doc: https://github.com/junegunn/fzf
 
-if [ ! -d "$DOTFILES/bin/fzf" ]; then
-  git clone --depth=1 https://github.com/junegunn/fzf.git ${DOTFILES}/bin/fzf
-  $DOTFILES/bin/fzf/install --no-completion --no-key-bindings --no-update-rc
+if [ ! -d "$HOME/.fzf" ]; then
+  git clone --depth=1 https://github.com/junegunn/fzf.git $HOME/.fzf
+  $HOME/.fzf/install --completion --key-bindings --no-update-rc --no-bash --no-fish
 fi
 
-if [ -d "$DOTFILES/bin/fzf" ]; then
-  export FZF_BASE="$DOTFILES/bin/fzf"
+if [ -d "$HOME/.fzf" ]; then
   export FZF_INIT_OPTS='--border --cycle --reverse --no-height'
   export FZF_DEFAULT_OPTS="$FZF_INIT_OPTS"
   export FZF_DEFAULT_COMMAND='rg --files'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-  export FZF_VIM='~/.fzf'
+  export FZF_VIM="$HOME/.fzf"
 
   plugins+=(fzf)
 
