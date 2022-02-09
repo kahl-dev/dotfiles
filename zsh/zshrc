@@ -1,6 +1,7 @@
 export DOTFILES=$HOME/.dotfiles
 export ZSH="$DOTFILES/zsh/ohmyzsh"
 export ZSH_CUSTOM=$DOTFILES/zsh/custom
+ZSH_DISABLE_COMPFIX=true
 
 if [ ! -d "$ZSH" ]; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
