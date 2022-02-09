@@ -16,3 +16,8 @@ vim/coc/*
 brew/Basebrew.lock.json
 
 tmux/plugins
+
+zsh/custom
+zsh/ohmyzsh
+
+bin

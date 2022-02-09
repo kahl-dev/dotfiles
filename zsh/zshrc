@@ -1,119 +1,40 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
+export DOTFILES=$HOME/.dotfiles
+export ZSH="$DOTFILES/zsh/ohmyzsh"
+export ZSH_CUSTOM=$DOTFILES/zsh/custom
 
-PROFILE=0
-if ((PROFILE == 1)); then
-    zmodload zsh/zprof
+if [ ! -d "$ZSH" ]; then
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
+    cd $HOME
 fi
 
-### Added by Zinit's installer
-if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
-    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
-    command mkdir -p "$HOME/.zinit" && command chmod g-rwX "$HOME/.zinit"
-    command git clone https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
-        print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
-        print -P "%F{160}▓▒░ The clone has failed.%f%b"
-fi
 
 # https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script
 _exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
-_not_exists() {
-  ! command -v "$1" &> /dev/null
+_raspberry() {
+  _exists raspi-config
 }
-
-IS_RASPBERRY=false
-dmesg | grep "Machine model"  &> /dev/null && IS_RASPBERRY=true
-export IS_RASPBERRY
 
 # Add modules
 for file in $(find $HOME/.dotfiles/modules -type f -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
   source "$file";
 done
 
-export DOTFILES=$HOME/.dotfiles
+# update automatically without asking
+zstyle ':omz:update' mode auto
 
-source "$HOME/.zinit/bin/zinit.zsh"
+# Uncomment the following line to change how often to auto-update (in days).
+zstyle ':omz:update' frequency 13
 
-# Workaround for https://github.com/zdharma/zinit/issues/366
-# [[ -v functions[.zinit-shade-off] ]] && .zinit-shade-off "${___mode:-load}"
+# Uncomment the following line to enable command auto-correction.
+ENABLE_CORRECTION="true"
 
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
+plugins=(git git-extras yarn)
 
-# Load a few important annexes, without Turbo
-# (this is currently required for annexes)
-zinit light-mode for \
-    zinit-zsh/z-a-rust \
-    zinit-zsh/z-a-as-monitor \
-    zinit-zsh/z-a-patch-dl \
-    zinit-zsh/z-a-bin-gem-node
-
-zinit ice wait"4" lucid as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX" nocompile
-zinit light tj/git-extras
-
-zinit wait lucid for \
-      OMZ::lib/key-bindings.zsh \
-      OMZ::lib/history.zsh \
-      OMZ::lib/compfix.zsh \
-      OMZ::lib/completion.zsh \
-      OMZ::lib/diagnostics.zsh \
-      OMZ::lib/functions.zsh \
-      OMZ::lib/misc.zsh \
-      OMZ::lib/spectrum.zsh \
-      OMZ::lib/directories.zsh \
-      OMZ::plugins/git \
-      OMZ::plugins/git-extras \
-      OMZ::plugins/yarn \
-      OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh \
-      OMZ::plugins/command-not-found/command-not-found.plugin.zsh \
-      # OMZ::plugins/git-auto-fetch/git-auto-fetch.plugin.zsh
-
-if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
-  alias ls='ls -G'
-else
-  alias ls='ls --color=auto'
-fi
-
-# A Zsh plugin to help remembering those shell aliases and Git aliases you once defined.
-# Doc: https://github.com/djui/alias-tips
-# zinit ice wait"3" lucid
-# zinit load djui/alias-tips
-# zinit ice from'gh-r' as'program'
-# zinit light sei40kr/fast-alias-tips-bin
-# zinit light sei40kr/zsh-fast-alias-tips
-
-# Add modules
 for file in $(find $DOTFILES/modules -type f -name "*.zsh" ! -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
   source "$file";
 done
 
-### End of Zinit's installer chunk
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# Add modules
-for file in $(find $HOME/.dotfiles/modules -type f -name "post*.zsh" ! -name "_*.zsh" | sort -n); do
-  source "$file";
-done
-
-[ ! -d "$HOME/.local/bin" ] && export PATH=$HOME/bin:$HOME/.local/bin:$PATH
-
-autoload -Uz compinit
-compinit
-
-### Profiling
-if ((PROFILE == 1)); then
-    zprof
-fi
-unset $PROFILE
-
-# Workaround for https://github.com/zdharma/zinit/issues/366
-# [[ -v functions[.zinit-shade-on] ]] && .zinit-shade-on "${___mode:-load}"
+source $ZSH/oh-my-zsh.sh

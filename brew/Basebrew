@@ -1,4 +1,6 @@
 brew "tmux"
 brew "python3"
 brew "tcl-tk"
+brew "bat"
+brew "ripgrep"
 brew "neovim"
