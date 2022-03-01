@@ -11,4 +11,4 @@ cnoremap kj <ESC>
 " xnoremap jk <Esc>
 " cnoremap jk <C-c>
 
-autocmd FileType text,markdown call setbufvar(bufnr("%"), 'easyescape_disable', 1)
+" autocmd FileType text,markdown call setbufvar(bufnr("%"), 'easyescape_disable', 1)
