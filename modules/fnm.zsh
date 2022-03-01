@@ -1,3 +1,8 @@
+if [ -d "$DOTFILES/bin/fnm" ]; then
+  export PATH=$DOTFILES/bin/fnm:$PATH
+  eval "`fnm env`"
+fi
+
 if ! _exists fnm; then
   curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "$DOTFILES/bin/fnm" --skip-shell
 fi
