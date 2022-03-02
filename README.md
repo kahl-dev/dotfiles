@@ -57,6 +57,12 @@ The following must be installed manually
 - [Translate](http://www.packal.org/workflow/translate)
 - [defaultbrowser-alfred-workflow](https://github.com/stuartcryan/defaultbrowser-alfred-workflow)
 
+## Fix colors
+
+Run the colortest at 
+```
+$ ~/.dotfiles/zsh/custom/plugins/base16-shell/colortest 
+```
 ## License
 
 MIT © [Patrick Kahl](https://github.com/patrickkahl)
