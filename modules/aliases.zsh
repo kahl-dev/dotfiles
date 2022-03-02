@@ -37,3 +37,5 @@ alias gbrclean='git fetch --prune && git branch -r | awk "{print \$1}" | egrep -
 
 alias ryid='rm -Rf node_modules && yarn install && yarn dev'
 alias ryib='rm -Rf node_modules && yarn install && yarn build'
+
+alias base16color='curl -s https://gist.githubusercontent.com/HaleTom/89ffe32783f89f403bba96bd7bcd1263/raw/ | bash'
