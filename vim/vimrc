@@ -146,7 +146,13 @@ set cursorline                    " highlight cursor line
 set scrolloff=10                  " min numbers above and below cursor
 set cmdheight=2                   " command window height to 2
 set pastetoggle=<F10>             " toggle paste mode
-set nowrap                        " No line break
+
+set wrap                          " No line break
+set linebreak
+set nolist
+set textwidth=80
+set whichwrap+=<,>,h,l
+
 set updatetime=50
 set conceallevel=2
 autocmd VimResized * wincmd =     " Adjust vim size on resize
