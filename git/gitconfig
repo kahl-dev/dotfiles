@@ -78,3 +78,5 @@
 [diff]
   renameLimit = 999999
   # tool = vimdiff
+[help]
+	autocorrect = 10
