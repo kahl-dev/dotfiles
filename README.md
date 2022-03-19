@@ -2,6 +2,12 @@
 
 > This are my dotfiles
 
+## DOCS
+
+ * [SSH](./docs/SSH.md)
+
+# OLD PART
+
 ## Install
 
 ```
