@@ -34,7 +34,7 @@
   helper = cache --timeout 228800
 
 [push]
-  default = simple
+	default = current
 
 [core]
   excludesfile = ~/.gitignore_global
