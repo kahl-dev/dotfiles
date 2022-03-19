@@ -320,9 +320,9 @@ noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
 
-command! W :w
+command! W <cmd>w<cr>
 
-nnoremap <CR> :nohlsearch<cr>
+nnoremap <cr> <cmd>nohlsearch<cr>
 
 " Smarter j and k navigation
 " Blog: https://bluz71.github.io/2017/05/15/vim-tips-tricks.html#smarter-j-and-k-navigation
@@ -331,7 +331,7 @@ nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
 
 " Make dot work over visual line selections
 " Blog: https://bluz71.github.io/2017/05/15/vim-tips-tricks.html#make-dot-work-over-visual-line-selections
-xnoremap . :norm.<CR>
+xnoremap . <cmd>norm.<cr>
 
 " highlight last inserted text
 nnoremap gV `[v`]
@@ -340,20 +340,17 @@ nnoremap gV `[v`]
 let mapleader=","
 
 " edit vimrc/zshrc and jload vimrc bindings
-nnoremap <leader>ve :vsp $MYVIMRC<CR>
-nnoremap <leader>vs :source $MYVIMRC<CR>
+nnoremap <leader>ve <cmd>vsp $MYVIMRC<cr>
+nnoremap <leader>vs <cmd>source $MYVIMRC<cr>
 
-nnoremap <C-n> :bn<CR>
-nnoremap <C-p> :bp<CR>
-
-nnoremap <C-s> :syntax sync fromstart<CR>
+nnoremap <C-n> <cmd>bn<cr>
+nnoremap <C-p> <cmd>bp<cr>
 
 " Do not replace buffer with paste
 xnoremap p "_dP
 
 " Search and replace term cursor
-nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
-nnoremap <Leader>S y:%s/<ctrl-r>"/new text/g
+nnoremap <Leader>s :%s/\<<C-r><C-w>\>//g<Left><Left>
 
 " }}}
 
