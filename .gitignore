@@ -20,4 +20,5 @@ tmux/plugins
 zsh/custom
 zsh/ohmyzsh
 
-bin
+bin/*
+!bin/open

@@ -2,6 +2,7 @@
 " Git plugin for Vim?
 " Doc: https://github.com/tpope/vim-fugitive
 Plug 'tpope/vim-fugitive'
+Plug 'https://github.com/tpope/vim-rhubarb.git'
 
 set diffopt+=vertical
 
