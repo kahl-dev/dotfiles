@@ -9,22 +9,15 @@ Host *tmux
   RequestTTY yes
 
 Host *
-  AddKeysToAgent yes
-  #ServerAliveInterval 30
-  #ServerAliveCountMax 3
-  #Compression yes
+	IdentityAgent "~/.1password/agent.sock"
+  # AddKeysToAgent yes
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
   ForwardAgent yes
-  UseKeychain yes
-  IdentityFile ~/.ssh/id_rsa
-
-
+  # UseKeychain yes
   Compression  yes
   TCPKeepAlive yes
-  HashKnownHosts no
-  ServerAliveInterval 60
-  ServerAliveCountMax 10
-
-  # RemoteCommand zsh
+  HashKnownHosts yes
 
   # Be careful this breaks clippe
   # ForwardX11 no
