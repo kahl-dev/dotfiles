@@ -16,3 +16,5 @@ npm-check-updates
 neovim
 git-recent
 git-recall
+trash-cli
+empty-trash-cli
