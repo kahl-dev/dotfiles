@@ -63,9 +63,6 @@
 	newNormal = green bold
 	newHighlight = green bold 22
 
-[url "git@github.com:"]
-    insteadOf = "https://github.com/"
-
 [pull]
 	rebase = true
 
