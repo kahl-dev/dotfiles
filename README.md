@@ -17,6 +17,12 @@ $ cd .dotfiles
 $ ./install-profile osx
 ```
 
+If you got some errors like me on my raspberry try to add this before clone.
+
+```zsh
+git config --global core.compression 0
+```
+
 ## Applications and tools
 
 All necessary applications and tools are installed with the installation script.
