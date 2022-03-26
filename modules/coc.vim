@@ -21,7 +21,8 @@ let g:coc_global_extensions = [
 \ 'coc-vetur',
 \ 'coc-yaml',
 \ 'coc-yank',
-\ 'coc-explorer'
+\ 'coc-explorer',
+\ 'coc-tailwindcss'
 \ ]
 
 if $IS_RASPBERRY == 'false'
