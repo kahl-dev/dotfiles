@@ -1,34 +1,21 @@
 # Guide: https://www.digitalocean.com/community/tutorials/how-to-configure-custom-connection-options-for-your-ssh-client#multiplexing-ssh-over-a-single-tcp-connection
 
-# Not supported by vscode
-#Include config.d/ssh-config
 Include ~/.dotfiles-local/ssh-config
 
 Host *tmux
-  RemoteCommand tmux new -A -s REMOTE
-  RequestTTY yes
+  RequestTTY yes                       # Allocate a pseudo-TTY
+  RemoteCommand tmux new -A -s REMOTE  # Attach to existing session or create new one
 
 Host *
-	IdentityAgent "~/.1password/agent.sock"
-  # AddKeysToAgent yes
-  ServerAliveInterval 30
-  ServerAliveCountMax 3
-  ForwardAgent yes
-  # UseKeychain yes
-  Compression  yes
-  TCPKeepAlive yes
-  HashKnownHosts yes
+  LogLevel INFO                        # LogLevel on client-side: QUIET, FATAL, ERROR, INFO,
+                                       # VERBOSE, DEBUG1, DEBUG2, DEBUG3
+  ServerAliveInterval 120              # Sends a keepalive packet every x seconds
+  ServerAliveCountMax 3                # If the client doesn't respond to x keepalive packets, the connection is closed
+  Compression yes                      # Compress the connection
+  HashKnownHosts yes                   # Store the hash of the host's key in the known_hosts file
+  ForwardAgent yes                     # Forward SSH agent
+  ForwardX11 no                        # Forward X11 grafical interface
 
-  # Be careful this breaks clippe
-  # ForwardX11 no
-  # ForwardX11Trusted yes
-
-  # Log info
-  LogLevel error
-
-  # Multiplexing SSH Over a Single TCP Connection
-  # https://www.digitalocean.com/community/tutorials/how-to-configure-custom-connection-options-for-your-ssh-client#multiplexing-ssh-over-a-single-tcp-connection
-  # Be careful this breaks clippe
-  #ControlMaster auto
-  #ControlPath ~/.ssh/%r@%h:%p
-  #ControlPersist 240
+  AddKeysToAgent yes                   # Add keys to ssh-agent
+  UseKeychain yes                      # Use keychain for storing keys
+  #IdentityAgent "~/.1password/agent.sock"
