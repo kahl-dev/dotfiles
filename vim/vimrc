@@ -352,6 +352,8 @@ xnoremap p "_dP
 " Search and replace term cursor
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>//g<Left><Left>
 
+set iskeyword+=-
+
 " }}}
 
 " {{{ Check python version if available
