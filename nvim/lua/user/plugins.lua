@@ -96,7 +96,7 @@ return packer.startup(function(use)
   use "p00f/nvim-ts-rainbow"
 
   -- Git
-  -- use "lewis6991/gitsigns.nvim"
+  use "lewis6991/gitsigns.nvim"
   use "tpope/vim-fugitive"
 
   -- Automatically set up your configuration after cloning packer.nvim
