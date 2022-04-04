@@ -12,11 +12,13 @@ if _exists nvim; then
   fi
 
   # alias vim='nvm use default && nvim'
-  alias vim='fnm exec --using=v16 nvim'
+  # alias vim='fnm exec --using=v16 nvim'
 
   function vim() {
-    command nvim "$@"
+    command fnm exec --using=v16 nvim "$@"
   }
+
+
 fi
 
 plugins+=(vi-mode)
