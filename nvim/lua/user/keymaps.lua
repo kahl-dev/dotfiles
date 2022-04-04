@@ -46,6 +46,9 @@ keymap("n", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
 keymap("n", "n", "nzz", opts)
 keymap("n", "N", "Nzz", opts)
 
+-- Cancel search highlighting with ESC
+keymap("n", "<ESC>", ":nohlsearch<Bar>:echo<CR>", opts)
+
 -- Insert --
 -- Press jk fast to enter
 keymap("i", "jk", "<ESC>", opts)
