@@ -42,9 +42,10 @@ keymap("n", "<S-h>", ":bprevious<CR>", opts)
 keymap("n", "<A-j>", ":m .+1<cr>==", opts)
 keymap("n", "<A-k>", ":m .-2<cr>==", opts)
 
--- Center search results
-keymap("n", "n", "nzz", opts)
-keymap("n", "N", "Nzz", opts)
+-- Keep it centered
+keymap("n", "n", "nzzzv", opts)
+keymap("n", "N", "Nzzzv", opts)
+keymap("n", "J", "mzJ`z", opts)
 
 -- Cancel search highlighting with ESC
 keymap("n", "<ESC>", ":nohlsearch<Bar>:echo<CR>", opts)
