@@ -59,6 +59,16 @@ return packer.startup(function(use)
   use "antoinemadec/FixCursorHold.nvim" -- This is needed to fix lsp doc highlight
   use "folke/which-key.nvim"
 
+  use {
+    "justinmk/vim-sneak", 
+    config = function() 
+      vim.g['sneak#label'] = '1'
+      vim.g['sneak#s_next'] = '1'
+    end
+  }
+  use 'unblevable/quick-scope'
+  use "tpope/vim-surround"
+
   -- tmux
   use 'christoomey/vim-tmux-navigator'
 
