@@ -60,6 +60,19 @@ return packer.startup(function(use)
 	use("folke/which-key.nvim")
 
 	use({
+		"airblade/vim-rooter",
+		config = function()
+			-- dentify a project's root directory
+			vim.g["rooter_patterns"] = { ".git/", ".git" }
+
+			-- Resolve symbolic links
+			vim.g["rooter_resolve_links"] = 1
+
+			vim.g["rooter_cd_cmd"] = "lcd"
+		end,
+	})
+
+	use({
 		"justinmk/vim-sneak",
 		config = function()
 			vim.g["sneak#label"] = "1"
