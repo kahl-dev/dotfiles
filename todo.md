@@ -1,4 +1,3 @@
-- [ ] Add "tic -x tmux-256color.terminfo" && "tic -x xterm-256color-italic.terminfo" to install process
 - [x] Learn https://github.com/tpope/vim-fugitive
 - [x] remove ohmyzsh / replace antigen / zplug
 - [x] alacritty mouse link support
@@ -10,15 +9,9 @@
 - [x] transparent ssh tmux in tmux
 - [x] repair tmux on off
 - [x] tmux show machine name
-- [ ] replace clipper with custome script and add open on browser options
-- [ ] tmux restore session want to rename window
 - [x] Add vi mode to zsh
-- [ ] Add observer to js snippets
-- [ ] replace cheat40 with simple open README
-- [ ] Find a nice way/keyboard shortcut to toggle folds
-- [ ] Add sensible to vim and remove all doublicate settings (https://github.com/tpope/vim-sensible)
-- [ ] Replace ale with coc to remove dependecie to change node version for vim
 
+- [ ] Add observer to js snippets
 - [ ] build own alfred tab search
 - [ ] build typo3-dev forwarding in tampermonkey
 - [ ] replace node-sass with dart-sass
@@ -29,3 +22,11 @@ Look later:
 - [ ] https://bluz71.github.io/
 - [ ] https://jdhao.github.io/2018/12/24/centos_nvim_install_use_guide_en/
 - [ ] https://thorsten-hans.com/5-types-of-zsh-aliases
+
+New neovim configuration:
+
+- [ ] Add undotree
+- [ ] Add posibility to telescope to add multiple files add ones
+- [ ] Add aplpha entry to open all current changed and new git files
+- [ ] Add nice folding
+- [ ] Add possibility to open remote links via socket
