@@ -6,7 +6,8 @@
 --   set background=dark
 -- endtry
 -- ]]
-vim.cmd('colorscheme base16-oceanicnext')
+-- vim.cmd('colorscheme base16-oceanicnext')
+vim.cmd[[colorscheme tokyonight]]
 
 require("transparent").setup({
   enable = true, -- boolean: enable transparent

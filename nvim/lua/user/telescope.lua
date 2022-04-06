@@ -7,10 +7,19 @@ local actions = require("telescope.actions")
 
 telescope.setup({
 	defaults = {
-
 		prompt_prefix = " ",
 		selection_caret = " ",
-		path_display = { "smart" },
+		path_display = { "truncate" },
+     -- path_display.shorten = { len = 1, exclude = {1, -1} }
+    layout_strategy = "horizontal",
+    -- layout_config = {
+    --   vertical = {
+    --     height = 0.9,
+    --     preview_cutoff = 50,
+    --     prompt_position = "bottom",
+    --     width = 0.8
+    --   }
+    -- },
 
 		mappings = {
 			i = {
@@ -78,6 +87,11 @@ telescope.setup({
 		},
 	},
 	pickers = {
+    find_files = {
+      -- theme = "dropdown",
+      -- hidden = true,
+      -- layout_strategy = "center",
+    }
 		-- Default configuration for builtin pickers goes here:
 		-- picker_name = {
 		--   picker_config_key = value,
@@ -95,5 +109,5 @@ telescope.setup({
 	},
 })
 
--- require("telescope").load_extension("fzf")
+require("telescope").load_extension("fzf")
 require("telescope").load_extension("repo")

@@ -99,7 +99,7 @@ local mappings = {
 	f = {
 		name = "Search",
 		f = {
-			"<cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>",
+			"<cmd>lua require('telescope.builtin').find_files()<cr>",
 			"Find files",
 		},
 		t = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" },
