@@ -16,7 +16,7 @@ local options = {
   splitbelow = true,                       -- force all horizontal splits to go below current window
   splitright = true,                       -- force all vertical splits to go to the right of current window
   swapfile = false,                        -- creates a swapfile
-  -- termguicolors = true,                    -- set term gui colors (most terminals support this)
+  termguicolors = true,                    -- set term gui colors (most terminals support this)
   timeoutlen = 300,                        -- time to wait for a mapped sequence to complete (in milliseconds)
   undofile = true,                         -- enable persistent undo
   updatetime = 300,                        -- faster completion (4000ms default)
@@ -53,3 +53,21 @@ vim.api.nvim_exec([[
   autocmd FileChangedShellPost *
     \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 ]], false)
+
+
+if vim.env.SSH_CLIENT or vim.env.SSH_TTY then
+  vim.cmd([[
+    nnoremap <leader>y :call system('nc -N 127.0.0.1 8377', @0)<CR>
+    if exists('##TextYankPost')
+      augroup Clipper
+        autocmd!
+        autocmd TextYankPost * call system('nc -N 127.0.0.1 8377', @0)
+      augroup END
+    endif
+  ]])
+end
+
+vim.g["gitblame_enabled"] = 0
+vim.g["gitblame_message_template"] = ' <sha> • <author> • <date> • <summary>'
+vim.g["gitblame_date_format"] = '%r'
+

@@ -138,6 +138,7 @@ local mappings = {
 			"<cmd>Gitsigns diffthis HEAD<cr>",
 			"Diff",
 		},
+		t = { "<cmd>GitBlameToggle<cr>", "Toggle git blame" },
 	},
 
 	l = {

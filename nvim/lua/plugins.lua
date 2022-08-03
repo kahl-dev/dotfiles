@@ -63,8 +63,8 @@ function M.setup()
 			config = get_config("telescope"),
 		})
 
-		-- use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
-		-- use("cljoly/telescope-repo.nvim")
+		use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
+		use("cljoly/telescope-repo.nvim")
 
 		-- use {"jvgrootveld/telescope-zoxide"}
 		-- use {"crispgm/telescope-heading.nvim"}
@@ -137,10 +137,16 @@ function M.setup()
 		-- use "lunarvim/colorschemes" -- A bunch of colorschemes you can try out
 		-- use("lunarvim/darkplus.nvim")
 		-- use("RRethy/nvim-base16")
+		-- use({
+		-- 	"folke/tokyonight.nvim",
+		-- 	requires = { { "xiyaowong/nvim-transparent" } },
+		-- 	config = get_config("tokyonight"),
+		-- })
+
 		use({
-			"folke/tokyonight.nvim",
+			"mhartington/oceanic-next",
 			requires = { { "xiyaowong/nvim-transparent" } },
-			config = get_config("tokyonight"),
+			config = get_config("oceanicnext"),
 		})
 
 		-- VIMSCRIPT PLUGINS
@@ -175,6 +181,12 @@ function M.setup()
 			config = function()
 				vim.g["fugitive_gitlab_domains"] = { "https://gitlab.louis-net.de" }
 			end,
+		})
+    use("f-person/git-blame.nvim")
+		use({
+			"yardnsm/vim-import-cost",
+			run = "npm install --production",
+			config = get_config("vim-import-cost"),
 		})
 
 	--
