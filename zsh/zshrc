@@ -44,3 +44,7 @@ source $ZSH/oh-my-zsh.sh
 for file in $(find $HOME/.dotfiles/modules -type f -name "post*.zsh" ! -name "_*.zsh" | sort -n); do
   source "$file";
 done
+
+xdg-open() {
+  open $@
+}
