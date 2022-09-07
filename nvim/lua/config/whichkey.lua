@@ -171,6 +171,7 @@ local mappings = {
 			"<cmd>Telescope lsp_dynamic_workspace_symbols<cr>",
 			"Workspace Symbols",
 		},
+		n = { "<cmd>:noautocmd w<cr>", "Save file without formating" },
 	},
 
 	t = {
