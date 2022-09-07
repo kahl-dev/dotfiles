@@ -101,7 +101,6 @@ cmp.setup {
       vim_item.kind = kind_icons[vim_item.kind]
       vim_item.menu = ({
         copilot = "[Copilot]",
-        cmp_tabnine = "[TN]",
         nvim_lsp = "[LSP]",
         nvim_lua = "[LUA]",
         -- rg = "[RG]",
@@ -119,7 +118,6 @@ cmp.setup {
     { name = "luasnip" },
     { name = "buffer" },
     { name = "path" },
-    { name = 'cmp_tabnine' },
     -- { name = 'rg', option = { debounce = 500 } },
   },
   confirm_opts = {

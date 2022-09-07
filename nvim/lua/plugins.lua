@@ -97,17 +97,17 @@ function M.setup()
 				{ "hrsh7th/cmp-cmdline" },
 				{ "saadparwaiz1/cmp_luasnip" },
 				{ "hrsh7th/cmp-copilot" },
-				{ "tzachar/cmp-tabnine" },
+				--[[ { "tzachar/cmp-tabnine" }, ]]
 				{ "lukas-reineke/cmp-rg" },
 			},
 			config = get_config("cmp"),
 		})
 
-		use({
-			"tzachar/cmp-tabnine",
-			run = "./install.sh",
-			requires = "hrsh7th/nvim-cmp",
-		})
+		--[[ use({ ]]
+		--[[ 	"tzachar/cmp-tabnine", ]]
+		--[[ 	run = "./install.sh", ]]
+		--[[ 	requires = "hrsh7th/nvim-cmp", ]]
+		--[[ }) ]]
 
 		-- snippets
 		use("L3MON4D3/LuaSnip") --snippet engine
