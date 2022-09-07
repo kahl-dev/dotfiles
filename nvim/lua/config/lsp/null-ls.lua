@@ -25,7 +25,7 @@ null_ls.setup({
 	debug = true,
 	sources = {
 		formatting.eslint_d,
-		--[[ formatting.prettier, ]]
+		formatting.prettier,
 		formatting.stylua,
 	},
 
