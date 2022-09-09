@@ -100,14 +100,14 @@ cmp.setup {
       -- Kind icons
       vim_item.kind = kind_icons[vim_item.kind]
       vim_item.menu = ({
-        copilot = "[Copilot]",
+        --[[ copilot = "[Copilot]", ]]
         nvim_lsp = "[LSP]",
         nvim_lua = "[LUA]",
         -- rg = "[RG]",
         luasnip = "[Snippet]",
         buffer = "[Buffer]",
         path = "[Path]",
-        emoji = "[EMOJI]"
+        emoji = "[EMOJI]",
       })[entry.source.name]
       return vim_item
     end,
