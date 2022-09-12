@@ -94,12 +94,14 @@ function M.setup()
 				{ "hrsh7th/cmp-path" },
 				{ "hrsh7th/cmp-cmdline" },
 				{ "saadparwaiz1/cmp_luasnip" },
-				{ "hrsh7th/cmp-copilot" },
+				--[[ { "hrsh7th/cmp-copilot" }, ]]
 				--[[ { "tzachar/cmp-tabnine" }, ]]
 				{ "lukas-reineke/cmp-rg" },
 			},
 			config = get_config("cmp"),
 		})
+
+		use("github/copilot.vim")
 
 		--[[ use({ ]]
 		--[[ 	"tzachar/cmp-tabnine", ]]

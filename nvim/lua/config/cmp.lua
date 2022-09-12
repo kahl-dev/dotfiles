@@ -100,7 +100,6 @@ cmp.setup {
       -- Kind icons
       vim_item.kind = kind_icons[vim_item.kind]
       vim_item.menu = ({
-        --[[ copilot = "[Copilot]", ]]
         nvim_lsp = "[LSP]",
         nvim_lua = "[LUA]",
         -- rg = "[RG]",
@@ -113,7 +112,7 @@ cmp.setup {
     end,
   },
   sources = {
-    -- { name = 'copilot' },
+    { name = 'copilot' },
     { name = "nvim_lsp" },
     { name = "luasnip" },
     { name = "buffer" },
