@@ -3,7 +3,7 @@ module.exports = {
   semi: false,
   singleQuote: true,
   trailingComma: 'es5',
-  jsxBracketSameLine: true,
+  bracketSameLine: true,
   overrides: [
     {
       files: ['*.html'],
@@ -13,3 +13,4 @@ module.exports = {
     },
   ],
 }
+
