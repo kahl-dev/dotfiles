@@ -170,6 +170,7 @@ function M.setup()
 			config = get_config("treesitter"),
 		})
 		use("JoosepAlviste/nvim-ts-context-commentstring")
+		use("nvim-treesitter/nvim-treesitter-context")
 		use("p00f/nvim-ts-rainbow")
 
 		-- Git
@@ -183,11 +184,11 @@ function M.setup()
 			end,
 		})
 		use("f-person/git-blame.nvim")
-		use({
-			"yardnsm/vim-import-cost",
-			run = "npm install --production",
-			config = get_config("vim-import-cost"),
-		})
+		--[[ use({ ]]
+		--[[ 	"yardnsm/vim-import-cost", ]]
+		--[[ 	run = "npm install --production", ]]
+		--[[ 	config = get_config("vim-import-cost"), ]]
+		--[[ }) ]]
 
 		--
 		--
