@@ -113,6 +113,9 @@ function M.setup()
 		use("L3MON4D3/LuaSnip") --snippet engine
 		use("rafamadriz/friendly-snippets") -- a bunch of snippets to use
 
+    -- Show undo history
+    use("simnalamburt/vim-mundo")
+
 		-- use {
 		--     "hrsh7th/nvim-cmp",
 		--     requires = {
