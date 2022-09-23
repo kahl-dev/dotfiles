@@ -1,21 +1,4 @@
 [alias]
-  aa      = add -A
-  a       = add
-  co      = checkout
-  cm      = commit -m
-  ca      = commit --amend
-  cma     = commit --amend -m
-  di      = diff
-  m       = merge
-  mnff    = merge --no-ff
-  r       = reset
-  ra      = reset .
-  st      = status -sb
-  p       = push
-  pom     = push origin master
-  poh     = push origin HEAD
-  #up      = pull --rebase --autostash
-
   # Add git lia aliases
   l       = lia
   ls      = lia start
@@ -25,6 +8,7 @@
 
   update  = !git pull && git submodule update --init --recursive
 	branchdate = "for-each-ref --count=20 --sort=-committerdate refs/remotes/origin --format=\"%(authordate:short)%09%(objectname:short)%09%(authorname)%09%1B[0;33m%(refname:short)%1B[m%09\""
+  delete-local-merged = "!git fetch && git branch --merged | egrep -v 'master|dev|main|staging'  | xargs git branch -d"
 
 [user]
   name = Patrick Kahl
@@ -35,6 +19,7 @@
 
 [push]
 	default = current
+	followTags = true
 
 [core]
   excludesfile = ~/.gitignore_global
@@ -76,5 +61,16 @@
 [diff]
   renameLimit = 999999
   # tool = vimdiff
+
 [help]
 	autocorrect = 10
+
+[fetch]
+	prune = true
+
+[web]
+  browser = open
+
+[browser "open"]
+	cmd = open
+

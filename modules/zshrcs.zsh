@@ -1,4 +1,4 @@
 # Allow work customizations in the ~/.zshrc-work
-if [ -f ~/.zshrc-local ]; then
-    source $HOME/.zshrc-local
+if [ -f $ZDOTDIR/.zshrc-local ]; then
+    source $ZDOTDIR/.zshrc-local
 fi
