@@ -75,7 +75,7 @@ cask "microsoft-edge"
 
 # development
 brew 'golang'
-cask "iterm2"
+# cask "iterm2"
 cask 'alacritty'
 #brew "macvim"
 cask "mongodb-compass"
