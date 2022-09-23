@@ -21,5 +21,7 @@ zsh/custom
 zsh/ohmyzsh
 zsh/.zsh_history
 zsh/.zcompdump*
+zsh/.zshrc-local
+
 bin/*
 !bin/open
