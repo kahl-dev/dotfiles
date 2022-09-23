@@ -19,6 +19,7 @@ tmux/plugins
 
 zsh/custom
 zsh/ohmyzsh
-
+zsh/.zsh_history
+zsh/.zcompdump*
 bin/*
 !bin/open
