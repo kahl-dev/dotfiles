@@ -1,50 +1,85 @@
-export DOTFILES=$HOME/.dotfiles
-export ZSH="$DOTFILES/zsh/ohmyzsh"
-export ZSH_CUSTOM=$DOTFILES/zsh/custom
-ZSH_DISABLE_COMPFIX=true
-
-if [ ! -d "$ZSH" ]; then
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
-    cd $HOME
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+#!/bin/sh
+# For more plugins: https://github.com/unixorn/awesome-zsh-plugins
+# More completions https://github.com/zsh-users/zsh-completions
 
-# https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script
-_exists() {
-  command -v "$1" >/dev/null 2>&1
-}
+export ZDOTDIR=$HOME/.config/zsh
+export DOTFILES=$HOME/.dotfiles
+ZSH_DISABLE_COMPFIX=true
+HISTFILE="$ZDOTDIR/custom/.zsh_history"
+setopt appendhistory
 
-_raspberry() {
-  _exists raspi-config
-}
+# some useful options (man zshoptions)
+setopt autocd extendedglob nomatch menucomplete
+setopt interactive_comments
+zle_highlight=('paste:none')
 
-# Add modules
-for file in $(find $HOME/.dotfiles/modules -type f -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
+# Add pre config
+for file in $(find $ZDOTDIR/config -type f -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
   source "$file";
 done
 
-# update automatically without asking
-zstyle ':omz:update' mode auto
 
-# Uncomment the following line to change how often to auto-update (in days).
-zstyle ':omz:update' frequency 13
+# beeping is annoying
+unsetopt BEEP
 
-# Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
+# completions
+autoload -Uz compinit
+zstyle ':completion:*' menu select
+# zstyle ':completion::complete:lsof:*' menu yes select
+zmodload zsh/complist
+# compinit
+_comp_options+=(globdots)		# Include hidden files.
 
-plugins=(git git-extras yarn)
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
 
-for file in $(find $DOTFILES/modules -type f -name "*.zsh" ! -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
+# Colors
+autoload -Uz colors && colors
+
+# Useful Functions
+source "$ZDOTDIR/zsh-functions"
+
+for file in $(find $ZDOTDIR/config -type f -name "*.zsh" ! -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
   source "$file";
 done
 
-source $ZSH/oh-my-zsh.sh
+# Normal files to source
+zsh_add_file "zsh-exports"
+zsh_add_file "zsh-aliases"
 
-# Add modules
-for file in $(find $HOME/.dotfiles/modules -type f -name "post*.zsh" ! -name "_*.zsh" | sort -n); do
+
+# Key-bindings
+# bindkey -s '^o' 'ranger^M'
+# bindkey -s '^f' 'zi^M'
+# bindkey -s '^s' 'ncdu^M'
+# # bindkey -s '^n' 'nvim $(fzf)^M'
+# # bindkey -s '^v' 'nvim\n'
+# bindkey -s '^z' 'zi^M'
+# bindkey '^[[P' delete-char
+# bindkey "^p" up-line-or-beginning-search # Up
+# bindkey "^n" down-line-or-beginning-search # Down
+# bindkey "^k" up-line-or-beginning-search # Up
+# bindkey "^j" down-line-or-beginning-search # Down
+# bindkey -r "^u"
+# bindkey -r "^d"
+
+# Add post modules
+for file in $(find $ZDOTDIR/config -type f -name "post*.zsh" ! -name "_*.zsh" | sort -n); do
   source "$file";
 done
 
-xdg-open() {
-  open $@
-}
+# Edit line in vim with ctrl-e:
+autoload edit-command-line; zle -N edit-command-line
+# bindkey '^e' edit-command-line
+
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh

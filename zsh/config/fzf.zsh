@@ -21,9 +21,11 @@ if [ -d "$HOME/.fzf" ]; then
   # Doc: https://github.com/wfxr/forgit
   # export FORGIT_NO_ALIASES=false
 
-  if [ ! -d "$ZSH_CUSTOM/plugins/forgit" ]; then
-    git clone https://github.com/wfxr/forgit.git $ZSH_CUSTOM/plugins/forgit
-  fi
+
+  zsh_add_plugin "wfxr/forgit"
+  # if [ ! -d "$ZSH_CUSTOM/plugins/forgit" ]; then
+  #   git clone https://github.com/wfxr/forgit.git $ZSH_CUSTOM/plugins/forgit
+  # fi
 
   export forgit_log=fglog
   export forgit_diff=fgd

@@ -1,7 +1,7 @@
 # ---- Default editors ---- #
-export EDITOR="nvim"
-export VISUAL="nvim"
+export BROWSER="brave"
+export TERMINAL="alacritty"
 
 # ---- ZSH ---- #
-export ZDOTDIR="$HOME/.config/.zsh"
-export HISTFILE="$HOME/.config/.zsh/.zsh_history"
+export ZDOTDIR="$HOME/.config/zsh"
+export HISTFILE="$ZDOTDIR/custom/.zsh_history"

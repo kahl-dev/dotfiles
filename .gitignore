@@ -17,12 +17,6 @@ brew/Basebrew.lock.json
 
 tmux/plugins
 
-zsh/custom
-zsh/ohmyzsh
-zsh/.zsh_history
-zsh/.zcompdump*
-zsh/.zshrc-local
-
 nvim/undodir
 
 bin/*

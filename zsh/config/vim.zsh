@@ -1,11 +1,7 @@
-export EDITOR="vim"
-export VISUAL="vim"
-
-# alias vi='vim'
-
 if _exists nvim; then
   export EDITOR="nvim"
   export VISUAL="nvim"
+
 
   if [ ! -d "$HOME/.config/nvim" ]; then
     ln -s "$DOTFILES/nvim" "$HOME/.config/nvim"
@@ -18,7 +14,6 @@ if _exists nvim; then
     command fnm exec --using=v16 nvim "$@"
   }
 
-
+  alias vi='v'
+  alias vim='v'
 fi
-
-plugins+=(vi-mode)

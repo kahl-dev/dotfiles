@@ -2,6 +2,6 @@
     ~/.zshenv:
         force: true
         path: zsh/.zshenv
-    ~/.config/.zsh:
+    ~/.config/zsh:
         force: true
         path: zsh
