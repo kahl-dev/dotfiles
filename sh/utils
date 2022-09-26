@@ -1,0 +1,17 @@
+#!/bin/bash
+
+_exec_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+_is_raspberry() {
+  _exec_exists raspi-config
+}
+
+_is_osx() {
+  [[ $(uname -s) =~ "Darwin" ]] && return 0 || return 1
+}
+
+_is_linux() {
+  [[ $(uname -s) =~ "Linux" ]] && return 0 || return 1
+}

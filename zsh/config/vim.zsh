@@ -1,4 +1,4 @@
-if _exists nvim; then
+if _exec_exists nvim; then
   export EDITOR="nvim"
   export VISUAL="nvim"
 

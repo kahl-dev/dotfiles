@@ -1,7 +1,0 @@
-- link:
-    ~/.zshenv:
-        force: true
-        path: zsh/.zshenv
-    ~/.config/zsh:
-        force: true
-        path: zsh

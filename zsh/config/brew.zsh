@@ -1,5 +1,5 @@
 # linux only
-if ! _raspberry; then
+if ! _is_raspberry; then
   if [ "$(uname 2> /dev/null)" = "Linux" ]; then
     ## Setup linux brew
     export LINUXBREWHOME=$HOME/.linuxbrew

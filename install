@@ -1,0 +1,57 @@
+#!/bin/bash
+
+export DOTFILES=$HOME/.dotfiles
+
+. $DOTFILES/sh/utils
+
+symlink() {
+
+  TYPE='Create'
+  if [ -L $2 ]; then
+    rm $2
+    TYPE='Overwrite'
+  fi
+  echo "$TYPE symlink $1 -> $2"
+  ln -s $1 $2
+}
+
+symlink $DOTFILES/zsh/.zshenv $HOME/.zshenv
+symlink $DOTFILES/zsh $HOME/.config/zsh
+
+symlink $DOTFILES/git/gitconfig $HOME/.gitconfig
+symlink $DOTFILES/git/gitignore_global $HOME/.gitignore_global
+symlink $DOTFILES/git/template ~/.gittemplate
+
+symlink $DOTFILES/ee/prettierrc.js $HOME/.prettierrc.js
+
+symlink $DOTFILES/ee/tern-config.json $HOME/.tern-config
+
+symlink $DOTFILES/ee/eslintrc.js $HOME/.eslintrc.js
+
+symlink $DOTFILES/tmux $HOME/.tmux
+symlink $DOTFILES/tmux/tmux.conf $HOME/.tmux.conf
+
+symlink $DOTFILES/ee/agignore $HOME/.agignore
+
+if _is_osx; then
+  symlink $DOTFILES/ee/alacritty.yml $HOME/.config/alacritty/alacritty.yml
+
+  symlink $DOTFILES/ee/clipper.json $HOME/.clipper.json
+  brew services start clipper
+fi
+
+
+symlink $DOTFILES/ssh/rc $HOME/.ssh/rc
+mkdir -p ~/.ssh/config.d
+
+# for file in $(find $DOTFILES/install -type f -name "pre*" ! -name "_*" | sort -n); do
+#   . "$file";
+# done
+#
+# for file in $(find $DOTFILES/install -type f -name "*" ! -name "pre*" ! -name "_*" | sort -n); do
+#   . "$file";
+# done
+#
+# for file in $(find $DOTFILES/install -type f -name "post*" ! -name "_*" | sort -n); do
+#   . "$file";
+# done

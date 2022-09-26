@@ -3,11 +3,11 @@ if [ -d "$DOTFILES/bin/fnm" ]; then
   eval "`fnm env`"
 fi
 
-if ! _exists fnm; then
+if ! _exec_exists fnm; then
   curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "$DOTFILES/bin/fnm" --skip-shell
 fi
 
-if _exists fnm; then
+if _exec_exists fnm; then
   export FNM_DIR="$DOTFILES/bin/fnm"
 
   if [ ! -d "$FNM_DIR/aliases/lts-latest" ]; then
