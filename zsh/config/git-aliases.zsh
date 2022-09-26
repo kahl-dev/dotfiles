@@ -56,6 +56,7 @@ alias gcl='git clone --recurse-submodules'
 alias gclean='git clean -id'
 alias gcm='git checkout $(git_main_branch)'
 alias gcd='git checkout $(git_develop_branch)'
+alias gc='git commit -v'
 alias gcmsg='git commit -m'
 alias gco='git checkout'
 
@@ -97,6 +98,8 @@ alias gsts='git stash show --text'
 # Go to git root dir
 alias cdtl='cd "$(git rev-parse --show-toplevel)"'
 
+alias gup='git up'
+alias gupdate='git update'
 alias gbrclean='git fetch --prune && git branch -r | awk "{print \$1}" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk "{print \$1}" | xargs git branch -D'
 
 function grename() {
