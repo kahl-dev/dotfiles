@@ -4,3 +4,6 @@ brew "tcl-tk"
 brew "bat"
 brew "ripgrep"
 brew "neovim"
+
+brew "golang"
+brew "git-extras"

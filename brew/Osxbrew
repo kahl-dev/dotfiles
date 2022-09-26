@@ -8,7 +8,6 @@ tap "colindean/fonts-nonfree"
 #cask "steam"
 
 # multimedia
-cask "spotify"
 #cask "vlc"
 #mas "PiPifier", id: 1160374471
 
@@ -74,7 +73,6 @@ cask "google-chrome-beta"
 cask "microsoft-edge"
 
 # development
-brew 'golang'
 # cask "iterm2"
 cask 'alacritty'
 #brew "macvim"
