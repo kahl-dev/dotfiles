@@ -48,10 +48,7 @@ for file in $(find $ZDOTDIR/config -type f -name "*.zsh" ! -name "pre*.zsh" ! -n
   source "$file";
 done
 
-# Normal files to source
 zsh_add_file "zsh-exports"
-zsh_add_file "zsh-aliases"
-
 
 # Key-bindings
 # bindkey -s '^o' 'ranger^M'
