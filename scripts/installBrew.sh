@@ -1,3 +1,8 @@
+#!/bin/bash
+
+source ./scripts/config.sh
+source ./scripts/functions.sh
+
 # brew bundle install --file $DOTFI$DOTFILES/brew/Basebrew
 if _is_linux; then
   LINUXBREWHOME=$HOME/.linuxbrew
@@ -33,11 +38,11 @@ if _is_osx; then
     # rm -rf alacritty
   fi
 
-  _symlink $DOTFILES/ee/alacritty.yml $HOME/.config/alacritty/alacritty.yml
+  _symlink $DOTFILES/config/alacritty.yml $HOME/.config/alacritty/alacritty.yml
 
 
   if _exec_exists brew; then
-    _symlink $DOTFILES/ee/clipper.json $HOME/.clipper.json
+    _symlink $DOTFILES/config/clipper.json $HOME/.clipper.json
     brew services start clipper
   fi
 fi

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $DOTFILES/scripts/config.sh
+source ./scripts/config.sh
 
 _symlink() {
   TYPE='Create'

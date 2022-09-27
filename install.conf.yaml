@@ -1,8 +1,0 @@
-- shell:
-    - command: [./sh/pre-install.sh, Pre-install script]
-      stdin: true
-      stdout: true
-
-    - command: [./sh/install.sh, Install script]
-      stdin: true
-      stdout: true
