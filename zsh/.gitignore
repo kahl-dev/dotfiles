@@ -1,5 +1,6 @@
 plugins
 custom
+.zcompcache
 .zcompdump*
 .zshrc-local
 
