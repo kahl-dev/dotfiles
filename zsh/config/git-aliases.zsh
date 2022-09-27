@@ -40,6 +40,18 @@ function git_develop_branch() {
   echo develop
 }
 
+function git_production_branch() {
+  command git rev-parse --git-dir &>/dev/null || return
+  local branch
+  for branch in online; do
+    if command git show-ref -q --verify refs/heads/$branch; then
+      echo $branch
+      return
+    fi
+  done
+  echo production
+}
+
 #
 # Aliases
 # (sorted alphabetically)
@@ -56,6 +68,7 @@ alias gcl='git clone --recurse-submodules'
 alias gclean='git clean -id'
 alias gcm='git checkout $(git_main_branch)'
 alias gcd='git checkout $(git_develop_branch)'
+alias gcp='git checkout $(git_production_branch)'
 alias gc='git commit -v'
 alias gcmsg='git commit -m'
 alias gco='git checkout'
