@@ -51,13 +51,53 @@ alias psmem='ps auxf | sort -nr -k 4 | head -5'
 # get top process eating cpu ##
 alias pscpu='ps auxf | sort -nr -k 3 | head -5'
 
+
+# Allow SSH tab completion for mosh hostnames
+compdef mosh=ssh
+
+
 case "$(uname -s)" in
 
 Darwin)
 	alias ls='ls -G'
 
   # Add markdownreader app
-  alias marked='open -a "Marked 2"'
+  function marked() {
+    if [ "$1" ]; then
+        open -a "marked 2.app" "$1"
+    else
+        open -a "marked 2.app"
+    fi
+  }
+
+  # Quick-Look a specified file
+  function quick-look() {
+    (( $# > 0 )) && qlmanage -p $* &>/dev/null &
+  }
+
+  # Open a specified man page in Preview app
+  function man-preview() {
+    # Don't let Preview.app steal focus if the man page doesn't exist
+    man -w "$@" &>/dev/null && man -t "$@" | open -f -a Preview || man "$@"
+  }
+  compdef _man man-preview
+
+  # Show/hide hidden files in the Finder
+  alias showfiles="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+  alias hidefiles="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+
+  # Remove .DS_Store files recursively in a directory, default .
+  function rmdsstore() {
+    find "${@:-.}" -type f -name .DS_Store -delete
+  }
+
+  # Open the current directory in a Finder window
+  alias ofd='open_command $PWD'
+
+  # cd to the current Finder directory
+  function cdf() {
+    cd "$(pfd)"
+  }
 	;;
 
 Linux)
