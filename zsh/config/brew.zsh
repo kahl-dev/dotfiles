@@ -18,4 +18,10 @@ if ! _is_raspberry; then
     export PKG_CONFIG_PATH="$(brew --prefix)/opt/python3@/lib/pkgconfig"
 
   fi
+
+  if type brew &>/dev/null
+  then
+    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+  fi
+
 fi

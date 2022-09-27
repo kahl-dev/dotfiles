@@ -30,7 +30,6 @@ autoload -Uz compinit
 zstyle ':completion:*' menu select
 # zstyle ':completion::complete:lsof:*' menu yes select
 zmodload zsh/complist
-compinit
 _comp_options+=(globdots)		# Include hidden files.
 
 autoload -U up-line-or-beginning-search
@@ -47,6 +46,8 @@ source "$ZDOTDIR/zsh-functions"
 for file in $(find $ZDOTDIR/config -type f -name "*.zsh" ! -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
   source "$file";
 done
+
+compinit
 
 zsh_add_file "zsh-exports"
 
