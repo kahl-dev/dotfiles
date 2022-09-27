@@ -1,9 +1,10 @@
-brew "tmux"
-brew "python3"
-brew "tcl-tk"
-brew "bat"
-brew "ripgrep"
-brew "neovim"
+brew "tmux"         # Terminal multiplexer
+brew "bat"          # Better cat
+brew "ripgrep"      # Better grep
+brew "neovim"       # Better vim alternative
+brew "fnm"          # Node package manager
+brew "git-extras"   # Additional git commands
+brew "tree"         # Recursive directory list
 
+brew "python3"
 brew "golang"
-brew "git-extras"

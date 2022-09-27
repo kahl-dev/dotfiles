@@ -4,62 +4,46 @@ tap "homebrew/cask-fonts"
 tap "colindean/fonts-nonfree"
 #brew "mas"
 
-# gaming
-#cask "steam"
 
-# multimedia
-#cask "vlc"
-#mas "PiPifier", id: 1160374471
 
-# tools
-# brew "node"
-#brew "mongodb"
+# CLI --------------------------------------------------------------------------
 brew "reattach-to-user-namespace"
-#brew "tree"
-#brew "wget"
+brew "wget"
+
+
+# APPS -------------------------------------------------------------------------
+
+# Gaming
+cask "steam"
+
+# Multimedia
+cask "vlc"
+
+# Fonts
+cask "font-hack-nerd-font"
+cask "font-droidsansmono-nerd-font"
+
+# Utility tools
 cask "transmit"
 cask "1password"
 cask "alfred"
-cask "appcleaner"
 cask "bartender"
-#cask "daisydisk"
-#cask "dropbox"
-cask "font-hack-nerd-font"
-# cask "font-droidsansmono-nerd-font"
-#cask "font-microsoft-office"
 cask "istat-menus"
 cask "little-snitch"
-# cask "muse"
-# cask "osxfuse"
-# brew "sshfs"
 cask "paragon-ntfs"
 cask "quitter"
-#cask "sizeup"
 cask "rectangle"
-#cask "tuck"
-#cask "shortcutdetective"
-#cask "pixelpeeper"
-#cask "spillo"
 cask "tunnelblick"
-#cask "usage"
-#cask "google-backup-and-sync"
-#mas "Airmail 3", id: 918858936
-#mas "Tyme2", id: 1063996724
+cask "usage"
 cask "tripmode"
 # cask "caffeine"
 #mas "colorsnapper"
-#cask "teamviewer"
-#cask "numi"
-#cask "nightowl"
-#cask "gfxCardStatus"
 brew "clipper"
 cask "muzzle"
 cask "google-drive"
 cask "bettertouchtool"
 
 # chats & socialmedia
-#cask "skype"
-#cask "skype-for-business"
 cask "slack"
 cask "whatsapp"
 #mas "Tweetbot", id: 557168941
@@ -68,17 +52,11 @@ cask "whatsapp"
 cask "brave-browser"
 cask "firefox"
 cask "google-chrome-beta"
-#cask "google-chrome-canary"
-#cask "opera"
 cask "microsoft-edge"
 
 # development
-# cask "iterm2"
 cask 'alacritty'
-#brew "macvim"
-cask "mongodb-compass"
 cask "visual-studio-code"
-#cask "visual-studio-code-insiders"
 #mas "Marked 2", id: 890031187
 #mas "Xcode", id: 497799835
 #brew "speedtest-cli"
