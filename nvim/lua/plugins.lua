@@ -60,15 +60,11 @@ function M.setup()
 			requires = { { "nvim-lua/popup.nvim" }, { "nvim-lua/plenary.nvim" } },
 			config = get_config("telescope"),
 		})
-
 		use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 		use("cljoly/telescope-repo.nvim")
 
-		-- use {"jvgrootveld/telescope-zoxide"}
-		-- use {"crispgm/telescope-heading.nvim"}
-		-- use {"nvim-telescope/telescope-symbols.nvim"}
-		-- use {"nvim-telescope/telescope-file-browser.nvim"}
-		-- use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
+
+
 
 		use({ "numToStr/Comment.nvim", config = get_config("comment") })
 		use({ "folke/which-key.nvim", config = get_config("whichkey") })
