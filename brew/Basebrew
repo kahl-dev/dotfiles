@@ -3,8 +3,10 @@ brew "bat"          # Better cat
 brew "ripgrep"      # Better grep
 brew "neovim"       # Better vim alternative
 brew "fnm"          # Node package manager
+brew "fzf"
 brew "git-extras"   # Additional git commands
 brew "tree"         # Recursive directory list
+brew "zoxide"       # A smarter cd command
 
 brew "python3"
 brew "golang"
