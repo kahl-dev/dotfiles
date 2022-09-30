@@ -43,11 +43,12 @@ autoload -Uz colors && colors
 # Useful Functions
 source "$ZDOTDIR/zsh-functions"
 
+compinit
+
 for file in $(find $ZDOTDIR/config -type f -name "*.zsh" ! -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
   source "$file";
 done
 
-compinit
 
 zsh_add_file "zsh-exports"
 
