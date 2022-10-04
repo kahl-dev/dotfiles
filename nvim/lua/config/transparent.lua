@@ -1,15 +1,11 @@
--- vim.cmd [[
--- try
---   colorscheme darkplus
--- catch /^Vim\%((\a\+)\)\=:E185/
---   colorscheme default
---   set background=dark
--- endtry
--- ]]
--- vim.cmd('colorscheme base16-oceanicnext')
-vim.cmd[[colorscheme tokyonight]]
+-- https://github.com/xiyaowong/nvim-transparent
 
-require("transparent").setup({
+local status_ok, transparent = pcall(require, "transparent")
+if not status_ok then
+  return
+end
+
+transparent.setup({
   enable = true, -- boolean: enable transparent
   extra_groups = { -- table/string: additional groups that should be clear
     -- In particular, when you set it to 'all', that means all avaliable groups
@@ -24,4 +20,3 @@ require("transparent").setup({
   },
   exclude = {}, -- table: groups you don't want to clear
 })
-vim.g.tokyonight_transparent = vim.g.transparent_enabled

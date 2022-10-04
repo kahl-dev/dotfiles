@@ -34,7 +34,10 @@ local options = {
   guifont = "monospace:h17",               -- the font used in graphical neovim applications
 
   undofile = true,                         -- enable persistent undo
-  undodir = vim.fn.expand('~/.config/nvim/undodir')
+  undodir = vim.fn.expand('~/.config/nvim/undodir'),
+
+  spell = true,
+  spelllang = { 'en_us' },
 }
 
 vim.opt.shortmess:append "c"
@@ -69,7 +72,4 @@ if vim.env.SSH_CLIENT or vim.env.SSH_TTY then
   ]])
 end
 
-vim.g["gitblame_enabled"] = 0
-vim.g["gitblame_message_template"] = ' <sha> • <author> • <date> • <summary>'
-vim.g["gitblame_date_format"] = '%r'
 
