@@ -1,10 +1,10 @@
 -- https://github.com/mhartington/oceanic-next
 
-vim.cmd[[
+vim.cmd([[
   if (has("termguicolors"))
    set termguicolors
   endif
 
   syntax enable
   colorscheme OceanicNext
-]]
+]])
