@@ -22,15 +22,13 @@ function M.setup()
 	-- https://github.com/williamboman/mason-lspconfig.nvim#available-lsp-servers
 	mason_lspconfig.setup({
 		ensure_installed = {
-
-			-- LSP
 			"bashls",
 			"cssls",
 			"esling",
 			"emmet_ls",
 			"html",
 			"stylelint_lsp",
-			-- "sumneko_lua",
+			"sumneko_lua",
 			"tailwindcss",
 			"tsserver",
 			"volar",

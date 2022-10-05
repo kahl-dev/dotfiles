@@ -38,7 +38,6 @@ function M.common_capabilities()
 	local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 	if status_ok then
 		capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
-    return capabilities
 	end
 
 	return capabilities
@@ -53,7 +52,7 @@ end
 function M.get_common_opts()
 	return {
 		on_attach = M.common_on_attach,
-		capabilities = M.common_capabilities,
+		capabilities = M.common_capabilities(),
 	}
 end
 
