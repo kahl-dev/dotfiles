@@ -7,7 +7,7 @@ local actions = require("telescope.actions")
 local action_layout = require("telescope.actions.layout")
 
 telescope.setup({
-  defaults = {
+	defaults = {
 		prompt_prefix = " ",
 		selection_caret = " ",
 		layout_strategy = "horizontal",
@@ -34,8 +34,8 @@ telescope.setup({
 				["<C-u>"] = actions.preview_scrolling_up,
 				["<C-d>"] = actions.preview_scrolling_down,
 
-        ["<C-_>"] = actions.which_key, -- keys from pressing <C-/>
-        ["<M-p>"] = action_layout.toggle_preview,
+				["<C-_>"] = actions.which_key, -- keys from pressing <C-/>
+				["<M-p>"] = action_layout.toggle_preview,
 			},
 
 			n = {
@@ -60,14 +60,14 @@ telescope.setup({
 				["<C-d>"] = actions.preview_scrolling_down,
 
 				["?"] = actions.which_key,
-        ["<M-p>"] = action_layout.toggle_preview,
+				["<M-p>"] = action_layout.toggle_preview,
 			},
 		},
 	},
 
 	pickers = {
 		find_files = {
-      previewer = false
+			previewer = false,
 		},
 	},
 })

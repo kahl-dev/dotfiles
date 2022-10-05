@@ -1,18 +1,10 @@
-vim.cmd[[colorscheme OceanicNext]]
+-- https://github.com/mhartington/oceanic-next
 
-require("transparent").setup({
-  enable = true, -- boolean: enable transparent
-  extra_groups = { -- table/string: additional groups that should be clear
-    -- In particular, when you set it to 'all', that means all avaliable groups
+vim.cmd([[
+  if (has("termguicolors"))
+   set termguicolors
+  endif
 
-    -- example of akinsho/nvim-bufferline.lua
-    "BufferLineTabClose",
-    "BufferlineBufferSelected",
-    "BufferLineFill",
-    "BufferLineBackground",
-    "BufferLineSeparator",
-    "BufferLineIndicatorSelected",
-  },
-  exclude = {}, -- table: groups you don't want to clear
-})
--- vim.g.tokyonight_transparent = vim.g.transparent_enabled
+  syntax enable
+  colorscheme OceanicNext
+]])
