@@ -1,14 +1,15 @@
 # linux only
 if ! _is_raspberry; then
   if _is_linux; then
-    ## Setup linux brew
-    export LINUXBREWHOME=$HOME/.linuxbrew
-    export PATH=$LINUXBREWHOME/bin:$LINUXBREWHOME/sbin:$PATH
-    export MANPATH=$LINUXBREWHOME/share/man:$MANPATH
-    export PKG_CONFIG_PATH=$LINUXBREWHOME/lib64/pkgconfig:$LINUXBREWHOME/lib/pkgconfig:$PKG_CONFIG_PATH
-    export LD_LIBRARY_PATH=$LINUXBREWHOME/lib64:$LINUXBREWHOME/lib:$LD_LIBRARY_PATH
-  fi
+    if [ -d "/home/linuxbrew/.linuxbrew/bin" ]; then
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      export PATH="$(brew --prefix)/opt/python/libexec/bin:${PATH}"
+    fi
 
+    if [ -d "/home/.linuxbrew/bin" ]; then
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
+  fi
 
   # https://docs.brew.sh/Shell-Completion
   # Brew auto completion

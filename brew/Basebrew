@@ -4,6 +4,7 @@ brew "ripgrep"      # Better grep
 brew "glow"         # Render Markdown in CLI
 brew "fnm"          # Node package manager
 brew "fzf"
+brew "fd"
 brew "tree"         # Recursive directory list
 brew "zoxide"       # A smarter cd command
 
