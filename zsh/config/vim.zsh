@@ -9,6 +9,5 @@ if _exec_exists nvim; then
     command fnm exec --using=v16 nvim "$@"
   }
 
-  alias vi='v'
   alias vim='v'
 fi
