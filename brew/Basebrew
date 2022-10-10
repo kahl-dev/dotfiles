@@ -1,6 +1,7 @@
 brew "tmux"         # Terminal multiplexer
 brew "bat"          # Better cat
 brew "ripgrep"      # Better grep
+brew "glow"         # Render Markdown in CLI
 brew "fnm"          # Node package manager
 brew "fzf"
 brew "tree"         # Recursive directory list

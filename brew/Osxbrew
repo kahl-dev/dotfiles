@@ -10,6 +10,9 @@ tap "colindean/fonts-nonfree"
 brew "reattach-to-user-namespace"
 brew "wget"
 
+# Create local dev ssl/https certificate
+brew "mkcert"
+brew "nss"
 
 # APPS -------------------------------------------------------------------------
 
