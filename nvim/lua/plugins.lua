@@ -161,7 +161,6 @@ function M.setup()
 		use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 		use("cljoly/telescope-repo.nvim")
 
-		--[[ use("github/copilot.vim") ]]
 
 		-- LSP
 
@@ -202,6 +201,8 @@ function M.setup()
 			},
 			config = get_config("cmp"),
 		})
+
+	  use({ "github/copilot.vim" , config = get_config("copilot")})
 
 		-- VIMSCRIPT PLUGINS
 
