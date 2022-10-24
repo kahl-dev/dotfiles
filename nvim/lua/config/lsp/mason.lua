@@ -24,7 +24,7 @@ function M.setup()
 		ensure_installed = {
 			"bashls",
 			"cssls",
-			"esling",
+			"eslint",
 			"emmet_ls",
 			"html",
 			"stylelint_lsp",
