@@ -2,9 +2,8 @@ tap "homebrew/cask-versions"
 tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "colindean/fonts-nonfree"
-#brew "mas"
-
-
+tap "homebrew/cask-drivers"
+brew "mas"
 
 # CLI --------------------------------------------------------------------------
 brew "reattach-to-user-namespace"
@@ -16,12 +15,6 @@ brew "nss"
 
 # APPS -------------------------------------------------------------------------
 
-# Gaming
-cask "steam"
-
-# Multimedia
-cask "vlc"
-
 # Fonts
 cask "font-hack-nerd-font"
 cask "font-droidsansmono-nerd-font"
@@ -32,43 +25,49 @@ cask "1password"
 cask "alfred"
 cask "bartender"
 cask "istat-menus"
-cask "little-snitch"
-cask "paragon-ntfs"
 cask "quitter"
 cask "rectangle"
-cask "tunnelblick"
 cask "usage"
 cask "tripmode"
-# cask "caffeine"
-#mas "colorsnapper"
 brew "clipper"
 cask "muzzle"
 cask "google-drive"
 cask "bettertouchtool"
+cask "toggl-track"
+cask "krisp"
+cask "affinity-designer"
 
 # chats & socialmedia
 cask "slack"
 cask "whatsapp"
-#mas "Tweetbot", id: 557168941
 
 # browser
+cask "finicky"
 cask "brave-browser"
 cask "firefox"
-cask "google-chrome-beta"
+cask "google-chrome"
 cask "microsoft-edge"
 
 # development
 cask 'alacritty'
 cask "visual-studio-code"
-#mas "Marked 2", id: 890031187
-#mas "Xcode", id: 497799835
-#brew "speedtest-cli"
-#cask "sequel-pro"
-#cask "pgadmin4"
-cask 'key-codes'
+cask 'spark'
 
-# image
-#cask "skitch"
-#mas "Affinity Photo", id: 824183456
-#mas "GIPHY Capture. The GIF Maker", id: 668208984
-#mas "Pixelmator", id: 407963104
+# App store Apps
+mas "Affinity Photo", id: 824183456
+mas "1Password for Safari", id: 1569813296
+mas "Keynote", id: 409183694
+mas "LanguageTool", id: 1534275760
+mas "iMovie", id: 408981434
+mas "Transmit", id: 1436522307
+mas "Tampermonkey", id: 1482490089
+mas "Pages", id: 409201541
+mas "ColorSnapper2", id: 969418666
+mas "AdBlock Pro", id: 1018301773
+mas "Numbers", id: 409203825
+mas "Marked 2 - Markdown Preview", id: 890031187
+
+# elgato
+cask "elgato-stream-deck"
+cask "elgato-wave-link"
+cask "elgato-thunderbolt-dock"

@@ -32,7 +32,7 @@ CREATED_SYMLINKS=(
 for file in "${CREATED_SYMLINKS[@]}"; do
   if [ -L $file ]; then
     printf "${COLOR_CYAN}Remove Symlink $file${COLOR_OFF}\n"
-    rm $file
+    rm -Rf $file
   else
     printf "${COLOR_YELLOW}Can not find $file${COLOR_OFF}\n"
   fi

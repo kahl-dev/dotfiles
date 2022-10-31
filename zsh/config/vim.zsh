@@ -3,12 +3,12 @@ if _exec_exists nvim; then
   export VISUAL="nvim"
 
   # alias vim='nvm use default && nvim'
-  # alias vim='fnm exec --using=v16 nvim'
+  # alias vim='fnm exec --using=v18 nvim'
 
 
   function v() {
     if _exec_exists fnm; then
-      command fnm exec --using=v16 nvim "$@"
+      command fnm exec --using=v18 nvim "$@"
     else
       nvim "$@"
     fi

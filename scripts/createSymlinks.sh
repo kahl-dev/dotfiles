@@ -4,6 +4,7 @@ source ./scripts/config.sh
 source ./scripts/functions.sh
 
 _symlink $DOTFILES/zsh/.zshenv $HOME/.zshenv
+mkdir $HOME/.config
 _symlink $DOTFILES/zsh $HOME/.config/zsh
 
 _symlink $DOTFILES/git/gitconfig $HOME/.gitconfig
