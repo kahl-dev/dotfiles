@@ -36,6 +36,7 @@ cask "bettertouchtool"
 cask "toggl-track"
 cask "krisp"
 cask "affinity-designer"
+cask "cleanmymac"
 
 # chats & socialmedia
 cask "slack"
