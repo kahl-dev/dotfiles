@@ -8,11 +8,12 @@ if _exec_exists nvim; then
 
   function v() {
     if _exec_exists fnm; then
-      command fnm exec --using=v18 nvim "$@"
+      command fnm exec --using=lts-latest nvim "$@"
     else
       nvim "$@"
     fi
   }
 
+  alias nvim='v'
   alias vim='v'
 fi
