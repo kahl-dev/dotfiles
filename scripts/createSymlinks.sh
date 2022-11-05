@@ -29,3 +29,7 @@ if _exec_exists nvim; then
     _symlink $DOTFILES/nvim $HOME/.config/nvim
   fi
 fi
+
+if _is_osx; then
+  _symlink $DOTFILES/config/finicky.js $HOME/.finicky.js
+fi
