@@ -45,7 +45,7 @@ source "$ZDOTDIR/zsh-functions"
 
 compinit
 
-for file in $(find $ZDOTDIR/config -type f -name "*.zsh" ! -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
+for file in $(find $ZDOTDIR/config -type f -name "*.zsh" ! -name "pre*.zsh" ! -name "post*.zsh" ! -name "_*.zsh" | sort -n); do
   source "$file";
 done
 

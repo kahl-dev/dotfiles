@@ -21,7 +21,11 @@ alias t='tail -f'
 alias help='man'
 
 # confirm before overwriting something
-alias rm='rm -i'
+if _exec_exists trash; then
+  alias rm='trash'
+else
+  alias rm='rm -i'
+fi
 alias cp='cp -i'
 alias mv='mv -i'
 
@@ -50,6 +54,7 @@ alias psmem='ps auxf | sort -nr -k 4 | head -5'
 
 # get top process eating cpu ##
 alias pscpu='ps auxf | sort -nr -k 3 | head -5'
+
 
 
 # Allow SSH tab completion for mosh hostnames
