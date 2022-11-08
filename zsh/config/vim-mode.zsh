@@ -1,7 +1,7 @@
 # bindkey -e will be emacs mode
 bindkey -v
 bindkey 'jk' vi-cmd-mode
-# export KEYTIMEOUT=1
+export KEYTIMEOUT=0.5
 
 # Use vim keys in tab complete menu:
 bindkey -M menuselect '^h' vi-backward-char
