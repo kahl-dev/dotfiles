@@ -63,6 +63,11 @@ telescope.setup({
 				["<M-p>"] = action_layout.toggle_preview,
 			},
 		},
+
+		path_display = { "truncate" },
+		-- path_display = {
+		-- 	shorten = { len = 3, exclude = { 1, -2 } },
+		-- },
 	},
 
 	pickers = {
