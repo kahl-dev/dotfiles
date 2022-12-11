@@ -31,6 +31,6 @@ uninstall: ##1 Remove all created folder and symlinks
 
 install: ##1 Install all Dotfiles
 	@make createSymlinks
-	@make installStarship
 	@make configurateSsh
 	@make installBrew
+	@make installStarship
