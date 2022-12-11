@@ -13,8 +13,8 @@ fi
 # A shell script to change your shell's default ANSI colors but most
 # importantly, colors 17 to 21 of your shell's 256 colorspace
 # Doc: https://github.com/chriskempson/base16-shell
-zsh_add_plugin "chriskempson/base16-shell"
+# zsh_add_plugin "chriskempson/base16-shell"
 
 # This ZSH plugin enhances the terminal environment with 256 colors.
 # Doc: https://github.com/chrissicool/zsh-256color
-zsh_add_plugin "chrissicool/zsh-256color"
+# zsh_add_plugin "chrissicool/zsh-256color"

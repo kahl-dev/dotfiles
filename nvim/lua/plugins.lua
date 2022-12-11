@@ -63,6 +63,12 @@ function M.setup()
 			config = get_config("oceanicnext"),
 		})
 
+    -- https://github.com/folke/tokyonight.nvim
+		use({
+			"folke/tokyonight.nvim",
+			config = get_config("tokyonight"),
+		})
+
 		-- Add transparent background
 		-- https://github.com/xiyaowong/nvim-transparent
 		use({
