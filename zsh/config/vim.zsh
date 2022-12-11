@@ -16,4 +16,5 @@ if _exec_exists nvim; then
 
   alias nvim='v'
   alias vim='v'
+  alias vimdiff='nvim -d'
 fi

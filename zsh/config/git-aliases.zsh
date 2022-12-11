@@ -91,6 +91,8 @@ alias gloga='git log --oneline --decorate --graph --all'
 alias glp="_git_log_prettily"
 
 alias gm='git merge'
+alias gdp='git up; git checkout $(git_production_branch); git up; git merge --commit --no-edit $(git_main_branch); git push; git checkout $(git_main_branch)'
+alias gdpg='gdp; make glab-production'
 
 alias gp='git push'
 
