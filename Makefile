@@ -11,6 +11,9 @@ createSymlinks: ##1 Create symlinks
 installBrew: ##1 Install brew
 	./scripts/installBrew.sh
 
+installStarship: ##1 Install starship
+	./scripts/installStarship.sh
+
 configurateSsh: ##1 Configurate SSH
 	./scripts/configurateSsh.sh
 
@@ -28,5 +31,6 @@ uninstall: ##1 Remove all created folder and symlinks
 
 install: ##1 Install all Dotfiles
 	@make createSymlinks
+	@make installStarship
 	@make configurateSsh
 	@make installBrew

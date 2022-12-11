@@ -18,11 +18,13 @@ CREATED_SYMLINKS=(
   "$HOME/.agignore"
   "$HOME/.ssh/rc"
   "$HOME/.config/nvim"
+  "$HOME/.config/starship.toml"
 
   # OSX specific
   "$HOME/.config/alacritty/alacritty.yml"
   "$HOME/.clipper.json"
   "$HOME/.ssh/config"
+  "$HOME/.finicky.js"
 
   # Old ones
   "$HOME/.asdfrc"
