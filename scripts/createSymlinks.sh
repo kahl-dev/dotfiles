@@ -24,6 +24,8 @@ _symlink $DOTFILES/config/agignore $HOME/.agignore
 
 _symlink $DOTFILES/config/rc $HOME/.ssh/rc
 
+_symlink $DOTFILES/config/starship.toml $HOME/.config/starship.toml
+
 if _exec_exists nvim; then
   if [ ! -d "$HOME/.config/nvim" ]; then
     _symlink $DOTFILES/nvim $HOME/.config/nvim

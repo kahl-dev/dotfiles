@@ -1,0 +1,47 @@
+# Doc: https://starship.rs/config
+
+format = """
+$sudo\
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_metrics"""
+
+right_format = """
+$package\
+$nodejs\
+$php\
+$docker_context\
+$lua\
+$cmd_duration $jobs $time"""
+
+scan_timeout = 30
+add_newline = false
+# palette = ""
+# palettes = {}
+
+[sudo]
+style = "bold green"
+symbol = " "
+disabled = false
+
+[directory]
+read_only = " "
+truncation_length = 4
+truncate_to_repo = false
+
+[docker_context]
+symbol = " "
+
+[git_branch]
+symbol = " "
+
+[golang]
+symbol = " "
+
+[lua]
+symbol = " "
+
+[nodejs]
+symbol = " "
