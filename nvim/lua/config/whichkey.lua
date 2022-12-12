@@ -193,6 +193,11 @@ local mappings = {
 		S = { "<cmd>PackerStatus<cr>", "Status" },
 		u = { "<cmd>PackerUpdate<cr>", "Update" },
 	},
+
+	s = {
+		name = "Settings",
+		r = { "<cmd>:source $MYVIMRC<cr>", "Reload vimrc" },
+	},
 }
 
 which_key.setup(setup)
