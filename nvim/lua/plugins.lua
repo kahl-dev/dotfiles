@@ -63,7 +63,7 @@ function M.setup()
 			config = get_config("oceanicnext"),
 		})
 
-    -- https://github.com/folke/tokyonight.nvim
+		-- https://github.com/folke/tokyonight.nvim
 		use({
 			"folke/tokyonight.nvim",
 			config = get_config("tokyonight"),
@@ -167,7 +167,6 @@ function M.setup()
 		use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 		use("cljoly/telescope-repo.nvim")
 
-
 		-- LSP
 
 		-- use() -- for formatters and linters
@@ -208,7 +207,7 @@ function M.setup()
 			config = get_config("cmp"),
 		})
 
-	  use({ "github/copilot.vim" , config = get_config("copilot")})
+		use({ "github/copilot.vim", config = get_config("copilot") })
 
 		-- VIMSCRIPT PLUGINS
 
@@ -263,23 +262,19 @@ function M.setup()
 			config = get_config("diffview"),
 		})
 
-		--[[
-    -- integrate terminal
-    -- https://github.com/akinsho/toggleterm.nvim
+		-- integrate terminal
+		-- https://github.com/akinsho/toggleterm.nvim
 		use({
-      "akinsho/toggleterm.nvim",
-      config = get_config("toggleterm")
-    })
-    ]]
+			"akinsho/toggleterm.nvim",
+			config = get_config("toggleterm"),
+		})
 
-		--[[
-    -- creat project
-    -- https://github.com/ahmedkhalf/project.nvim
+		-- creat project
+		-- https://github.com/ahmedkhalf/project.nvim
 		use({
-      "ahmedkhalf/project.nvim",
-      config = get_config("project")
-    })
-    ]]
+			"ahmedkhalf/project.nvim",
+			config = get_config("project"),
+		})
 
 		-- use {
 		--     "folke/todo-comments.nvim",
