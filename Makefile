@@ -17,6 +17,9 @@ installStarship: ##1 Install starship
 configurateSsh: ##1 Configurate SSH
 	./scripts/configurateSsh.sh
 
+startServices: ##1 Start services
+	./scripts/startServices.sh
+
 setupOsx: ##1 Setup Mac OSX
 	./scripts/osx.sh
 
@@ -34,3 +37,4 @@ install: ##1 Install all Dotfiles
 	@make configurateSsh
 	@make installBrew
 	@make installStarship
+	@make startServices
