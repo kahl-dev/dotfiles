@@ -1,10 +1,10 @@
 #!/bin/bash
 
-read params
-echo $params | xargs open
+# read params
+# echo $params
+# echo $params | xargs open
 # echo $params | base64 -D | xargs open
 # open $(cat "$@" | base64 -D)
-# echo $(cat "$@")
-
-
+# cat "$@" <&0
+cat "$@" | base64 -D | xargs open
 
