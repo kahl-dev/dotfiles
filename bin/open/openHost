@@ -1,4 +1,10 @@
 #!/bin/bash
 
-echo "opening $@"
-open $(cat "$@" | base64 -D)
+read params
+echo $params | xargs open
+# echo $params | base64 -D | xargs open
+# open $(cat "$@" | base64 -D)
+# echo $(cat "$@")
+
+
+
