@@ -247,7 +247,7 @@ function M.setup()
 		use({
 			"shumphrey/fugitive-gitlab.vim",
 			config = function()
-				vim.g["fugitive_gitlab_domains"] = { "https://gitlab.louis-net.de" }
+				vim.g["fugitive_gitlab_domains"] = { "ssh://gitlab.louis-net.de", "https://gitlab.louis-net.de" }
 			end,
 		})
 

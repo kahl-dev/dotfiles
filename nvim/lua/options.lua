@@ -40,6 +40,8 @@ local options = {
 	spelllang = { "en_us" },
 }
 
+vim.g.netrw_browsex_viewer = "open"
+
 vim.opt.shortmess:append("c")
 
 for k, v in pairs(options) do
