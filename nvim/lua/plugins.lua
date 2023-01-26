@@ -276,6 +276,17 @@ function M.setup()
 			config = get_config("project"),
 		})
 
+		-- markdown preview
+		use({
+			"iamcco/markdown-preview.nvim",
+			opt = true,
+			ft = "markdown",
+			run = function()
+				vim.fn["mkdp#util#install"]()
+			end,
+			config = get_config("markdown-preview"),
+		})
+
 		-- use {
 		--     "folke/todo-comments.nvim",
 		--     requires = "nvim-lua/plenary.nvim",
