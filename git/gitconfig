@@ -75,3 +75,5 @@
 [browser "open"]
 	cmd = open
 
+[rerere]
+	enabled = true
