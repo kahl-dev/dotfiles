@@ -8,6 +8,7 @@ brew "mas"
 # CLI --------------------------------------------------------------------------
 brew "reattach-to-user-namespace"
 brew "wget"
+brew "php"
 
 # Create local dev ssl/https certificate
 brew "mkcert"
@@ -18,6 +19,9 @@ brew "nss"
 # Fonts
 cask "font-hack-nerd-font"
 cask "font-droidsansmono-nerd-font"
+cask "font-monoid-nerd-font"
+cask "font-iosevka"
+cask "font-fira-code-nerd-font"
 
 # Utility tools
 cask "transmit"
@@ -72,3 +76,5 @@ mas "Marked 2 - Markdown Preview", id: 890031187
 cask "elgato-stream-deck"
 cask "elgato-wave-link"
 cask "elgato-thunderbolt-dock"
+
+cask "logitech-g-hub"
