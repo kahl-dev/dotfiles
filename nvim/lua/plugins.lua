@@ -90,6 +90,13 @@ function M.setup()
 			config = get_config("autopairs"),
 		})
 
+		-- Vim movement
+		-- https://github.com/ggandor/leap.nvim
+		use({
+			"ggandor/leap.nvim",
+			config = get_config("leap"),
+		})
+
 		-- Better buffer handling
 		-- https://github.com/moll/vim-bbye
 		use("moll/vim-bbye")
