@@ -41,6 +41,8 @@ cask "toggl-track"
 cask "krisp"
 cask "affinity-designer"
 cask "cleanmymac"
+cask "radio-silence"
+cask "shottr" # Better Screenshots
 
 # chats & socialmedia
 cask "slack"
@@ -52,6 +54,7 @@ cask "brave-browser"
 cask "firefox"
 cask "google-chrome"
 cask "microsoft-edge"
+cask "orion"
 
 # development
 cask 'alacritty'
