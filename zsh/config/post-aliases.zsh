@@ -101,7 +101,7 @@ Darwin)
   }
 
   # Open the current directory in a Finder window
-  alias ofd='open_command $PWD'
+  alias ofd='open $PWD'
 
   # cd to the current Finder directory
   function cdf() {
