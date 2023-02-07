@@ -1,4 +1,5 @@
 -- https://github.com/xiyaowong/nvim-transparent
+-- You cann see all available groups by `:hi` in vim
 
 local status_ok, transparent = pcall(require, "transparent")
 if not status_ok then
@@ -93,5 +94,24 @@ transparent.setup({
 		"lualine_a_insert",
 		"lualine_a_normal",
 		"lualine_a_visual",
+
+		"diffIsA",
+		"diffFile",
+		"diffLine",
+		"diffOnly",
+		"diffAdded",
+		"diffNoEOL",
+		"diffCommon",
+		"diffDiffer",
+		"diffBDiffer",
+		"diffChanged",
+		"diffChanged",
+		"diffComment",
+		"diffNewFile",
+		"diffOldFile",
+		"diffRemoved",
+		"diffSubname",
+		"diffIdentical",
+		"diffIndexLine",
 	}, -- table: groups you don't want to clear
 })
