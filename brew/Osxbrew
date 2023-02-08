@@ -43,6 +43,7 @@ cask "affinity-designer"
 cask "cleanmymac"
 cask "radio-silence"
 cask "shottr" # Better Screenshots
+cask "jettison" # Auto unmount on sleep
 
 # chats & socialmedia
 cask "slack"
