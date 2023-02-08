@@ -43,7 +43,19 @@ function M.setup()
 
 	mason_lspconfig.setup_handlers({
 		function(server_name)
-			lspconfig[server_name].setup(require("config.lsp").get_common_opts())
+			local opts = require("config.lsp").get_common_opts()
+
+			if server_name == "jsonls" then
+				local jsonls_opts = require("config.lsp.settings.jsonls")
+				opts = vim.tbl_deep_extend("force", jsonls_opts, opts)
+			end
+
+			if server_name == "sumneko_lua" then
+				local sumneko_opts = require("config.lsp.settings.sumneko_lua")
+				opts = vim.tbl_deep_extend("force", sumneko_opts, opts)
+			end
+
+			lspconfig[server_name].setup(opts)
 		end,
 	})
 end
