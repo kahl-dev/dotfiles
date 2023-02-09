@@ -294,6 +294,15 @@ function M.setup()
 			config = get_config("markdown-preview"),
 		})
 
+		-- https://github.com/dstein64/vim-startuptime
+		-- Use :StartupTime to see how long it takes to load your config
+		use({
+			"dstein64/vim-startuptime",
+			config = function()
+				vim.g.statuptime_tries = 10
+			end,
+		})
+
 		-- use {
 		--     "folke/todo-comments.nvim",
 		--     requires = "nvim-lua/plenary.nvim",
