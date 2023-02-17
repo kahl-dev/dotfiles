@@ -3,6 +3,7 @@ tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "colindean/fonts-nonfree"
 tap "homebrew/cask-drivers"
+tap "jesseduffield/lazygit/lazygit"
 brew "mas"
 
 # CLI --------------------------------------------------------------------------
