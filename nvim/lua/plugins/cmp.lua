@@ -11,9 +11,7 @@ return {
   -- then: setup supertab in cmp
   {
     "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-emoji",
-    },
+
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
       local has_words_before = function()
@@ -26,6 +24,9 @@ return {
       local cmp = require("cmp")
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
+        ["<C-k>"] = cmp.mapping.select_prev_item(),
+        ["<C-j>"] = cmp.mapping.select_next_item(),
+
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
