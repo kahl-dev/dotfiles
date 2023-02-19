@@ -3,12 +3,9 @@
 --
 -- nvim-cmp source for emoji
 -- https://github.com/hrsh7th/cmp-emoji
---
--- copilot.vim source for nvim-cmp
--- https://github.com/hrsh7th/cmp-copilot
--- https://github.com/github/copilot.vim
 
 return {
+
   "hrsh7th/nvim-cmp",
   dependencies = {
     "hrsh7th/cmp-emoji",
@@ -30,15 +27,29 @@ return {
         panel = { enabled = false },
       },
     },
+
+    {
+      "roobert/tailwindcss-colorizer-cmp.nvim",
+      dependencies = {
+        {
+          "NvChad/nvim-colorizer.lua",
+          opts = {
+            user_default_options = {
+              tailwind = true,
+            },
+          },
+        },
+      },
+    },
   },
 
   opts = function(_, opts)
     local cmp = require("cmp")
 
-    opts.sources = vim.tbl_extend("force", opts.sources, {
+    opts.sources = cmp.config.sources(vim.list_extend(opts.sources, {
       { name = "emoji", group_index = 2 },
       { name = "copilot", group_index = 2 },
-    })
+    }))
 
     -- Change the default keybinds
     -- Defaults: https://github.com/LazyVim/LazyVim/blob/8e84dcf85c8a73ebcf6ade6b7b77544f468f1dfa/lua/lazyvim/plugins/coding.lua#L52
@@ -51,8 +62,9 @@ return {
     end
 
     opts.mapping = vim.tbl_extend("force", opts.mapping, {
-      ["<C-k>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-      ["<C-j>"] = vim.schedule_wrap(function(fallback)
+      ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+      ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+      ["<Tab>"] = vim.schedule_wrap(function(fallback)
         if cmp.visible() and has_words_before() then
           cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
         else
@@ -67,6 +79,7 @@ return {
     })
 
     opts.formatting = {
+
       format = function(entry, item)
         local icons = require("lazyvim.config").icons.kinds
         if icons[item.kind] then
@@ -81,7 +94,7 @@ return {
           copilot = "[Copilot]",
         })[entry.source.name]
 
-        return item
+        return require("tailwindcss-colorizer-cmp").formatter(entry, item)
       end,
     }
   end,
