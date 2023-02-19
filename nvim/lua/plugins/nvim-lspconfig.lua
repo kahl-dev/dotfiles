@@ -7,6 +7,7 @@ return {
     opts = {
       servers = {
         tailwindcss = {},
+        volar = {},
       },
       format = {
         async = true,

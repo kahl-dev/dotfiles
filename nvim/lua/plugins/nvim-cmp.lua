@@ -3,6 +3,9 @@
 --
 -- nvim-cmp source for emoji
 -- https://github.com/hrsh7th/cmp-emoji
+--
+-- A Neovim plugin to add vscode-style TailwindCSS completion to nvim-cmp
+-- https://github.com/roobert/tailwindcss-colorizer-cmp.nvim
 
 return {
 
