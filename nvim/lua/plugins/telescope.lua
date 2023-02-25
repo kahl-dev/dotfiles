@@ -15,6 +15,7 @@ return {
           end,
         },
       },
+      path_display = { "truncate" },
     },
   },
 }
