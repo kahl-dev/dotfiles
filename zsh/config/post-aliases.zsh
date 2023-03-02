@@ -20,14 +20,9 @@ alias t='tail -f'
 # Command line head / tail shortcuts
 alias help='man'
 
-# confirm before overwriting something
-if _exec_exists trash; then
-  alias rm='trash'
-else
-  alias rm='rm -i'
-fi
 alias cp='cp -i'
 alias mv='mv -i'
+alias rm='rm -i'
 
 if _exec_exists browser-sync; then
   alias bs='browser-sync'
@@ -69,6 +64,11 @@ case "$(uname -s)" in
 
 Darwin)
 	alias ls='ls -G'
+
+  # confirm before overwriting something
+  if _exec_exists trash; then
+    alias rm='trash'
+  fi
 
   # Add markdownreader app
   function marked() {
