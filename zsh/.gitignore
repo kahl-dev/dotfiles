@@ -3,3 +3,6 @@ plugins
 .zcompdump*
 .zshrc-local
 
+.zsh_history
+.zsh_sessions
+
