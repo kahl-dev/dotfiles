@@ -26,6 +26,9 @@ setupOsx: ##1 Setup Mac OSX
 colorTest: ##1 Show color test
 	./scripts/colorTest.sh
 
+checkForUpdates: ##1 Check for available updates
+	./scripts/checkForUpdates.sh
+
 update: ##1 Update all
 	./scripts/updates.sh
 
