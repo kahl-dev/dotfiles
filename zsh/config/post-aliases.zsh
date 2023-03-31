@@ -20,8 +20,8 @@ alias t='tail -f'
 # Command line head / tail shortcuts
 alias help='man'
 
-alias cp='cp -i'
-alias mv='mv -i'
+# alias cp='cp -i'
+# alias mv='mv -i'
 alias rm='rm -i'
 
 if _exec_exists browser-sync; then
