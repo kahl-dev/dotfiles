@@ -15,6 +15,9 @@ brew "php"
 brew "mkcert"
 brew "nss"
 
+brew "supabase/tap/supabase"
+brew "postgresql"
+
 # APPS -------------------------------------------------------------------------
 
 # Fonts
