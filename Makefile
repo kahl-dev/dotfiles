@@ -41,3 +41,8 @@ install: ##1 Install all Dotfiles
 	@make installBrew
 	@make installStarship
 	@make startServices
+
+installPi: ##1 Install all Dotfiles
+	@make createSymlinks
+	@make configurateSsh
+	@make installStarship
