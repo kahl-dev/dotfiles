@@ -1,8 +1,8 @@
 # Powerlevel10k is a theme for Zsh. It emphasizes speed, flexibility and out-of-the-box experience.
 # Doc: https://github.com/romkatv/powerlevel10k
 # zsh_add_plugin "romkatv/powerlevel10k"
-source $ZDOTDIR/plugins/powerlevel10k/powerlevel10k.zsh-theme
-# eval "$(starship init zsh)"
+# source $ZDOTDIR/plugins/powerlevel10k/powerlevel10k.zsh-theme
+eval "$(starship init zsh)"
 
 # An architecture for building themes based on carefully chosen syntax highlighting using a base of sixteen colors.
 # Doc: https://github.com/chriskempson/base16
