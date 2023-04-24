@@ -48,6 +48,7 @@ cask "cleanmymac"
 cask "radio-silence"
 cask "shottr" # Better Screenshots
 cask "jettison" # Auto unmount on sleep
+cask "raspberry-pi-imager"
 
 # chats & socialmedia
 cask "slack"
