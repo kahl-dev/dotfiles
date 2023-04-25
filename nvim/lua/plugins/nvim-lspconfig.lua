@@ -8,6 +8,9 @@ return {
       servers = {
         tailwindcss = {},
         volar = {},
+        docker_compose_language_service = {},
+        prismals = {},
+        shellcheck = {},
       },
       format = {
         async = true,
