@@ -46,3 +46,8 @@ installPi: ##1 Install all Dotfiles
 	@make createSymlinks
 	@make configurateSsh
 	@make installStarship
+
+nvimResetPackages: ##1 reset lazy.nvim packages
+	rm -Rf ~/.local/share/nvim/lazy
+	rm -Rf ~/.local/state/nvim/lazy
+
