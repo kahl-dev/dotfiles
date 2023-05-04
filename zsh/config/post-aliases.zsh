@@ -54,7 +54,9 @@ alias psmem='ps auxf | sort -nr -k 4 | head -5'
 # get top process eating cpu ##
 alias pscpu='ps auxf | sort -nr -k 3 | head -5'
 
-
+# Add ??, git??, and gh? commands for github copilot clients
+# https://www.npmjs.com/package/@githubnext/github-copilot-cli
+eval "$(github-copilot-cli alias -- "$0")"
 
 # Allow SSH tab completion for mosh hostnames
 compdef mosh=ssh
