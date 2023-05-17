@@ -6,6 +6,7 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        cssls = {},
         volar = {},
         docker_compose_language_service = {},
         prismals = {},
