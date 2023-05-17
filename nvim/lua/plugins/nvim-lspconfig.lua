@@ -6,11 +6,10 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        tailwindcss = {},
         volar = {},
         docker_compose_language_service = {},
         prismals = {},
-        shellcheck = {},
+        -- shellcheck = {},
         -- https://github.com/aca/emmet-ls
         emmet_ls = {
           -- filetype = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" },
@@ -26,6 +25,7 @@ return {
           --   },
           -- },
         },
+        marksman = {},
       },
       format = {
         async = true,

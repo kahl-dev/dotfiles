@@ -4,7 +4,8 @@ source ./scripts/config.sh
 source ./scripts/functions.sh
 
 _symlink $DOTFILES/zsh/.zshenv $HOME/.zshenv
-mkdir $HOME/.config
+
+_createPath $HOME/.config
 _symlink $DOTFILES/zsh $HOME/.config/zsh
 
 _symlink $DOTFILES/git/gitconfig $HOME/.gitconfig
@@ -24,15 +25,13 @@ _symlink $DOTFILES/config/agignore $HOME/.agignore
 
 _symlink $DOTFILES/config/rc $HOME/.ssh/rc
 
-
 if _exec_exists nvim; then
-  if [ ! -d "$HOME/.config/nvim" ]; then
-    _symlink $DOTFILES/nvim $HOME/.config/nvim
-  fi
+	if [ ! -d "$HOME/.config/nvim" ]; then
+		_symlink $DOTFILES/nvim $HOME/.config/nvim
+	fi
 fi
 
 if _is_osx; then
-  _symlink $DOTFILES/config/kitty.conf $HOME/.config/kitty/kitty.conf
-  _symlink $DOTFILES/bin/open/open.plist $HOME/Library/LaunchAgents/open.plist
-  _symlink $DOTFILES/config/finicky.js $HOME/.finicky.js
+	_copyfile $DOTFILES/config/com.kahl_dev.nc_listener.plist $HOME/Library/LaunchAgents/com.kahl_dev.nc_listener.plist
+	_copyfile $DOTFILES/config/finicky.js $HOME/.finicky.js
 fi

@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-echo "${@}" | base64 -w 0 | nc -C localhost 20501

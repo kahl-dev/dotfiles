@@ -6,34 +6,38 @@ help: ## Show this help
 	@echo
 
 createSymlinks: ##1 Create symlinks
-	./scripts/createSymlinks.sh
+	@./scripts/createSymlinks.sh
 
 installBrew: ##1 Install brew
-	./scripts/installBrew.sh
+	@./scripts/installBrew.sh
 
 installStarship: ##1 Install starship
-	./scripts/installStarship.sh
+	@./scripts/installStarship.sh
 
 configurateSsh: ##1 Configurate SSH
-	./scripts/configurateSsh.sh
+	@./scripts/configurateSsh.sh
 
 startServices: ##1 Start services
-	./scripts/startServices.sh
+	@./scripts/startServices.sh
+
+stopServices: ##1 Stop services
+	@./scripts/startServices.sh
 
 setupOsx: ##1 Setup Mac OSX
-	./scripts/osx.sh
+	@./scripts/osx.sh
 
 colorTest: ##1 Show color test
-	./scripts/colorTest.sh
+	@./scripts/colorTest.sh
 
 checkForUpdates: ##1 Check for available updates
-	./scripts/checkForUpdates.sh
+	@./scripts/checkForUpdates.sh
 
 update: ##1 Update all
-	./scripts/updates.sh
+	@./scripts/updates.sh
 
 uninstall: ##1 Remove all created folder and symlinks
-	./scripts/uninstall.sh
+	@make stopServices
+	@./scripts/uninstall.sh
 
 install: ##1 Install all Dotfiles
 	@make createSymlinks
@@ -48,6 +52,6 @@ installPi: ##1 Install all Dotfiles
 	@make installStarship
 
 nvimResetPackages: ##1 reset lazy.nvim packages
-	rm -Rf ~/.local/share/nvim/lazy
-	rm -Rf ~/.local/state/nvim/lazy
+	@rm -Rf ~/.local/share/nvim/lazy
+	@rm -Rf ~/.local/state/nvim/lazy
 

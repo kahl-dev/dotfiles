@@ -5,5 +5,4 @@ New neovim configuration:
 - [ ] Add nice folding
 - [ ] Add possibility to open remote links via socket
 - [ ] Read socket support
-- [ ] try to replace clipper with https://github.com/ojroques/vim-oscyank
 - [ ] Add possibility to open npm module README
