@@ -15,7 +15,11 @@ done
 
 ZSH_DISABLE_COMPFIX=true
 HISTFILE="$ZDOTDIR/custom/.zsh_history"
-setopt appendhistory
+# setopt appendhistory 
+setopt INC_APPEND_HISTORY # To save every command before it is executed
+setopt SHARE_HISTORY # Share history between all sessions.
+setopt HIST_SAVE_NO_DUPS # Do not write duplicate entries in the history file.
+
 
 # some useful options (man zshoptions)
 setopt autocd extendedglob nomatch menucomplete
