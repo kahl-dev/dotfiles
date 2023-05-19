@@ -24,6 +24,18 @@ if Util.has("bufferline.nvim") then
   -- map("v", "<leader>cgr", "<cmd>ChatGPTRun<CR>", { desc = "ChatGPTRun" })
 end
 
+local gitlinks =
+  -- Open Git repo in browser
+  map("n", "<leader>gur", "<cmd>lua require('gitlinks').open_repo()<CR>", { desc = "Open Git repo in browser" })
+map("n", "<leader>gub", "<cmd>lua require('gitlinks').open_branch()<CR>", { desc = "Open Git branch in browser" })
+map("n", "<leader>guc", "<cmd>lua require('gitlinks').open_commit()<CR>", { desc = "Open Git commit in browser" })
+map(
+  "n",
+  "<leader>guf",
+  "<cmd>lua require('gitlinks').open_file()<CR>",
+  { desc = "Open current file in Git repo in browser" }
+)
+
 vim.cmd([[
   inoremap jk <ESC>
 
