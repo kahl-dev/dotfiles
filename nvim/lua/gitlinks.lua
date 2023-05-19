@@ -2,30 +2,29 @@ local M = {}
 
 local function get_git_repo()
   local f = io.popen("git config --get remote.origin.url")
-  local l = f:read("*a")
+  local l = f:read("*l")
   f:close()
-  return l:sub(1, -2)
+  return l
 end
 
 local function get_git_branch()
   local f = io.popen("git rev-parse --abbrev-ref HEAD")
-  local l = f:read("*a")
+  local l = f:read("*l")
   f:close()
-  return l:sub(1, -2)
+  return l
 end
 
 local function get_git_commit()
   local f = io.popen("git rev-parse HEAD")
-  local l = f:read("*a")
+  local l = f:read("*l")
   f:close()
-  return l:sub(1, -2)
+  return l
 end
 
 local function get_current_file()
   local f = io.popen("git rev-parse --show-prefix")
-  local repo_relative_path = f:read("*a")
+  local repo_relative_path = f:read("*l")
   f:close()
-  repo_relative_path = repo_relative_path:sub(1, -2) -- Trim trailing newline
 
   -- Get the filename relative to the current directory
   local filename = vim.fn.expand("%")
@@ -51,21 +50,27 @@ end
 function M.open_repo()
   local repo = get_git_repo()
   local git_host, user_repo = format_git_host(repo)
-  os.execute(string.format("open 'https://%s/%s'", git_host, user_repo))
+  local url = string.format("https://%s/%s", git_host, user_repo)
+  print("Opening URL: " .. url)
+  os.execute(string.format("open '%s'", url))
 end
 
 function M.open_branch()
   local repo = get_git_repo()
   local branch = get_git_branch()
   local git_host, user_repo = format_git_host(repo)
-  os.execute(string.format("open 'https://%s/%s/tree/%s'", git_host, user_repo, branch))
+  local url = string.format("https://%s/%s/tree/%s", git_host, user_repo, branch)
+  print("Opening URL: " .. url)
+  os.execute(string.format("open '%s'", url))
 end
 
 function M.open_commit()
   local repo = get_git_repo()
   local commit = get_git_commit()
   local git_host, user_repo = format_git_host(repo)
-  os.execute(string.format("open 'https://%s/%s/commit/%s'", git_host, user_repo, commit))
+  local url = string.format("https://%s/%s/commit/%s", git_host, user_repo, commit)
+  print("Opening URL: " .. url)
+  os.execute(string.format("open '%s'", url))
 end
 
 function M.open_file()
@@ -73,7 +78,9 @@ function M.open_file()
   local branch = get_git_branch()
   local file = get_current_file()
   local git_host, user_repo = format_git_host(repo)
-  os.execute(string.format("open 'https://%s/%s/blob/%s/%s'", git_host, user_repo, branch, file))
+  local url = string.format("https://%s/%s/blob/%s/%s", git_host, user_repo, branch, file)
+  print("Opening URL: " .. url)
+  os.execute(string.format("open '%s'", url))
 end
 
 return M
