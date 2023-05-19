@@ -1,57 +1,77 @@
-.DEFAULT_GOAL := help
+# Variables
+SCRIPTS_DIR=./scripts
+DEFAULT_GOAL := help
 
-help: ## Show this help
-	@echo
-	@grep -E '^[a-zA-Z0-9_-]+:\s?##1\s.*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?##1 "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-	@echo
+help: ## Display this help message
+	@echo "-----------------------------------------------------------------"
+	@echo "    __         __    __     __             ____        __  _____ __     "
+	@echo "   / /______ _/ /_  / /____/ /__ _   __   / __ \____  / /_/ __(_) /__  _____"
+	@echo "  / //_/ __ '/ __ \/ // __  / _ \ | / /  / / / / __ \/ __/ /_/ / / _ \/ ___/"
+	@echo " / ,< / /_/ / / / / // /_/ /  __/ |/ /  / /_/ / /_/ / /_/ __/ / /  __(__  ) "
+	@echo "/_/|_|\__,_/_/ /_/_(_)__,_/\___/|___/  /_____/\____/\__/_/ /_/_/\___/____/  "
+	@echo "-----------------------------------------------------------------"
+	@printf "\n\033[1;36m%s\033[0m\n" "Installation commands"
+	@grep -E '^[a-zA-Z_-]+:.*?## INSTALLATION: .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## INSTALLATION: "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@printf "\n\033[1;36m%s\033[0m\n" "Maintenance commands"
+	@grep -E '^[a-zA-Z_-]+:.*?## MAINTENANCE: .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## MAINTENANCE: "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@printf "\n\033[1;36m%s\033[0m\n" "Debug commands"
+	@grep -E '^[a-zA-Z_-]+:.*?## DEBUG: .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## DEBUG: "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@printf "\n\033[1;36m%s\033[0m\n" "Cleanup commands"
+	@grep -E '^[a-zA-Z_-]+:.*?## CLEANUP: .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## CLEANUP: "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	
 
-createSymlinks: ##1 Create symlinks
-	@./scripts/createSymlinks.sh
 
-installBrew: ##1 Install brew
-	@./scripts/installBrew.sh
+# Installation commands
 
-installStarship: ##1 Install starship
-	@./scripts/installStarship.sh
+createSymlinks: ## INSTALLATION: Create symlinks
+	@$(SCRIPTS_DIR)/createSymlinks.sh
 
-configurateSsh: ##1 Configurate SSH
-	@./scripts/configurateSsh.sh
+installBrew: ## INSTALLATION: Install brew
+	@$(SCRIPTS_DIR)/installBrew.sh
 
-startServices: ##1 Start services
-	@./scripts/startServices.sh
+installStarship: ## INSTALLATION: Install starship
+	@$(SCRIPTS_DIR)/installStarship.sh
 
-stopServices: ##1 Stop services
-	@./scripts/startServices.sh
+setupOsx: ## INSTALLATION: Setup Mac OSX
+	@$(SCRIPTS_DIR)/osx.sh
 
-setupOsx: ##1 Setup Mac OSX
-	@./scripts/osx.sh
-
-colorTest: ##1 Show color test
-	@./scripts/colorTest.sh
-
-checkForUpdates: ##1 Check for available updates
-	@./scripts/checkForUpdates.sh
-
-update: ##1 Update all
-	@./scripts/updates.sh
-
-uninstall: ##1 Remove all created folder and symlinks
-	@make stopServices
-	@./scripts/uninstall.sh
-
-install: ##1 Install all Dotfiles
+install: ## INSTALLATION: Install all Dotfiles
 	@make createSymlinks
-	@make configurateSsh
 	@make installBrew
 	@make installStarship
 	@make startServices
 
-installPi: ##1 Install all Dotfiles
+installPi: ## INSTALLATION: Install all Dotfiles
 	@make createSymlinks
-	@make configurateSsh
 	@make installStarship
 
-nvimResetPackages: ##1 reset lazy.nvim packages
+# Maintenance commands
+
+update: ## MAINTENANCE: Update all
+	@$(SCRIPTS_DIR)/updates.sh
+
+startServices: ## MAINTENANCE: Start services
+	@$(SCRIPTS_DIR)/startServices.sh
+
+stopServices: ## MAINTENANCE: Stop services
+	@$(SCRIPTS_DIR)/startServices.sh
+
+# Debug commands
+
+colorTest: ## DEBUG: Show color test
+	@$(SCRIPTS_DIR)/colorTest.sh
+
+logNcListener: ## DEBUG: Log nc listener
+	@tail -f ~/Library/Logs/com.kahl_dev.nc_listener
+
+# Cleanup commands
+
+nvimResetPackages: ## CLEANUP: Reset lazy.nvim packages
 	@rm -Rf ~/.local/share/nvim/lazy
 	@rm -Rf ~/.local/state/nvim/lazy
+
+uninstall: ## CLEANUP: Remove all created folder and symlinks
+	@make stopServices
+	@$(SCRIPTS_DIR)/uninstall.sh
+	
 
