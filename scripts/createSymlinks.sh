@@ -3,27 +3,31 @@
 source ./scripts/config.sh
 source ./scripts/functions.sh
 
-_symlink $DOTFILES/zsh/.zshenv $HOME/.zshenv
+paths=(
+	"$DOTFILES/zsh/.zshenv:$HOME/.zshenv"
+	"$HOME/.config:"
+	"$DOTFILES/zsh:$HOME/.config/zsh"
+	"$DOTFILES/git/gitconfig:$HOME/.gitconfig"
+	"$DOTFILES/git/gitignore_global:$HOME/.gitignore_global"
+	"$DOTFILES/git/template:$HOME/.gittemplate"
+	"$DOTFILES/config/prettierrc.js:$HOME/.prettierrc.js"
+	"$DOTFILES/config/tern-config.json:$HOME/.tern-config"
+	"$DOTFILES/config/eslintrc.js:$HOME/.eslintrc.js"
+	"$DOTFILES/tmux:$HOME/.tmux"
+	"$DOTFILES/tmux/tmux.conf:$HOME/.tmux.conf"
+	"$DOTFILES/config/agignore:$HOME/.agignore"
+	"$DOTFILES/config/rc:$HOME/.ssh/rc"
+)
 
-_createPath $HOME/.config
-_symlink $DOTFILES/zsh $HOME/.config/zsh
-
-_symlink $DOTFILES/git/gitconfig $HOME/.gitconfig
-_symlink $DOTFILES/git/gitignore_global $HOME/.gitignore_global
-_symlink $DOTFILES/git/template ~/.gittemplate
-
-_symlink $DOTFILES/config/prettierrc.js $HOME/.prettierrc.js
-
-_symlink $DOTFILES/config/tern-config.json $HOME/.tern-config
-
-_symlink $DOTFILES/config/eslintrc.js $HOME/.eslintrc.js
-
-_symlink $DOTFILES/tmux $HOME/.tmux
-_symlink $DOTFILES/tmux/tmux.conf $HOME/.tmux.conf
-
-_symlink $DOTFILES/config/agignore $HOME/.agignore
-
-_symlink $DOTFILES/config/rc $HOME/.ssh/rc
+for path in "${paths[@]}"; do
+	source=$(echo $path | cut -d: -f1)
+	destination=$(echo $path | cut -d: -f2)
+	if [ -z "$destination" ]; then
+		_createPath $source
+	else
+		_symlink $source $destination
+	fi
+done
 
 if _exec_exists nvim; then
 	if [ ! -d "$HOME/.config/nvim" ]; then

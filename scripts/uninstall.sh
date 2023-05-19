@@ -21,12 +21,13 @@ CREATED_SYMLINKS=(
 	"$HOME/.config/starship.toml"
 
 	# OSX specific
-	$HOME/.config/alacritty/alacritty.yml
-	$HOME/.ssh/config
+	$HOME/Library/LaunchAgents/com.kahl_dev.nc_listener.plist
 	$HOME/.finicky.js
-	$HOME/Library/LaunchAgents/open.plist
+	$HOME/.ssh/config
 
-	# Old ones
+	$HOME/.config/alacritty/alacritty.yml
+
+	# Old config file from previous versions
 	"$HOME/.asdfrc"
 	"$HOME/.base16_theme"
 )
