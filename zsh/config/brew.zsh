@@ -15,6 +15,7 @@ if ! _is_raspberry; then
   # Brew auto completion
   if _is_osx; then
     export PATH="$(brew --prefix)/opt/python3@/bin:$PATH"
+    export PATH="$(brew --prefix)/sbin:$PATH"
     export LDFLAGS="-L$(brew --prefix)/opt/python3@/lib"
     export PKG_CONFIG_PATH="$(brew --prefix)/opt/python3@/lib/pkgconfig"
 
