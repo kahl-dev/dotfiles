@@ -20,12 +20,12 @@ return {
           "zbirenbaum/copilot.lua",
           cmd = "Copilot",
           event = "InsertEnter",
-          config = {
+          opts = {
             method = "getCompletionsCycling",
           },
         },
       },
-      config = {
+      opts = {
         suggestion = { enabled = false },
         panel = { enabled = false },
       },
