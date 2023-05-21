@@ -45,3 +45,68 @@ vim.cmd([[
   noremap <silent> <c-l> :<C-U>TmuxNavigateRight<cr>
   noremap <silent> <c-\> :<C-U>TmuxNavigatePrevious<cr>
 ]])
+
+-- greatest remap ever
+-- vim.keymap.set("x", "<leader>p", [["_dP]])
+
+-- vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
+
+-- _G.send_yank_to_host = function()
+--   if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
+--     local clip_contents = vim.fn.getreg('"')
+--     local result = vim.fn.system("nc_yank " .. vim.fn.shellescape(clip_contents))
+--     if result ~= "" then
+--       vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
+--     else
+--       vim.api.nvim_echo({ { "Yank sent to host", "Highlight" } }, false, {})
+--     end
+--   end
+-- end
+
+_G.send_yank_to_host = function()
+  if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
+    local clip_contents = vim.fn.getreg('"')
+
+    local base64_prefix = "base64::"
+    local escaped_content = vim.fn.shellescape(clip_contents)
+    local command = "echo -n " .. escaped_content .. ' | base64 -w0 | tr -d "\n"'
+    local encoded_content = vim.fn.system(command)
+    local final_command = "nc_yank " .. base64_prefix .. encoded_content
+    local result = vim.fn.system(final_command)
+
+    if result ~= "" then
+      vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
+    else
+      vim.api.nvim_echo({ { "Yank sent to host", "Highlight" } }, false, {})
+    end
+  end
+end
+
+if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
+  -- For normal mode
+  vim.api.nvim_set_keymap("n", "<leader>ny", ":lua _G.send_yank_to_host()<CR>", { noremap = true, silent = true })
+  vim.api.nvim_set_keymap("n", "<leader>nY", "y$<Cmd>lua _G.send_yank_to_host()<CR>", { noremap = true, silent = true })
+
+  -- For visual mode
+  vim.api.nvim_set_keymap("v", "<leader>ny", "y<Cmd>lua _G.send_yank_to_host()<CR>", { noremap = true, silent = true })
+  vim.api.nvim_set_keymap("v", "<leader>nY", "y$<Cmd>lua _G.send_yank_to_host()<CR>", { noremap = true, silent = true })
+end
+
+_G.open_url_with_nc_open = function()
+  if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
+    local url_under_cursor = vim.fn.expand("<cfile>")
+    if url_under_cursor ~= "" then
+      local nc_open_path = "nc_open" -- replace with actual path if needed
+      local result = vim.fn.system(nc_open_path .. " " .. vim.fn.shellescape(url_under_cursor))
+      if result ~= "" then
+        vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
+      else
+        vim.api.nvim_echo({ { "URL opened with nc_open", "Highlight" } }, false, {})
+      end
+    end
+  end
+end
+
+if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
+  vim.api.nvim_set_keymap("n", "<leader>no", ":lua _G.open_url_with_nc_open()<CR>", { noremap = true, silent = true })
+end

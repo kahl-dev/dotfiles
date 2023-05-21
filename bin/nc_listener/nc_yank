@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Enable or disable logging. Set to "true" to enable logging, "false" to disable.
+logging_enabled="true"
+
+source $DOTFILES/bin/nc_listener/listener.sh
+
+# Log the input before encoding it
+log_message "Before encoding: ${@}"
+
+# Encode and prefix
+prefixed_encoded=$(encode_and_prefix "$@" "yank")
+
+# Send the encoded input
+echo "$prefixed_encoded" | nc localhost $NC_LISTENER_REMOTE_PORT
+
+# Log that the data has been sent
+log_message "Data sent"

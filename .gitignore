@@ -20,4 +20,4 @@ tmux/plugins
 nvim/undodir
 
 bin/*
-!bin/open
+!bin/nc_listener
