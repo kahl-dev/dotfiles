@@ -3,6 +3,9 @@
 source ./scripts/config.sh
 source ./scripts/functions.sh
 
+printf "${COLOR_CYAN}Update LazyVim${COLOR_OFF}\n"
+nvim --headless '+Lazy! sync' +qa
+
 # https://www.chriswrites.com/update-apps-and-macos-without-ever-launching-the-app-store/
 
 printf "${COLOR_CYAN}Update Homebrew packages${COLOR_OFF}\n"
