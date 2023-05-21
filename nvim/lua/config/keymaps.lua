@@ -46,22 +46,11 @@ vim.cmd([[
   noremap <silent> <c-\> :<C-U>TmuxNavigatePrevious<cr>
 ]])
 
--- greatest remap ever
--- vim.keymap.set("x", "<leader>p", [["_dP]])
-
--- vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
-
--- _G.send_yank_to_host = function()
---   if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
---     local clip_contents = vim.fn.getreg('"')
---     local result = vim.fn.system("nc_yank " .. vim.fn.shellescape(clip_contents))
---     if result ~= "" then
---       vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
---     else
---       vim.api.nvim_echo({ { "Yank sent to host", "Highlight" } }, false, {})
---     end
---   end
--- end
+-- Delete and paste without regitry overwrite
+map("n", "<leader>p", [["_dP]], { desc = "Paste without regitry overwrite" })
+map("v", "<leader>p", [["_dP]], { desc = "Paste without regitry overwrite" })
+map("n", "<leader>d", [["_d]], { desc = "Delete without regitry overwrite" })
+map("v", "<leader>d", [["_d]], { desc = "Delete without regitry overwrite" })
 
 _G.send_yank_to_host = function()
   if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
