@@ -47,8 +47,11 @@ installPi: ## INSTALLATION: Install all Dotfiles
 
 # Maintenance commands
 
-update: ## MAINTENANCE: Update all
+update: ## MAINTENANCE: Run updates
 	@$(SCRIPTS_DIR)/updates.sh
+
+updateAll: ## MAINTENANCE: Update all 
+	@$(SCRIPTS_DIR)/updates.sh --yes
 
 startServices: ## MAINTENANCE: Start services
 	@$(SCRIPTS_DIR)/startServices.sh
