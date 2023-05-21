@@ -12,14 +12,9 @@ url_regex='^https?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]$'
 while IFS= read -r line; do
 	echo "$(date) - Received: $line" >>$log_file
 
-	# Decode the Base64 input
-	decoded=$(echo "$line" | base64 --decode)
-
-	echo "$(date) - Decoded: $decoded" >>$log_file
-
 	# Extract the command and block from the decoded string
-	command=${decoded%%::*}
-	block=${decoded#*::}
+	command=${line%%::*}
+	block=${line#*::}
 
 	decoded_block=$(echo "$block" | base64 --decode)
 
