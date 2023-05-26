@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Shows custom command list
+alias custom_command_list="bat $DOTFILES/docs/Commands.md"
+alias ccl="custom_command_list"
+
 # ls, the common ones I use a lot shortened for rapid fire usage
 alias l="ls -lFh"     #size,show type,human readable
 alias la='ls -lAFh'   #long list,show almost all,show type,human readable
