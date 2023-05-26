@@ -25,11 +25,13 @@ while IFS= read -r line; do
 	yank)
 		echo "$decoded_block" | pbcopy
 		echo "$(date) - Copied to clipboard: $decoded_block" >>$log_file
+		/usr/local/bin/terminal-notifier -title "NC Listener" -subtitle "Copy to clipboard" -message "$decoded_block" -sound default -group "nc_listener"
 		;;
 	open)
 		if [[ $decoded_block =~ $url_regex ]]; then
 			open "$decoded_block"
 			echo "$(date) - Opened in browser: $decoded_block" >>$log_file
+			/usr/local/bin/terminal-notifier -title "NC Listener" -subtitle "Open in browser" -message "$decoded_block" -sound default -group "nc_listener"
 		fi
 		;;
 	*)
