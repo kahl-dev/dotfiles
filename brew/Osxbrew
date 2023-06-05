@@ -19,6 +19,10 @@ brew "postgresql"
 
 # APPS -------------------------------------------------------------------------
 
+cask "discord"
+cask "tiptoi-manager"
+cask "copilot" # aws copilot cli https://aws.github.io/copilot-cli/
+
 # Fonts
 cask "font-hack-nerd-font"
 cask "font-droidsansmono-nerd-font"
@@ -49,6 +53,7 @@ cask "shottr" # Better Screenshots
 cask "jettison" # Auto unmount on sleep
 cask "raspberry-pi-imager"
 brew "terminal-notifier"
+brew "gh"
 
 # chats & socialmedia
 cask "slack"
