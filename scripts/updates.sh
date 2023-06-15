@@ -14,6 +14,8 @@ if _exec_exists nvim; then
 		printf "${COLOR_CYAN}Update LazyVim${COLOR_OFF}\n"
 		nvim --headless '+Lazy! sync' +qa
 	fi
+
+	printf "${COLOR_CYAN}Please also update Mason LSPs manualy${COLOR_OFF}\n"
 fi
 
 if _exec_exists brew; then
@@ -39,3 +41,5 @@ if _is_osx; then
 		softwareupdate -i -a
 	fi
 fi
+
+printf "${COLOR_CYAN}node and npm packages has to be updated manually${COLOR_OFF}\n"
