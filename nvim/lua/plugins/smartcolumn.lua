@@ -1,4 +1,4 @@
--- Hightlight when the cursor is at the 80th column
+-- A Neovim plugin hiding your colorcolumn when unneeded.
 -- https://github.com/m4xshen/smartcolumn.nvim
 
 return {

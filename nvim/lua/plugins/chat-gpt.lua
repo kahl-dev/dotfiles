@@ -1,5 +1,7 @@
--- Description: Chat with GPT-3
+-- ChatGPT Neovim Plugin: Effortless Natural Language Generation with OpenAI's
+-- ChatGPT API
 -- https://github.com/jackMort/ChatGPT.nvim
+
 return {
   "jackMort/ChatGPT.nvim",
   dependencies = {
