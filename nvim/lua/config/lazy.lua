@@ -14,6 +14,7 @@ require("lazy").setup({
     -- import any extras modules here
 
     { import = "lazyvim.plugins.extras.coding.copilot" },
+    { import = "lazyvim.plugins.extras.coding.yanky" },
     { import = "lazyvim.plugins.extras.editor.flash" },
     { import = "lazyvim.plugins.extras.formatting.prettier" },
     { import = "lazyvim.plugins.extras.lang.json" },
