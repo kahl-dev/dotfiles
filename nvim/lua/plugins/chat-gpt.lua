@@ -23,7 +23,8 @@ return {
         },
       },
       popup_input = {
-        submit = "<C-s>",
+        -- submit = "<C-s>",
+        submit = "<CR>",
       },
     })
   end,
