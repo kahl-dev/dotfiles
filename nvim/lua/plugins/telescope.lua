@@ -28,12 +28,23 @@ return {
 
       -- The function to call when a URL is selected
       local function open_url(entry)
-        local nc_open_path = "nc_open" -- replace with actual path if needed
-        local result = vim.fn.system(nc_open_path .. " " .. vim.fn.shellescape(entry.value))
-        if result ~= "" then
-          vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
+        local result
+
+        if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
+          local nc_open_path = "nc_open" -- replace with actual path if needed
+          result = vim.fn.system(nc_open_path .. " " .. vim.fn.shellescape(entry.value))
+          if result ~= "" then
+            vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
+          else
+            vim.api.nvim_echo({ { "URL opened with nc_open", "Highlight" } }, false, {})
+          end
         else
-          vim.api.nvim_echo({ { "URL opened with nc_open", "Highlight" } }, false, {})
+          result = vim.fn.system("open " .. vim.fn.shellescape(entry.value))
+          if result ~= "" then
+            vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
+          else
+            vim.api.nvim_echo({ { "URL opened with default browser", "Highlight" } }, false, {})
+          end
         end
       end
 

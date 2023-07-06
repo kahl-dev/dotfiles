@@ -82,15 +82,23 @@ if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
 end
 
 _G.open_url_with_nc_open = function()
-  if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
-    local url_under_cursor = vim.fn.expand("<cfile>")
-    if url_under_cursor ~= "" then
+  local url_under_cursor = vim.fn.expand("<cfile>")
+  if url_under_cursor ~= "" then
+    if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
       local nc_open_path = "nc_open" -- replace with actual path if needed
       local result = vim.fn.system(nc_open_path .. " " .. vim.fn.shellescape(url_under_cursor))
       if result ~= "" then
         vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
       else
         vim.api.nvim_echo({ { "URL opened with nc_open", "Highlight" } }, false, {})
+      end
+    else
+      -- Local environment, use open command
+      local result = vim.fn.system("open " .. vim.fn.shellescape(url_under_cursor))
+      if result ~= "" then
+        vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
+      else
+        vim.api.nvim_echo({ { "URL opened with default browser", "Highlight" } }, false, {})
       end
     end
   end
