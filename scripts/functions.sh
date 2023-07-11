@@ -71,3 +71,11 @@ _is_osx() {
 _is_linux() {
 	[[ $(uname -s) =~ "Linux" ]] && return 0 || return 1
 }
+
+_is_path_exists() {
+  if [ -e "$1" ]; then
+    return 0  # Path exists
+  else
+    return 1  # Path does not exist
+  fi
+}

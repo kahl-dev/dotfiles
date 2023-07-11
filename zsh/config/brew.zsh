@@ -14,16 +14,15 @@ if ! _is_raspberry; then
   # https://docs.brew.sh/Shell-Completion
   # Brew auto completion
   if _is_osx; then
-    export PATH="$(brew --prefix)/opt/python3@/bin:$PATH"
-    export PATH="$(brew --prefix)/sbin:$PATH"
-    export LDFLAGS="-L$(brew --prefix)/opt/python3@/lib"
-    export PKG_CONFIG_PATH="$(brew --prefix)/opt/python3@/lib/pkgconfig"
-
+    # export PATH="$(brew --prefix)/opt/python3@/bin:$PATH"
+    # export PATH="$(brew --prefix)/sbin:$PATH"
+    # export LDFLAGS="-L$(brew --prefix)/opt/python3@/lib"
+    # export PKG_CONFIG_PATH="$(brew --prefix)/opt/python3@/lib/pkgconfig"
   fi
 
-  if type brew &>/dev/null
-  then
-    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
-  fi
+  # if type brew &>/dev/null
+  # then
+  #   FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+  # fi
 
 fi
