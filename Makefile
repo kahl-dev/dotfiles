@@ -30,10 +30,10 @@ installBrew: ## INSTALLATION: Install brew
 	@$(SCRIPTS_DIR)/installBrew.sh
 
 installBrewOsxPackages: ## INSTALLATION: Install osx brew packages
-	@brew bundle -v --no-upgrade --file "$DOTFILES/brew/Osxbrew"
+	@/usr/local/bin/brew bundle -v --no-upgrade --file "$(DOTFILES)/brew/Osxbrew"
 
 installBrewBasePackages: ## INSTALLATION: Install base brew packages
-	@brew bundle -v --no-upgrade --file "$DOTFILES/brew/Basebrew"
+	@/usr/local/bin/brew bundle -v --no-upgrade --file "$(DOTFILES)/brew/Basebrew"
 
 installStarship: ## INSTALLATION: Install starship
 	@$(SCRIPTS_DIR)/installStarship.sh
