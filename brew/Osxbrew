@@ -1,8 +1,8 @@
 tap "homebrew/cask-versions"
 tap "homebrew/cask-fonts"
 tap "colindean/fonts-nonfree"
-tap "homebrew/cask-drivers"
-tap "jesseduffield/lazygit/lazygit"
+#tap "homebrew/cask-drivers"
+brew "lazygit"
 brew "mas"
 
 # CLI --------------------------------------------------------------------------
@@ -15,8 +15,7 @@ brew "mkcert"
 brew "nss"
 
 brew "supabase/tap/supabase"
-brew "postgresql"
-
+brew "postgresql@15"
 # APPS -------------------------------------------------------------------------
 
 cask "discord"
@@ -25,7 +24,7 @@ cask "copilot" # aws copilot cli https://aws.github.io/copilot-cli/
 
 # Fonts
 cask "font-hack-nerd-font"
-cask "font-droidsansmono-nerd-font"
+cask "font-droid-sans-mono-nerd-font"
 cask "font-monoid-nerd-font"
 cask "font-iosevka"
 cask "font-fira-code-nerd-font"
@@ -44,9 +43,9 @@ brew "clipper"
 cask "muzzle"
 cask "google-drive"
 cask "bettertouchtool"
-cask "toggl-track"
+#cask "toggl-track"
 cask "krisp"
-cask "affinity-designer"
+# cask "affinity-designer"
 cask "cleanmymac"
 cask "radio-silence"
 cask "shottr" # Better Screenshots
@@ -54,6 +53,7 @@ cask "jettison" # Auto unmount on sleep
 cask "raspberry-pi-imager"
 brew "terminal-notifier"
 brew "gh"
+cask "obsidian"
 
 # chats & socialmedia
 cask "slack"
@@ -70,26 +70,30 @@ cask "orion"
 # development
 cask 'alacritty'
 cask "visual-studio-code"
-cask 'spark'
+cask 'readdle-spark'
 
 # App store Apps
-mas install 824183456 # Affinity Photo
-mas install 1569813296 # 1Password for Safari
-mas install 409183694 # Keynote
-mas install 1534275760 # LanguageTool
-mas install 408981434 # iMovie
-mas install 1436522307 # Transmit
-mas install 1482490089 # Tampermonkey
-mas install 409201541 # Pages
-mas install 969418666 # ColorSnapper2
-mas install 1018301773 # AdBlock
-mas install 409203825 # Numbers
-mas install 890031187 # Marked 2 - Markdown Preview
-mas install 937984704 # Amphetamine
+mas "Affinity Photo", id: 824183456
+mas "1Password for Safari", id: 1569813296
+mas "Xcode", id: 497799835
+mas "Keynote", id: 409183694
+mas "iMovie", id: 408981434
+mas "LanguageTool", id: 1534275760
+mas "Tampermonkey", id: 1482490089
+mas "Controller", id: 1198176727
+mas "Marked 2", id: 890031187
+mas "Pages", id: 409201541
+mas "ColorSnapper2", id: 969418666
+mas "Reeder", id: 1529448980
+mas "Amphetamine", id: 937984704
+mas "AudioSwitcher", id: 1484150558
+mas "Numbers", id: 409203825
+mas "Toggl Track", id: 1291898086
+# mas "AdBlock", id: 1018301773
 
 # elgato
 cask "elgato-stream-deck"
 cask "elgato-wave-link"
-cask "elgato-thunderbolt-dock"
+#cask "elgato-thunderbolt-dock"
 
-cask "logitech-g-hub"
+#cask "logitech-g-hub"
