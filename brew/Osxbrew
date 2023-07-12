@@ -82,6 +82,7 @@ mas "LanguageTool", id: 1534275760
 mas "Tampermonkey", id: 1482490089
 mas "Controller", id: 1198176727
 mas "Marked 2", id: 890031187
+mas "Outbank", id: 1094255754
 mas "Pages", id: 409201541
 mas "ColorSnapper2", id: 969418666
 mas "Reeder", id: 1529448980
@@ -97,3 +98,5 @@ cask "elgato-wave-link"
 #cask "elgato-thunderbolt-dock"
 
 #cask "logitech-g-hub"
+cask "logi-options-plus"
+cask "logitune"
