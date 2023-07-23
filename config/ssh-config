@@ -16,6 +16,6 @@ Host *
   ForwardAgent yes                     # Forward SSH agent
   ForwardX11 no                        # Forward X11 grafical interface
 
-  AddKeysToAgent yes                   # Add keys to ssh-agent
-  UseKeychain yes                      # Use keychain for storing keys
-  #IdentityAgent "~/.1password/agent.sock"
+  # AddKeysToAgent yes                   # Add keys to ssh-agent
+  # UseKeychain yes                      # Use keychain for storing keys
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
