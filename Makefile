@@ -44,6 +44,7 @@ setupOsx: ## INSTALLATION: Setup Mac OSX
 install: ## INSTALLATION: Install all Dotfiles
 	@make createSymlinks
 	@make installBrew
+	@make createSymlinks
 	@make installStarship
 	@make startServices
 
