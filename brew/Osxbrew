@@ -1,3 +1,4 @@
+tap 'homebrew/core'
 tap "homebrew/cask-versions"
 tap "homebrew/cask-fonts"
 tap "colindean/fonts-nonfree"
@@ -71,6 +72,7 @@ cask "orion"
 cask 'alacritty'
 cask "visual-studio-code"
 cask 'readdle-spark'
+cask 'wezterm'
 
 # App store Apps
 mas "Affinity Photo", id: 824183456

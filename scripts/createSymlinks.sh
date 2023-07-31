@@ -41,4 +41,10 @@ if _is_osx; then
 
 	_symlink $DOTFILES/config/ssh-config $HOME/.ssh/config
 	mkdir -p ~/.ssh/config.d
+
+	mkdir -p $HOME/.config/alacritty
+	_symlink $DOTFILES/config/alacritty.yml $HOME/.config/alacritty/alacritty.yml
+
+	mkdir -p $HOME/.config/wezterm
+	_symlink $DOTFILES/config/wezterm.lua $HOME/.config/wezterm/wezterm.lua
 fi

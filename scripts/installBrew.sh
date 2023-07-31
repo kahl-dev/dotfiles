@@ -28,6 +28,4 @@ if _is_osx; then
 		pip3 install pynvim
 	fi
 
-	mkdir -p $HOME/.config/alacritty
-	_symlink $DOTFILES/config/alacritty.yml $HOME/.config/alacritty/alacritty.yml
 fi
