@@ -17,9 +17,13 @@ config.color_scheme = "tokyonight"
 config.window_background_opacity = 0.9
 config.hide_tab_bar_if_only_one_tab = true
 config.tab_bar_at_bottom = true
+config.enable_scroll_bar = true
+config.send_composed_key_when_left_alt_is_pressed = true
+-- config.send_composed_key_when_right_alt_is_pressed = true
+-- config.use_ime = true
 
-wezterm.font = wezterm.font("FireCode Nerd Font Mono")
-config.font_size = 20
+config.font = wezterm.font("FiraCode Nerd Font")
+config.font_size = 22
 
 config.scrollback_lines = 50000
 config.window_decorations = "RESIZE"
