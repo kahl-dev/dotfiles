@@ -6,7 +6,7 @@ if wezterm.config_builder then
 end
 
 config.font = wezterm.font("FiraCode Nerd Font")
-config.font_size = 22
+config.font_size = 18
 
 config.color_scheme = "tokyonight"
 
@@ -16,9 +16,10 @@ config.hide_tab_bar_if_only_one_tab = true
 
 config.window_background_opacity = 0.9
 
-config.send_composed_key_when_left_alt_is_pressed = true
+-- config.send_composed_key_when_left_alt_is_pressed = true
 -- config.send_composed_key_when_right_alt_is_pressed = true
 -- config.use_ime = true
+config.use_dead_keys = false
 
 config.scrollback_lines = 50000
 config.window_decorations = "RESIZE"
