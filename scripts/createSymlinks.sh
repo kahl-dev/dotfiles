@@ -30,9 +30,17 @@ for path in "${paths[@]}"; do
 done
 
 if _exec_exists nvim; then
-	if [ ! -d "$HOME/.config/nvim" ]; then
+	if ! _is_path_exists $HOME/.config/nvim; then
 		_symlink $DOTFILES/nvim $HOME/.config/nvim
 	fi
+fi
+
+if _exec_exists glow; then
+	if ! _is_path_exists $HOME/.config/glow; then
+		mkdir -p $HOME/.config/glow
+	fi
+
+	_symlink $DOTFILES/.config/glow.yml $HOME/.config/glow/glow.yml
 fi
 
 if _is_osx; then
