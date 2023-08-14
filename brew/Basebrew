@@ -15,3 +15,4 @@ brew "python3"
 brew "golang"
 
 brew "git-extras"   # Additional git commands
+brew "git-delta"    # Better git diff

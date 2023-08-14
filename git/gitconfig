@@ -23,9 +23,13 @@
 	followTags = true
 
 [core]
+  pager = delta
   excludesfile = ~/.gitignore_global
   editor = "if command -v 'nvim' >/dev/null 2>&1; then ED='nvim'; else ED='vim'; fi; $ED"
   compression = 0
+
+[interactive]
+  diffFilter = delta --color-only
 
 [init]
   templatedir = ~/.gittemplate
@@ -57,9 +61,11 @@
 	autoStash = true
 
 [merge]
+  conflictstyle = diff3
 	ff = false
 
 [diff]
+  colorMoved = default
   renameLimit = 999999
   # tool = vimdiff
 
@@ -77,3 +83,8 @@
 
 [rerere]
 	enabled = true
+
+[delta]
+  navigate = true    # use n and N to move between diff sections
+  light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
+  line-numbers = true
