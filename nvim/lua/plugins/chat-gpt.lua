@@ -10,8 +10,9 @@ return {
   config = function()
     require("chatgpt").setup()
 
+    -- Set the key as OPENAI_API_KEY in your shell
     -- require("chatgpt").setup({
-    --   api_key_cmd = "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",
+    --   api_key_cmd = "",
     -- })
     -- chat = {
     --   keymaps = {
