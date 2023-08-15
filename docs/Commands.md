@@ -1,90 +1,95 @@
-# Commands
 
-### [ShellGpt](https://github.com/TheR1D/shell_gpt)
+# Command Tool Reference
 
-- `sgpt` Simple questions
-- `sgpt -s` Shell commands
+## 1. ShellGpt
 
-Chats
+* [Repository Link](https://github.com/TheR1D/shell_gpt)
 
-- `sgpt --list-chats`
-- `sgpt --show-chat number`
+ShellGpt provides a command-line interface for querying OpenAI's GPT models. This can be particularly handy for quick answers or for obtaining shell commands for specific tasks.
 
-#### Usage
+### Commands:
+
+- **General Queries**: 
+  ```
+  sgpt "<your-query>"
+  ```
+  
+- **Shell Commands**: 
+  ```
+  sgpt -s "<shell-related-query>"
+  ```
+
+- **Chat Management**:
+  - List chats: `sgpt --list-chats`
+  - Show a specific chat: `sgpt --show-chat <number>`
+
+### Sample Usage:
 
 ```sh
 sgpt "1 hour and 30 minutes to seconds"
-# -> 5,400 seconds
-```
+# Output: 5,400 seconds
 
-```sh
 git diff | sgpt "Generate git commit message, for my changes"
-# -> Commit message: Implement Model enum and get_edited_prompt()
-```
+# Output: Implement Model enum and get_edited_prompt()
 
-```sh
 sgpt --shell "make all files in current directory read only"
-# -> chmod 444 *
-# -> [E]xecute, [D]escribe, [A]bort: e
-...
-
-sgpt -s "update my system"
-# -> sudo softwareupdate -i -a
-# -> [E]xecute, [D]escribe, [A]bort: e
-...
+# Suggestion: chmod 444 *
+# [E]xecute, [D]escribe, [A]bort: e
 ```
 
-### Copilot CLI
+## 2. Copilot CLI
 
-- `??` Ask for cli commands
-- `git?` Ask for git commands
-- `gh?` Ask for github cli commands
+GitHub Copilot's CLI provides intelligent code suggestions right from your terminal.
 
-### Git recent
+### Commands:
 
-[https://github.com/paulirish/git-recent](https://github.com/paulirish/git-recent)
+- **CLI Queries**: `??`
+- **Git Related Queries**: `git?`
+- **GitHub CLI Queries**: `gh?`
 
-#### Usage
+## 3. Git recent
+
+* [Repository Link](https://github.com/paulirish/git-recent)
+
+Git recent displays your most recently checked-out branches.
+
+### Usage:
 
 ```zsh
-git recent
+git recent # Displays recent branches
+git recent -n5 # Displays the 5 most recent branches
 ```
 
-Optionally, add `-n<int>` to see the most recent `<n>` branches
+## 4. Git recall
 
-```zsh
-git recent -n5
-```
+* [Repository Link](https://github.com/Fakerr/git-recall)
 
-### Git recall
+Git recall is an interactive CLI tool to navigate through your git history.
 
-An interactive way to peruse your git history from the terminal
-
-[https://github.com/Fakerr/git-recall](https://github.com/Fakerr/git-recall)
-
-#### Usage
+### Usage:
 
 ```sh
-$ git recall   [-a <author name>]
-               [-d <days-ago>]
-               [-b <branch name>]
-               [-p <paths>]
-               [-f]
-               [-h]
-               [-v]
+git recall [-a <author name>]
+           [-d <days-ago>]
+           [-b <branch name>]
+           [-p <paths>]
+           [-f]
+           [-h]
+           [-v]
 ```
 
-##### Options description:
+### Options:
 
-- `-a` - Restrict search for a specific user (use -a "all" for all users)
-- `-d` - Display commits for the last n days
-- `-b` - Specify branch to display commits from
-- `-p` - Specify path/s or file/s to display commits from
-- `-f` - Fetch the latest changes
-- `-h` - Show help screen
-- `-v` - Show version
+- `-a`: Filter by author (use `-a "all"` for all users)
+- `-d`: Filter commits from the last `n` days
+- `-b`: Filter commits from a specific branch
+- `-p`: Filter commits by path or file
+- `-f`: Fetch the latest changes
+- `-h`: Show the help screen
+- `-v`: Display version
 
-##### How to use:
+### Navigation:
 
-Once the commits are displayed, you can use either the `arrow keys` or `j/k` to switch between commits,
-press `TAB` or `e` to `expand/reduce` the commit's diff or `q` to quit.
+- Use `arrow keys` or `j/k` to navigate commits.
+- Press `TAB` or `e` to expand/reduce a commit's diff.
+- Press `q` to exit the interface.
