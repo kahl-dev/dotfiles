@@ -11,9 +11,7 @@ if _is_linux; then
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 		brew bundle -v --no-upgrade --file "$DOTFILES/brew/Basebrew"
-		pip3 install pynvim
 	fi
-
 fi
 
 if _is_osx; then
@@ -25,7 +23,5 @@ if _is_osx; then
 
 		brew bundle -v --no-upgrade --file "$DOTFILES/brew/Basebrew"
 		brew bundle -v --no-upgrade --file "$DOTFILES/brew/Osxbrew"
-		pip3 install pynvim
 	fi
-
 fi

@@ -28,6 +28,7 @@ createSymlinks: ## INSTALLATION: Create symlinks
 
 installBrew: ## INSTALLATION: Install brew
 	@$(SCRIPTS_DIR)/installBrew.sh
+	@make updateShell
 
 installBrewOsxPackages: ## INSTALLATION: Install osx brew packages
 	@/usr/local/bin/brew bundle -v --no-upgrade --file "$(DOTFILES)/brew/Osxbrew"
@@ -46,11 +47,15 @@ install: ## INSTALLATION: Install all Dotfiles
 	@make installBrew
 	@make createSymlinks
 	@make installStarship
+	@make installAdditionalShellScripts
 	@make startServices
 
 installPi: ## INSTALLATION: Install all Dotfiles
 	@make createSymlinks
 	@make installStarship
+
+installAdditionalShellScripts: ## INSTALLATION: Innstall additional shell scripts
+	@$(SCRIPTS_DIR)/installAdditionalShellScripts.sh
 
 # Maintenance commands
 
@@ -65,6 +70,9 @@ startServices: ## MAINTENANCE: Start services
 
 stopServices: ## MAINTENANCE: Stop services
 	@$(SCRIPTS_DIR)/startServices.sh
+
+updateShell: ## MAINTENANCE: Update shell
+	source ~/.zshrc
 
 # Debug commands
 

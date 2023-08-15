@@ -1,5 +1,39 @@
 # Commands
 
+### [ShellGpt](https://github.com/TheR1D/shell_gpt)
+
+- `sgpt` Simple questions
+- `sgpt -s` Shell commands
+
+Chats
+
+- `sgpt --list-chats`
+- `sgpt --show-chat number`
+
+#### Usage
+
+```sh
+sgpt "1 hour and 30 minutes to seconds"
+# -> 5,400 seconds
+```
+
+```sh
+git diff | sgpt "Generate git commit message, for my changes"
+# -> Commit message: Implement Model enum and get_edited_prompt()
+```
+
+```sh
+sgpt --shell "make all files in current directory read only"
+# -> chmod 444 *
+# -> [E]xecute, [D]escribe, [A]bort: e
+...
+
+sgpt -s "update my system"
+# -> sudo softwareupdate -i -a
+# -> [E]xecute, [D]escribe, [A]bort: e
+...
+```
+
 ### Copilot CLI
 
 - `??` Ask for cli commands
@@ -10,7 +44,7 @@
 
 [https://github.com/paulirish/git-recent](https://github.com/paulirish/git-recent)
 
-## Usage
+#### Usage
 
 ```zsh
 git recent
@@ -28,7 +62,7 @@ An interactive way to peruse your git history from the terminal
 
 [https://github.com/Fakerr/git-recall](https://github.com/Fakerr/git-recall)
 
-## Usage
+#### Usage
 
 ```sh
 $ git recall   [-a <author name>]
