@@ -75,7 +75,7 @@ updateShell: ## MAINTENANCE: Update shell
 	source ~/.zshrc
 
 bugfixCopilot: ## MAINTENANCE: Bugfix copilot
-	sed -i 's/\["\\n"\]/["\\n\\n\\n"]/' $(ls ~/.local/share/nvim/lazy/copilot.lua/copilot/dist/agent.js)
+	@$(SCRIPTS_DIR)/bugfixCopilot.sh
 
 # Debug commands
 
