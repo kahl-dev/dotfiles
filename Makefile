@@ -74,6 +74,9 @@ stopServices: ## MAINTENANCE: Stop services
 updateShell: ## MAINTENANCE: Update shell
 	source ~/.zshrc
 
+bugfixCopilot: ## MAINTENANCE: Bugfix copilot
+	sed -i 's/\["\\n"\]/["\\n\\n\\n"]/' $(ls ~/.local/share/nvim/lazy/copilot.lua/copilot/dist/agent.js)
+
 # Debug commands
 
 colorTest: ## DEBUG: Show color test
