@@ -6,14 +6,18 @@
     <string>com.kahl_dev.nc_listener</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/bin/sh</string>
-        <string>-c</string>
-        <string>/Users/pk/.dotfiles/scripts/nc_wrapper.sh</string>
+      <string>/bin/sh</string>
+      <string>-c</string>
+      <string>$HOME/.dotfiles/scripts/nc_wrapper.sh</string>
     </array>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
     <true/>
+    <key>StandardErrorPath</key>
+    <string>/tmp/com.kahl_dev.nc_listener.error.log</string>
+    <key>StandardOutPath</key>
+    <string>/tmp/com.kahl_dev.nc_listener.out.log</string>
 </dict>
 </plist>
 
