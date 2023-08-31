@@ -55,6 +55,7 @@ cask "raspberry-pi-imager"
 brew "terminal-notifier"
 brew "gh"
 cask "obsidian"
+cask "aldente"
 
 # chats & socialmedia
 cask "slack"
