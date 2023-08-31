@@ -1,31 +1,97 @@
 # Function to source files if they exist
 function zsh_add_file() {
-    [ -f "$ZDOTDIR/$1" ] && source "$ZDOTDIR/$1"
+    local DIR_PATH=$(dirname "$ZDOTDIR/$1")
+    local FILE_NAME=$(basename "$1")
+
+    # Dereference the directory if it's a symlink
+    if [ -L "$DIR_PATH" ]; then
+        DIR_PATH=$(readlink "$DIR_PATH")
+    fi
+
+    local ACTUAL_PATH="$DIR_PATH/$FILE_NAME"
+
+    [ -f "$ACTUAL_PATH" ] && source "$ACTUAL_PATH"
 }
 
+# zsh_add_plugin
+# Installs or sources a Zsh plugin.
+# 
+# Usage:
+#   zsh_add_plugin "github-username/repo-name"
+#   zsh_add_plugin "https://gitlab-instance.com/username/repo-name.git"
+#   zsh_add_plugin "/local/path/to/plugin"
 function zsh_add_plugin() {
-    PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
+    local PLUGIN_PATH REPO_URL
+    # Determine if the input is a local path
+    if [[ -d "$1" ]]; then
+        PLUGIN_PATH="$1"
+        PLUGIN_NAME=$(basename "$PLUGIN_PATH")
+    else
+        PLUGIN_NAME=$(echo $1 | awk -F'/' '{print $NF}' | sed 's/\.git//')
+        if [[ $1 == gitlab* ]]; then
+            REPO_URL=$1
+        else
+            REPO_URL="https://github.com/$1.git"
+        fi
+    fi
+
     if [ -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then
-        # For plugins
+        # Source local plugins
         zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
         zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
     else
-        git clone "https://github.com/$1.git" "$ZDOTDIR/plugins/$PLUGIN_NAME"
+        if [[ -n "$PLUGIN_PATH" ]]; then
+            ln -s "$PLUGIN_PATH" "$ZDOTDIR/plugins/$PLUGIN_NAME"
+        else
+            git clone "$REPO_URL" "$ZDOTDIR/plugins/$PLUGIN_NAME"
+       fi
     fi
 }
 
+# zsh_add_completion
+# Installs or sources the completion for a Zsh plugin.
+# 
+# Usage:
+#   zsh_add_completion "github-username/repo-name" true
+#   zsh_add_completion "https://gitlab-instance.com/username/repo-name.git" true
+#   zsh_add_completion "/local/path/to/plugin" true
 function zsh_add_completion() {
-    PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
+    local PLUGIN_PATH REPO_URL completion_file_path completion_file
+
+    # Determine if the input is a local path
+    if [[ -d "$1" ]]; then
+        PLUGIN_PATH="$1"
+        PLUGIN_NAME=$(basename "$PLUGIN_PATH")
+    else
+        PLUGIN_NAME=$(echo $1 | awk -F'/' '{print $NF}' | sed 's/\.git//')
+        if [[ $1 == gitlab* ]]; then
+            REPO_URL=$1
+        else
+            REPO_URL="https://github.com/$1.git"
+        fi
+    fi
+
     if [ -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then
         # For completions
-		completion_file_path=$(ls $ZDOTDIR/plugins/$PLUGIN_NAME/_*)
-		fpath+="$(dirname "${completion_file_path}")"
-        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh"
+        completion_file_path=$(ls $ZDOTDIR/plugins/$PLUGIN_NAME/_* 2>/dev/null)
+        if [[ -n "$completion_file_path" ]]; then
+            fpath+=$(dirname "${completion_file_path}")
+            zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh"
+        fi
     else
-        git clone "https://github.com/$1.git" "$ZDOTDIR/plugins/$PLUGIN_NAME"
-		fpath+=$(ls $ZDOTDIR/plugins/$PLUGIN_NAME/_*)
-        [ -f $ZDOTDIR/.zccompdump ] && $ZDOTDIR/.zccompdump
+        if [[ -n "$PLUGIN_PATH" ]]; then
+            ln -s "$PLUGIN_PATH" "$ZDOTDIR/plugins/$PLUGIN_NAME"
+        else
+            git clone "$REPO_URL" "$ZDOTDIR/plugins/$PLUGIN_NAME"
+        fi
+        completion_file_path=$(ls $ZDOTDIR/plugins/$PLUGIN_NAME/_* 2>/dev/null)
+        if [[ -n "$completion_file_path" ]]; then
+            fpath+=$(dirname "${completion_file_path}")
+            [ -f $ZDOTDIR/.zccompdump ] && rm $ZDOTDIR/.zccompdump
+        fi
     fi
-	completion_file="$(basename "${completion_file_path}")"
-	if [ "$2" = true ] && compinit "${completion_file:1}"
+    completion_file="$(basename "${completion_file_path}")"
+    if [ "$2" = true ] && [[ -n "$completion_file" ]]; then
+        autoload -Uz compinit && compinit "${completion_file:1}"
+    fi
 }
