@@ -4,8 +4,28 @@
 return {
   "nvim-treesitter/nvim-treesitter",
   opts = function(_, opts)
-    if type(opts.ensure_installed) == "table" then
-      vim.list_extend(opts.ensure_installed, { "prisma" })
-    end
+    -- add tsx and treesitter
+    vim.list_extend(opts.ensure_installed, {
+      "arduino",
+      "bash",
+      "comment",
+      "css",
+      "csv",
+      "graphql",
+      "html",
+      "javascript",
+      "json5",
+      "json",
+      "jsdoc",
+      "lua",
+      "markdown",
+      "php",
+      "regex",
+      "scss",
+      "prisma",
+      "tsx",
+      "typescript",
+      "vue",
+    })
   end,
 }
