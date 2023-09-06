@@ -1,20 +1,19 @@
-
 # Command Tool Reference
 
-## 1. ShellGpt
+## 1. Shell-GPT
 
-* [Repository Link](https://github.com/TheR1D/shell_gpt)
+- [Repository Link](https://github.com/TheR1D/shell_gpt)
 
-ShellGpt provides a command-line interface for querying OpenAI's GPT models. This can be particularly handy for quick answers or for obtaining shell commands for specific tasks.
+Shell-GPT provides a command-line interface for querying OpenAI's GPT models. This can be particularly handy for quick answers or for obtaining shell commands for specific tasks.
 
 ### Commands:
 
-- **General Queries**: 
+- **General Queries**:
   ```
   sgpt "<your-query>"
   ```
-  
-- **Shell Commands**: 
+- **Shell Commands**:
+
   ```
   sgpt -s "<shell-related-query>"
   ```
@@ -49,7 +48,7 @@ GitHub Copilot's CLI provides intelligent code suggestions right from your termi
 
 ## 3. Git recent
 
-* [Repository Link](https://github.com/paulirish/git-recent)
+- [Repository Link](https://github.com/paulirish/git-recent)
 
 Git recent displays your most recently checked-out branches.
 
@@ -62,7 +61,7 @@ git recent -n5 # Displays the 5 most recent branches
 
 ## 4. Git recall
 
-* [Repository Link](https://github.com/Fakerr/git-recall)
+- [Repository Link](https://github.com/Fakerr/git-recall)
 
 Git recall is an interactive CLI tool to navigate through your git history.
 
