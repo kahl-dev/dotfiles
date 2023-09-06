@@ -77,6 +77,9 @@ updateShell: ## MAINTENANCE: Update shell
 bugfixCopilot: ## MAINTENANCE: Bugfix copilot
 	@$(SCRIPTS_DIR)/bugfixCopilot.sh
 
+resetBugfixCopilot: ## MAINTENANCE: Reset copilot bugfix
+	@$(SCRIPTS_DIR)/resetBugfixCopilot.sh
+
 # Debug commands
 
 colorTest: ## DEBUG: Show color test
