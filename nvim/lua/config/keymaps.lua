@@ -107,3 +107,9 @@ end
 if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
   vim.api.nvim_set_keymap("n", "<leader>no", ":lua _G.open_url_with_nc_open()<CR>", { noremap = true, silent = true })
 end
+
+-- Define a Neovim command that calls the function
+vim.cmd("command! OpenInMarked2 lua require('marked2_open').open_in_marked2()")
+
+-- Set up the keymap to call the command
+vim.api.nvim_set_keymap("n", "<leader>Cm", ":OpenInMarked2<CR>", { noremap = true, silent = true })
