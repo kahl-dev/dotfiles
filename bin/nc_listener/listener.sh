@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# Check if we're on macOS
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	BASE64_CMD="base64"
+else
+	BASE64_CMD="base64 -w0"
+fi
+
 # Specify the log file path
 log_file="$HOME/log.txt"
 
@@ -22,7 +29,11 @@ function encode_and_prefix() {
 		encoded=${input#base64::}
 	else
 		# The input is not base64 encoded, so encode it
-		encoded=$(echo -n "$input" | base64 -w0)
+		if [[ "$OSTYPE" == "darwin"* ]]; then
+			encoded=$(echo -n "$input" | base64)
+		else
+			encoded=$(echo -n "$input" | base64 -w0)
+		fi
 	fi
 
 	full_encoded=$(echo -n "${prefix}::${encoded}")

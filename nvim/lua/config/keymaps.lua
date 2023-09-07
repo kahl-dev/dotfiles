@@ -2,114 +2,118 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
-local Util = require("lazyvim.util")
+-- exit insert mode with jk
+vim.keymap.set("i", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
 
-local function map(mode, lhs, rhs, opts)
-  local keys = require("lazy.core.handler").handlers.keys
-  ---@cast keys LazyKeysHandler
-  -- do not create the keymap if a lazy keys handler exists
-  if not keys.active[keys.parse({ lhs, mode = mode }).id] then
-    opts = opts or {}
-    opts.silent = opts.silent ~= false
-    vim.keymap.set(mode, lhs, rhs, opts)
-  end
-end
+-- Unmap mappings used by tmux plugin
+-- TODO(vintharas): There's likely a better way to do this.
+vim.keymap.del("n", "<C-h>")
+vim.keymap.del("n", "<C-j>")
+vim.keymap.del("n", "<C-k>")
+vim.keymap.del("n", "<C-l>")
+vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<cr>")
+vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<cr>")
+vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<cr>")
+vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<cr>")
 
-if Util.has("bufferline.nvim") then
-  map("n", "<leader>cgc", "<cmd>ChatGPT<CR>", { desc = "ChatGPT" })
-  map("n", "<leader>cga", "<cmd>ChatGPTAct<CR>", { desc = "ChatGPTAct" })
-  map("n", "<leader>cgi", "<cmd>ChatGPTEditWithInstructions<CR>", { desc = "ChatGPTEditWithInstructions" })
-  map("v", "<leader>cgi", "<cmd>ChatGPTEditWithInstructions<CR>", { desc = "ChatGPTEditWithInstructions" })
-  -- map("n", "<leader>cgr", "<cmd>ChatGPTRun<CR>", { desc = "ChatGPTRun" })
-  -- map("v", "<leader>cgr", "<cmd>ChatGPTRun<CR>", { desc = "ChatGPTRun" })
-end
+-- Delete and paste without regitry overwrite
+vim.keymap.set("n", "<leader>p", [["_dP]], { desc = "Paste without regitry overwrite" })
+vim.keymap.set("v", "<leader>p", [["_dP]], { desc = "Paste without regitry overwrite" })
+vim.keymap.set("n", "<leader>d", [["_d]], { desc = "Delete without regitry overwrite" })
+vim.keymap.set("v", "<leader>d", [["_d]], { desc = "Delete without regitry overwrite" })
 
-local gitlinks =
-  -- Open Git repo in browser
-  map("n", "<leader>gur", "<cmd>lua require('gitlinks').open_repo()<CR>", { desc = "Open Git repo in browser" })
-map("n", "<leader>gub", "<cmd>lua require('gitlinks').open_branch()<CR>", { desc = "Open Git branch in browser" })
-map("n", "<leader>guc", "<cmd>lua require('gitlinks').open_commit()<CR>", { desc = "Open Git commit in browser" })
-map(
+local wk = require("which-key")
+
+wk.register({
+  ["<leader>"] = {
+    C = {
+      name = "Custom",
+      g = {
+        name = "ChatGPT",
+      },
+      o = {
+        name = "Open URL",
+      },
+    },
+  },
+})
+
+-- Add ChatGPT
+vim.keymap.set("n", "<leader>Cgc", "<cmd>ChatGPT<CR>", { desc = "ChatGPT" })
+vim.keymap.set("n", "<leader>Cga", "<cmd>ChatGPTAct<CR>", { desc = "ChatGPTAct" })
+vim.keymap.set("n", "<leader>Cgi", "<cmd>ChatGPTEditWithInstructions<CR>", { desc = "ChatGPTEditWithInstructions" })
+vim.keymap.set("v", "<leader>Cgi", "<cmd>ChatGPTEditWithInstructions<CR>", { desc = "ChatGPTEditWithInstructions" })
+vim.keymap.set("n", "<leader>Cgr", "<cmd>ChatGPTRun<CR>", { desc = "ChatGPTRun" })
+vim.keymap.set("v", "<leader>Cgr", "<cmd>ChatGPTRun<CR>", { desc = "ChatGPTRun" })
+
+-- Open Git repo in browser
+vim.keymap.set(
   "n",
-  "<leader>guf",
+  "<leader>Cor",
+  "<cmd>lua require('gitlinks').open_repo()<CR>",
+  { desc = "Open Git repo in browser" }
+)
+vim.keymap.set(
+  "n",
+  "<leader>Cob",
+  "<cmd>lua require('gitlinks').open_branch()<CR>",
+  { desc = "Open Git branch in browser" }
+)
+vim.keymap.set(
+  "n",
+  "<leader>Coc",
+  "<cmd>lua require('gitlinks').open_commit()<CR>",
+  { desc = "Open Git commit in browser" }
+)
+vim.keymap.set(
+  "n",
+  "<leader>Cof",
   "<cmd>lua require('gitlinks').open_file()<CR>",
   { desc = "Open current file in Git repo in browser" }
 )
 
-vim.cmd([[
-  inoremap jk <ESC>
-
-  noremap <silent> <c-h> :<C-U>TmuxNavigateLeft<cr>
-  noremap <silent> <c-j> :<C-U>TmuxNavigateDown<cr>
-  noremap <silent> <c-k> :<C-U>TmuxNavigateUp<cr>
-  noremap <silent> <c-l> :<C-U>TmuxNavigateRight<cr>
-  noremap <silent> <c-\> :<C-U>TmuxNavigatePrevious<cr>
-]])
-
--- Delete and paste without regitry overwrite
-map("n", "<leader>p", [["_dP]], { desc = "Paste without regitry overwrite" })
-map("v", "<leader>p", [["_dP]], { desc = "Paste without regitry overwrite" })
-map("n", "<leader>d", [["_d]], { desc = "Delete without regitry overwrite" })
-map("v", "<leader>d", [["_d]], { desc = "Delete without regitry overwrite" })
-
-_G.send_yank_to_host = function()
-  if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
-    local clip_contents = vim.fn.getreg('"')
-
-    local base64_prefix = "base64::"
-    local escaped_content = vim.fn.shellescape(clip_contents)
-    local command = "echo -n " .. escaped_content .. ' | base64 -w0 | tr -d "\n"'
-    local encoded_content = vim.fn.system(command)
-    local final_command = "nc_yank " .. base64_prefix .. encoded_content
-    local result = vim.fn.system(final_command)
-
-    if result ~= "" then
-      vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
-    else
-      vim.api.nvim_echo({ { "Yank sent to host", "Highlight" } }, false, {})
-    end
-  end
-end
-
 if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
+  vim.cmd("command! SendYankToHost lua require('url_handler').send_yank_to_host()")
+
   -- For normal mode
-  vim.api.nvim_set_keymap("n", "<leader>ny", ":lua _G.send_yank_to_host()<CR>", { noremap = true, silent = true })
-  vim.api.nvim_set_keymap("n", "<leader>nY", "y$<Cmd>lua _G.send_yank_to_host()<CR>", { noremap = true, silent = true })
+  vim.keymap.set("n", "<leader>Cy", ":SendYankToHost()<CR>", {
+    desc = "Send yank to host",
+    noremap = true,
+    silent = true,
+  })
+  vim.keymap.set("n", "<leader>CY", "y$<Cmd>:SendYankToHost<CR>", {
+    desc = "Send yank to host until end of line",
+    noremap = true,
+    silent = true,
+  })
 
   -- For visual mode
-  vim.api.nvim_set_keymap("v", "<leader>ny", "y<Cmd>lua _G.send_yank_to_host()<CR>", { noremap = true, silent = true })
-  vim.api.nvim_set_keymap("v", "<leader>nY", "y$<Cmd>lua _G.send_yank_to_host()<CR>", { noremap = true, silent = true })
+  vim.keymap.set("v", "<leader>Cy", "y<Cmd>:SendYankToHost<CR>", {
+
+    desc = "Send yank to host",
+    noremap = true,
+    silent = true,
+  })
+  vim.keymap.set("v", "<leader>CY", "y$<Cmd>:SendYankToHost()<CR>", {
+    desc = "Send yank to host until end of line",
+    noremap = true,
+    silent = true,
+  })
 end
 
-_G.open_url_with_nc_open = function()
-  local url_under_cursor = vim.fn.expand("<cfile>")
-  if url_under_cursor ~= "" then
-    if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
-      local nc_open_path = "nc_open" -- replace with actual path if needed
-      local result = vim.fn.system(nc_open_path .. " " .. vim.fn.shellescape(url_under_cursor))
-      if result ~= "" then
-        vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
-      else
-        vim.api.nvim_echo({ { "URL opened with nc_open", "Highlight" } }, false, {})
-      end
-    else
-      -- Local environment, use open command
-      local result = vim.fn.system("open " .. vim.fn.shellescape(url_under_cursor))
-      if result ~= "" then
-        vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
-      else
-        vim.api.nvim_echo({ { "URL opened with default browser", "Highlight" } }, false, {})
-      end
-    end
-  end
-end
+-- Define a Neovim command and map it to open the URL under the cursor
+vim.cmd("command! OpenUrlWithNcOpen lua require('url_handler').open_url_with_nc_open()")
+vim.keymap.set("n", "<leader>Cou", ":OpenUrlWithNcOpen<CR>", {
+  desc = "Open URL under cursor",
+  noremap = true,
+  silent = true,
+})
 
-if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
-  vim.api.nvim_set_keymap("n", "<leader>no", ":lua _G.open_url_with_nc_open()<CR>", { noremap = true, silent = true })
-end
-
--- Define a Neovim command that calls the function
+-- Define a Neovim command and map it to open the current file in Marked 2
 vim.cmd("command! OpenInMarked2 lua require('marked2_open').open_in_marked2()")
-
--- Set up the keymap to call the command
-vim.api.nvim_set_keymap("n", "<leader>Cm", ":OpenInMarked2<CR>", { noremap = true, silent = true })
+vim.keymap.set(
+  "n",
+  "<leader>Cm",
+  ":OpenInMarked2<CR>",
+  { desc = "Open file in Marked2", noremap = true, silent = true }
+)

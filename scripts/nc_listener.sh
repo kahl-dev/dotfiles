@@ -5,9 +5,8 @@ log_file="$HOME/Library/Logs/com.kahl_dev.nc_listener"
 
 echo "$(date) - Starting nc_listener" >>$log_file
 
-# A simple regex to check for a URL-like string.
-# This is not fully accurate, but should work for most common URLs.
-url_regex='^https?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]$'
+# A more comprehensive regex for detecting URLs
+url_regex='\b((?:https?|ftp|file)://|www\.)[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|]'
 
 while IFS= read -r line; do
 	echo "$(date) - Received: $line" >>$log_file
