@@ -55,4 +55,35 @@ if [ -d "$HOME/.fzf" ]; then
   }
 
 
+
+# Fuzzy find urls in last prompt
+ffu() {
+  local pane_id="$1"
+
+  # Check if inside a tmux session
+  if [ -z "$TMUX" ]; then
+    echo "Warning: Not inside a tmux session."
+    return 1
+  fi
+
+  # Extract URLs
+  extract_urls() {
+    grep -oP '(http|https)://\S+'
+  }
+
+  # Capture the entire history of the specified pane's contents or the current pane if none is specified
+  tmux_output=$(tmux capture-pane -p -S -10000 -t "${pane_id:-}")
+
+  # List URLs in fzf and capture the selected URL
+  selected_url=$(echo "$tmux_output" | extract_urls | fzf)
+
+  # If a URL was selected, open it with nc_open
+  if [ -n "$selected_url" ]; then
+    nc_open "$selected_url"
+  fi
+
+  # Exit the shell session
+  exit
+}
+
 fi
