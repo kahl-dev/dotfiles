@@ -27,11 +27,11 @@ while IFS= read -r line; do
 		/usr/local/bin/terminal-notifier -title "NC Listener" -subtitle "Copy to clipboard" -message "$decoded_block" -sound default -group "nc_listener"
 		;;
 	open)
-		if [[ $decoded_block =~ $url_regex ]]; then
-			open "$decoded_block"
-			echo "$(date) - Opened in browser: $decoded_block" >>$log_file
-			/usr/local/bin/terminal-notifier -title "NC Listener" -subtitle "Open in browser" -message "$decoded_block" -sound default -group "nc_listener"
-		fi
+		# if [[ $decoded_block =~ $url_regex ]]; then
+		open "$decoded_block"
+		echo "$(date) - Opened in browser: $decoded_block" >>$log_file
+		/usr/local/bin/terminal-notifier -title "NC Listener" -subtitle "Open in browser" -message "$decoded_block" -sound default -group "nc_listener"
+		# fi
 		;;
 	*)
 		echo "$(date) - Unknown command: $command" >>$log_file
