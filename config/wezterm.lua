@@ -6,7 +6,7 @@ if wezterm.config_builder then
 end
 
 config.font = wezterm.font("FiraCode Nerd Font")
-config.font_size = 20
+config.font_size = 16
 config.line_height = 1.1
 
 -- config.color_scheme = "tokyonight"
