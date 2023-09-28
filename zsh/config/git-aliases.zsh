@@ -71,6 +71,8 @@ alias gcd='git checkout $(git_develop_branch)'
 alias gcp='git checkout $(git_production_branch)'
 alias gc='git commit -v'
 alias gcmsg='git commit -m'
+
+unalias gco
 # alias gco='git checkout'
 gco() {
     if [ "$#" -eq 0 ]; then
