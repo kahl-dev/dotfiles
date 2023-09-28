@@ -71,7 +71,15 @@ alias gcd='git checkout $(git_develop_branch)'
 alias gcp='git checkout $(git_production_branch)'
 alias gc='git commit -v'
 alias gcmsg='git commit -m'
-alias gco='git checkout'
+# alias gco='git checkout'
+gco() {
+    if [ "$#" -eq 0 ]; then
+        $DOTFILES/scripts/git/switchBranch.sh
+    else
+        git checkout "$@"
+    fi
+}
+
 
 alias gd='git diff'
 
