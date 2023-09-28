@@ -34,6 +34,7 @@ return {
         },
         completionEnabled = true,
       },
+      arduino_language_server = {},
     },
     format = {
       async = true,
