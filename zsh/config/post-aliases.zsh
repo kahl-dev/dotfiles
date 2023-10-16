@@ -1,5 +1,7 @@
 #!/bin/sh
 
+alias ex='exit'
+
 # Shows custom command list
 alias custom_command_list="bat $DOTFILES/docs/Commands.md"
 alias ccl="custom_command_list"
@@ -41,9 +43,6 @@ alias base16color='curl -s https://gist.githubusercontent.com/HaleTom/89ffe32783
 
 # Get my ip
 alias myip="curl http://ipecho.net/plain; echo"
-
-alias ryid='rm -Rf node_modules && yarn install && yarn dev'
-alias ryib='rm -Rf node_modules && yarn install && yarn build'
 
 # alias j='z'
 # alias f='zi'
