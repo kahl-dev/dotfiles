@@ -104,3 +104,11 @@ vim.keymap.set(
   ":OpenInMarked2<CR>",
   { desc = "Open file in Marked2", noremap = true, silent = true }
 )
+
+vim.cmd("command! GetTogglTicketId lua require('toggl_handler').get_ticket_id()")
+vim.keymap.set(
+  "n",
+  "<leader>Cx",
+  ":GetTogglTicketId<CR>",
+  { desc = "Get current toggle key", noremap = true, silent = true }
+)
