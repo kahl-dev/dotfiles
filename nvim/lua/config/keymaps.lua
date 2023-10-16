@@ -112,3 +112,11 @@ vim.keymap.set(
   ":GetTogglTicketId<CR>",
   { desc = "Get current toggle key", noremap = true, silent = true }
 )
+
+-- Message to force me to use the keymaps instead of the command
+
+-- Close buffer
+vim.cmd([[
+  command! Bd echomsg 'Use SPACE b+d to close the buffer!'
+  cabbr <expr> bd 'Bd'
+]])
