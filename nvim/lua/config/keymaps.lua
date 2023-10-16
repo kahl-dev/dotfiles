@@ -22,9 +22,7 @@ vim.keymap.set("v", "<leader>p", [["_dP]], { desc = "Paste without regitry overw
 vim.keymap.set("n", "<leader>d", [["_d]], { desc = "Delete without regitry overwrite" })
 vim.keymap.set("v", "<leader>d", [["_d]], { desc = "Delete without regitry overwrite" })
 
-local wk = require("which-key")
-
-wk.register({
+require("which-key").register({
   ["<leader>"] = {
     C = {
       name = "Custom",
