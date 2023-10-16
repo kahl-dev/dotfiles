@@ -33,7 +33,7 @@
 
 [init]
   templatedir = ~/.gittemplate
-	defaultBranch = master
+	defaultBranch = main
 
 # Allow local customizations in the .gitconfig_local file
 [include]
