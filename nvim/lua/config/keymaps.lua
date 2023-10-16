@@ -28,23 +28,12 @@ wk.register({
   ["<leader>"] = {
     C = {
       name = "Custom",
-      g = {
-        name = "ChatGPT",
-      },
       o = {
         name = "Open URL",
       },
     },
   },
 })
-
--- Add ChatGPT
-vim.keymap.set("n", "<leader>Cgc", "<cmd>ChatGPT<CR>", { desc = "ChatGPT" })
-vim.keymap.set("n", "<leader>Cga", "<cmd>ChatGPTAct<CR>", { desc = "ChatGPTAct" })
-vim.keymap.set("n", "<leader>Cgi", "<cmd>ChatGPTEditWithInstructions<CR>", { desc = "ChatGPTEditWithInstructions" })
-vim.keymap.set("v", "<leader>Cgi", "<cmd>ChatGPTEditWithInstructions<CR>", { desc = "ChatGPTEditWithInstructions" })
-vim.keymap.set("n", "<leader>Cgr", "<cmd>ChatGPTRun<CR>", { desc = "ChatGPTRun" })
-vim.keymap.set("v", "<leader>Cgr", "<cmd>ChatGPTRun<CR>", { desc = "ChatGPTRun" })
 
 -- Open Git repo in browser
 vim.keymap.set(
