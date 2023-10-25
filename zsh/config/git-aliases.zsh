@@ -146,17 +146,3 @@ function grename() {
 
 unset git_version
 
-alias gl="git lia"
-alias gls="git lia start"
-alias glp="git lia preview"
-alias glf="git lia finish"
-
-alias glc="git lia commit"
-alias gfeat="git lia feat"
-alias gfix="git lia fix"
-alias gchore="git lia chore"
-alias gdocs="git lia docs"
-alias gstyle="git lia style"
-alias gref="git lia refactor"
-alias gperf="git lia perf"
-alias gtest="git lia test"
