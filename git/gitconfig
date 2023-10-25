@@ -75,7 +75,7 @@
 	cmd = open
 
 [rerere]
-	enabled = true
+	enabled = false
 
 [delta]
   navigate = true    # use n and N to move between diff sections
