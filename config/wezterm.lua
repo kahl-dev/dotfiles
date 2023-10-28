@@ -1,5 +1,17 @@
 local wezterm = require("wezterm")
 
+function scheme_for_appearance(appearance)
+	if appearance:find("Dark") then
+		return "Catppuccin Mocha"
+	else
+		return "Catppuccin Latte"
+	end
+end
+
+-- return {
+--   -- ...your existing config
+-- }
+
 local config = {}
 if wezterm.config_builder then
 	config = wezterm.config_builder()
@@ -10,6 +22,7 @@ config.font_size = 16
 config.line_height = 1.1
 
 -- config.color_scheme = "tokyonight"
+config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
 
 config.enable_tab_bar = true
 config.tab_bar_at_bottom = true
