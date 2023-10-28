@@ -16,7 +16,7 @@ $php\
 $docker_context\
 [](fg:surface1 bg:surface0)\
 $time\
-[ ](fg:surface0 bg:base)\
+[ ](fg:surface0)\
 \n$character"""
 
 palette = "catppuccin_mocha"
@@ -32,7 +32,7 @@ disabled = true
 
 [hostname]
 ssh_only = true
-ssh_symbol = '󰢹'
+ssh_symbol = '󰢹 '
 trim_at = '.'
 style = 'fg:base bg:teal'
 format = '[$ssh_symbol$hostname]($style)'
