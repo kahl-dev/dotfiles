@@ -4,18 +4,18 @@
 -- https://github.com/folke/tokyonight.nvim
 
 return {
-  "folke/tokyonight.nvim",
-  opts = {
-    style = "moon",
-    transparent = true,
-    styles = {
-      sidebars = "transparent",
-      floats = "transparent",
-    },
-    dim_inactive = false,
-    -- on_colors = function(colors)
-      --   colors.hint = colors.orange
-      --   colors.error = "#ff0000"
-    -- end,
-  },
+  -- "folke/tokyonight.nvim",
+  -- opts = {
+  --   style = "moon",
+  --   transparent = true,
+  --   styles = {
+  --     sidebars = "transparent",
+  --     floats = "transparent",
+  --   },
+  --   dim_inactive = false,
+  --   -- on_colors = function(colors)
+  --     --   colors.hint = colors.orange
+  --     --   colors.error = "#ff0000"
+  --   -- end,
+  -- },
 }
