@@ -1,23 +1,25 @@
 # Doc: https://starship.rs/config
 
 format = """
-[░▒▓](#a3aed2)\
-[ $os $hostname ](bg:#a3aed2 fg:#090c0c)\
-[](bg:#769ff0 fg:#a3aed2)\
+[░▒▓](teal)\
+[ $os $hostname ](fg:base bg:teal)\
+[](fg:teal bg:blue)\
 $directory\
-[](fg:#769ff0 bg:#394260)\
+[](fg:blue bg:surface2)\
 $git_branch\
 $git_status\
-[](fg:#394260 bg:#212736)\
+[](fg:surface2 bg:surface1)\
 $nodejs\
 $rust\
 $golang\
 $php\
 $docker_context\
-[](fg:#212736 bg:#1d2230)\
+[](fg:surface1 bg:surface0)\
 $time\
-[ ](fg:#1d2230)\
+[ ](fg:surface0 bg:base)\
 \n$character"""
+
+palette = "catppuccin_mocha"
 
 [os]
 format = "$symbol"
@@ -30,10 +32,10 @@ disabled = true
 
 [hostname]
 ssh_only = true
-ssh_symbol = ''
+ssh_symbol = '󰢹'
 trim_at = '.'
-format = '[$ssh_symbol$hostname](bg:#a3aed2 fg:#090c0c)'
-style = 'bold '
+style = 'fg:base bg:teal'
+format = '[$ssh_symbol$hostname]($style)'
 disabled = false
 
 [os.symbols]
@@ -51,7 +53,7 @@ error_symbol = "[x](bold red)"
 vimcmd_symbol = "[<](bold green)"
 
 [directory]
-style = "fg:#e3e5e5 bg:#769ff0"
+style = "fg:base bg:blue"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
@@ -64,41 +66,69 @@ truncation_symbol = "…/"
 
 [git_branch]
 symbol = ""
-style = "bg:#394260"
-format = '[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)'
+style = "fg:blue bg:surface2"
+format = '[[ $symbol $branch ]($style)]($style)'
 
 [git_status]
-style = "bg:#394260"
-format = '[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)'
+style = "fg:blue bg:surface2"
+format = '[[($all_status$ahead_behind )]($style)]($style)'
 
 [nodejs]
 symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+style = "fg:text bg:surface1"
+format = '[[ $symbol ($version) ]($style)]($style)'
 
 [rust]
 symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+style = "fg:text bg:surface1"
+format = '[[ $symbol ($version) ]($style)]($style)'
 
 [golang]
 symbol = "ﳑ"
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+style = "fg:text bg:surface1"
+format = '[[ $symbol ($version) ]($style)]($style)'
 
 [php]
 symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+style = "fg:text bg:surface1"
+format = '[[ $symbol ($version) ]($style)]($style)'
 
 [docker_context]
 symbol = " "
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-
+style = "fg:text bg:surface1"
+format = '[[ $symbol ($version) ]($style)]($style)'
 
 [time]
 disabled = false
 time_format = "%R" # Hour:Minute Format
-style = "bg:#1d2230"
-format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
+style = "fg:text bg:surface0"
+format = '[[  $time ]($style)]($style)'
+
+# https://github.com/catppuccin/starship
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"
