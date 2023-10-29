@@ -1,5 +1,6 @@
 # Doc: https://starship.rs/config
 
+# https://starship.rs/config/#prompt
 format = """
 [░▒▓](teal)\
 [ $os $hostname ](fg:base bg:teal)\
@@ -7,19 +8,21 @@ format = """
 $directory\
 [](fg:blue bg:surface2)\
 $git_branch\
+$git_state\
 $git_status\
 [](fg:surface2 bg:surface1)\
 $nodejs\
-$rust\
-$golang\
 $php\
 $docker_context\
 [](fg:surface1 bg:surface0)\
 $time\
 [ ](fg:surface0)\
-\n$character"""
+$line_break\
+$character"""
 
+scan_timeout = 30
 palette = "catppuccin_mocha"
+add_newline = true
 
 [os]
 format = "$symbol"
@@ -48,15 +51,17 @@ Raspbian = ""
 Ubuntu = ""
 
 [character]
-success_symbol = "[>](bold green)"
-error_symbol = "[x](bold red)"
-vimcmd_symbol = "[<](bold green)"
+success_symbol = "[>](bold fg:green)"
+error_symbol = "[x](bold fg:red)"
+vimcmd_symbol = "[V](bold fg:green)"
 
 [directory]
 style = "fg:base bg:blue"
 format = "[ $path ]($style)"
 truncation_length = 3
-truncation_symbol = "…/"
+truncation_symbol = '…/'
+use_logical_path = true
+read_only = '[]'
 
 [directory.substitutions]
 "Documents" = " "
@@ -67,42 +72,43 @@ truncation_symbol = "…/"
 [git_branch]
 symbol = ""
 style = "fg:blue bg:surface2"
-format = '[[ $symbol $branch ]($style)]($style)'
+format = '[ $symbol $branch]($style)'
+truncation_length = 10
+truncation_symbol = '…'
+only_attached = true
+always_show_remote = true
+# ignore_branches = ["main", "master"]
+
+# [git_state]
+# format = '[\($state( $progress_current of $progress_total)\)]($style) '
+# cherry_pick = '[🍒 PICKING](bold red)'
 
 [git_status]
+up_to_date = ' ✓'
 style = "fg:blue bg:surface2"
-format = '[[($all_status$ahead_behind )]($style)]($style)'
+stashed = '\$$count '
+format = '[ $all_status$ahead_behind ]($style)'
 
 [nodejs]
 symbol = ""
 style = "fg:text bg:surface1"
-format = '[[ $symbol ($version) ]($style)]($style)'
-
-[rust]
-symbol = ""
-style = "fg:text bg:surface1"
-format = '[[ $symbol ($version) ]($style)]($style)'
-
-[golang]
-symbol = "ﳑ"
-style = "fg:text bg:surface1"
-format = '[[ $symbol ($version) ]($style)]($style)'
+format = '[ $symbol ($version) ]($style)'
 
 [php]
 symbol = ""
 style = "fg:text bg:surface1"
-format = '[[ $symbol ($version) ]($style)]($style)'
+format = '[ $symbol ($version) ]($style)'
 
 [docker_context]
 symbol = " "
 style = "fg:text bg:surface1"
-format = '[[ $symbol ($version) ]($style)]($style)'
+format = '[ $symbol ($version) ]($style)'
 
 [time]
 disabled = false
 time_format = "%R" # Hour:Minute Format
 style = "fg:text bg:surface0"
-format = '[[  $time ]($style)]($style)'
+format = '[  $time ]($style)'
 
 # https://github.com/catppuccin/starship
 [palettes.catppuccin_mocha]
