@@ -3,9 +3,6 @@ return {
     "LazyVim/LazyVim",
     opts = function(_, opts)
       opts.colorscheme = "catppuccin"
-      opts.install = { colorscheme = { "catppuchin" } }
-      -- automatically check for plugin updates
-      opts.checker = { enabled = true, frequency = 86400 }
       return opts
     end,
   },
