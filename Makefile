@@ -57,6 +57,9 @@ installPi: ## INSTALLATION: Install all Dotfiles
 installAdditionalShellScripts: ## INSTALLATION: Innstall additional shell scripts
 	@$(SCRIPTS_DIR)/installAdditionalShellScripts.sh
 
+install colorls: ## INSTALLATION: Install colorls
+	sudo gem install colorls
+
 # Maintenance commands
 
 update: ## MAINTENANCE: Run updates

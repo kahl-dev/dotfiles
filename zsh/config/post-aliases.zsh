@@ -11,6 +11,12 @@ alias l="ls -lFh"     #size,show type,human readable
 alias la='ls -lAFh'   #long list,show almost all,show type,human readable
 alias ll='ls -l'      #long list
 
+if _exec_exists colorls; then
+  alias l='colorls -lah --gs'
+  alias la='colorls -lah --gs'
+  alias ll='colorls -lh --gs'
+fi
+
 alias dotfiles='vim ~/.dotfiles'
 alias nvimrc='vim ~/.config/nvim/'
 alias zshrc='vim ${ZDOTDIR:-$HOME}/.zshrc'
@@ -70,6 +76,10 @@ case "$(uname -s)" in
 Darwin)
 	alias ls='ls -G'
 
+  if _exec_exists colorls; then
+	  alias ls='l'
+  fi
+
   # confirm before overwriting something
   if _exec_exists trash; then
     alias rm='trash'
@@ -116,6 +126,10 @@ Darwin)
 
 Linux)
 	alias ls='ls --color=auto'
+
+  if _exec_exists colorls; then
+    alias ls='l'
+  fi
 	;;
 
 CYGWIN* | MINGW32* | MSYS* | MINGW*)
