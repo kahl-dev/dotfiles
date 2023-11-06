@@ -1,6 +1,6 @@
 # ---- Default editors ---- #
 export BROWSER="brave"
-export TERMINAL="alacritty"
+export TERMINAL="wezterm"
 
 # ---- ZSH ---- #
 export ZDOTDIR=${ZDOTDIR:-~/.config/zsh}
