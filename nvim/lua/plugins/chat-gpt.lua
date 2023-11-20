@@ -43,7 +43,14 @@ return {
       --   submit = "<CR>",
       -- },
       openai_params = {
-        model = "gpt-4",
+        model = "gpt-4-1106-preview",
+        -- model = "gpt-4",
+        -- max_tokens = 1000,
+        max_tokens = 4096,
+      },
+      openai_edit_params = {
+        model = "gpt-4-1106-preview",
+        -- model = "gpt-4",
       },
     })
   end,
