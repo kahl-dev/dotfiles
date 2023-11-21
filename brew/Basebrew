@@ -7,6 +7,7 @@ brew "fzf"
 brew "fd"
 brew "tree"         # Recursive directory list
 brew "zoxide"       # A smarter cd command
+brew "ruby"         # To be able to install ruby gems
 
 brew "neovim"       # Better vim alternative
 brew "stylua"
