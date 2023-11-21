@@ -35,6 +35,10 @@ return {
         completionEnabled = true,
       },
       arduino_language_server = {},
+
+      -- For Bash scripts
+      -- spellcheck = {},
+      bashls = {},
     },
     format = {
       async = true,
