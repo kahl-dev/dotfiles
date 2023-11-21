@@ -116,19 +116,19 @@ vim.keymap.set(
 -- Message to force me to use the keymaps instead of the command
 
 -- Override the :bd command to show an error message
-vim.cmd([[
-  command! Bd echomsg "Use SPACE b+d to close the buffer!"
-  cabbr <expr> bd "Bd"
-]])
-
--- Override the :wq command to show an error message
-vim.cmd([[
-  command! Wq echomsg "Use SPACE q+q to save and quit!"
-  cabbr <expr> wq "Wq"
-]])
-
--- Override the :w command to show an error message
-vim.cmd([[
-  command! W echomsg "Use <C-s> to save the file!"
-  cabbr <expr> w "W"
-]])
+-- vim.cmd([[
+--   command! Bd echomsg "Use SPACE b+d to close the buffer!"
+--   cabbr <expr> bd "Bd"
+-- ]])
+--
+-- -- Override the :wq command to show an error message
+-- vim.cmd([[
+--   command! Wq echomsg "Use SPACE q+q to save and quit!"
+--   cabbr <expr> wq "Wq"
+-- ]])
+--
+-- -- Override the :w command to show an error message
+-- vim.cmd([[
+--   command! W echomsg "Use <C-s> to save the file!"
+--   cabbr <expr> w "W"
+-- ]])
