@@ -74,9 +74,9 @@ _is_linux() {
 }
 
 _is_path_exists() {
-  if [ -e "$1" ]; then
-    return 0  # Path exists
-  else
-    return 1  # Path does not exist
-  fi
+	if [ -e "$1" ]; then
+		return 0 # Path exists
+	else
+		return 1 # Path does not exist
+	fi
 }
