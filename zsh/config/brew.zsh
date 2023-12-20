@@ -27,18 +27,26 @@ if ! _is_raspberry; then
     compinit
   fi
 
-  # Check if Ruby is installed via brew
-  if type brew &>/dev/null && brew list ruby &>/dev/null; then
+  # Example usage for the Ruby check
+  TIMESTAMP_FILE_RUBY="$HOME/.zsh_check_ruby"
+  INTERVAL_RUBY=2630016  # Approximately one month
+
+  if should_run_check "$TIMESTAMP_FILE_RUBY" "$INTERVAL_RUBY"; then
+    echo 'Checking for Ruby once a month...'
+
+    # Check if Ruby is installed via brew
+    if type brew &>/dev/null && brew list ruby &>/dev/null; then
       RUBY_PATH="$(brew --prefix ruby)/bin"
       export PATH="$RUBY_PATH:$PATH"
 
-      # Check if bashly is installed, install if not
-      if ! gem list -i bashly &>/dev/null; then
+        # Check if bashly is installed, install if not
+        if ! gem list -i bashly &>/dev/null; then
           echo "bashly is not installed. Installing now..."
           gem install bashly
-      fi
-  else
-      echo "Ruby not installed via Homebrew or not found."
-  fi
+        fi
+      else
+        echo "Ruby not installed via Homebrew or not found."
+    fi
 
+  fi
 fi

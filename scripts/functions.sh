@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source $DOTFILES/scripts/config.sh
+source $DOTFILES/scripts/should_run_check.sh
 
 _symlink() {
 	TYPE='Create'
