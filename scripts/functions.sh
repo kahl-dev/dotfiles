@@ -80,3 +80,25 @@ _is_path_exists() {
 		return 1 # Path does not exist
 	fi
 }
+
+# Function to measure and log the execution time of a given command or block
+# Includes a message for clarity and checks if logging is enabled globally
+# Usage: _log_performance "Description of task" command_or_function
+_log_performance() {
+	local description=$1
+	shift # Shift the arguments to access the command/function
+
+	if [ "$ZSH_PERFORMANCE_LOGGING" -eq 1 ]; then
+		local start_time=$(date +%s%N)
+		"$@"
+		local end_time=$(date +%s%N)
+		local duration=$((($end_time - $start_time) / 1000000))
+		echo "$description execution time: $duration ms"
+	else
+		# If logging is not enabled, just execute the command
+		"$@"
+	fi
+}
+
+# Example usage:
+# _log_performance "Log sourcing of some file" source "/path/to/file"
