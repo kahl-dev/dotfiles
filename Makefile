@@ -83,7 +83,7 @@ bugfixCopilot: ## MAINTENANCE: Bugfix copilot
 resetBugfixCopilot: ## MAINTENANCE: Reset copilot bugfix
 	@$(SCRIPTS_DIR)/resetBugfixCopilot.sh
 
-clearTmuxResurrect: ## MAINTENANCE: Clear tmux resurrect
+tmuxClearResurrect: ## MAINTENANCE: Clear tmux resurrect
 	@rm -r ~/.tmux/resurrect/*;
 
 # Debug commands
