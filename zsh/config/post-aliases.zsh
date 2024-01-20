@@ -2,6 +2,10 @@
 
 alias ex='exit'
 
+if _exec_exists lazygit; then
+  alias lg='lazygit'
+fi
+
 # Shows custom command list
 alias custom_command_list="bat $DOTFILES/docs/Commands.md"
 alias ccl="custom_command_list"
