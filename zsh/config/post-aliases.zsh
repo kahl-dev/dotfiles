@@ -2,6 +2,31 @@
 
 alias ex='exit'
 
+# Alises for developer Makefile
+alias mi='if [ -f Makefile ] && grep -q "^install:" Makefile; then \
+             make install; \
+           else \
+             echo "No Makefile found or no install command defined"; \
+           fi'
+
+alias mb='if [ -f Makefile ] && grep -q "^build:" Makefile; then \
+             make build; \
+           else \
+             echo "No Makefile found or no build command defined"; \
+           fi'
+
+alias md='if [ -f Makefile ]; then \
+             if grep -q "^dev:" Makefile; then \
+               make dev; \
+             elif grep -q "^develop:" Makefile; then \
+               make develop; \
+             else \
+               echo "No dev or develop command defined in Makefile"; \
+             fi; \
+           else \
+             echo "No Makefile found"; \
+           fi'
+
 if _exec_exists lazygit; then
   alias lg='lazygit'
 fi
