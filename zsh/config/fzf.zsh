@@ -92,4 +92,20 @@ ffu() {
   exit
 }
 
+ sshf() {
+    local ssh_config_file
+    if [[ -f ~/.dotfiles-local/ssh-config ]]; then
+        ssh_config_file=~/.dotfiles-local/ssh-config
+    else
+        ssh_config_file=~/.ssh/config
+    fi
+
+    local host
+    host=$(grep '^Host ' "$ssh_config_file" | awk '{print $2}' | fzf --height 40% --reverse)
+    if [[ -n $host ]]; then
+        ssh "$host"
+    fi
+}
+
+
 fi
