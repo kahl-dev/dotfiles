@@ -58,8 +58,14 @@ alias agrep='alias | grep'
 
 alias t='tail -f'
 
+# add wrappte to for man and cat to use tldr and bat
+alias man="$DOTFILES/bin/man-wrapper-for-tldr.sh"
+alias cat="$DOTFILES/bin/cat-wrapper-for-bat.sh"
+
 # Command line head / tail shortcuts
 alias help='man'
+
+
 
 # alias cp='cp -i'
 # alias mv='mv -i'

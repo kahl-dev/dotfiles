@@ -21,3 +21,5 @@ nvim/undodir
 
 bin/*
 !bin/nc_listener
+!bin/man-wrapper-for-tldr.sh
+!bin/cat-wrapper-for-bat.sh
