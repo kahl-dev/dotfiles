@@ -92,7 +92,7 @@ ffu() {
   exit
 }
 
- sshf() {
+sshf() {
     local ssh_config_file
     if [[ -f ~/.dotfiles-local/ssh-config ]]; then
         ssh_config_file=~/.dotfiles-local/ssh-config
@@ -101,7 +101,9 @@ ffu() {
     fi
 
     local host
-    host=$(grep '^Host ' "$ssh_config_file" | awk '{print $2}' | fzf --height 40% --reverse)
+    # Get a list of aliases, ensuring each alias is on a new line
+    host=$(awk '/^Host / { for (i=2; i<=NF; i++) print $i }' "$ssh_config_file" | fzf --height 40% --reverse)
+    
     if [[ -n $host ]]; then
         ssh "$host"
     fi
