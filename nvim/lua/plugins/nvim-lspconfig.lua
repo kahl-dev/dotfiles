@@ -9,50 +9,53 @@ return {
   "neovim/nvim-lspconfig",
   opts = {
     servers = {
-      cssls = {},
+      -- cssls = {},
       volar = {},
-      docker_compose_language_service = {},
+      -- docker_compose_language_service = {},
       prismals = {},
       -- https://github.com/aca/emmet-ls
       emmet_ls = {},
       marksman = {},
-      ltex = {
-        enabled = { "latex", "tex", "bib", "md" },
-        checkFrequency = "save",
-        diagnosticSeverity = "information",
-        setenceCacheSize = 5000,
-        -- language = "en-US",
-        -- language = "de-DE",
-        -- additionalRules = {
-        --   enablePickyRules = true,
-        --   motherTongue = "de-DE",
-        -- },
-        trace = { server = "verbose" },
-        languageToolOrg = {
-          username = username_from_env, -- Set the value from the env variable
-          apiKey = apiKey_from_env, -- Set the value from the env variable
-        },
-        completionEnabled = true,
-      },
-      arduino_language_server = {},
+      -- ltex = {
+      --   enabled = { "latex", "tex", "bib", "md" },
+      --   checkFrequency = "save",
+      --   diagnosticSeverity = "information",
+      --   setenceCacheSize = 5000,
+      --   -- language = "en-US",
+      --   -- language = "de-DE",
+      --   -- additionalRules = {
+      --   --   enablePickyRules = true,
+      --   --   motherTongue = "de-DE",
+      --   -- },
+      --   trace = { server = "verbose" },
+      --   languageToolOrg = {
+      --     username = username_from_env, -- Set the value from the env variable
+      --     apiKey = apiKey_from_env, -- Set the value from the env variable
+      --   },
+      --   completionEnabled = true,
+      -- },
+      -- arduino_language_server = {},
 
       -- For Bash scripts
       -- spellcheck = {},
       bashls = {},
+
+      -- Dont use because of memory issues
+      intelephense = {},
     },
     format = {
       async = true,
     },
     setup = {
-      tsserver = function(_, opts)
-        opts.capabilities.documentFormattingProvider = true
-      end,
-      eslint = function(_, opts)
-        opts.capabilities.documentFormattingProvider = true
-      end,
-      prettier = function(_, opts)
-        opts.capabilities.documentFormattingProvider = true
-      end,
+      -- tsserver = function(_, opts)
+      --   opts.capabilities.documentFormattingProvider = true
+      -- end,
+      -- eslint = function(_, opts)
+      --   opts.capabilities.documentFormattingProvider = true
+      -- end,
+      -- prettier = function(_, opts)
+      --   opts.capabilities.documentFormattingProvider = true
+      -- end,
     },
   },
 }
