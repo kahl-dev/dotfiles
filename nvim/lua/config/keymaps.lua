@@ -2,8 +2,12 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+-- Adjust the timeout length for key sequences
+vim.o.timeoutlen = 100
+
 -- exit insert mode with jk
 vim.keymap.set("i", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
+vim.keymap.set("v", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
 
 -- Unmap mappings used by tmux plugin
 -- TODO(vintharas): There's likely a better way to do this.
