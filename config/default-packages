@@ -22,6 +22,5 @@ eslint_d
 typescript-language-server
 trash-cli
 empty-trash-cli
-alacritty-themes
 @builder.io/ai-shell
 @githubnext/github-copilot-cli

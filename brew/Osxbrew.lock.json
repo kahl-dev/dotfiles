@@ -757,12 +757,6 @@
           "full_name": "orion"
         }
       },
-      "alacritty": {
-        "version": "0.12.2",
-        "options": {
-          "full_name": "alacritty"
-        }
-      },
       "visual-studio-code": {
         "version": "1.80.0",
         "options": {

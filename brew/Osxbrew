@@ -70,7 +70,6 @@ cask "microsoft-edge"
 cask "orion"
 
 # development
-cask 'alacritty'
 cask "visual-studio-code"
 cask 'readdle-spark'
 cask 'wezterm'
