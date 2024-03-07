@@ -28,25 +28,39 @@ if ! _is_raspberry; then
   fi
 
   # Example usage for the Ruby check
-  TIMESTAMP_FILE_RUBY="$HOME/.zsh_check_ruby"
+  TIMESTAMP_FILE_RUBY="$HOME/.config/dot/.zsh_check_ruby"
   INTERVAL_RUBY=2630016  # Approximately one month
 
-  if should_run_check "$TIMESTAMP_FILE_RUBY" "$INTERVAL_RUBY"; then
-    echo 'Checking for Ruby once a month...'
+  # Define a file to store the Ruby path
+  RUBY_PATH_FILE="$HOME/.config/dot/.zsh_ruby_path"
 
-    # Check if Ruby is installed via brew
-    if type brew &>/dev/null && brew list ruby &>/dev/null; then
-      RUBY_PATH="$(brew --prefix ruby)/bin"
-      export PATH="$RUBY_PATH:$PATH"
 
-        # Check if bashly is installed, install if not
-        if ! gem list -i bashly &>/dev/null; then
-          echo "bashly is not installed. Installing now..."
-          gem install bashly
-        fi
-      else
-        echo "Ruby not installed via Homebrew or not found."
+  # Ensure the .config directory exists
+  if ! _is_path_exists "$HOME/.config/dot/"; then
+    mkdir -p "$HOME/.config/dot/"
+  fi
+
+  # Check if Ruby is installed via brew and the path file does not exist
+  if [ ! -f "$RUBY_PATH_FILE" ] && type brew &>/dev/null && brew list ruby &>/dev/null; then
+    # Store the Ruby path in the file
+    brew --prefix ruby > "$RUBY_PATH_FILE"
+  fi
+
+  if [ -f "$RUBY_PATH_FILE" ]; then
+    # Read the Ruby path from the file
+    RUBY_PATH=$(cat "$RUBY_PATH_FILE")/bin
+    export PATH="$RUBY_PATH:$PATH"
+
+    if should_run_check "$TIMESTAMP_FILE_RUBY" "$INTERVAL_RUBY"; then
+      echo 'Checking for Ruby once a month...'
+
+      # Check if bashly is installed, install if not
+      if ! gem list -i bashly &>/dev/null; then
+        echo "bashly is not installed. Installing now..."
+        gem install bashly
+      fi
     fi
-
+  else
+    echo "Ruby not installed via Homebrew or not found."
   fi
 fi
