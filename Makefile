@@ -61,13 +61,6 @@ installColorls: ## INSTALLATION: Install colorls
 	sudo gem install colorls
 
 # Maintenance commands
-
-update: ## MAINTENANCE: Run updates
-	@$(SCRIPTS_DIR)/updates.sh
-
-updateAll: ## MAINTENANCE: Update all 
-	@$(SCRIPTS_DIR)/updates.sh --yes
-
 startServices: ## MAINTENANCE: Start services
 	@$(SCRIPTS_DIR)/startServices.sh
 
