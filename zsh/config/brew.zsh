@@ -58,6 +58,7 @@ if ! _is_raspberry; then
       if ! gem list -i bashly &>/dev/null; then
         echo "bashly is not installed. Installing now..."
         gem install bashly
+	      gem install colorls
       fi
     fi
   else
