@@ -39,4 +39,5 @@ if _is_osx; then
 	fi
 fi
 
+# @TODO: update npm packages
 printf "${COLOR_CYAN}node and npm packages has to be updated manually${COLOR_OFF}\n"

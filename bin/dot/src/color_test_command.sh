@@ -1,5 +1,3 @@
-#!/bin/bash
-#
 # https://gist.github.com/XVilka/8346728
 #
 awk 'BEGIN{

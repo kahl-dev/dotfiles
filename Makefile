@@ -77,10 +77,6 @@ tmuxClearResurrect: ## MAINTENANCE: Clear tmux resurrect
 	@rm -r ~/.tmux/resurrect/*;
 
 # Debug commands
-
-colorTest: ## DEBUG: Show color test
-	@$(SCRIPTS_DIR)/colorTest.sh
-
 logNcListener: ## DEBUG: Log nc listener
 	@tail -f ~/Library/Logs/com.kahl_dev.nc_listener
 

@@ -34,8 +34,9 @@ dot_usage() {
   echo
   # :command.usage_commands
   printf "%s\n" "Commands:"
-  printf "  %s   Edit .dotfiles in your favorite editor (neovim)\n" "edit  "
-  printf "  %s   Update all dependencies and handlet apps/bin etc (brew, lazyvim, ...)\n" "update"
+  printf "  %s   Edit .dotfiles in your favorite editor (neovim)\n" "edit      "
+  printf "  %s   Update all dependencies and handlet apps/bin etc (brew, lazyvim, ...)\n" "update    "
+  printf "  %s   Output a color-test\n" "color-test"
   echo
 
   # :command.long_usage
@@ -117,6 +118,35 @@ dot_update_usage() {
   fi
 }
 
+# :command.usage
+dot_color_test_usage() {
+  if [[ -n $long_usage ]]; then
+    printf "dot color-test - Output a color-test\n"
+    echo
+
+  else
+    printf "dot color-test - Output a color-test\n"
+    echo
+
+  fi
+
+  printf "%s\n" "Usage:"
+  printf "  dot color-test\n"
+  printf "  dot color-test --help | -h\n"
+  echo
+
+  # :command.long_usage
+  if [[ -n $long_usage ]]; then
+    printf "%s\n" "Options:"
+
+    # :command.usage_fixed_flags
+    printf "  %s\n" "--help, -h"
+    printf "    Show this help\n"
+    echo
+
+  fi
+}
+
 # :command.normalize_input
 normalize_input() {
   local arg flags
@@ -183,7 +213,7 @@ inspect_args() {
 }
 
 # :command.user_lib
-# src/lib/sample_function.sh
+# src/lib/helper.sh
 ZDOTDIR=$HOME/.config/zsh
 DOTFILES=$HOME/.dotfiles
 
@@ -255,8 +285,6 @@ dot_update_command() {
   	fi
   fi
 
-  echo _is_osx
-
   if _is_osx; then
   	if [[ $all_yes == 1 ]] || (read -p "Do you want to update App Store packages with mas? (y/n) " response && [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]); then
   		printf "${COLOR_CYAN}Update App Store packages with mas${COLOR_OFF}\n"
@@ -269,7 +297,31 @@ dot_update_command() {
   	fi
   fi
 
+  # @TODO: update npm packages
   printf "${COLOR_CYAN}node and npm packages has to be updated manually${COLOR_OFF}\n"
+
+}
+
+# :command.function
+dot_color_test_command() {
+  # src/color_test_command.sh
+  # https://gist.github.com/XVilka/8346728
+  #
+  awk 'BEGIN{
+      s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
+      for (colnum = 0; colnum<77; colnum++) {
+          r = 255-(colnum*255/76);
+          g = (colnum*510/76);
+          b = (colnum*255/76);
+          if (g>255) g = 510-g;
+          printf "\033[48;2;%d;%d;%dm", r,g,b;
+          printf "\033[38;2;%d;%d;%dm", 255-r,255-g,255-b;
+          printf "%s\033[0m", substr(s,colnum+1,1);
+      }
+      printf "\n";
+  }'
+
+  # curl -s https://gist.githubusercontent.com/lifepillar/09a44b8cf0f9397465614e622979107f/raw/24-bit-color.sh >24-bit-color.sh
 
 }
 
@@ -313,6 +365,13 @@ parse_requirements() {
       action="update"
       shift
       dot_update_parse_requirements "$@"
+      shift $#
+      ;;
+
+    color-test)
+      action="color-test"
+      shift
+      dot_color_test_parse_requirements "$@"
       shift $#
       ;;
 
@@ -447,6 +506,50 @@ dot_update_parse_requirements() {
 
 }
 
+# :command.parse_requirements
+dot_color_test_parse_requirements() {
+  # :command.fixed_flags_filter
+  while [[ $# -gt 0 ]]; do
+    case "${1:-}" in
+      --help | -h)
+        long_usage=yes
+        dot_color_test_usage
+        exit
+        ;;
+
+      *)
+        break
+        ;;
+
+    esac
+  done
+
+  # :command.command_filter
+  action="color-test"
+
+  # :command.parse_requirements_while
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+
+      -?*)
+        printf "invalid option: %s\n" "$key" >&2
+        exit 1
+        ;;
+
+      *)
+        # :command.parse_requirements_case
+        # :command.parse_requirements_case_simple
+        printf "invalid argument: %s\n" "$key" >&2
+        exit 1
+
+        ;;
+
+    esac
+  done
+
+}
+
 # :command.initialize
 initialize() {
   version="0.1.0"
@@ -468,6 +571,7 @@ run() {
   case "$action" in
     "edit") dot_edit_command ;;
     "update") dot_update_command ;;
+    "color-test") dot_color_test_command ;;
   esac
 }
 

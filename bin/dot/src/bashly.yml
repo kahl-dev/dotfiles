@@ -13,3 +13,6 @@ commands:
       - long: --yes
         short: -y
         help: Confirm all with yes
+
+  - name: color-test
+    help: Output a color-test
