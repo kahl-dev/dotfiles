@@ -36,6 +36,7 @@ setOptions () {
 
   # completions
   autoload -Uz compinit
+  autoload -U +X bashcompinit && bashcompinit
   zstyle ':completion:*' menu select
   # zstyle ':completion::complete:lsof:*' menu yes select
   zmodload zsh/complist
@@ -59,6 +60,7 @@ _log_performance "Log completion init" compinit
 
 export PATH="$HOME/.local/bin":$PATH
 export PATH="$DOTFILES/bin/dot":$PATH
+source $DOTFILES/bin/dot/completions.bash
 
 for file in $(find $ZDOTDIR/config -type f -name "*.zsh" ! -name "pre*.zsh" ! -name "post*.zsh" ! -name "_*.zsh" | sort -n); do
   _log_performance "Log sourcing of $file" source "$file";
