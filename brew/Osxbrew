@@ -2,6 +2,7 @@ tap 'homebrew/core'
 tap "homebrew/cask-versions"
 tap "homebrew/cask-fonts"
 tap "colindean/fonts-nonfree"
+tap "jesseduffield/lazydocker/lazydocker"
 #tap "homebrew/cask-drivers"
 brew "lazygit"
 brew "mas"
@@ -10,6 +11,8 @@ brew "mas"
 brew "reattach-to-user-namespace"
 brew "wget"
 brew "php"
+brew "lazydocker"
+brew "thefuck"
 
 # Create local dev ssl/https certificate
 brew "mkcert"
