@@ -1,30 +1,25 @@
-tap 'homebrew/core'
+# Homebrew Taps
+tap "homebrew/core"
 tap "homebrew/cask-versions"
 tap "homebrew/cask-fonts"
 tap "colindean/fonts-nonfree"
-tap "jesseduffield/lazydocker/lazydocker"
-#tap "homebrew/cask-drivers"
+tap "jesseduffield/lazydocker"
+
+# CLI Tools
 brew "lazygit"
 brew "mas"
-
-# CLI --------------------------------------------------------------------------
 brew "reattach-to-user-namespace"
 brew "wget"
 brew "php"
 brew "lazydocker"
 brew "thefuck"
-
-# Create local dev ssl/https certificate
-brew "mkcert"
+brew "mkcert" # Local dev ssl/https certificate creation
 brew "nss"
-
 brew "supabase/tap/supabase"
 brew "postgresql@15"
-# APPS -------------------------------------------------------------------------
-
-cask "discord"
-cask "tiptoi-manager"
-cask "copilot" # aws copilot cli https://aws.github.io/copilot-cli/
+brew "clipper"
+brew "terminal-notifier"
+brew "gh"
 
 # Fonts
 cask "font-hack-nerd-font"
@@ -33,7 +28,7 @@ cask "font-monoid-nerd-font"
 cask "font-iosevka"
 cask "font-fira-code-nerd-font"
 
-# Utility tools
+# Utility Tools
 cask "transmit"
 cask "1password"
 cask "alfred"
@@ -43,11 +38,9 @@ cask "quitter"
 cask "rectangle"
 cask "usage"
 cask "tripmode"
-brew "clipper"
 cask "muzzle"
 cask "google-drive"
 cask "bettertouchtool"
-#cask "toggl-track"
 cask "krisp"
 # cask "affinity-designer"
 cask "cleanmymac"
@@ -55,16 +48,14 @@ cask "radio-silence"
 cask "shottr" # Better Screenshots
 cask "jettison" # Auto unmount on sleep
 cask "raspberry-pi-imager"
-brew "terminal-notifier"
-brew "gh"
 cask "obsidian"
 cask "aldente"
 
-# chats & socialmedia
+# Chats & Social Media
 cask "slack"
 cask "whatsapp"
 
-# browser
+# Browsers
 cask "finicky"
 cask "brave-browser"
 cask "firefox"
@@ -72,13 +63,13 @@ cask "google-chrome"
 cask "microsoft-edge"
 cask "orion"
 
-# development
+# Development Tools
 cask "visual-studio-code"
-cask 'readdle-spark'
-cask 'wezterm'
-cask 'docker'
+cask "readdle-spark"
+cask "wezterm"
+cask "docker"
 
-# App store Apps
+# App Store Apps (MAS)
 mas "Affinity Photo", id: 824183456
 mas "1Password for Safari", id: 1569813296
 mas "Xcode", id: 497799835
@@ -98,11 +89,10 @@ mas "Numbers", id: 409203825
 mas "Toggl Track", id: 1291898086
 # mas "AdBlock", id: 1018301773
 
-# elgato
+# Elgato
 cask "elgato-stream-deck"
 cask "elgato-wave-link"
-#cask "elgato-thunderbolt-dock"
 
-#cask "logitech-g-hub"
+# Logitech
 cask "logi-options-plus"
 cask "logitune"
