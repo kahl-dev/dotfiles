@@ -1,3 +1,4 @@
+brew "neofetch"     # System info
 brew "tmux"         # Terminal multiplexer
 brew "bat"          # Better cat
 brew "ripgrep"      # Better grep
