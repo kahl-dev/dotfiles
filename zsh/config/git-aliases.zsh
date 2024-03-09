@@ -93,18 +93,9 @@ alias gc='git commit -v'
 alias gcmsg='git commit -m'
 
 if alias gco > /dev/null 2>&1; then
-    unalias gco
+  unalias gco
 fi
-
-# alias gco='git checkout'
-gco() {
-    if [ "$#" -eq 0 ]; then
-        $DOTFILES/scripts/git/switchBranch.sh
-    else
-        git checkout "$@"
-    fi
-}
-
+alias gco="git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short) - (%(authorname) %(committerdate:relative))' | fzf --header \"Checkout Recent Branch\" --preview \"git diff {1} --color=always\" --pointer=\"\" | xargs git checkout"
 
 alias gd='git diff'
 
