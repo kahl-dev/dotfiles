@@ -92,10 +92,25 @@ alias gcp='git checkout $(git_production_branch)'
 alias gc='git commit -v'
 alias gcmsg='git commit -m'
 
-if alias gco > /dev/null 2>&1; then
-  unalias gco
-fi
-alias gco="git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short) - (%(authorname) %(committerdate:relative))' | fzf --header \"Checkout Recent Branch\" --preview \"git diff {1} --color=always\" --pointer=\"\" | xargs git checkout"
+git_recent() {
+    # List all branches, keeping 'origin/' prefix for remote branches without a local equivalent
+    git for-each-ref --sort=-committerdate --format='%(refname:short) - (%(authorname) %(committerdate:relative))' refs/heads/ refs/remotes/ | \
+    awk -F' - ' '{
+        # Remove the 'origin/' prefix for processing but keep it for display
+        original=$1; gsub(/^origin\//, "", $1);
+        if (!seen[$1]++) {
+            # If this is the first occurrence of the branch, print it with its original prefix
+            print original" - "$2
+        }
+    }' | \
+    # Use fzf for interactive branch selection with a preview of the branch's last commit
+    fzf --header "Checkout Recent Branch" --preview "git show --color=always --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %C(green)(%cr) %C(bold blue)<%an>%Creset' {1}" --pointer="" | \
+    # Extract the selected branch name
+    awk -F' - ' '{print $1}' | \
+    # Checkout the selected branch, creating a new local branch if it's a remote branch
+    xargs -I {} bash -c 'branch="{}"; if git show-ref --verify --quiet refs/heads/$branch; then git checkout $branch; else git checkout -b "${branch#origin/}" --track "$branch"; fi'
+}
+alias gr='git_recent'
 
 alias gd='git diff'
 
