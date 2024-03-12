@@ -91,6 +91,7 @@ alias gcd='git checkout $(git_develop_branch)'
 alias gcp='git checkout $(git_production_branch)'
 alias gc='git commit -v'
 alias gcmsg='git commit -m'
+alias gco='git checkout'
 
 git_recent() {
     # List all branches, keeping 'origin/' prefix for remote branches without a local equivalent
