@@ -57,6 +57,9 @@ installPi: ## INSTALLATION: Install all Dotfiles
 installAdditionalShellScripts: ## INSTALLATION: Innstall additional shell scripts
 	@$(SCRIPTS_DIR)/installAdditionalShellScripts.sh
 
+installNvimFromSource: ## INSTALLATION: Install neovim from source
+	@$(SCRIPTS_DIR)/installNvimFromSource.sh
+
 # Maintenance commands
 startServices: ## MAINTENANCE: Start services
 	@$(SCRIPTS_DIR)/startServices.sh
