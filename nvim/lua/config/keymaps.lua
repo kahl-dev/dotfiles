@@ -63,34 +63,34 @@ vim.keymap.set(
   { desc = "Open current file in Git repo in browser" }
 )
 
-if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
-  vim.cmd("command! SendYankToHost lua require('url_handler').send_yank_to_host()")
-
-  -- For normal mode
-  vim.keymap.set("n", "<leader>ny", ":SendYankToHost()<CR>", {
-    desc = "Send yank to host",
-    noremap = true,
-    silent = true,
-  })
-  vim.keymap.set("n", "<leader>nY", "y$<Cmd>:SendYankToHost<CR>", {
-    desc = "Send yank to host until end of line",
-    noremap = true,
-    silent = true,
-  })
-
-  -- For visual mode
-  vim.keymap.set("v", "<leader>ny", "y<Cmd>:SendYankToHost<CR>", {
-
-    desc = "Send yank to host",
-    noremap = true,
-    silent = true,
-  })
-  vim.keymap.set("v", "<leader>nY", "y$<Cmd>:SendYankToHost()<CR>", {
-    desc = "Send yank to host until end of line",
-    noremap = true,
-    silent = true,
-  })
-end
+-- if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
+--   vim.cmd("command! SendYankToHost lua require('url_handler').send_yank_to_host()")
+--
+--   -- For normal mode
+--   vim.keymap.set("n", "<leader>ny", ":SendYankToHost()<CR>", {
+--     desc = "Send yank to host",
+--     noremap = true,
+--     silent = true,
+--   })
+--   vim.keymap.set("n", "<leader>nY", "y$<Cmd>:SendYankToHost<CR>", {
+--     desc = "Send yank to host until end of line",
+--     noremap = true,
+--     silent = true,
+--   })
+--
+--   -- For visual mode
+--   vim.keymap.set("v", "<leader>ny", "y<Cmd>:SendYankToHost<CR>", {
+--
+--     desc = "Send yank to host",
+--     noremap = true,
+--     silent = true,
+--   })
+--   vim.keymap.set("v", "<leader>nY", "y$<Cmd>:SendYankToHost()<CR>", {
+--     desc = "Send yank to host until end of line",
+--     noremap = true,
+--     silent = true,
+--   })
+-- end
 
 -- Define a Neovim command and map it to open the URL under the cursor
 vim.cmd("command! OpenUrlWithNcOpen lua require('url_handler').open_url_with_nc_open()")
