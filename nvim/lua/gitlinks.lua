@@ -47,12 +47,14 @@ local function format_git_host(repo)
   return git_host, user_repo
 end
 
+local osc52 = require("osc52")
+
 function M.open_repo()
   local repo = get_git_repo()
   local git_host, user_repo = format_git_host(repo)
   local url = string.format("https://%s/%s", git_host, user_repo)
-  print("Opening URL: " .. url)
-  vim.fn.system(string.format("nc_open '%s'", url))
+  print("Copying URL to clipboard: " .. url)
+  osc52.copy(url)
 end
 
 function M.open_branch()
@@ -60,8 +62,8 @@ function M.open_branch()
   local branch = get_git_branch()
   local git_host, user_repo = format_git_host(repo)
   local url = string.format("https://%s/%s/tree/%s", git_host, user_repo, branch)
-  print("Opening URL: " .. url)
-  vim.fn.system(string.format("nc_open '%s'", url))
+  print("Copying URL to clipboard: " .. url)
+  osc52.copy(url)
 end
 
 function M.open_commit()
@@ -69,8 +71,8 @@ function M.open_commit()
   local commit = get_git_commit()
   local git_host, user_repo = format_git_host(repo)
   local url = string.format("https://%s/%s/commit/%s", git_host, user_repo, commit)
-  print("Opening URL: " .. url)
-  vim.fn.system(string.format("nc_open '%s'", url))
+  print("Copying URL to clipboard: " .. url)
+  osc52.copy(url)
 end
 
 function M.open_file()
@@ -79,8 +81,8 @@ function M.open_file()
   local file = get_current_file()
   local git_host, user_repo = format_git_host(repo)
   local url = string.format("https://%s/%s/blob/%s/%s", git_host, user_repo, branch, file)
-  print("Opening URL: " .. url)
-  vim.fn.system(string.format("nc_open '%s'", url))
+  print("Copying URL to clipboard: " .. url)
+  osc52.copy(url)
 end
 
 return M
