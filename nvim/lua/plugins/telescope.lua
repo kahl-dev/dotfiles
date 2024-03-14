@@ -27,25 +27,11 @@ return {
       local previewers = require("telescope.previewers")
 
       -- The function to call when a URL is selected
+      -- Updated open_url function to use nvim-osc52 for copying URLs to clipboard
       local function open_url(entry)
-        local result
-
-        if os.getenv("SSH_CLIENT") or os.getenv("SSH_CONNECTION") then
-          local nc_open_path = "nc_open" -- replace with actual path if needed
-          result = vim.fn.system(nc_open_path .. " " .. vim.fn.shellescape(entry.value))
-          if result ~= "" then
-            vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
-          else
-            vim.api.nvim_echo({ { "URL opened with nc_open", "Highlight" } }, false, {})
-          end
-        else
-          result = vim.fn.system("open " .. vim.fn.shellescape(entry.value))
-          if result ~= "" then
-            vim.api.nvim_echo({ { result, "ErrorMsg" } }, false, {})
-          else
-            vim.api.nvim_echo({ { "URL opened with default browser", "Highlight" } }, false, {})
-          end
-        end
+        -- Use nvim-osc52 to copy the URL to the clipboard
+        require("osc52").copy(entry.value)
+        vim.api.nvim_echo({ { "URL copied to clipboard", "Highlight" } }, false, {})
       end
 
       -- The Telescope picker
@@ -83,7 +69,12 @@ return {
           :find()
       end
 
-      vim.api.nvim_set_keymap("n", "<leader>nf", ":lua _G.find_urls_in_buffer()<CR>", { noremap = true, silent = true })
+      vim.api.nvim_set_keymap(
+        "n",
+        "<leader>ob",
+        ":lua _G.find_urls_in_buffer()<CR>",
+        { desc = "Find URLs in buffer", noremap = true, silent = true }
+      )
 
       return opts
     end,
