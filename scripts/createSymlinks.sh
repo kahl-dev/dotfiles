@@ -45,7 +45,6 @@ fi
 
 if _is_osx; then
 	_copyfile $DOTFILES/config/com.kahl_dev.add_ssh.plist $HOME/Library/LaunchAgents/com.kahl_dev.add_ssh.plist
-	_copyfile $DOTFILES/config/com.kahl_dev.nc_listener.plist $HOME/Library/LaunchAgents/com.kahl_dev.nc_listener.plist
 	_copyfile $DOTFILES/config/finicky.js $HOME/.finicky.js
 
 	_symlink $DOTFILES/config/ssh-config $HOME/.ssh/config

@@ -29,7 +29,5 @@ all_urls=$(extract_urls "$all_content")
 # Use fzf to select a URL
 selected_url=$(echo "$all_urls" | tac | awk '!visited[$0]++' | fzf)
 
-# If a URL is selected, open it using nc_open
-if [[ -n $selected_url ]]; then
-	nc_open "$selected_url"
-fi
+# @TODO: Send url to local clipboard or better open in browser
+echo "$selected_url"

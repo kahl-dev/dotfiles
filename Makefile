@@ -60,13 +60,6 @@ installAdditionalShellScripts: ## INSTALLATION: Innstall additional shell script
 installNvimFromSource: ## INSTALLATION: Install neovim from source
 	@$(SCRIPTS_DIR)/installNvimFromSource.sh
 
-# Maintenance commands
-startServices: ## MAINTENANCE: Start services
-	@$(SCRIPTS_DIR)/startServices.sh
-
-stopServices: ## MAINTENANCE: Stop services
-	@$(SCRIPTS_DIR)/startServices.sh
-
 updateShell: ## MAINTENANCE: Update shell
 	source ~/.zshrc
 
@@ -78,10 +71,6 @@ resetBugfixCopilot: ## MAINTENANCE: Reset copilot bugfix
 
 tmuxClearResurrect: ## MAINTENANCE: Clear tmux resurrect
 	@rm -r ~/.tmux/resurrect/*;
-
-# Debug commands
-logNcListener: ## DEBUG: Log nc listener
-	@tail -f ~/Library/Logs/com.kahl_dev.nc_listener
 
 # Cleanup commands
 
