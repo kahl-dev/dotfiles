@@ -1,7 +1,7 @@
 #!/bin/bash
 
-source ./scripts/config.sh
-source ./scripts/functions.sh
+source $DOTFILES/scripts/config.sh
+source $DOTFILES/scripts/functions.sh
 
 paths=(
 	"$DOTFILES/zsh/.zshenv:$HOME/.zshenv"

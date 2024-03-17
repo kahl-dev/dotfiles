@@ -3,6 +3,7 @@
 import { Command } from 'commander';
 import { registerUpdateCommand } from './commands/update.js';
 import { registerColorTestCommand } from './commands/color-test.js';
+import { registerLinkCommand } from './commands/link.js';
 import { readPackageSync } from 'read-pkg';
 
 const program = new Command();
@@ -13,6 +14,7 @@ program
 
 registerUpdateCommand(program);
 registerColorTestCommand(program);
+registerLinkCommand(program);
 
 program.parse(process.argv);
 

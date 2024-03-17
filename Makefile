@@ -23,9 +23,6 @@ help: ## Display this help message
 
 # Installation commands
 
-createSymlinks: ## INSTALLATION: Create symlinks
-	@$(SCRIPTS_DIR)/createSymlinks.sh
-
 installBrew: ## INSTALLATION: Install brew
 	@$(SCRIPTS_DIR)/installBrew.sh
 	@make updateShell
