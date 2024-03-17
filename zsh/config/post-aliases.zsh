@@ -46,6 +46,10 @@ if _exec_exists colorls; then
   alias ll='colorls -lh --gs'
 fi
 
+if _exec_exists neofetch; then
+  alias info='neofetch'
+fi
+
 alias dotfiles='vim ~/.dotfiles'
 alias nvimrc='vim ~/.config/nvim/'
 alias zshrc='vim ${ZDOTDIR:-$HOME}/.zshrc'
