@@ -2,25 +2,21 @@
   "name": "dot-cli",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.mjs",
   "type": "module",
   "scripts": {
-    "dev": "rimraf ./dist && tsc -w && chmod +x ./dist/index.js",
-    "build": "rimraf ./dist && tsc && chmod +x ./dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "relink": "pnpm uninstall -g dot-cli && pnpm link -g"
+    "relink": "pnpm uninstall -g dot-cli && pnpm install -g \"dot-cli@link:$(pwd)\""
   },
   "bin": {
-    "dot-cli": "./dist/index.js"
+    "dot-cli": "src/index.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.11.25",
-    "@types/readline-sync": "^1.4.8",
     "rimraf": "^5.0.5",
-    "typescript": "^5.4.2",
+    "yargs": "^17.7.2",
     "zx": "^7.2.3"
   },
   "dependencies": {

@@ -55,13 +55,18 @@ function zsh_add_plugin() {
 #   zsh_add_completion "github-username/repo-name" true
 #   zsh_add_completion "https://gitlab-instance.com/username/repo-name.git" true
 #   zsh_add_completion "/local/path/to/plugin" true
+#   zsh_add_completion "binary-name" true
+#
 function zsh_add_completion() {
-    local PLUGIN_PATH REPO_URL completion_file_path completion_file
+    local PLUGIN_PATH REPO_URL completion_file_path completion_file BINARYNAME
 
     # Determine if the input is a local path
     if [[ -d "$1" ]]; then
         PLUGIN_PATH="$1"
         PLUGIN_NAME=$(basename "$PLUGIN_PATH")
+    elif type "$1" &>/dev/null; then
+        # This is assumed to be a yargs-based binary name
+        BINARYNAME=$1
     else
         PLUGIN_NAME=$(echo $1 | awk -F'/' '{print $NF}' | sed 's/\.git//')
         if [[ $1 == gitlab* ]]; then
@@ -71,7 +76,16 @@ function zsh_add_completion() {
         fi
     fi
 
-    if [ -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then
+
+    if [[ -n "$BINARYNAME"  ]]; then
+      # Generate and source yargs completion
+      if ! _is_path_exists "$ZDOTDIR/plugins/$BINARYNAME"; then
+        mkdir -p "$ZDOTDIR/plugins/$BINARYNAME"
+        $BINARYNAME completion > "$ZDOTDIR/plugins/_$BINARYNAME"
+      fi
+      completion_file_path="$ZDOTDIR/plugins/_$BINARYNAME"
+      fpath+=$(dirname "${completion_file_path}")
+    elif [ -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then
         # For completions
         completion_file_path=$(ls $ZDOTDIR/plugins/$PLUGIN_NAME/_* 2>/dev/null)
         if [[ -n "$completion_file_path" ]]; then

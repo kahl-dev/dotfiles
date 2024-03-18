@@ -1,10 +1,10 @@
-import { $, question, os } from 'zx';
+import { $, os, question } from 'zx';
 
 export function isOSX() {
   return os.platform() === 'darwin'; // 'darwin' is the value returned by os.platform() for macOS
 }
 
-export async function commandExists(command: string): Promise<boolean> {
+export async function commandExists(command) {
   try {
     await $`command -v ${command}`.quiet()
     return true;
@@ -13,7 +13,7 @@ export async function commandExists(command: string): Promise<boolean> {
   }
 }
 
-export async function askYesNo(questionText: string): Promise<boolean> {
+export async function askYesNo(questionText ) {
   const choices = ['yes', 'no', 'y', 'n', 'YES', 'NO', 'Y', 'N'];
 
   while (true) {
@@ -35,7 +35,7 @@ export async function askYesNo(questionText: string): Promise<boolean> {
 const spin = {
   running: false,
   isRunning: false,
-  start: async function(message: string): Promise<void> {
+  start: async function(message) {
     this.isRunning = true;
     spinner(message, async () => {
       this.running = true;
@@ -71,7 +71,7 @@ const spin = {
   }
 };
 
-export const changeCommandWithSpinner = async function(spinnerMsg: string, cb: any) {
+export const changeCommandWithSpinner = async function(spinnerMsg, cb) {
   await spin.start(spinnerMsg)
   await cb
     .pipe(await spin.stop())
