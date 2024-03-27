@@ -66,9 +66,6 @@ bugfixCopilot: ## MAINTENANCE: Bugfix copilot
 resetBugfixCopilot: ## MAINTENANCE: Reset copilot bugfix
 	@$(SCRIPTS_DIR)/resetBugfixCopilot.sh
 
-tmuxClearResurrect: ## MAINTENANCE: Clear tmux resurrect
-	@rm -r ~/.tmux/resurrect/*;
-
 # Cleanup commands
 
 nvimResetPackages: ## CLEANUP: Reset lazy.nvim packages

@@ -8,3 +8,6 @@ then
    # fi
 
 fi
+
+alias tmux-clear-resurrect='rm -rf ~/.tmux/resurrect/* && echo "Cleared all tmux-resurrect entries!"'
+
