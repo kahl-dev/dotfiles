@@ -1,5 +1,13 @@
 export GIT_LIA_COMMIT_MESSAGE_METHOD="editor"
 
+# look if git-lia is available, if not look if the binary is in 
+# $DOTFILES/bin/git-lia/git-lia and source that
+if ! command -v git-lia &> /dev/null; then
+  if [ -f "$DOTFILES/bin/git-lia/git-lia" ]; then
+    export PATH=$PATH:$DOTFILES/bin/git-lia
+  fi
+fi
+
 alias gl="git lia"
 alias gls="git lia start"
 alias glp="git lia preview"
