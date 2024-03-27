@@ -1,3 +1,4 @@
+brew "pygitup"      # Update all git repos
 brew "fswatch"      # File system watcher
 
 brew "neofetch"     # System info
