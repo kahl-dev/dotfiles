@@ -153,3 +153,11 @@ function grename() {
 
 unset git_version
 
+# alias gjirab="echo 'Branch Name: ' && git branch --show-current | grep -oE '[A-Z]+-[0-9]+' | head -n 1 | xargs -I {} echo \"$JIRA_WORKSPACE/browse/{}\""
+# alias gjirac="echo 'Commit Message: ' && git log -1 --pretty=%B | grep -oE '([A-Z]+-[0-9]+)' | head -n 1 | xargs -I {} echo \"$JIRA_WORKSPACE/browse/{}\""
+
+alias gjirab="export JIRA_URL=\$(git branch --show-current | grep -oE '[A-Z]+-[0-9]+' | head -n 1 | xargs -I {} echo \"$JIRA_WORKSPACE/browse/{}\") && echo -ne \"\033]52;c;\$(echo -n \$JIRA_URL | base64)\007\""
+# alias gjirac="export JIRA_URL=\$(git log -1 --pretty=%B | grep -oE '([A-Z]+-[0-9]+)' | head -n 1 | xargs -I {} echo \"$JIRA_WORKSPACE/browse/{}\") && echo -ne \"\033]52;c;\$(echo -n \$JIRA_URL | base64)\007\""
+alias gjirac="git log -10 --pretty='%h %s' | fzf --no-multi | awk '{print \$1}' | xargs -I {} git log -1 --format=%B {} | grep -oE '([A-Z]+-[0-9]+)' | head -n 1 | xargs -I {} echo -n \"$JIRA_WORKSPACE/browse/{}\" | xargs -I {} bash -c 'echo -ne \"\033]52;c;\$(echo -n {} | base64)\007\"'"
+
+
