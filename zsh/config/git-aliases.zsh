@@ -52,25 +52,6 @@ function git_production_branch() {
   echo production
 }
 
-function git_check_if_merged() {
-# Determine the main or master branch dynamically
-local main_branch=$(git_main_branch)
-# Get the current branch name
-local current_branch=$(git branch --show-current)
-
-# Fetch the latest changes for main or master branch
-git fetch origin $main_branch:$main_branch
-
-# Check if the current branch is fully merged into the main or master branch
-if git branch --merged | grep -qE "^ *($main_branch)$"; then
-  echo "Current branch $current_branch is fully merged into $main_branch."
-else
-  echo "Current branch $current_branch is NOT fully merged into $main_branch."
-  echo "Listing commits in $current_branch that are not in $main_branch:"
-  git log $main_branch..$current_branch --oneline
-fi
-}
-
 #
 # Aliases
 # (sorted alphabetically)
@@ -83,7 +64,6 @@ alias gaa='git add --all'
 
 alias gba='git branch -a'
 
-alias gcheckmerged='git_check_if_merged'
 alias gcl='git clone --recurse-submodules'
 alias gclean='git clean -id'
 alias gcm='git checkout $(git_main_branch)'
