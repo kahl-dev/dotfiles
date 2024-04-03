@@ -54,4 +54,5 @@ if _is_osx; then
 
 	mkdir -p $HOME/.config/wezterm
 	_symlink $DOTFILES/config/wezterm.lua $HOME/.config/wezterm/wezterm.lua
+	_symlink $HOME/Library/Mobile\ Documents/com~apple~CloudDocs/ $HOME/icloud
 fi
