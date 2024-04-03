@@ -25,3 +25,5 @@ empty-trash-cli
 @builder.io/ai-shell
 @githubnext/github-copilot-cli
 intelephense
+vscode-langservers-extracted
+@vue/language-server

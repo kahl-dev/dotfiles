@@ -12,7 +12,6 @@ paths=(
 	"$DOTFILES/git/template:$HOME/.gittemplate"
 	"$DOTFILES/config/prettierrc.js:$HOME/.prettierrc.js"
 	"$DOTFILES/config/tern-config.json:$HOME/.tern-config"
-	"$DOTFILES/config/eslintrc.js:$HOME/.eslintrc.js"
 	"$DOTFILES/tmux:$HOME/.tmux"
 	"$DOTFILES/tmux/tmux.conf:$HOME/.tmux.conf"
 	"$DOTFILES/config/agignore:$HOME/.agignore"

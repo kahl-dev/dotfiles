@@ -10,7 +10,15 @@ return {
   opts = {
     servers = {
       -- cssls = {},
-      volar = {},
+      -- tsserver = {},
+      volar = {
+        filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+        init_options = {
+          vue = {
+            hybridMode = false,
+          },
+        },
+      },
       -- docker_compose_language_service = {},
       prismals = {},
       -- https://github.com/aca/emmet-ls
