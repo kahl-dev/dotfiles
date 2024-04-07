@@ -3,10 +3,8 @@
 -- Add any additional options here
 
 vim.g.root_spec = { { ".git" }, "cwd" }
--- vim.g.mapleader = ","
--- vim.g.maplocalleader = ","
 
-if vim.env.SSH_CONNECTION then
+if vim.env.SSH_TTY then
   vim.g.clipboard = {
     name = "Tmux clipboard",
     copy = {
