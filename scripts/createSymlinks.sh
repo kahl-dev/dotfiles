@@ -16,15 +16,26 @@ paths=(
 	"$DOTFILES/tmux/tmux.conf:$HOME/.tmux.conf"
 	"$DOTFILES/config/agignore:$HOME/.agignore"
 	"$DOTFILES/config/rc:$HOME/.ssh/rc"
+	"$DOTFILES/config/lazygit.yml:$HOME/.config/lazygit/config.yml"
 )
 
 for path in "${paths[@]}"; do
-	source=$(echo $path | cut -d: -f1)
-	destination=$(echo $path | cut -d: -f2)
+	IFS=':' read -r source destination <<<"$path"
+
+	# Check if destination path is provided.
 	if [ -z "$destination" ]; then
-		_createPath $source
+		# Assume _createPath is a function intended for creating directories.
+		_createPath "$source"
 	else
-		_symlink $source $destination
+		# Check if the destination exists and is not a symlink.
+		if [ -e "$destination" ] && [ ! -L "$destination" ]; then
+			# Backup the existing file or directory.
+			mv "$destination" "$destination.bak"
+			printf "${COLOR_GREEN}Backed up $destination to $destination.bak${COLOR_OFF}\n"
+		fi
+
+		# Use the custom symlink function.
+		_symlink "$source" "$destination"
 	fi
 done
 

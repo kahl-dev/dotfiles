@@ -1,0 +1,14 @@
+keybinding:
+  universal:
+    openDiffTool: null
+customCommands:
+  - key: '<c-c>'
+    context: 'files'
+    description: 'Git lia commit'
+    command: 'git-lia commit'
+    subprocess: true
+  - key: '<c-t>'
+    context: 'files'
+    description: 'Git lia commit'
+    command: 'git-lia-toggl'
+    subprocess: true

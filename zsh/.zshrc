@@ -58,7 +58,8 @@ _log_performance "Log sourcing zsh-functions" source "$ZDOTDIR/zsh-functions"
 
 _log_performance "Log completion init" compinit
 
-export PATH="$HOME/.local/bin":$PATH
+_is_path_exists "$DOTFILES/.local/bin" && export PATH="$HOME/.local/bin":$PATH
+_is_path_exists "$DOTFILES/bin" && export PATH="$DOTFILES/bin:$PATH"
 
 for file in $(find $ZDOTDIR/config -type f -name "*.zsh" ! -name "pre*.zsh" ! -name "post*.zsh" ! -name "_*.zsh" | sort -n); do
   _log_performance "Log sourcing of $file" source "$file";

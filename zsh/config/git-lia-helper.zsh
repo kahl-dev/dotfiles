@@ -34,63 +34,9 @@ grefs() { if [ "$#" -eq 1 ]; then git-lia commit -t "refactor" -m "$1"; else git
 gperfs() { if [ "$#" -eq 1 ]; then git-lia commit -t "perf" -m "$1"; else git-lia commit -t "perf" -s "$1" -m "$2"; fi; }
 gtests() { if [ "$#" -eq 1 ]; then git-lia commit -t "test" -m "$1"; else git-lia commit -t "test" -s "$1" -m "$2"; fi; }
 
-get_ticket_id_from_toggl() {
-    # Get the Toggl API token from the environment variable
-    local TOGGL_API_TOKEN="${T}"
-
-    if [[ -z "${TOGGL_API_TOKEN}" ]]; then
-        echo "Error: Toggl API token is not set in the T environment variable." >&2
-        return 1
-    fi
-
-    # Execute the curl command
-    local RESPONSE=$(curl -s "https://api.track.toggl.com/api/v9/me/time_entries/current" \
-                           -H "Content-Type: application/json" \
-                           -u "${TOGGL_API_TOKEN}:api_token")
-
-    # Extract the ticket ID
-    local TICKET_ID=$(echo "${RESPONSE}" | grep -oE "[A-Z]+-[0-9]+")
-
-    if [[ -z "$TICKET_ID" ]]; then
-        echo "Error: Could not fetch Toggl ticket ID. Aborting." >&2
-        return 1
-    fi
-
-
-    echo "${TICKET_ID}"
-}
 VALID_TYPES=("feat" "fix" "docs" "style" "refactor" "perf" "test" "chore")
 
-glct() {
-    if [[ $# -lt 1 || $# -gt 2 ]]; then
-        echo "Usage: glct <type> [message]"
-        return 1
-    fi
-
-    local TYPE="$1"
-    local MESSAGE="$2"
-
-    if [[ ! " ${VALID_TYPES[@]} " =~ " ${TYPE} " ]]; then
-        echo "Error: Invalid type. Must be one of: ${VALID_TYPES[*]}"
-        return 1
-    fi
-
-    local SCOPE=$(get_ticket_id_from_toggl)
-    if [[ $? -ne 0 ]]; then # Check the exit status of the function
-        return 1
-    fi
-
-    if [[ -z "$SCOPE" ]]; then
-        echo "Error: No Toggl ticket ID found. Aborting commit." >&2
-        return 1
-    fi
-
-    if [[ -z "$MESSAGE" ]]; then
-        git-lia commit -t "$TYPE" -s "$SCOPE"
-    else
-        git-lia commit -t "$TYPE" -s "$SCOPE" -m "$MESSAGE"
-    fi
-}
+_is_path_exists "$DOTFILES/bin" && alias glct="git-lia-toggl"
 
 _glct_completions() {
     local -a commands
