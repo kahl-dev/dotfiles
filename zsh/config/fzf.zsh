@@ -92,7 +92,16 @@ if [ -d "$HOME/.fzf" ]; then
 #   exit
 # }
 
-sshf() {
+# SSH into a host using fzf to select from your SSH config
+# runs the original ssh command if arguments are provided
+s() {
+    # If arguments are provided, use the original ssh command
+    if [ $# -gt 0 ]; then
+        # 'command' bypasses shell aliases and functions, calling the binary directly
+        command ssh "$@"
+        return
+    fi
+
     local ssh_config_file
     if [[ -f ~/.dotfiles-local/ssh-config ]]; then
         ssh_config_file=~/.dotfiles-local/ssh-config
@@ -105,7 +114,8 @@ sshf() {
     host=$(awk '/^Host / { for (i=2; i<=NF; i++) print $i }' "$ssh_config_file" | fzf --height 40% --reverse)
     
     if [[ -n $host ]]; then
-        ssh "$host"
+        # Use 'command' to call the original ssh binary with the selected host
+        command ssh "$host"
     fi
 }
 
