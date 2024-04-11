@@ -2,7 +2,7 @@
 alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
 alias npmLsg="npm ls -g --depth=0 "$@" 2>/dev/null"
 
-# Prvent intelephense from crashing
+# Prevent intelephense from crashing
 export NODE_OPTIONS=--max_old_space_size=8192
 
 npmid() {
