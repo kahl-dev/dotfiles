@@ -9,6 +9,11 @@ vim.o.timeoutlen = 100
 vim.keymap.set("i", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
 vim.keymap.set("v", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
 
+function DeleteLastWord()
+  vim.cmd("normal! daw")
+end
+vim.api.nvim_set_keymap("n", "<M-BS>", "<cmd>lua DeleteLastWord()<CR>", { noremap = true, silent = true })
+
 -- Unmap mappings used by tmux plugin
 -- TODO(vintharas): There's likely a better way to do this.
 vim.keymap.del("n", "<C-h>")
