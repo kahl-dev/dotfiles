@@ -2,6 +2,10 @@ keybinding:
   universal:
     openDiffTool: null
 customCommands:
+  - key: 'N'
+    context: 'localBranches'
+    command: 'git-lia start'
+    subprocess: true
   - key: '<c-c>'
     context: 'files'
     description: 'Git lia commit'
