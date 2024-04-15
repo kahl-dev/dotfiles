@@ -5,51 +5,91 @@
 local username_from_env = os.getenv("LTEX_USERNAME")
 local apiKey_from_env = os.getenv("LTEX_APIKEY")
 
+local home = os.getenv("HOME")
+local vue_language_server_path = home
+  .. "/.local/share/nvim/mason/packages/vue-language-server/node_modules/@vue/language-server"
+
 return {
   "neovim/nvim-lspconfig",
   opts = {
     servers = {
-      -- cssls = {},
-      -- tsserver = {},
-      volar = {
-        filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+      -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#cssls
+      -- npm i -g vscode-langservers-extracted
+      cssls = {},
+
+      -- Hybrid mode where volar only handles vue and typescript by itself
+      tsserver = {
         init_options = {
-          vue = {
-            hybridMode = false,
+          plugins = {
+            {
+              name = "@vue/typescript-plugin",
+              location = vue_language_server_path,
+              languages = { "vue" },
+            },
           },
         },
+        filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
       },
-      -- docker_compose_language_service = {},
-      prismals = {},
-      -- https://github.com/aca/emmet-ls
+
+      -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#emmet_ls
+      -- npm install -g emmet-ls
       emmet_ls = {},
+
+      -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#marksman
       marksman = {},
-      -- ltex = {
-      --   enabled = { "latex", "tex", "bib", "md" },
-      --   checkFrequency = "save",
-      --   diagnosticSeverity = "information",
-      --   setenceCacheSize = 5000,
-      --   -- language = "en-US",
-      --   -- language = "de-DE",
-      --   -- additionalRules = {
-      --   --   enablePickyRules = true,
-      --   --   motherTongue = "de-DE",
-      --   -- },
-      --   trace = { server = "verbose" },
-      --   languageToolOrg = {
-      --     username = username_from_env, -- Set the value from the env variable
-      --     apiKey = apiKey_from_env, -- Set the value from the env variable
-      --   },
-      --   completionEnabled = true,
-      -- },
-      -- arduino_language_server = {},
 
-      -- For Bash scripts
-      -- spellcheck = {},
-      bashls = {},
+      -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#bashls
+      -- npm i -g bash-language-server
+      bashls = {
+        filetypes = { "sh", "bash", "zsh" },
+      },
 
-      -- Dont use because of memory issues
+      -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#prismals
+      -- npm install -g @prisma/language-server
+      prismals = {},
+
+      -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#prismals
+      -- go install github.com/arduino/arduino-language-server@latest
+      arduino_language_server = {},
+
+      -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#intelephense
+      -- npm install -g intelephense
       intelephense = {},
+
+      -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#cssls
+      -- https://github.com/vuejs/language-tools
+      -- npm install -g typescript typescript-language-server
+
+      -- None hybrid mode where volar also handles typescript
+      -- volar = {
+      --   filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+      --   init_options = {
+      --     vue = {
+      --       hybridMode = false,
+      --     },
+      --   },
+      -- },
+
+      -- None hybrid mode where volar only handles vue and typescript by itself
+      -- tsserver = {
+      --   init_options = {
+      --     plugins = {
+      --       {
+      --         name = "@vue/typescript-plugin",
+      --         location = vue_language_server_path,
+      --         languages = { "vue" },
+      --       },
+      --     },
+      --   },
+      --
+      --   volar = {
+      --     init_options = {
+      --       vue = {
+      --         hybridMode = false,
+      --       },
+      --     },
+      --   },
+      -- },
     },
     format = {
       async = true,
