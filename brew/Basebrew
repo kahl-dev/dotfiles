@@ -21,3 +21,5 @@ brew "golang"
 
 brew "git-extras"   # Additional git commands
 brew "git-delta"    # Better git diff
+
+brew "gh"           # GitHub CLI

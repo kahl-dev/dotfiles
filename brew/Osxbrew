@@ -19,7 +19,6 @@ brew "supabase/tap/supabase"
 brew "postgresql@15"
 brew "clipper"
 brew "terminal-notifier"
-brew "gh"
 
 # Fonts
 cask "font-hack-nerd-font"
