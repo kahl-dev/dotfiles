@@ -17,6 +17,7 @@ return {
           },
         },
         path_display = { "truncate" },
+        file_ignore_patterns = { ".git/", "node_modules/", "tpl/", "ce/" },
       })
 
       local actions = require("telescope.actions")
