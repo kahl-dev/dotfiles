@@ -65,6 +65,8 @@ alias t='tail -f'
 # add wrappte to for man and cat to use tldr and bat
 _exec_exists tldr && alias man="$DOTFILES/bin/man-wrapper-for-tldr.sh"
 _exec_exists bat && alias cat="$DOTFILES/bin/bat-wrapper-for-cat.sh"
+_exec_exists btop && alias top="$DOTFILES/bin/top-wrapper-for-btop.sh"
+_exec_exists btop && alias htop="$DOTFILES/bin/htop-wrapper-for-btop.sh"
 
 # Command line head / tail shortcuts
 alias help='man'
