@@ -22,6 +22,6 @@ nvim/undodir
 bin/*
 !bin/nc_listener
 !bin/man-wrapper-for-tldr.sh
-!bin/cat-wrapper-for-bat.sh
+!bin/bat-wrapper-for-cat.sh
 !bin/dot-cli
 !bin/git-lia-toggl
