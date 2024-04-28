@@ -9,6 +9,13 @@ vim.o.timeoutlen = 100
 vim.keymap.set("i", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
 vim.keymap.set("v", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
 
+-- Retain original register when pasting
+vim.keymap.set("v", "p", '"_dP')
+
+-- Move to next/previous quickfix item
+vim.keymap.set("n", "<leader>h", "<cmd>cnext<CR>zz", { desc = "Forward qfixlist" })
+vim.keymap.set("n", "<leader>;", "<cmd>cprev<CR>zz", { desc = "Backward qfixlist" })
+
 function DeleteLastWord()
   vim.cmd("normal! daw")
 end
