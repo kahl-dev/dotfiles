@@ -155,11 +155,28 @@ function grename() {
 
 unset git_version
 
-# alias gjirab="echo 'Branch Name: ' && git branch --show-current | grep -oE '[A-Z]+-[0-9]+' | head -n 1 | xargs -I {} echo \"$JIRA_WORKSPACE/browse/{}\""
-# alias gjirac="echo 'Commit Message: ' && git log -1 --pretty=%B | grep -oE '([A-Z]+-[0-9]+)' | head -n 1 | xargs -I {} echo \"$JIRA_WORKSPACE/browse/{}\""
+gjirab() {
+    local branch_name=$(git branch --show-current)
+    local ticket_id=$(echo "$branch_name" | grep -oE '[A-Z]+-[0-9]+' | head -n 1)
+    if [[ -n "$ticket_id" ]]; then
+        local jira_url="${JIRA_WORKSPACE}/browse/${ticket_id}"
+        handle_clipboard.sh "$jira_url"
+    else
+        echo "No JIRA ticket found in the branch name."
+    fi
+}
 
-alias gjirab="export JIRA_URL=\$(git branch --show-current | grep -oE '[A-Z]+-[0-9]+' | head -n 1 | xargs -I {} echo \"$JIRA_WORKSPACE/browse/{}\") && echo -ne \"\033]52;c;\$(echo -n \$JIRA_URL | base64)\007\""
-# alias gjirac="export JIRA_URL=\$(git log -1 --pretty=%B | grep -oE '([A-Z]+-[0-9]+)' | head -n 1 | xargs -I {} echo \"$JIRA_WORKSPACE/browse/{}\") && echo -ne \"\033]52;c;\$(echo -n \$JIRA_URL | base64)\007\""
-alias gjirac="git log -10 --pretty='%h %s' | fzf --no-multi | awk '{print \$1}' | xargs -I {} git log -1 --format=%B {} | grep -oE '([A-Z]+-[0-9]+)' | head -n 1 | xargs -I {} echo -n \"$JIRA_WORKSPACE/browse/{}\" | xargs -I {} bash -c 'echo -ne \"\033]52;c;\$(echo -n {} | base64)\007\"'"
-
-
+gjirac() {
+    local commit_hash=$(git log -10 --pretty='%h %s' | fzf --no-multi | awk '{print $1}')
+    if [[ -n "$commit_hash" ]]; then
+        local ticket_id=$(git log -1 --format=%B "$commit_hash" | grep -oE '([A-Z]+-[0-9]+)' | head -n 1)
+        if [[ -n "$ticket_id" ]]; then
+            local jira_url="${JIRA_WORKSPACE}/browse/${ticket_id}"
+            handle_clipboard.sh "$jira_url"
+        else
+            echo "No JIRA ticket found in the commit message."
+        fi
+    else
+        echo "No commit selected."
+    fi
+}
