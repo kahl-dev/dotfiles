@@ -5,43 +5,45 @@
 -- Adjust the timeout length for key sequences
 vim.o.timeoutlen = 100
 
--- exit insert mode with jk
-vim.keymap.set("i", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
-vim.keymap.set("v", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
-
--- Retain original register when pasting
-vim.keymap.set("v", "p", '"_dP')
-
--- Move to next/previous quickfix item
-vim.keymap.set("n", "<leader>h", "<cmd>cnext<CR>zz", { desc = "Forward qfixlist" })
-vim.keymap.set("n", "<leader>;", "<cmd>cprev<CR>zz", { desc = "Backward qfixlist" })
-
--- Delete and paste without regitry overwrite
-vim.keymap.set("n", "<leader>p", [["_dP]], { desc = "Paste without regitry overwrite" })
-vim.keymap.set("v", "<leader>p", [["_dP]], { desc = "Paste without regitry overwrite" })
-vim.keymap.set("n", "<leader>d", [["_d]], { desc = "Delete without regitry overwrite" })
-vim.keymap.set("v", "<leader>d", [["_d]], { desc = "Delete without regitry overwrite" })
+-- shortcut for vim.keymap.set
+local function map(mode, key, action, opts)
+  opts = vim.tbl_extend("force", { noremap = true, silent = false }, opts or {})
+  vim.keymap.set(mode, key, action, opts)
+end
 
 require("which-key").register({
+  r = { name = "+reg" },
   k = {
     name = "kahl's keymaps",
-    t = { "<cmd>lua require('toggl_handler').get_ticket_id()<CR>", "Get Toggl ticket ID" },
     o = {
       name = "Open or OCR52",
-      m = { "<cmd>lua require('marked2_open').open_in_marked2()<CR>", "Open in Marked 2" },
-      c = { "<cmd>lua require('url_utils').open_url()<CR>", "Open URL under cursor" },
-      j = {
-        name = "Open JIRA",
-        b = { "<cmd>lua require('url_utils').open_jira_from_branch()<CR>", "Open JIRA from Git branch" },
-        c = { "<cmd>lua require('url_utils').open_jira_from_commit()<CR>", "Open JIRA from Git commit" },
-      },
-      g = {
-        name = "Open GIT",
-        r = { "<cmd>lua require('url_utils').open_repo()<CR>", "Open Git repo in browser" },
-        b = { "<cmd>lua require('url_utils').open_branch()<CR>", "Open Git branch in browser" },
-        c = { "<cmd>lua require('url_utils').open_commit()<CR>", "Open Git commit in browser" },
-        f = { "<cmd>lua require('url_utils').open_file()<CR>", "Open current file in Git repo in browser" },
-      },
+      j = { name = "Open JIRA" },
+      g = { name = "Open GIT" },
     },
   },
-}, { prefix = "<leader>" })
+}, { prefix = "<leader>", mode = "n" })
+require("which-key").register({ r = { name = "+reg" } }, { prefix = "<leader>", mode = "v" })
+
+-- exit insert mode with jk
+map("i", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
+map("v", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
+
+-- Move to next/previous quickfix item
+map("n", "<leader>ch", "<cmd>cnext<CR>zz", { desc = "Forward qfixlist" })
+map("n", "<leader>c;", "<cmd>cprev<CR>zz", { desc = "Backward qfixlist" })
+
+-- Delete and paste without regitry overwrite
+map("n", "<leader>rp", [["_dP]], { desc = "Paste without regitry overwrite" })
+map("v", "<leader>rp", [["_dP]], { desc = "Paste without regitry overwrite" })
+map("n", "<leader>rd", [["_d]], { desc = "Delete without regitry overwrite" })
+map("v", "<leader>rd", [["_d]], { desc = "Delete without regitry overwrite" })
+
+map("n", "<leader>kt", "<cmd>lua require('toggl_handler').get_ticket_id()<CR>", { desc = "Toggle ID" })
+map("n", "<leader>kom", "<cmd>lua require('marked2_open').open_in_marked2()<CR>", { desc = "Marked 2" })
+map("n", "<leader>koc", "<cmd>lua require('url_utils').open_url()<CR>", { desc = "URL under cursor" })
+map("n", "<leader>kojb", "<cmd>lua require('url_utils').open_jira_from_branch()<CR>", { desc = "Git branch" })
+map("n", "<leader>kojc", "<cmd>lua require('url_utils').open_jira_from_commit()<CR>", { desc = "Git commit" })
+map("n", "<leader>kogr", "<cmd>lua require('url_utils').open_repo()<CR>", { desc = "Git repo" })
+map("n", "<leader>kogb", "<cmd>lua require('url_utils').open_branch()<CR>", { desc = "Git branch" })
+map("n", "<leader>kogc", "<cmd>lua require('url_utils').open_commit()<CR>", { desc = "Git commit" })
+map("n", "<leader>kogf", "<cmd>lua require('url_utils').open_file()<CR>", { desc = "Git file" })
