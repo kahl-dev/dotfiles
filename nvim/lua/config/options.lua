@@ -4,6 +4,8 @@
 
 vim.g.root_spec = { { ".git" }, "cwd" }
 
+vim.lsp.log.set_level(vim.log.levels.ERROR)
+
 if vim.env.SSH_TTY then
   vim.g.clipboard = {
     name = "Tmux clipboard",
