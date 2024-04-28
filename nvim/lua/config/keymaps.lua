@@ -12,6 +12,7 @@ local function map(mode, key, action, opts)
 end
 
 require("which-key").register({
+  z = { name = "+quickfix" },
   r = { name = "+reg" },
   k = {
     name = "kahl's keymaps",
@@ -29,8 +30,8 @@ map("i", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
 map("v", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
 
 -- Move to next/previous quickfix item
-map("n", "<leader>ch", "<cmd>cnext<CR>zz", { desc = "Forward qfixlist" })
-map("n", "<leader>c;", "<cmd>cprev<CR>zz", { desc = "Backward qfixlist" })
+map("n", "<leader>zn", "<cmd>cnext<CR>zz", { desc = "Forward qfixlist" })
+map("n", "<leader>zp", "<cmd>cprev<CR>zz", { desc = "Backward qfixlist" })
 
 -- Delete and paste without regitry overwrite
 map("n", "<leader>rp", [["_dP]], { desc = "Paste without regitry overwrite" })
