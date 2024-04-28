@@ -54,7 +54,7 @@ return {
 
       -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#intelephense
       -- npm install -g intelephense
-      intelephense = {},
+      -- intelephense = {},
 
       -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#cssls
       -- https://github.com/vuejs/language-tools
