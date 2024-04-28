@@ -21,17 +21,6 @@ function DeleteLastWord()
 end
 vim.api.nvim_set_keymap("n", "<M-BS>", "<cmd>lua DeleteLastWord()<CR>", { noremap = true, silent = true })
 
--- Unmap mappings used by tmux plugin
--- TODO(vintharas): There's likely a better way to do this.
-vim.keymap.del("n", "<C-h>")
-vim.keymap.del("n", "<C-j>")
-vim.keymap.del("n", "<C-k>")
-vim.keymap.del("n", "<C-l>")
-vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<cr>")
-vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<cr>")
-vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<cr>")
-vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<cr>")
-
 -- Delete and paste without regitry overwrite
 vim.keymap.set("n", "<leader>p", [["_dP]], { desc = "Paste without regitry overwrite" })
 vim.keymap.set("v", "<leader>p", [["_dP]], { desc = "Paste without regitry overwrite" })
@@ -105,22 +94,3 @@ vim.keymap.set(
   { desc = "Get current toggle key", noremap = true, silent = true }
 )
 
--- Message to force me to use the keymaps instead of the command
-
--- Override the :bd command to show an error message
--- vim.cmd([[
---   command! Bd echomsg "Use SPACE b+d to close the buffer!"
---   cabbr <expr> bd "Bd"
--- ]])
---
--- -- Override the :wq command to show an error message
--- vim.cmd([[
---   command! Wq echomsg "Use SPACE q+q to save and quit!"
---   cabbr <expr> wq "Wq"
--- ]])
---
--- -- Override the :w command to show an error message
--- vim.cmd([[
---   command! W echomsg "Use <C-s> to save the file!"
---   cabbr <expr> w "W"
--- ]])
