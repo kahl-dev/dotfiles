@@ -5,8 +5,7 @@
   "main": "src/index.mjs",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "relink": "pnpm uninstall -g dot-cli && pnpm install -g \"dot-cli@link:$(pwd)\""
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
     "dot-cli": "src/index.mjs"
