@@ -28,69 +28,20 @@ vim.keymap.set("n", "<leader>d", [["_d]], { desc = "Delete without regitry overw
 vim.keymap.set("v", "<leader>d", [["_d]], { desc = "Delete without regitry overwrite" })
 
 require("which-key").register({
-  ["<leader>"] = {
-    C = {
-      name = "Custom",
-      o = {
-        name = "Open URL",
-      },
-    },
+  k = {
+    name = "kahl's keymaps",
+    t = { "<cmd>lua require('toggl_handler').get_ticket_id()<CR>", "Get Toggl ticket ID" },
     o = {
-      name = "Open in browser",
+      name = "Open or OCR52",
+      m = { "<cmd>lua require('marked2_open').open_in_marked2()<CR>", "Open in Marked 2" },
+      c = { "<cmd>lua require('url_handler').open_url()<CR>", "Open URL under cursor" },
       g = {
-        name = "Git",
+        name = "Open Git",
+        r = { "<cmd>lua require('gitlinks').open_repo()<CR>", "Open Git repo in browser" },
+        b = { "<cmd>lua require('gitlinks').open_branch()<CR>", "Open Git branch in browser" },
+        c = { "<cmd>lua require('gitlinks').open_commit()<CR>", "Open Git commit in browser" },
+        f = { "<cmd>lua require('gitlinks').open_file()<CR>", "Open current file in Git repo in browser" },
       },
     },
   },
-})
-
--- Open Git repo in browser
-vim.keymap.set(
-  "n",
-  "<leader>ogr",
-  "<cmd>lua require('gitlinks').open_repo()<CR>",
-  { desc = "Open Git repo in browser" }
-)
-vim.keymap.set(
-  "n",
-  "<leader>ogb",
-  "<cmd>lua require('gitlinks').open_branch()<CR>",
-  { desc = "Open Git branch in browser" }
-)
-vim.keymap.set(
-  "n",
-  "<leader>ogc",
-  "<cmd>lua require('gitlinks').open_commit()<CR>",
-  { desc = "Open Git commit in browser" }
-)
-vim.keymap.set(
-  "n",
-  "<leader>ogf",
-  "<cmd>lua require('gitlinks').open_file()<CR>",
-  { desc = "Open current file in Git repo in browser" }
-)
-
--- Define a Neovim command and map it to open the URL under the cursor
-vim.keymap.set("n", "<leader>oc", "<cmd>lua require('url_handler').open_url()<CR>", {
-  desc = "Open URL under cursor",
-  noremap = true,
-  silent = true,
-})
-
--- Define a Neovim command and map it to open the current file in Marked 2
-vim.cmd("command! OpenInMarked2 lua require('marked2_open').open_in_marked2()")
-vim.keymap.set(
-  "n",
-  "<leader>nm",
-  ":OpenInMarked2<CR>",
-  { desc = "Open file in Marked2", noremap = true, silent = true }
-)
-
-vim.cmd("command! GetTogglTicketId lua require('toggl_handler').get_ticket_id()")
-vim.keymap.set(
-  "n",
-  "<leader>nx",
-  ":GetTogglTicketId<CR>",
-  { desc = "Get current toggle key", noremap = true, silent = true }
-)
-
+}, { prefix = "<leader>" })
