@@ -34,13 +34,13 @@ require("which-key").register({
     o = {
       name = "Open or OCR52",
       m = { "<cmd>lua require('marked2_open').open_in_marked2()<CR>", "Open in Marked 2" },
-      c = { "<cmd>lua require('url_handler').open_url()<CR>", "Open URL under cursor" },
+      c = { "<cmd>lua require('url_utils').open_url()<CR>", "Open URL under cursor" },
       g = {
         name = "Open Git",
-        r = { "<cmd>lua require('gitlinks').open_repo()<CR>", "Open Git repo in browser" },
-        b = { "<cmd>lua require('gitlinks').open_branch()<CR>", "Open Git branch in browser" },
-        c = { "<cmd>lua require('gitlinks').open_commit()<CR>", "Open Git commit in browser" },
-        f = { "<cmd>lua require('gitlinks').open_file()<CR>", "Open current file in Git repo in browser" },
+        r = { "<cmd>lua require('url_utils').open_repo()<CR>", "Open Git repo in browser" },
+        b = { "<cmd>lua require('url_utils').open_branch()<CR>", "Open Git branch in browser" },
+        c = { "<cmd>lua require('url_utils').open_commit()<CR>", "Open Git commit in browser" },
+        f = { "<cmd>lua require('url_utils').open_file()<CR>", "Open current file in Git repo in browser" },
       },
     },
   },
