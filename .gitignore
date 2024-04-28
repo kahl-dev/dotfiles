@@ -23,5 +23,7 @@ bin/*
 !bin/nc_listener
 !bin/man-wrapper-for-tldr.sh
 !bin/bat-wrapper-for-cat.sh
+!bin/top-wrapper-for-btop.sh
+!bin/htop-wrapper-for-btop.sh
 !bin/dot-cli
 !bin/git-lia-toggl
