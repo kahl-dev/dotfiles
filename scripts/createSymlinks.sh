@@ -17,6 +17,7 @@ paths=(
 	"$DOTFILES/config/agignore:$HOME/.agignore"
 	"$DOTFILES/config/rc:$HOME/.ssh/rc"
 	"$DOTFILES/config/lazygit.yml:$HOME/.config/lazygit/config.yml"
+	"$DOTFILES/config/gh-copilot/config.yml:$HOME/.config/gh-copilot/config.yml"
 )
 
 for path in "${paths[@]}"; do

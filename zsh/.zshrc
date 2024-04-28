@@ -15,6 +15,9 @@ DOTFILES="$HOME/.dotfiles"
 source $DOTFILES/scripts/config.sh
 source $DOTFILES/scripts/functions.sh
 
+# Ensure the .config directory exists
+! _is_path_exists "$HOME/.config/dot/" && mkdir -p "$HOME/.config/dot/"
+
 # Add pre config
 for file in $(find $ZDOTDIR/config -type f -name "pre*.zsh" ! -name "_*.zsh" | sort -n); do
   _log_performance "Log sourcing of $file" source "$file";

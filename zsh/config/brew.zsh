@@ -35,11 +35,6 @@ if ! _is_raspberry; then
   RUBY_PATH_FILE="$HOME/.config/dot/.zsh_ruby_path"
 
 
-  # Ensure the .config directory exists
-  if ! _is_path_exists "$HOME/.config/dot/"; then
-    mkdir -p "$HOME/.config/dot/"
-  fi
-
   # Check if Ruby is installed via brew and the path file does not exist
   if [ ! -f "$RUBY_PATH_FILE" ] && type brew &>/dev/null && brew list ruby &>/dev/null; then
     # Store the Ruby path in the file

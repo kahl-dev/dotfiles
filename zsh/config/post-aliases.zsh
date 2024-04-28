@@ -104,38 +104,6 @@ alias psmem='ps auxf | sort -nr -k 4 | head -5'
 # get top process eating cpu ##
 alias pscpu='ps auxf | sort -nr -k 3 | head -5'
 
-if _exec_exists gh; then
-
-  # Directly check the output of `gh auth status` in the conditional
-  if gh auth status 2>&1 | grep -q "You are not logged into any GitHub hosts"; then
-    echo "You are not logged into any GitHub hosts. Initiating login..."
-    gh auth login --web -h github.com
-  fi
-
-  if ! gh copilot > /dev/null 2>&1; then
-    echo "gh copilot is not available, installing..."
-    gh extension install github/gh-copilot --force
-  fi
-
-  eval "$(gh copilot alias -- zsh)"
-
-  # Define functions
-  function gh_copilot_shell_suggest {
-      gh copilot suggest -t shell "$*"
-  }
-  function gh_copilot_gh_suggest {
-      gh copilot suggest -t gh "$*"
-  }
-  function gh_copilot_git_suggest {
-      gh copilot suggest -t git "$*"
-  }
-
-  # Set aliases
-  alias '??'=gh_copilot_shell_suggest
-  alias 'gh?'=gh_copilot_gh_suggest
-  alias 'git?'=gh_copilot_git_suggest
-fi
-
 # Allow SSH tab completion for mosh hostnames
 compdef mosh=ssh
 
