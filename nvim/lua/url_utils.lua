@@ -1,5 +1,8 @@
 local M = {}
 local osc52 = require("osc52")
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
+local builtins = require("telescope.builtin")
 
 -- Determine if Neovim is running locally or remotely
 local function is_remote()
@@ -86,6 +89,49 @@ function M.open_url()
   else
     vim.api.nvim_echo({ { "No URL found under cursor", "WarningMsg" } }, false, {})
   end
+end
+
+-- Helper function to extract a JIRA ticket ID from a string
+local function extract_ticket_id(str)
+  return string.match(str, "[A-Z]+%-[0-9]+")
+end
+
+-- Retrieve the JIRA workspace URL from the environment variable
+local jira_workspace = os.getenv("JIRA_WORKSPACE")
+
+-- Functions to open JIRA links
+function M.open_jira_from_branch()
+  local branch_name = get_git_info("git branch --show-current")
+  local ticket_id = extract_ticket_id(branch_name)
+  if ticket_id then
+    local jira_url = string.format("%s/browse/%s", jira_workspace, ticket_id)
+    handle_action(jira_url)
+  else
+    print("No JIRA ticket found in the branch name.")
+  end
+end
+
+-- Open JIRA ticket from a selected commit using Telescope
+function M.open_jira_from_commit()
+  builtins.git_commits({
+    attach_mappings = function(prompt_bufnr)
+      actions.select_default:replace(function()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        if selection then
+          local commit_msg = get_git_info("git log -1 --format=%B " .. selection.value)
+          local ticket_id = extract_ticket_id(commit_msg)
+          if ticket_id then
+            local jira_url = string.format("%s/browse/%s", jira_workspace, ticket_id)
+            handle_action(jira_url)
+          else
+            print("No JIRA ticket found in the commit message.")
+          end
+        end
+      end)
+      return true
+    end,
+  })
 end
 
 -- Git Link Functions
