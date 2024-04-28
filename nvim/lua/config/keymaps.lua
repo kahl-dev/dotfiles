@@ -16,11 +16,6 @@ vim.keymap.set("v", "p", '"_dP')
 vim.keymap.set("n", "<leader>h", "<cmd>cnext<CR>zz", { desc = "Forward qfixlist" })
 vim.keymap.set("n", "<leader>;", "<cmd>cprev<CR>zz", { desc = "Backward qfixlist" })
 
-function DeleteLastWord()
-  vim.cmd("normal! daw")
-end
-vim.api.nvim_set_keymap("n", "<M-BS>", "<cmd>lua DeleteLastWord()<CR>", { noremap = true, silent = true })
-
 -- Delete and paste without regitry overwrite
 vim.keymap.set("n", "<leader>p", [["_dP]], { desc = "Paste without regitry overwrite" })
 vim.keymap.set("v", "<leader>p", [["_dP]], { desc = "Paste without regitry overwrite" })
