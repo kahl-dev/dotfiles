@@ -17,8 +17,10 @@ if [ -d "$HOME/.fzf" ]; then
 
   export FZF_DEFAULT_COMMAND='rg --files'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-  export FZF_TMUX_OPTS="$FZF_DEFAULT_OPTS"
+  export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}' --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+  export FZF_TMUX_OPTS="$FZF_DEFAULT_OPTS -p80%,60%"
   export FZF_VIM="$HOME/.fzf"
+  export FZF_TMUX=1
  
   # Fix that its not possible to set height in FZF_TMUX_OPTS
   fzf-tmux() {
