@@ -86,7 +86,7 @@ git_recent() {
         }
     }' | \
     # Use fzf for interactive branch selection with a preview of the branch's last commit
-    fzf --header "Checkout Recent Branch" --preview "git show --color=always --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %C(green)(%cr) %C(bold blue)<%an>%Creset' {1}" --pointer="" | \
+    fzf-tmux --header "Checkout Recent Branch" --preview "git show --color=always --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %C(green)(%cr) %C(bold blue)<%an>%Creset' {1}" --pointer="" | \
     # Extract the selected branch name
     awk -F' - ' '{print $1}' | \
     # Checkout the selected branch, creating a new local branch if it's a remote branch
@@ -167,7 +167,7 @@ gjirab() {
 }
 
 gjirac() {
-    local commit_hash=$(git log -10 --pretty='%h %s' | fzf --no-multi | awk '{print $1}')
+    local commit_hash=$(git log -10 --pretty='%h %s' | fzf-tmux --no-multi | awk '{print $1}')
     if [[ -n "$commit_hash" ]]; then
         local ticket_id=$(git log -1 --format=%B "$commit_hash" | grep -oE '([A-Z]+-[0-9]+)' | head -n 1)
         if [[ -n "$ticket_id" ]]; then

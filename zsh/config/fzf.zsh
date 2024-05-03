@@ -10,14 +10,20 @@ if [ -d "$HOME/.fzf" ]; then
   # Add catppuchino theme
   # https://github.com/catppuccin/fzf
   export FZF_DEFAULT_OPTS=" \
-  --border --cycle --reverse --no-height \
-  --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+  --border --cycle --reverse --no-height --padding=1 --margin=1 \
+  --color=bg+:#313244,spinner:#f5e0dc,hl:#f38ba8 \
   --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
   --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 
   export FZF_DEFAULT_COMMAND='rg --files'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_TMUX_OPTS="$FZF_DEFAULT_OPTS"
   export FZF_VIM="$HOME/.fzf"
+ 
+  # Fix that its not possible to set height in FZF_TMUX_OPTS
+  fzf-tmux() {
+    command fzf-tmux -p 80% "$@"
+  }
 
   plugins+=(fzf)
 
