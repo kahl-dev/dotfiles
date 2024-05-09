@@ -23,6 +23,28 @@ require("which-key").register({
     },
   },
 }, { prefix = "<leader>", mode = "n" })
+
+-- Function to determine if Neovim is running locally or remotely
+local function is_remote()
+  return vim.env.SSH_CONNECTION ~= nil
+end
+
+-- Only set these key mappings if Neovim is running locally
+if not is_remote() then
+  require("which-key").register({
+    o = {
+      name = "obsidian",
+    },
+  }, { prefix = "<leader>", mode = "n" })
+
+  -- Key mappings specific to Obsidian features
+  map("n", "<leader>on", "<cmd>ObsidianNew<CR>", { desc = "New note" })
+  map("n", "<leader>os", "<cmd>ObsidianSearch<CR>", { desc = "Search notes" })
+else
+  -- Optionally, handle behavior if it's a remote connection
+  print("Remote environment detected. Skipping Obsidian mappings.")
+end
+
 require("which-key").register({ r = { name = "+reg" } }, { prefix = "<leader>", mode = "v" })
 
 -- exit insert mode with jk
