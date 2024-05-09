@@ -9,8 +9,9 @@ Host *tmux
 Host *
   LogLevel INFO                        # LogLevel on client-side: QUIET, FATAL, ERROR, INFO,
                                        # VERBOSE, DEBUG1, DEBUG2, DEBUG3
-  ServerAliveInterval 120              # Sends a keepalive packet every x seconds
-  ServerAliveCountMax 3                # If the client doesn't respond to x keepalive packets, the connection is closed
+  ServerAliveInterval 15              # Sends a keepalive packet every x seconds
+  ServerAliveCountMax 10                # If the client doesn't respond to x keepalive packets, the connection is closed
+  TCPKeepAlive yes
   Compression yes                      # Compress the connection
   HashKnownHosts yes                   # Store the hash of the host's key in the known_hosts file
   ForwardAgent yes                     # Forward SSH agent
