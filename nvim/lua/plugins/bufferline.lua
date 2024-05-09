@@ -1,0 +1,5 @@
+return {
+  {
+    "Theyashsawarkar/bufferline.nvim",
+  },
+}
