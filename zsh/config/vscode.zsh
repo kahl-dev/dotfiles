@@ -4,6 +4,4 @@
 
 if [ ! -n "$SSH_CLIENT" ] || [ ! -n "$SSH_TTY" ]; then
   VSCODE=code
-
-  plugins+=(vscode)
 fi

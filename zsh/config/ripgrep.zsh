@@ -3,5 +3,4 @@
 
 if _exec_exists rg; then
   export RIPGREP_CONFIG_PATH=$DOTFILES/config/ripgreprc
-  plugins+=(ripgrep)
 fi

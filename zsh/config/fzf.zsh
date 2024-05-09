@@ -27,8 +27,6 @@ if [ -d "$HOME/.fzf" ]; then
     command fzf-tmux -p 80% "$@"
   }
 
-  plugins+=(fzf)
-
   alias falias='alias | fzf'
 
   # This tool is designed to help you use git more efficiently. It's lightweight and easy to use.

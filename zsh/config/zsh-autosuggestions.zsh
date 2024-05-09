@@ -3,7 +3,6 @@
 
 zsh_add_plugin "zsh-users/zsh-autosuggestions"
 
-    plugins+=(zsh-autosuggestions)
 
     ZSH_AUTOSUGGEST_USE_ASYNC=true
 
