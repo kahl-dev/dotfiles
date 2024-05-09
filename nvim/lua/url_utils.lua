@@ -111,6 +111,11 @@ function M.open_jira_from_branch()
   end
 end
 
+-- Process a URL from a string
+function M.process_url(url)
+  handle_action(url)
+end
+
 -- Open JIRA ticket from a selected commit using Telescope
 function M.open_jira_from_commit()
   builtins.git_commits({
