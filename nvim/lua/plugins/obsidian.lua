@@ -7,13 +7,13 @@ local function is_remote()
   return vim.env.SSH_CONNECTION ~= nil
 end
 
--- Conditional configuration for the Obsidian.nvim plugin
 if not is_remote() then
   return {
     {
       "epwalsh/obsidian.nvim",
-      version = "*", -- recommended, use latest release instead of latest commit
+      version = "*",
       lazy = true,
+      ft = "markdown",
       cmd = {
         "ObsidianOpen",
         "ObsidianQuickSwitch",
@@ -36,18 +36,12 @@ if not is_remote() then
         "ObsidianTags",
       },
       dependencies = {
-        "nvim-lua/plenary.nvim", -- Required.
+        "nvim-lua/plenary.nvim",
         "hrsh7th/nvim-cmp",
         "nvim-telescope/telescope.nvim",
         "nvim-treesitter/nvim-treesitter",
       },
       opts = {
-        -- A list of workspace names, paths, and configuration overrides.
-        -- If you use the Obsidian app, the 'path' of a workspace should generally be
-        -- your vault root (where the `.obsidian` folder is located).
-        -- When obsidian.nvim is loaded by your plugin manager, it will automatically set
-        -- the workspace to the first workspace in the list whose `path` is a parent of the
-        -- current markdown file being edited.
         workspaces = {
           {
             name = "personal",
@@ -55,11 +49,7 @@ if not is_remote() then
           },
         },
 
-        -- Optional, if you keep notes in a specific subdirectory of your vault.
         notes_subdir = "notes",
-
-        -- Optional, set the log level for obsidian.nvim. This is an integer corresponding to one of the log
-        -- levels defined by "vim.log.levels.*".
         log_level = vim.log.levels.INFO,
 
         daily_notes = {
@@ -73,37 +63,69 @@ if not is_remote() then
           template = nil,
         },
 
-        -- Optional, completion of wiki links, local markdown links, and tags using nvim-cmp.
         completion = {
-          -- Set to false to disable completion.
           nvim_cmp = true,
-          -- Trigger completion at 2 chars.
           min_chars = 2,
         },
 
-        -- Optional, configure key mappings. These are the defaults. If you don't want to set any keymappings this
-        -- way then set 'mappings = {}'.
         mappings = {
-
-          -- "Obsidian follow"
-          ["<leader>oof"] = {
+          ["gf"] = {
             action = function()
               return require("obsidian").util.gf_passthrough()
             end,
             opts = { noremap = false, expr = true, buffer = true },
           },
+
           -- Toggle check-boxes "obsidian toggle"
-          ["<leader>oot"] = {
+          ["<leader>oc"] = {
             action = function()
               return require("obsidian").util.toggle_checkbox()
             end,
-            opts = { buffer = true },
+            opts = { buffer = true, desc = "Toggle checkbox" },
           },
 
-          ["<leader>oos"] = {
+          ["<leader>of"] = {
             action = function()
-              return require("obsidian").util.search_notes()
+              return require("obsidian").util.gf_passthrough()
             end,
+            opts = { noremap = false, expr = true, buffer = true, desc = "Follow link (gf)" },
+          },
+
+          ["<leader>oq"] = {
+            action = function()
+              return vim.cmd("ObsidianQuickOpen")
+            end,
+            opts = { desc = "Quick Switch" },
+          },
+          ["<leader>ot"] = {
+            action = function()
+              return vim.cmd("ObsidianTemplate")
+            end,
+            opts = { desc = "Insert Template" },
+          },
+          ["<leader>oo"] = {
+            action = function()
+              return vim.cmd("ObsidianOpen")
+            end,
+            opts = { desc = "Open in App" },
+          },
+          ["<leader>ob"] = {
+            action = function()
+              return vim.cmd("ObsidianBacklinks")
+            end,
+            opts = { desc = "Show Backlinks" },
+          },
+          ["<leader>ol"] = {
+            action = function()
+              return vim.cmd("ObsidianLink")
+            end,
+            opts = { desc = "Show Link" },
+          },
+          ["<leader>or"] = {
+            action = function()
+              return vim.cmd("ObsidianRename new-id")
+            end,
+            opts = { desc = "Rename" },
           },
 
           -- Smart action depending on context, either follow link or toggle checkbox.
@@ -222,7 +244,7 @@ if not is_remote() then
         use_advanced_uri = false,
 
         -- Optional, set to true to force ':ObsidianOpen' to bring the app to the foreground.
-        open_app_foreground = false,
+        open_app_foreground = true,
 
         picker = {
           -- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', or 'mini.pick'.
@@ -237,44 +259,9 @@ if not is_remote() then
           },
         },
 
-        -- Optional, sort search results by "path", "modified", "accessed", or "created".
-        -- The recommend value is "modified" and `true` for `sort_reversed`, which means, for example,
-        -- that `:ObsidianQuickSwitch` will show the notes sorted by latest modified time
         sort_by = "modified",
         sort_reversed = true,
-
-        -- Optional, determines how certain commands open notes. The valid options are:
-        -- 1. "current" (the default) - to always open in the current window
-        -- 2. "vsplit" - to open in a vertical split if there's not already a vertical split
-        -- 3. "hsplit" - to open in a horizontal split if there's not already a horizontal split
         open_notes_in = "current",
-
-        -- Optional, define your own callbacks to further customize behavior.
-        callbacks = {
-          -- Runs at the end of `require("obsidian").setup()`.
-          ---@param client obsidian.Client
-          post_setup = function(client) end,
-
-          -- Runs anytime you enter the buffer for a note.
-          ---@param client obsidian.Client
-          ---@param note obsidian.Note
-          enter_note = function(client, note) end,
-
-          -- Runs anytime you leave the buffer for a note.
-          ---@param client obsidian.Client
-          ---@param note obsidian.Note
-          leave_note = function(client, note) end,
-
-          -- Runs right before writing the buffer for a note.
-          ---@param client obsidian.Client
-          ---@param note obsidian.Note
-          pre_write_note = function(client, note) end,
-
-          -- Runs anytime the workspace is set/changed.
-          ---@param client obsidian.Client
-          ---@param workspace obsidian.Workspace
-          post_set_workspace = function(client, workspace) end,
-        },
 
         -- Optional, configure additional syntax highlighting / extmarks.
         -- This requires you have `conceallevel` set to 1 or 2. See `:help conceallevel` for more details.
