@@ -4,6 +4,34 @@
 return {
   {
     "nvim-telescope/telescope.nvim",
+    dependencies = {
+      {
+        "nvim-telescope/telescope-live-grep-args.nvim",
+        -- This will not install any breaking changes.
+        -- For major updates, this must be adjusted manually.
+        -- version = "^1.0.0",
+      },
+    },
+    keys = {
+      {
+        "<leader>,",
+        "<cmd>Telescope buffers sort_mru=true sort_lastused=true ignore_current_buffer=true<cr>",
+        desc = "Switch Buffer",
+      },
+      {
+        "<leader>/",
+        "<cmd>:lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>",
+        desc = "Live Grep Args",
+      },
+      -- { "<leader>sg", LazyVim.telescope("live_grep"), desc = "Grep (Root Dir)" },
+      -- { "<leader>sG", LazyVim.telescope("live_grep", { cwd = false }), desc = "Grep (cwd)" },
+
+      -- {
+      --   "<leader>/",
+      --   "<cmd>:lua require('telescope').extensions.live_grep_args.live_grep_args({ search_dirs: })<CR>",
+      --   desc = "Live Grep Args",
+      -- },
+    },
     opts = function(_, opts)
       opts.defaults = vim.tbl_deep_extend("force", opts.defaults or {}, {
         mappings = {
