@@ -7,19 +7,20 @@
 --type-add=web:*.{html,css,scss,js,ts,json}*
 
 # Disable gitignore
-# --no-ignore
+--no-ignore
 
 # Follow symlinks
---follow
+# --follow
 
 # Allow search hidden files
 --hidden
 
 # Using glob patterns to include/exclude files or folders
---glob=!{.git,.svn}
+--glob=!{.git,.svn,.nuxt,dist,.dist,.output}
 --glob=!*.min.{css,js}
---glob=!**/typo3conf/ext/kamax/Resources/Public/*
+# --glob=!**/typo3conf/ext/kamax/Resources/Public/*
 --glob=!**/*.{sql,png,jpg,jpeg,svg}
+--glob=!**/node_modules/*
 
 # Because who cares about case!?
 --smart-case
