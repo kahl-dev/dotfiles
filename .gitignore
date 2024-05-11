@@ -25,5 +25,6 @@ bin/*
 !bin/bat-wrapper-for-cat.sh
 !bin/top-wrapper-for-btop.sh
 !bin/htop-wrapper-for-btop.sh
+!bin/handle_clipboard.sh
 !bin/dot-cli
 !bin/git-lia-toggl
