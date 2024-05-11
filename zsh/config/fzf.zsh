@@ -19,44 +19,9 @@ if [ -d "$HOME/.fzf" ]; then
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}' --bind 'ctrl-/:change-preview-window(down|hidden|)'"
   export FZF_TMUX_OPTS="$FZF_DEFAULT_OPTS -p80%,60%"
-  export FZF_VIM="$HOME/.fzf"
   export FZF_TMUX=1
- 
-  # Fix that its not possible to set height in FZF_TMUX_OPTS
-  fzf-tmux() {
-    command fzf-tmux -p 80% "$@"
-  }
 
   alias falias='alias | fzf'
-
-  # This tool is designed to help you use git more efficiently. It's lightweight and easy to use.
-  # Doc: https://github.com/wfxr/forgit
-  # export FORGIT_NO_ALIASES=false
-
-
-  zsh_add_plugin "wfxr/forgit"
-  # if [ ! -d "$ZSH_CUSTOM/plugins/forgit" ]; then
-  #   git clone https://github.com/wfxr/forgit.git $ZSH_CUSTOM/plugins/forgit
-  # fi
-
-  export forgit_log=fglog
-  export forgit_diff=fgd
-  export forgit_add=fgaa
-  export forgit_reset_head=fgrh
-  export forgit_ignore=fgi
-  export forgit_checkout_file=fgcf
-  export forgit_checkout_branch=fgcb
-  export forgit_branch_delet=fgbd
-  export forgit_checkout_tag=fgct
-  export forgit_checkout_commit=fgco
-  export forgit_revert_commit=fgrc
-  export forgit_clean=fgclean
-  export forgit_stash_show=fgss
-  export forgit_cherry_pick=fgcp
-  export forgit_rebase=fgrb
-  export forgit_fixup=fgfu
-
-  plugins+=(forgit)
 
   tm() {
     [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
@@ -66,41 +31,9 @@ if [ -d "$HOME/.fzf" ]; then
     session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
   }
 
-
-
-# Fuzzy find urls in last prompt
-# ffu() {
-#   local pane_id="$1"
-#
-#   # Check if inside a tmux session
-#   if [ -z "$TMUX" ]; then
-#     echo "Warning: Not inside a tmux session."
-#     return 1
-#   fi
-#
-#   # Extract URLs
-#   extract_urls() {
-#     grep -oP '(http|https)://\S+'
-#   }
-#
-#   # Capture the entire history of the specified pane's contents or the current pane if none is specified
-#   tmux_output=$(tmux capture-pane -p -S -10000 -t "${pane_id:-}")
-#
-#   # List URLs in fzf and capture the selected URL
-#   selected_url=$(echo "$tmux_output" | extract_urls | fzf)
-#
-#   # If a URL was selected, open it with nc_open
-#   if [ -n "$selected_url" ]; then
-#     nc_open "$selected_url"
-#   fi
-#
-#   # Exit the shell session
-#   exit
-# }
-
-# SSH into a host using fzf to select from your SSH config
-# runs the original ssh command if arguments are provided
-s() {
+  # SSH into a host using fzf to select from your SSH config
+  # runs the original ssh command if arguments are provided
+  s() {
     # If arguments are provided, use the original ssh command
     if [ $# -gt 0 ]; then
         # 'command' bypasses shell aliases and functions, calling the binary directly
@@ -123,7 +56,5 @@ s() {
         # Use 'command' to call the original ssh binary with the selected host
         command ssh "$host"
     fi
-}
-
-
+  }
 fi
