@@ -1,6 +1,0 @@
-{
-  "test1": {
-    "prefix": "cl",
-    "body": ["console.log($1)"]
-  }
-}
