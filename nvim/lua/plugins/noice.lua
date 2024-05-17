@@ -1,5 +1,6 @@
+-- https://github.com/folke/noice.nvim
+
 return {
-  -- https://github.com/folke/noice.nvim
   {
     "folke/noice.nvim",
     opts = {
