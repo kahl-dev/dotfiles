@@ -21,6 +21,8 @@
 # --glob=!**/typo3conf/ext/kamax/Resources/Public/*
 --glob=!**/*.{sql,png,jpg,jpeg,svg}
 --glob=!**/node_modules/*
+--glob=!**/Public/Assets/*
+--glob=!yarn.lock
 
 # Because who cares about case!?
 --smart-case
