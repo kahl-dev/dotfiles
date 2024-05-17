@@ -1,7 +1,6 @@
 # Homebrew Taps
 tap "homebrew/core"
 tap "homebrew/cask-versions"
-tap "homebrew/cask-fonts"
 tap "colindean/fonts-nonfree"
 tap "jesseduffield/lazydocker"
 
@@ -40,7 +39,6 @@ cask "tripmode"
 cask "muzzle"
 cask "google-drive"
 cask "bettertouchtool"
-cask "krisp"
 # cask "affinity-designer"
 cask "cleanmymac"
 cask "radio-silence"
@@ -56,11 +54,8 @@ cask "whatsapp"
 
 # Browsers
 cask "finicky"
-cask "brave-browser"
 cask "firefox"
 cask "google-chrome"
-cask "microsoft-edge"
-cask "orion"
 
 # Development Tools
 cask "visual-studio-code"
