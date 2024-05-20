@@ -1,12 +1,25 @@
-# # Add fzf fuzzy finder to zsh
-# # Doc: https://github.com/junegunn/fzf
+# Add fzf fuzzy finder to zsh
+# https://github.com/junegunn/fzf
 
-if [ ! -d "$HOME/.fzf" ]; then
-  git clone --depth=1 https://github.com/junegunn/fzf.git $HOME/.fzf
-  $HOME/.fzf/install --completion --key-bindings --no-update-rc --no-bash --no-fish
-fi
+# Install and configure fzf plugin
+zinit lucid as=program pick="$ZPFX/bin/{fzf,fzf-tmux}" \
+    atclone="cp shell/completion.zsh _fzf_completion" \
+    make="PREFIX=$ZPFX install" \
+    for junegunn/fzf
+export PATH="$ZINIT_ROOT/plugins/junegunn---fzf/bin:$PATH"
 
-if [ -d "$HOME/.fzf" ]; then
+# command_exists fzf && eval "$(fzf --zsh)"
+
+if command_exists fzf && command_exists fzf-tmux; then
+
+
+  # https://github.com/Aloxaf/fzf-tab
+  zinit light Aloxaf/fzf-tab
+  zstyle ':completion:*' menu no
+  zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+  zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+
   # Add catppuchino theme
   # https://github.com/catppuccin/fzf
   export FZF_DEFAULT_OPTS=" \
@@ -21,13 +34,7 @@ if [ -d "$HOME/.fzf" ]; then
   export FZF_TMUX_OPTS="-p80%,60%"
   export FZF_TMUX=1
 
-  fzf-custom-tmux() {
-    fzf-tmux ${FZF_TMUX_OPTS} "$@"
-  }
-
-  alias falias='alias | fzf'
-
-  tm() {
+  _tm() {
     [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
     if [ $1 ]; then
       tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
@@ -35,30 +42,35 @@ if [ -d "$HOME/.fzf" ]; then
     session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
   }
 
-  # SSH into a host using fzf to select from your SSH config
-  # runs the original ssh command if arguments are provided
-  s() {
-    # If arguments are provided, use the original ssh command
-    if [ $# -gt 0 ]; then
-        # 'command' bypasses shell aliases and functions, calling the binary directly
-        command ssh "$@"
-        return
-    fi
+  if ! is_ssh_client; then
+    # SSH into a host using fzf to select from your SSH config
+    # runs the original ssh command if arguments are provided
+    _s() {
+      # If arguments are provided, use the original ssh command
+      if [ $# -gt 0 ]; then
+          # 'command' bypasses shell aliases and functions, calling the binary directly
+          command ssh "$@"
+          return
+      fi
 
-    local ssh_config_file
-    if [[ -f ~/.dotfiles-local/ssh-config ]]; then
-        ssh_config_file=~/.dotfiles-local/ssh-config
-    else
-        ssh_config_file=~/.ssh/config
-    fi
+      local ssh_config_file
+      if [[ -f ~/.dotfiles-local/ssh-config ]]; then
+          ssh_config_file=~/.dotfiles-local/ssh-config
+      else
+          ssh_config_file=~/.ssh/config
+      fi
 
-    local host
-    # Get a list of aliases, ensuring each alias is on a new line
-    host=$(awk '/^Host / { for (i=2; i<=NF; i++) print $i }' "$ssh_config_file" | fzf --height 40% --reverse)
-    
-    if [[ -n $host ]]; then
-        # Use 'command' to call the original ssh binary with the selected host
-        command ssh "$host"
-    fi
-  }
+      local host
+      # Get a list of aliases, ensuring each alias is on a new line
+      host=$(awk '/^Host / { for (i=2; i<=NF; i++) print $i }' "$ssh_config_file" | fzf --height 40% --reverse)
+      
+      if [[ -n $host ]]; then
+          # Use 'command' to call the original ssh binary with the selected host
+          command ssh "$host"
+      fi
+    }
+  fi
+
+else
+  echo "fzf or fzf-tmux not found"
 fi

@@ -2,7 +2,7 @@
 # https://github.com/sharkdp/bat
 # List of themes: bat --list-themes
 
-if _exec_exists bat; then
+if command_exists bat; then
   export FZF_PREVIEW_OPTS="bat {} || cat {} || tree -C {}"
   export FZF_CTRL_T_OPTS="--min-height 30 --preview-window down:60% --preview-window noborder --preview '($FZF_PREVIEW_OPTS) 2> /dev/null'"
 
@@ -11,7 +11,7 @@ if _exec_exists bat; then
 
   # https://github.com/catppuccin/bat
   BAT_THEME="$(bat --config-dir)/themes"
-  if ! _is_path_exists $BAT_THEME; then
+  if ! path_exists $BAT_THEME; then
     echo "Installing bat catppuccin themes..."
     mkdit -p ~/temp_dir/
     git clone https://github.com/catppuccin/bat.git ~/temp_dir/catppuccino-bat

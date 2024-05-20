@@ -1,4 +1,12 @@
-# bindkey -e will be emacs mode
+# Keybindings
+
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+
+# Emacs keybindings
+# bindkey -e # emacs keybindings
+
+# Vi keybindings
 bindkey -v
 bindkey 'jk' vi-cmd-mode
 export KEYTIMEOUT=0.5
@@ -26,3 +34,4 @@ zle-line-init() {
 zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
+
