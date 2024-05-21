@@ -358,9 +358,3 @@ alias zsh-reload='source $ZDOTDIR/.zshrc'
 alias zsh-reload-all='_zsh-reload-all'
 alias zsh-reset='_zsh-reset'
 alias dot-clean-home='_dot-clean-home'
-
-# add wrappte to for man and cat to use tldr and bat
-command_exists tldr && alias man="$DOTFILES/bin/man-wrapper-for-tldr.sh"
-command_exists bat && alias cat="$DOTFILES/bin/bat-wrapper-for-cat.sh"
-command_exists btop && alias top="$DOTFILES/bin/top-wrapper-for-btop.sh"
-command_exists btop && alias htop="$DOTFILES/bin/htop-wrapper-for-btop.sh"
