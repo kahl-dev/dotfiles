@@ -1,21 +1,10 @@
-if _is_path_exists "$DOTFILES/bin/nvim/bin/"; then
-  export PATH="$DOTFILES/bin/nvim/bin:$PATH"
-fi
+path_exists "$DOTFILES/bin/nvim/bin/" && export PATH="$DOTFILES/bin/nvim/bin:$PATH"
 
-if _exec_exists nvim; then
+if command_exists nvim; then
   export EDITOR="nvim"
   export VISUAL="nvim"
+  export NEOVIM_NODE_HOST=$(fnm exec --using lts-latest  -- which node)
 
-  function v() {
-    if _exec_exists fnm; then
-      command fnm exec --using=lts-latest nvim "$@"
-    else
-      nvim "$@"
-    fi
-  }
-
-  alias nvim='v'
-  alias vim='v'
   alias vimdiff='nvim -d'
 fi
 
