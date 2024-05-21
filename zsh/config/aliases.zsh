@@ -70,34 +70,22 @@ alias mb='_mb'
 alias md='_md'
 
 # ############################## #
-# Browser-Sync
+# Applications
 # ############################## #
 
+# browser-sync
 command_exists browser-sync && alias bs='browser-sync'
 
-# ############################## #
-# Tmux
-# ############################## #
-#
+# tmux
 alias tmux-clear-resurrect='rm -rf ~/.tmux/resurrect/* && echo "Cleared all tmux-resurrect entries!"'
 
-
-# ############################## #
-# Lazygit
-# ############################## #
-
+# lazygit
 command_exists lazygit && alias lg='lazygit'
 
-# ############################## #
 # Neofetch
-# ############################## #
-
 command_exists neofetch && alias info='neofetch'
 
-# ############################## #
 # Neovim
-# ############################## #
-
 if command_exists nvim; then
   alias v='nvim'
   alias vim='nvim'
