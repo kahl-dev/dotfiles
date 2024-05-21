@@ -45,3 +45,5 @@ export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 export PATH=$HOME/.local/share/go/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 
+# Add syntax highlighting to man pages
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
