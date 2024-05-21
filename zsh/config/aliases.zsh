@@ -92,6 +92,18 @@ if command_exists nvim; then
   alias vimdiff='nvim -d'
 fi
 
+# Bat
+if command_exists bat; then
+  alias bat='bat'
+  alias taillog='tail -f "$@" | bat --paging=never -l log'
+fi
+
+# Btop
+if command_exists btop; then
+  alias top='btop'
+  alias htop='btop'
+fi
+
 # ############################## #
 # Git
 # ############################## #
