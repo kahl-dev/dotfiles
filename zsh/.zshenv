@@ -38,18 +38,13 @@ export MANPAGER='nvim +Man!'
 # Set a high width for man page formatting to avoid line wrapping
 export MANWIDTH=999
 
-# Set Go workspace location
-export GOPATH=$HOME/.local/share/go
-
 # Allow Git to discover repositories across filesystem boundaries
 export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 
-# Ensure Go binaries and user-installed binaries are in the PATH
-export PATH=$HOME/.local/share/go/bin:$PATH
-export PATH=$HOME/.local/bin:$PATH
-
 # Add syntax highlighting to man pages
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+if command_exists bat; then
+  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
 
 if is_macos; then
   export HOMEBREW_CASK_OPTS="--no-quarantine"
