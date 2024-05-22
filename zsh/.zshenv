@@ -4,11 +4,8 @@
 # It is sourced first, before ~/.zprofile, ~/.zshrc, and ~/.zlogin.
 # -----------------------------------------------------------------------------
 
-
 # Set DOTFILES to organize configuration files
 export DOTFILES="$HOME/.dotfiles"
-
-source $DOTFILES/zsh/utils.zsh
 
 # Set ZDOTDIR to point to the .dotfiles zsh directory
 export ZDOTDIR="$DOTFILES/zsh"
@@ -50,8 +47,3 @@ export PATH=$HOME/.local/bin:$PATH
 
 # Add syntax highlighting to man pages
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-
-if is_macos; then
-  export HOMEBREW_CASK_OPTS="--no-quarantine"
-  export HOMEBREW_BUNDLE_FILE_GLOBAL="$DOTFILES/brew/osx/.Brewfile"
-fi
