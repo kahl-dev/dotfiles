@@ -104,6 +104,12 @@ if command_exists btop; then
   alias htop='btop'
 fi
 
+# Brew
+if command_exists brew; then
+  alias brewup='brew update; brew upgrade; brew cleanup'
+  alias brewdump='brew bundle dump --force --describe --file=$HOMEBREW_BUNDLE_FILE_GLOBAL'
+fi
+
 # ############################## #
 # Git
 # ############################## #
