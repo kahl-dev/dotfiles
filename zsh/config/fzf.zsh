@@ -36,10 +36,18 @@ if command_exists fzf && command_exists fzf-tmux; then
 
   _tm() {
     [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
-    if [ $1 ]; then
-      tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
+    
+    session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf -e --print-query --preview "tmux list-windows -t {}") 
+
+    echo $session
+
+    if [ -n "$session" ]; then
+      selected_session=$(echo "$session" | tail -n 1)
+
+      tmux $change -t "$selected_session" 2>/dev/null || (tmux new-session -d -s "$selected_session" && tmux $change -t "$selected_session")
+    else
+      echo "No sessions found."
     fi
-    session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
   }
 
   if ! is_ssh_client; then

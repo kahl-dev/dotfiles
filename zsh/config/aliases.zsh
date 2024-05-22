@@ -24,7 +24,6 @@ alias pscpu='ps aux | sort -nrk 3 | head -5'
 
 if command_exists fzf; then
   alias fa='alias | fzf-tmux'
-  alias tm='_tm'
   alias s='_s'
 fi
 
@@ -78,6 +77,10 @@ command_exists browser-sync && alias bs='browser-sync'
 
 # tmux
 alias tmux-clear-resurrect='rm -rf ~/.tmux/resurrect/* && echo "Cleared all tmux-resurrect entries!"'
+
+if command_exists fzf; then
+  alias tm='_tm'
+fi
 
 # lazygit
 command_exists lazygit && alias lg='lazygit'
