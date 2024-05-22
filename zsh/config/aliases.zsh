@@ -113,6 +113,12 @@ if command_exists brew; then
   alias brewdump='brew bundle dump --force --describe --file=$HOMEBREW_BUNDLE_FILE_GLOBAL'
 fi
 
+# Eza
+if command_exists eza; then
+  alias ll="eza -lAhF --git"
+  alias ls="eza -AhF"
+fi
+
 # ############################## #
 # Git
 # ############################## #
