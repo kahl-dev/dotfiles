@@ -1,0 +1,19 @@
+- defaults:
+    link:
+      relink: true
+
+- clean: ['~']
+
+- link:
+    ~/.zshenv: ./zsh/.zshenv
+    ~/.tmux: ./tmux
+    ~/.tmux.conf: ./tmux/tmux.conf
+    ~/.gitignore_global: ./git/gitignore_global
+    ~/.gitconfig: ./git/gitconfig
+    ~/.gittemplate: ./git/template
+    ~/.prettierrc.js: ./config/prettierrc.js
+    ~/.tern-config: ./config/tern-config.json
+    ~/.agignore: ./config/agignore
+    ~/.ssh/rc: ./config/rc
+    ~/.config/lazygit/config.yml: ./config/lazygit.yml
+    ~/.config/gh-copilot/config.yml: ./config/gh-copilot/config.yml
