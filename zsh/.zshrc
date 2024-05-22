@@ -8,7 +8,6 @@
 # https://github.com/dreamsofautonomy/zensh/blob/main/.zshrc
 
 source $ZDOTDIR/utils.zsh
-source "$ZDOTDIR/config/env.zsh"
 source "$ZDOTDIR/config/zinit.zsh"
 source "$ZDOTDIR/config/history.zsh"
 source "$ZDOTDIR/config/node.zsh"
