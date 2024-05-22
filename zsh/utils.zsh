@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+
 # Check if a command exists
 command_exists() {
 	command -v "$1" >/dev/null 2>&1
@@ -58,4 +60,26 @@ open_command() {
   fi
 
   ${=open_cmd} "$@" &>/dev/null
+}
+
+# Prompt for user input (yes/no)
+# Usage: prompt_user "Your question here" yes_action no_action
+prompt_user() {
+  local question=$1
+  local yes_action=$2
+  local no_action=$3
+
+  echo "$question"
+  select yn in "Yes" "No"; do
+    case $yn in
+      Yes)
+        eval "$yes_action"
+        break
+        ;;
+      No)
+        eval "$no_action"
+        break
+        ;;
+    esac
+  done
 }

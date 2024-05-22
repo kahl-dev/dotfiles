@@ -17,3 +17,11 @@
     ~/.ssh/rc: ./config/rc
     ~/.config/lazygit/config.yml: ./config/lazygit.yml
     ~/.config/gh-copilot/config.yml: ./config/gh-copilot/config.yml
+
+
+- shell:
+    # - [git submodule update --init --recursive, Installing submodules]
+    - command: ./install_scripts/setup_homebrew.zsh
+      stdout: true
+      stdin: true
+      stderr: true
