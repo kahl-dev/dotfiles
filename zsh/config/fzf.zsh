@@ -2,16 +2,16 @@
 # https://github.com/junegunn/fzf
 
 # Install and configure fzf plugin
-zinit lucid as=program pick="$ZPFX/bin/{fzf,fzf-tmux}" \
-    atclone="cp shell/completion.zsh _fzf_completion" \
-    make="PREFIX=$ZPFX install" \
-    for junegunn/fzf
-export PATH="$ZINIT_ROOT/plugins/junegunn---fzf/bin:$PATH"
+# zinit lucid as=program pick="$ZPFX/bin/{fzf,fzf-tmux}" \
+#     atclone="cp shell/completion.zsh _fzf_completion" \
+#     make="PREFIX=$ZPFX install" \
+#     for junegunn/fzf
+# export PATH="$ZINIT_ROOT/plugins/junegunn---fzf/bin:$PATH"
 
-# command_exists fzf && eval "$(fzf --zsh)"
 
 if command_exists fzf && command_exists fzf-tmux; then
 
+  eval "$(fzf --zsh)"
 
   # https://github.com/Aloxaf/fzf-tab
   zinit light Aloxaf/fzf-tab
