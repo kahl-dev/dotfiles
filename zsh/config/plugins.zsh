@@ -13,8 +13,6 @@ zinit light zsh-users/zsh-completions
 # https://github.com/zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-autosuggestions
 ZSH_AUTOSUGGEST_USE_ASYNC=true
-bindkey '^z' autosuggest-toggle # toggle suggestions
-bindkey '^f' autosuggest-accept # accept suggestions
 
 # zsh-autopair
 # Auto-pairing for zsh

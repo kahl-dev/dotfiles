@@ -1,7 +1,5 @@
 # Keybindings
 
-bindkey '^p' history-search-backward
-bindkey '^n' history-search-forward
 
 # Emacs keybindings
 # bindkey -e # emacs keybindings
@@ -35,3 +33,12 @@ zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
+# History search
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+
+# zsh-autosuggestions
+# Fish-like autosuggestions for zsh.
+# https://github.com/zsh-users/zsh-autosuggestions
+bindkey '^z' autosuggest-toggle # toggle suggestions
+bindkey '^f' autosuggest-accept # accept suggestions
