@@ -14,29 +14,59 @@ source "$ZDOTDIR/config/node.zsh"
 
 # Plugins and application files
 source "$ZDOTDIR/config/neovim.zsh"
-source "$ZDOTDIR/config/bat.zsh"
 source "$ZDOTDIR/config/fzf.zsh"
 source "$ZDOTDIR/config/plugins.zsh"
 
-# Load completions
-autoload -U compinit && compinit
-zinit cdreplay -q
+# Enable useful options (see 'man zshoptions' for more details)
+setopt autocd                # Automatically change to a directory if a command matches a directory name
+setopt extendedglob          # Enable extended globbing syntax for advanced pattern matching
+setopt nomatch               # Prevent errors when no matches are found for a glob pattern
+setopt menucomplete          # Use arrow keys to cycle through completion options instead of showing a list
+setopt interactive_comments  # Allow comments in interactive shells (lines starting with # are ignored)
 
-compdef mosh=ssh
+# Optionally, disable highlighting of pasted text to avoid visual distractions
+zle_highlight=('paste:none')
 
-# Completion styling
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+# Optionally, disable the terminal bell sound (beeping)
+unsetopt BEEP
 
-# Make zsh know about hosts already accessed by SSH
-zstyle -e ':completion:*:(ssh|scp|sftp|rsh|rsync):hosts' hosts 'reply=(${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) /dev/null)"}%%[# ]*}//,/ })'
+# Initialize and configure completions
+autoload -Uz compinit       # Load the compinit function to initialize the completion system
+compinit                    # Initialize the completion system
+autoload -U +X bashcompinit && bashcompinit # Load bashcompinit for using Bash completion scripts in Zsh
+zstyle ':completion:*' menu select          # Present a menu for selection when multiple completions are available
+zmodload zsh/complist       # Load the complist module for advanced completion list features
+_comp_options+=(globdots)   # Include hidden files (those starting with a dot) in glob patterns
 
+# Enhance history navigation
+autoload -U up-line-or-beginning-search     # Load the up-line-or-beginning-search function
+autoload -U down-line-or-beginning-search   # Load the down-line-or-beginning-search function
+zle -N up-line-or-beginning-search          # Define up-line-or-beginning-search as a ZLE widget
+zle -N down-line-or-beginning-search        # Define down-line-or-beginning-search as a ZLE widget
+
+# Enable and set up color definitions
+autoload -Uz colors && colors               # Load and execute the colors function to set up color definitions
+
+# Additional completion configurations
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}' # Case-insensitive completion
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}" # Use LS_COLORS for completion list coloring
+
+# Make Zsh aware of hosts already accessed by SSH
+zstyle -e ':completion:*:(ssh|scp|sftp|rsh|rsync):hosts' hosts \
+  'reply=(${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) /dev/null)"}%%[# ]*}//,/ })'
+
+# Load Git extras completion if available
 if command_exists brew; then
   GIT_EXTRAS_COMPLETION_PATH="$(brew --prefix)/opt/git-extras/share/git-extras/git-extras-completion.zsh"
-  if file_exists "$GIT_EXTRAS_COMPLETION_PATH" && source "$GIT_EXTRAS_COMPLETION_PATH"
+  if file_exists "$GIT_EXTRAS_COMPLETION_PATH"; then
+    source "$GIT_EXTRAS_COMPLETION_PATH"
+  fi
 fi
 
-zmodload zsh/complist
+# Additional settings
+zinit cdreplay -q                    # Load zinit cdreplay quietly
+compdef mosh=ssh                     # Use ssh completion for mosh
+zmodload zsh/complist                # Load the complist module for advanced completion list features
 
 # Files needs to be loaded after completion or compinit
 source "$ZDOTDIR/config/git-lia.zsh"
