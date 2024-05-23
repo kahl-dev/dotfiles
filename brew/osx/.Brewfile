@@ -1,4 +1,5 @@
 tap "colindean/fonts-nonfree"
+tap "felixkratz/formulae"
 tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
@@ -128,6 +129,8 @@ brew "tree"
 brew "wget"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
+# Custom macOS statusbar with shell plugin, interaction and graph support
+brew "felixkratz/formulae/sketchybar"
 # A simple terminal UI for docker, written in Go
 brew "jesseduffield/lazydocker/lazydocker"
 # Simple hotkey-daemon for macOS.
@@ -190,6 +193,8 @@ cask "google-drive"
 cask "istat-menus"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
+# Keyboard customiser
+cask "karabiner-elements"
 # Blocks all Keyboard and TouchBar input
 cask "keyboardcleantool"
 # Open-source keystroke visualiser
@@ -228,6 +233,8 @@ cask "readdle-spark"
 cask "shottr"
 # Team communication and collaboration software
 cask "slack"
+# App launcher/switcher
+cask "spacelauncher"
 # Manage the data on children's Ravensburger tip toi audio pen
 cask "tiptoi-manager"
 # File transfer application
