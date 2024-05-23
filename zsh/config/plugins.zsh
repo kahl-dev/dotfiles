@@ -43,10 +43,10 @@ export ZSH_PLUGINS_ALIAS_TIPS_FORCE=0
 # the fuck
 # correct mistyped command
 # https://github.com/nvbn/thefuck
-# if command_exists thefuck; then
-#   unsetopt correct_all
-#   eval $(thefuck --alias fuck)
-# fi
+if command_exists thefuck; then
+  unsetopt correct_all
+  eval $(thefuck --alias fuck)
+fi
 
 # ripgrep
 # fast search as replacement for grep
