@@ -1,6 +1,5 @@
 # Keybindings
 
-
 # Emacs keybindings
 # bindkey -e # emacs keybindings
 
@@ -34,11 +33,18 @@ echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
 # History search
-bindkey '^p' history-search-backward
-bindkey '^n' history-search-forward
+bindkey '^K' history-search-backward
+bindkey '^J' history-search-forward
 
 # zsh-autosuggestions
 # Fish-like autosuggestions for zsh.
 # https://github.com/zsh-users/zsh-autosuggestions
-bindkey '^z' autosuggest-toggle # toggle suggestions
-bindkey '^f' autosuggest-accept # accept suggestions
+bindkey '^Z' autosuggest-toggle # toggle suggestions
+bindkey '^F' autosuggest-accept # accept suggestions
+
+# Edit line in vim with ctrl-e:
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^E' edit-command-line
+
+bindkey -s '^U' 'tm^M'
+bindkey -s '^N' 'nvim $(fzf)^M'
