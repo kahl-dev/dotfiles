@@ -10,6 +10,8 @@ export DOTFILES="$HOME/.dotfiles"
 
 source $DOTFILES/zsh/utils.zsh
 
+export PATH="$DOTFILES/bin:$PATH"
+
 # Set ZDOTDIR to point to the .dotfiles zsh directory
 export ZDOTDIR="$DOTFILES/zsh"
 
