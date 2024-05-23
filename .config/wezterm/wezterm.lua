@@ -112,7 +112,7 @@ config.enable_tab_bar = true
 config.window_padding = {
 	left = "0.5cell",
 	right = "0.5cell",
-	top = "1.5cell",
+	top = "0.5cell",
 	bottom = "0cell",
 }
 
