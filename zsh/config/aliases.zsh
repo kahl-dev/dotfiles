@@ -120,6 +120,32 @@ if command_exists eza; then
 fi
 
 # ############################## #
+# Node/NPM/Yarn
+# ############################## #
+
+# install default packages from $DOTFILES/config/default-packages 
+_npm_install_global_default() {
+  echo "${NODE_DEFAULT_PACKAGES[@]}" | xargs npm install -g
+}
+
+# npm list without dependencies
+alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
+alias npmLsg="npm ls -g --depth=0 "$@" 2>/dev/null"
+alias npmid=_npm_install_global_default
+
+alias ya="yarn add"
+alias y="yarn"
+alias yb="yarn build"
+alias yd="yarn dev"
+alias yi="yarn"
+alias yin="yarn install"
+
+if command_exists fnm; then
+  alias fnm_uninstall_all=_fnm_uninstall_all
+  alias fnm_install_latest=_fnm_install_latest
+fi
+
+# ############################## #
 # Git
 # ############################## #
 

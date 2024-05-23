@@ -55,3 +55,17 @@ if is_macos; then
   export HOMEBREW_CASK_OPTS="--no-quarantine"
   export HOMEBREW_BUNDLE_FILE_GLOBAL="$DOTFILES/brew/osx/.Brewfile"
 fi
+
+# Prevent intelephense from crashing
+export NODE_OPTIONS=--max_old_space_size=8192
+
+export NODE_DEFAULT_PACKAGES=(
+  yarn
+  prettier
+  tldr
+  diff-so-fancy
+  serve
+  browser-sync
+  neovim
+  @antfu/ni
+)

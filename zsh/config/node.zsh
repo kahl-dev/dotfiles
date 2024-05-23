@@ -1,27 +1,9 @@
 # npm aliases and options
 
-# Prevent intelephense from crashing
-export NODE_OPTIONS=--max_old_space_size=8192
-
-# install default packages from $DOTFILES/config/default-packages 
-_npm_install_global_default() {
-  cat $DOTFILES/config/default-packages | xargs npm install -g
-}
-
-# npm list without dependencies
-alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
-alias npmLsg="npm ls -g --depth=0 "$@" 2>/dev/null"
-alias npmid=_npm_install_global_default
-
-alias ya="yarn add"
-alias y="yarn"
-alias yb="yarn build"
-alias yd="yarn dev"
-alias yi="yarn"
-alias yin="yarn install"
 
 # Fast and simple Node.js version manager, built in Rust
 # https://github.com/Schniz/fnm
+
 
 if command_exists fnm; then
   eval "$(fnm env --use-on-cd --version-file-strategy=recursive)"
@@ -48,9 +30,6 @@ if command_exists fnm; then
   if [ ! -L "$FNM_DIR/aliases/lts-latest" ]; then
     _fnm_install_latest
   fi
-
-  alias fnm_uninstall_all=_fnm_uninstall_all
-  alias fnm_install_latest=_fnm_install_latest
 fi
 
 # PNPM
