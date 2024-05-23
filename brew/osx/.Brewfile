@@ -51,6 +51,8 @@ brew "freetds"
 brew "fzf"
 # GitHub command-line tool
 brew "gh"
+# Distributed revision control system
+brew "git"
 # Syntax-highlighting pager for git and diff output
 brew "git-delta"
 # Small git utilities
@@ -191,6 +193,8 @@ cask "gemini"
 cask "google-chrome"
 # Client for the Google Drive storage service
 cask "google-drive"
+# Desktop automation application
+cask "hammerspoon"
 # System monitoring app
 cask "istat-menus"
 # Terminal emulator as alternative to Apple's Terminal app
