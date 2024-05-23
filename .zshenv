@@ -43,6 +43,11 @@ export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 
 # Add syntax highlighting to man pages
 if command_exists bat; then
+  if command_exists fzf; then
+    export FZF_PREVIEW_OPTS="bat {} || cat {} || tree -C {}"
+    export FZF_CTRL_T_OPTS="--min-height 30 --preview-window down:60% --preview-window noborder --preview '($FZF_PREVIEW_OPTS) 2> /dev/null'"
+  fi
+
   export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 fi
 

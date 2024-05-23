@@ -97,7 +97,7 @@ fi
 
 # Bat
 if command_exists bat; then
-  alias bat='bat'
+  alias cat='bat'
   alias taillog='tail -f "$@" | bat --paging=never -l log'
 fi
 

@@ -42,3 +42,7 @@
 #       stdout: true
 #       stdin: true
 #       stderr: true
+#     - command: ./scripts/install_bat_themes.zsh
+#       stdout: true
+#       stdin: true
+#       stderr: true
