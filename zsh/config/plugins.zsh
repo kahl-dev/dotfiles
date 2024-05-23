@@ -53,10 +53,6 @@ fi
 # Doc: https://github.com/BurntSushi/ripgrep/
 
 # zinit for from'gh-r' sbin'**/rg -> rg' BurntSushi/ripgrep
-export RIPGREP_CONFIG_PATH=$DOTFILES/config/ripgreprc
-
-
-
 
 # Add in snippets
 # TODO; make notes for all usefull osx commands
