@@ -5,25 +5,40 @@
 - clean: ['~']
 
 - link:
-    ~/.zshenv: ./zsh/.zshenv
     ~/.tmux: ./tmux
     ~/.tmux.conf: ./tmux/tmux.conf
     ~/.gitignore_global: ./git/gitignore_global
     ~/.gitconfig: ./git/gitconfig
     ~/.gittemplate: ./git/template
-    ~/.prettierrc.js: ./config/prettierrc.js
-    ~/.tern-config: ./config/tern-config.json
-    ~/.agignore: ./config/agignore
-    ~/.ssh/rc: ./config/rc
-    ~/.config/lazygit/config.yml: ./config/lazygit.yml
-    ~/.config/gh-copilot/config.yml: ./config/gh-copilot/config.yml
-    ~/.yabairc: ./config/.yabairc
-    ~/.skhdrc: ./config/.skhdrc
+    ~/.icloud: ~/Library/Mobile Documents/com~apple~CloudDocs/
 
+    ~/.ssh/rc: ./.ssh/rc
+    ~/.ssh/config: ./.ssh/config
+    ~/.tern-config: ./.tern-config
+    ~/.prettierrc.js: ./.prettierrc.js
+    ~/.zshenv: ./.zshenv
+    ~/.agignore: ./.agignore
+    ~/.finicky.js: ./.finicky.js
+    ~/.yabairc: ./.yabairc
+    ~/.skhdrc: ./.skhdrc
+    ~/.ripgreprc: ./.ripgreprc
+    ~/.npmrc: ./.npmrc
 
-- shell:
-    # - [git submodule update --init --recursive, Installing submodules]
-    - command: ./install_scripts/setup_homebrew.zsh
-      stdout: true
-      stdin: true
-      stderr: true
+    ~/.config/wezterm: ./.config/wezterm/
+    ~/.config/bat: ./.config/bat/
+    ~/.config/glow: ./.config/glow/
+    ~/.config/karabiner: ./.config/karabiner/
+    ~/.config/lazygit: ./.config/lazygit/
+    ~/.config/gh-copilot: ./.config/gh-copilot/
+    ~/.config/.nuxtrc: ./.config/.nuxtrc
+    ~/.config/nvim: ./.config/nvim/
+    ~/.config/starship.toml: ./.config/starship.toml
+
+    ~/Library/LaunchAgents/com.kahl_dev.add_ssh.plist: ./Library/LaunchAgents/com.kahl_dev.add_ssh.plist
+#
+# - shell:
+#     - [git submodule update --init --recursive, Installing submodules]
+#     - command: ./scripts/setup_homebrew.zsh
+#       stdout: true
+#       stdin: true
+#       stderr: true
