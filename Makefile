@@ -60,12 +60,6 @@ installNvimFromSource: ## INSTALLATION: Install neovim from source
 updateShell: ## MAINTENANCE: Update shell
 	source ~/.zshrc
 
-bugfixCopilot: ## MAINTENANCE: Bugfix copilot
-	@$(SCRIPTS_DIR)/bugfixCopilot.sh
-
-resetBugfixCopilot: ## MAINTENANCE: Reset copilot bugfix
-	@$(SCRIPTS_DIR)/resetBugfixCopilot.sh
-
 # Cleanup commands
 
 nvimResetPackages: ## CLEANUP: Reset lazy.nvim packages
