@@ -73,6 +73,8 @@ brew "lazygit"
 brew "libzip"
 # LSP for LanguageTool with support for Latex, Markdown and Others
 brew "ltex-ls"
+# Keep your Mac's application settings in sync
+brew "mackup"
 # Mac App Store command-line interface
 brew "mas"
 # Unified display of technical and tag data for audio/video

@@ -1,6 +1,8 @@
 - defaults:
     link:
       relink: true
+      force: true
+      relative: false
 
 - clean: ['~']
 
@@ -27,6 +29,7 @@
     ~/.skhdrc: ./.skhdrc
     ~/.ripgreprc: ./.ripgreprc
     # ~/.npmrc: ./.npmrc
+    ~/.mackup.cfg: ./.mackup.cfg
 
     ~/.config/wezterm: ./.config/wezterm/
     ~/.config/bat: ./.config/bat/
