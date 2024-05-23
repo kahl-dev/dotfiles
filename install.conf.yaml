@@ -10,6 +10,7 @@
 - link:
     ~/.tmux: ./tmux
     ~/.tmux.conf: ./tmux/tmux.conf
+
     ~/.gitignore_global: ./git/gitignore_global
     ~/.gitconfig: ./git/gitconfig
     ~/.gittemplate: ./git/template
@@ -25,7 +26,7 @@
     ~/.yabairc: ./.yabairc
     ~/.skhdrc: ./.skhdrc
     ~/.ripgreprc: ./.ripgreprc
-    ~/.npmrc: ./.npmrc
+    # ~/.npmrc: ./.npmrc
 
     ~/.config/wezterm: ./.config/wezterm/
     ~/.config/bat: ./.config/bat/
@@ -39,14 +40,14 @@
     ~/.config/sketchybar: ./.config/sketchybar/
 
     ~/Library/LaunchAgents/com.kahl_dev.add_ssh.plist: ./Library/LaunchAgents/com.kahl_dev.add_ssh.plist
-#
-# - shell:
-#     - [git submodule update --init --recursive, Installing submodules]
-#     - command: ./scripts/setup_homebrew.zsh
-#       stdout: true
-#       stdin: true
-#       stderr: true
-#     - command: ./scripts/install_bat_themes.zsh
-#       stdout: true
-#       stdin: true
-#       stderr: true
+
+- shell:
+    - [git submodule update --init --recursive, Installing submodules]
+    - command: ./scripts/setup_homebrew.zsh
+      stdout: true
+      stdin: true
+      stderr: true
+    - command: ./scripts/install_bat_themes.zsh
+      stdout: true
+      stdin: true
+      stderr: true
