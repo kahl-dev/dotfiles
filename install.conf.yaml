@@ -4,6 +4,9 @@
 
 - clean: ['~']
 
+- create:
+    - ~/.config
+
 - link:
     ~/.tmux: ./tmux
     ~/.tmux.conf: ./tmux/tmux.conf
