@@ -71,6 +71,8 @@ brew "jq"
 brew "krb5"
 # Simple terminal UI for git commands
 brew "lazygit"
+# Pager program similar to more
+brew "less"
 # C library for reading, creating, and modifying zip archives
 brew "libzip"
 # LSP for LanguageTool with support for Latex, Markdown and Others
