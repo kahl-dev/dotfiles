@@ -33,6 +33,7 @@
     ~/.config/.nuxtrc: ./.config/.nuxtrc
     ~/.config/nvim: ./.config/nvim/
     ~/.config/starship.toml: ./.config/starship.toml
+    ~/.config/sketchybar: ./.config/sketchybar/
 
     ~/Library/LaunchAgents/com.kahl_dev.add_ssh.plist: ./Library/LaunchAgents/com.kahl_dev.add_ssh.plist
 #
