@@ -7,81 +7,61 @@
 # see this wiki page for information:
 #  - https://github.com/koekeishiya/yabai/wiki/Installing-yabai-(latest-release)#configure-scripting-addition
 #
-# yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
-# sudo yabai --load-sa
-#
-
-# global settings
-# yabai -m config                                 \
-#     external_bar                 off:40:0       \
-#     menubar_opacity              1.0            \
-#     mouse_follows_focus          off            \
-#     focus_follows_mouse          off            \
-#     display_arrangement_order    default        \
-#     window_origin_display        default        \
-#     window_placement             second_child   \
-#     window_zoom_persist          on             \
-#     window_shadow                on             \
-#     window_animation_duration    0.0            \
-#     window_animation_easing      ease_out_circ  \
-#     window_opacity_duration      0.0            \
-#     active_window_opacity        1.0            \
-#     normal_window_opacity        0.90           \
-#     window_opacity               off            \
-#     insert_feedback_color        0xffd75f5f     \
-#     split_ratio                  0.50           \
-#     split_type                   auto           \
-#     auto_balance                 off            \
-#     top_padding                  12             \
-#     bottom_padding               12             \
-#     left_padding                 12             \
-#     right_padding                12             \
-#     window_gap                   06             \
-#     layout                       bsp            \
-#     mouse_modifier               fn             \
-#     mouse_action1                move           \
-#     mouse_action2                resize         \
-#     mouse_drop_action            swap
-#
-# echo "yabai configuration loaded.."
 
 #!/usr/bin/env sh
 
-sudo yabai --load-sa
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+sudo yabai --load-sa
 
 # global settings
-yabai -m config mouse_follows_focus off
-yabai -m config focus_follows_mouse off
+# yabai -m config                                 \
+#     display_arrangement_order    default        \
+#     window_zoom_persist          on             \
+#     window_animation_duration    0.0            \
+#     window_animation_easing      ease_out_circ  \
+#     split_type                   auto           \
 yabai -m config window_origin_display default
-yabai -m config window_placement second_child
 yabai -m config window_topmost off
-yabai -m config window_shadow on
-yabai -m config window_opacity off
 yabai -m config window_opacity_duration 0.0
-yabai -m config active_window_opacity 1.0
-yabai -m config normal_window_opacity 0.90
 yabai -m config window_border off
 yabai -m config window_border_width 6
 yabai -m config active_window_border_color 0xff775759
 yabai -m config normal_window_border_color 0xff555555
 yabai -m config insert_feedback_color 0xffd75f5f
-yabai -m config split_ratio 0.50
+yabai -m config mouse_drop_action swap
+
+# layout
+yabai -m config layout bsp
+yabai -m config window_placement second_child
+
+# paddings and gaps
+yabai -m config top_padding 0
+yabai -m config bottom_padding 0
+yabai -m config left_padding 0
+yabai -m config right_padding 0
+yabai -m config window_gap 0
+
+# split ratios
 yabai -m config auto_balance off
+yabai -m config split_ratio 0.50
+
+# mouse support
 yabai -m config mouse_modifier fn
 yabai -m config mouse_action1 move
 yabai -m config mouse_action2 resize
-yabai -m config mouse_drop_action swap
+yabai -m config focus_follows_mouse off
+yabai -m config mouse_follows_focus off
 
-# general space settings
-yabai -m config layout bsp
-yabai -m config top_padding 15
-yabai -m config bottom_padding 15
-yabai -m config left_padding 15
-# NOTE: for OBS floating head
-# yabai -m config left_padding                 450
-yabai -m config right_padding 15
-yabai -m config window_gap 15
+# window modifications
+yabai -m config window_shadow on
+yabai -m config window_opacity on
+yabai -m config active_window_opacity 1.0
+yabai -m config normal_window_opacity 0.9
+
+# status bar
+# yabai -m config external_bar all:20:0
+# yabai -m config menubar_opacity 0.0
+yabai -m config external_bar all:32:0
 
 # apps to not manage (ignore)
 yabai -m rule --add app="^System Settings$" manage=off
@@ -94,6 +74,10 @@ yabai -m rule --add app="^Logi Options$" manage=off
 yabai -m rule --add app="^Alfred Preferences$" manage=off
 yabai -m rule --add app="Raycast" manage=off
 yabai -m rule --add app="^Music$" manage=off
+
+# https://github.com/koekeishiya/yabai/issues/1622
 yabai -m rule --add app="^Arc$" title="^$" mouse_follows_focus=off
+yabai -m rule --add app="^Arc$" title="^Space 1$" manage=off
+yabai -m rule --add app="^Arc$" title="^Space [0-9]+" manage=off
 
 echo "yabai configuration loaded.."
