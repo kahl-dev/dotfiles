@@ -23,3 +23,5 @@ bin/*
 !bin/handle_clipboard.sh
 !bin/dot-cli
 !bin/git-lia-toggl
+
+!.config/bat/themes/*
