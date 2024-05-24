@@ -17,6 +17,7 @@ alias myip="curl http://ipecho.net/plain; echo" # Get my ip
 alias df='df -h'                                # human-readable disk usage
 alias psmem='ps aux | sort -nrk 4 | head -5'
 alias pscpu='ps aux | sort -nrk 3 | head -5'
+alias trail='<<<${(F)path}'
 
 # ############################## #
 # FZF
@@ -97,7 +98,9 @@ fi
 
 # Bat
 if command_exists bat; then
-  alias cat='bat'
+  alias cat='bat --paging=never'
+  alias less='bat'
+  alias more='bat'
   alias taillog='tail -f "$@" | bat --paging=never -l log'
 fi
 
@@ -115,8 +118,16 @@ fi
 
 # Eza
 if command_exists eza; then
-  alias ll="eza -lAhF --git"
-  alias ls="eza -AhF"
+  eza_params=('--git' '--icons' '--classify' '--group-directories-first' '--time-style=long-iso' '--group' '--color-scale')
+
+  alias ls='eza -AhF ${eza_params}'
+  alias l='eza -AhF --git-ignore ${eza_params}'
+  alias ll='eza --all --header --long ${eza_params}'
+  alias llm='eza --all --header --long --sort=modified ${eza_params}'
+  alias la='eza -lbhHigUmuSa'
+  alias lx='eza -lbhHigUmuSa@'
+  alias lt='eza --tree'
+  alias tree='eza --tree'
 fi
 
 # ############################## #
