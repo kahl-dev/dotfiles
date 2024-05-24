@@ -136,12 +136,12 @@ wezterm.on("update-status", function(window, pane)
 	}))
 end)
 
-config.enable_tab_bar = true
+config.enable_tab_bar = false
 config.window_padding = {
-	left = "0.5cell",
-	right = "0.5cell",
-	top = "0.5cell",
-	bottom = "0cell",
+	left = "0.2cell",
+	right = "0.2cell",
+	top = "0.2cell",
+	bottom = "0.2cell",
 }
 
 return config
