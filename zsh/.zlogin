@@ -4,8 +4,5 @@
 # It is useful for commands that need to be run after the shell environment is set up.
 # -----------------------------------------------------------------------------
 
-# Login-specific commands
-echo "Welcome, $USER! You are logged in to $(hostname)."
-
 source $ZDOTDIR/utils.zsh
 command_exists neofetch && neofetch
