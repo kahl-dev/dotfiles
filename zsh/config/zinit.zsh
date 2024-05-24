@@ -6,4 +6,3 @@ if [ ! -d "$ZINIT_HOME" ]; then
 fi
 
 source "${ZINIT_HOME}/zinit.zsh"
-export PATH="$ZINIT_ROOT/polaris/bin:$PATH"

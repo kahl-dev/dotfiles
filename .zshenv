@@ -10,7 +10,16 @@ export DOTFILES="$HOME/.dotfiles"
 
 source $DOTFILES/zsh/utils.zsh
 
-export PATH="$DOTFILES/bin:$PATH"
+typeset -U path
+path=(
+  "$ZINIT_ROOT/polaris/bin"
+  $DOTFILES/bin
+  $path
+)
+
+! command_exists git-lia && file_exists "$DOTFILES/bin/git-lia/git-lia" && path+=("$DOTFILES/bin/git-lia/git-lia")
+
+path_exists "$DOTFILES/bin/nvim/bin/" && path+=("$DOTFILES/bin/nvim/bin")
 
 # Set ZDOTDIR to point to the .dotfiles zsh directory
 export ZDOTDIR="$DOTFILES/zsh"

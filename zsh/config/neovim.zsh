@@ -1,5 +1,3 @@
-path_exists "$DOTFILES/bin/nvim/bin/" && export PATH="$DOTFILES/bin/nvim/bin:$PATH"
-
 if command_exists nvim; then
   export EDITOR="nvim"
   export VISUAL="nvim"
