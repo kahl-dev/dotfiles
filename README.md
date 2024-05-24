@@ -42,3 +42,8 @@ mackup restore
 - [x] Rewrite to use `brew bundle` commands.
 - [x] Look into [Mackup](https://github.com/lra/mackup) for syncing application settings.
 - [ ] Disable mission control auto rearrange.
+- [ ] Try out [yazi](https://github.com/sxyazi/yazi) as terminal file manager
+- [ ] Use trash-cli instead of rm on macOS
+- [ ] Move node/fnm/yarn/pnpm installation with dotbot
+- [ ] Transform vscode to look more like my neovim setup (theme, font, etc.)
+- [ ] Make starship prompt more pure [omerxx config](https://github.com/omerxx/dotfiles/blob/master/starship/starship.toml)
