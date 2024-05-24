@@ -185,6 +185,8 @@ cask "font-fira-code-nerd-font"
 cask "font-hack-nerd-font"
 # Sans-serif, slab-serif, monospace and quasi‑proportional typeface family
 cask "font-iosevka"
+# Superfamily of fonts for code
+cask "font-monaspace"
 # Developer targeted fonts with a high number of glyphs
 cask "font-monoid-nerd-font"
 # Fujitsu ScanSnap Scanner software
