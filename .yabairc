@@ -56,7 +56,7 @@ yabai -m config mouse_follows_focus off
 yabai -m config window_shadow on
 yabai -m config window_opacity on
 yabai -m config active_window_opacity 1.0
-yabai -m config normal_window_opacity 0.9
+yabai -m config normal_window_opacity 0.95
 
 # status bar
 # yabai -m config external_bar all:20:0
@@ -65,14 +65,13 @@ yabai -m config external_bar all:32:0
 
 # apps to not manage (ignore)
 yabai -m rule --add app="^System Settings$" manage=off
+yabai -m rule --add app="^iStat Menus$" manage=off
 yabai -m rule --add app="^Archive Utility$" manage=off
 yabai -m rule --add app="^Wally$" manage=off
-yabai -m rule --add app="^Pika$" manage=off
 yabai -m rule --add app="^balenaEtcher$" manage=off
 yabai -m rule --add app="^Creative Cloud$" manage=off
 yabai -m rule --add app="^Logi Options$" manage=off
 yabai -m rule --add app="^Alfred Preferences$" manage=off
-yabai -m rule --add app="Raycast" manage=off
 yabai -m rule --add app="^Music$" manage=off
 
 # https://github.com/koekeishiya/yabai/issues/1622
