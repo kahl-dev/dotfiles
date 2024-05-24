@@ -12,14 +12,42 @@ end
 -- config.color_scheme = "Tokyo Night"
 config.color_scheme = "Catppuccin Mocha"
 
-config.font = wezterm.font_with_fallback({
-	{ family = "FiraCode Nerd Font", scale = 1.4 },
-	{ family = "JetBrains Mono", scale = 1.4 },
-	{ family = "Hack Nerd Font", scale = 1.4 },
-	{ family = "Menlo", scale = 1.4 },
-})
--- config.font_size = 16
--- config.line_height = 1.1
+config.font = wezterm.font({ family = "Monaspace Argon" })
+config.font_rules = {
+	{
+		italic = true,
+		font = wezterm.font({
+			family = "Monaspace Radon",
+			style = "Italic",
+		}),
+	},
+	{
+		intensity = "Bold",
+		font = wezterm.font({
+			family = "Monaspace Argon",
+			weight = "Bold",
+		}),
+	},
+	{
+		intensity = "Bold",
+		italic = true,
+		font = wezterm.font({
+			family = "Monaspace Radon",
+			weight = "Bold",
+			style = "Italic",
+		}),
+	},
+}
+
+-- config.font = wezterm.font_with_fallback({
+-- 	{ family = "FiraCode Nerd Font" },
+-- 	{ family = "JetBrains Mono" },
+-- 	{ family = "Hack Nerd Font" },
+-- })
+
+config.font_size = 20
+config.line_height = 1.1
+config.adjust_window_size_when_changing_font_size = false
 
 config.term = "xterm-256color"
 config.window_background_opacity = 0.9
