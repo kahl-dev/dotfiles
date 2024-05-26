@@ -48,8 +48,7 @@ mackup restore
 - [ ] Transform vscode to look more like my neovim setup (theme, font, etc.)
 - [ ] Make starship prompt more pure [omerxx config](https://github.com/omerxx/dotfiles/blob/master/starship/starship.toml)
 - [ ] Clean zsh and old install script even more
-- [ ] Add better dotbot scripts
-  - Maybe something like ingredients and recipes
-  - Or multiple install/update scripts
-  - Add config for work dev server
+- [ ] Add better dotbot scripts - Maybe something like ingredients and recipes - Or multiple install/update scripts - Add config for work dev server
 - [ ] Show infos like heredoc/array etc in zsh prompt (starship?)
+- [ ] Hanndle max line warning in obsidian markdown files
+      MD013/line-length Line length [Expected: 80; Actual: 190]
