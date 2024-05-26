@@ -52,3 +52,5 @@ mackup restore
 - [ ] Show infos like heredoc/array etc in zsh prompt (starship?)
 - [ ] Hanndle max line warning in obsidian markdown files
       MD013/line-length Line length [Expected: 80; Actual: 190]
+- [ ] Catpuchino theme for more apps ([catppuccin](https://github.com/catppuccin/catppuccin?tab=readme-ov-file))
+- [ ] look into [bat-extras](https://github.com/eth-p/bat-extras)
