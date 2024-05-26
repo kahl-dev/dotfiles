@@ -30,6 +30,9 @@ zle_highlight=('paste:none')
 # Optionally, disable the terminal bell sound (beeping)
 unsetopt BEEP
 
+# Add completion functions provided by Homebrew
+file_exists /opt/homebrew/share/zsh/site-functions/_brew ] && fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+
 # Initialize and configure completions
 autoload -Uz compinit       # Load the compinit function to initialize the completion system
 compinit                    # Initialize the completion system
