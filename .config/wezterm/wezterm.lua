@@ -45,7 +45,7 @@ config.font_rules = {
 -- 	{ family = "Hack Nerd Font" },
 -- })
 
-config.font_size = 20
+config.font_size = 18
 config.line_height = 1.1
 config.adjust_window_size_when_changing_font_size = false
 
@@ -138,8 +138,8 @@ end)
 
 config.enable_tab_bar = false
 config.window_padding = {
-	left = "0.2cell",
-	right = "0.2cell",
+	left = "1cell",
+	right = "1cell",
 	top = "0.2cell",
 	bottom = "0.2cell",
 }
