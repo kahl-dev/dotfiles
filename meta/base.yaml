@@ -16,42 +16,24 @@
     ~/.gitignore_global: ./git/gitignore_global
     ~/.gitconfig: ./git/gitconfig
     ~/.gittemplate: ./git/template
-    ~/.icloud: ~/Library/Mobile Documents/com~apple~CloudDocs/
 
-    ~/.ssh/rc: ./.ssh/rc
-    ~/.ssh/config: ./.ssh/config
     ~/.tern-config: ./.tern-config
     ~/.prettierrc.js: ./.prettierrc.js
     ~/.zshenv: ./.zshenv
     ~/.agignore: ./.agignore
-    ~/.finicky.js: ./.finicky.js
-    ~/.yabairc: ./.yabairc
-    ~/.skhdrc: ./.skhdrc
     ~/.ripgreprc: ./.ripgreprc
     # ~/.npmrc: ./.npmrc
-    ~/.mackup.cfg: ./.mackup.cfg
 
-    ~/.config/wezterm: ./.config/wezterm/
     ~/.config/bat: ./.config/bat/
     ~/.config/glow: ./.config/glow/
-    ~/.config/karabiner: ./.config/karabiner/
     ~/.config/lazygit: ./.config/lazygit/
     ~/.config/gh-copilot: ./.config/gh-copilot/
     ~/.config/.nuxtrc: ./.config/.nuxtrc
     ~/.config/nvim: ./.config/nvim/
     ~/.config/starship.toml: ./.config/starship.toml
-    ~/.config/sketchybar: ./.config/sketchybar/
-
-    ~/.hammerspoon: ./.hammerspoon/
-
-    ~/Library/LaunchAgents/com.kahl_dev.add_ssh.plist: ./Library/LaunchAgents/com.kahl_dev.add_ssh.plist
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
-    - command: ./scripts/setup_homebrew.zsh
-      stdout: true
-      stdin: true
-      stderr: true
     - command: ./scripts/install_bat_themes.zsh
       stdout: true
       stdin: true
