@@ -133,6 +133,8 @@ brew "tmux"
 brew "tree"
 # Internet file retriever
 brew "wget"
+# Blazing fast terminal file manager written in Rust, based on async I/O
+brew "yazi"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # Custom macOS statusbar with shell plugin, interaction and graph support
@@ -209,6 +211,8 @@ cask "karabiner-elements"
 cask "keyboardcleantool"
 # Open-source keystroke visualiser
 cask "keycastr"
+# Finds, learns and remembers keyboard shortcuts
+cask "keycue"
 # Noise cancelling application
 cask "krisp"
 # Software for Logitech devices
@@ -243,8 +247,6 @@ cask "readdle-spark"
 cask "shottr"
 # Team communication and collaboration software
 cask "slack"
-# App launcher/switcher
-cask "spacelauncher"
 # Manage the data on children's Ravensburger tip toi audio pen
 cask "tiptoi-manager"
 # File transfer application
