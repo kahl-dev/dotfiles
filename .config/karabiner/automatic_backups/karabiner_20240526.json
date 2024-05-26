@@ -18,9 +18,9 @@
                 },
                 "rules": [
                     {
-                        "description": "Post escape if caps is pressed alone, left_ctrl otherwise",
                         "manipulators": [
                             {
+                                "description": "Change caps_lock to command+control+option+shift.",
                                 "from": {
                                     "key_code": "caps_lock",
                                     "modifiers": {
@@ -31,12 +31,12 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "left_control"
-                                    }
-                                ],
-                                "to_if_alone": [
-                                    {
-                                        "key_code": "escape"
+                                        "key_code": "left_shift",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_control",
+                                            "left_option"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -150,7 +150,7 @@
                     },
                     "to": [
                         {
-                            "key_code": "vk_none"
+                            "apple_vendor_keyboard_key_code": "spotlight"
                         }
                     ]
                 },
