@@ -16,9 +16,16 @@ if command_exists fzf && command_exists fzf-tmux; then
   # https://github.com/Aloxaf/fzf-tab
   zinit light Aloxaf/fzf-tab
   zstyle ':completion:*' menu no
-  zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-  zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+  if command_exists zoxide; then
+    zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+  fi
 
+  # preview directory's content with eza when completing cd
+  if command_exists eza; then
+    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+  else
+    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+  fi
 
   # Add catppuchino theme
   # https://github.com/catppuccin/fzf
