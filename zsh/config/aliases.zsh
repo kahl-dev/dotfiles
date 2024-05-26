@@ -2,7 +2,16 @@ _mkcd() {
   mkdir -p "$@" && cd "$_"
 }
 
+_cx() {
+  cd "$@" && ls
+}
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
 alias mkcd="_mkcd"
+alias cx="_cx"
 alias c='clear'
 alias x='exit'
 alias ll="ls -lAFh --color"
@@ -24,8 +33,14 @@ alias trail='<<<${(F)path}'
 # ############################## #
 
 if command_exists fzf; then
+  _fcd() { 
+    cd "$(find . -type d -not -path '*/.*' -not -path '*/node_modules/*' | fzf)" && ls; 
+  }
+
+
   alias fa='alias | fzf-tmux'
   alias s='_s'
+  alias fcd='_fcd'
 fi
 
 # ############################## #
@@ -118,15 +133,15 @@ fi
 
 # Eza
 if command_exists eza; then
-  eza_params=('--git' '--icons' '--classify' '--group-directories-first' '--time-style=long-iso' '--group' '--color-scale')
+  eza_params=('--git' '--icons' '--classify' '--group-directories-first' '--group' '--color-scale')
 
   alias ls='eza -AhF ${eza_params}'
-  alias l='eza -AhF --git-ignore ${eza_params}'
+  alias l='ll'
   alias ll='eza --all --header --long ${eza_params}'
   alias llm='eza --all --header --long --sort=modified ${eza_params}'
   alias la='eza -lbhHigUmuSa'
   alias lx='eza -lbhHigUmuSa@'
-  alias lt='eza --tree'
+  alias lt='ll --tree --level=2'
   alias tree='eza --tree'
 fi
 
