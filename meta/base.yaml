@@ -12,6 +12,7 @@
 - link:
     ~/.tmux: ./tmux
     ~/.tmux.conf: ./tmux/tmux.conf
+    ~/.tmux/plugins/tmux/custom/memory.sh: ./tmux/custom/memory.sh
 
     ~/.gitignore_global: ./git/gitignore_global
     ~/.gitconfig: ./git/gitconfig
