@@ -14,6 +14,7 @@ alias mkcd="_mkcd"
 alias cx="_cx"
 alias c='clear'
 alias x='exit'
+alias cl='clear'
 alias ll="ls -lAFh --color"
 alias l="ll"
 alias ls="ls -AFh --color"
@@ -141,8 +142,8 @@ if command_exists eza; then
   alias llm='eza --all --header --long --sort=modified ${eza_params}'
   alias la='eza -lbhHigUmuSa'
   alias lx='eza -lbhHigUmuSa@'
-  alias lt='ll --tree --level=2'
-  alias tree='eza --tree'
+  alias lt='ll --tree --ignore-glob node_modules --level=2'
+  alias tree='eza --tree --ignore-glob node_modules'
 fi
 
 # ############################## #
