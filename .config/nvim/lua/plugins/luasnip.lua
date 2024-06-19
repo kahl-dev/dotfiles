@@ -4,7 +4,7 @@
 return {
   "L3MON4D3/LuaSnip",
   config = function()
-    local snippet_paths = { "~/.config/nvim/my_snippets" }
+    local snippet_paths = {}
 
     -- use Neovim's globpath to get all subdirectories of ~/dev/snippets
     local dirs = vim.fn.globpath("~/dev/snippets", "*/", 0, 1)
