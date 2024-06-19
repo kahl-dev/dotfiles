@@ -12,24 +12,27 @@ local vue_language_server_path = home
 return {
   "neovim/nvim-lspconfig",
   opts = {
+    -- inlay_hints = {
+    --   enabled = false,
+    -- },
     servers = {
       -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#cssls
       -- npm i -g vscode-langservers-extracted
       cssls = {},
 
       -- Hybrid mode where volar only handles vue and typescript by itself
-      tsserver = {
-        init_options = {
-          plugins = {
-            {
-              name = "@vue/typescript-plugin",
-              location = vue_language_server_path,
-              languages = { "vue" },
-            },
-          },
-        },
-        filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
-      },
+      -- tsserver = {
+      --   init_options = {
+      --     plugins = {
+      --       {
+      --         name = "@vue/typescript-plugin",
+      --         location = vue_language_server_path,
+      --         languages = { "vue" },
+      --       },
+      --     },
+      --   },
+      --   filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+      -- },
 
       -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#emmet_ls
       -- npm install -g emmet-ls
@@ -46,7 +49,7 @@ return {
 
       -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#prismals
       -- npm install -g @prisma/language-server
-      prismals = {},
+      -- prismals = {},
 
       -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#prismals
       -- go install github.com/arduino/arduino-language-server@latest
@@ -61,14 +64,14 @@ return {
       -- npm install -g typescript typescript-language-server
 
       -- None hybrid mode where volar also handles typescript
-      -- volar = {
-      --   filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
-      --   init_options = {
-      --     vue = {
-      --       hybridMode = false,
-      --     },
-      --   },
-      -- },
+      volar = {
+        filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+        init_options = {
+          vue = {
+            hybridMode = false,
+          },
+        },
+      },
 
       -- None hybrid mode where volar only handles vue and typescript by itself
       -- tsserver = {
