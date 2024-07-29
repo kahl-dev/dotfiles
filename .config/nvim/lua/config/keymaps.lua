@@ -11,18 +11,16 @@ local function map(mode, key, action, opts)
   vim.keymap.set(mode, key, action, opts)
 end
 
-require("which-key").register({
-  z = { name = "+quickfix" },
-  r = { name = "+reg" },
-  k = {
-    name = "kahl's keymaps",
-    o = {
-      name = "Open or OCR52",
-      j = { name = "Open JIRA" },
-      g = { name = "Open GIT" },
-    },
-  },
-}, { prefix = "<leader>", mode = "n" })
+local wk = require("which-key")
+wk.add({
+  { mode = "n" },
+  { "<leader>k", group = "kahl's keymaps" },
+  { "<leader>ko", group = "Open or OCR52" },
+  { "<leader>kog", group = "Open GIT" },
+  { "<leader>koj", group = "Open JIRA" },
+  { "<leader>r", group = "reg" },
+  { "<leader>z", group = "quickfix" },
+})
 
 -- Function to determine if Neovim is running locally or remotely
 local function is_remote()
@@ -31,11 +29,13 @@ end
 
 -- Only set these key mappings if Neovim is running locally
 if not is_remote() then
-  require("which-key").register({
-    o = {
-      name = "obsidian",
+  wk.add({
+    { mode = "n" },
+    "<leader>o",
+    {
+      desc = "Obsidian",
     },
-  }, { prefix = "<leader>", mode = "n" })
+  })
 
   -- Key mappings specific to Obsidian features
   map("n", "<leader>on", "<cmd>ObsidianNew<CR>", { desc = "New note" })
@@ -45,7 +45,9 @@ else
   print("Remote environment detected. Skipping Obsidian mappings.")
 end
 
-require("which-key").register({ r = { name = "+reg" } }, { prefix = "<leader>", mode = "v" })
+wk.add({
+  { "<leader>r", group = "reg", mode = "v" },
+})
 
 -- exit insert mode with jk
 map("i", "jk", "<ESC>", { noremap = true, silent = true, desc = "<ESC>" })
