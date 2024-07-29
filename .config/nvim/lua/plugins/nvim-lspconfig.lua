@@ -53,7 +53,7 @@ return {
 
       -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#prismals
       -- go install github.com/arduino/arduino-language-server@latest
-      arduino_language_server = {},
+      -- arduino_language_server = {},
 
       -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#intelephense
       -- npm install -g intelephense
@@ -64,14 +64,14 @@ return {
       -- npm install -g typescript typescript-language-server
 
       -- None hybrid mode where volar also handles typescript
-      volar = {
-        filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
-        init_options = {
-          vue = {
-            hybridMode = false,
-          },
-        },
-      },
+      -- volar = {
+      --   filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+      --   init_options = {
+      --     vue = {
+      --       hybridMode = false,
+      --     },
+      --   },
+      -- },
 
       -- None hybrid mode where volar only handles vue and typescript by itself
       -- tsserver = {
@@ -94,9 +94,9 @@ return {
       --   },
       -- },
     },
-    format = {
-      async = true,
-    },
+    -- format = {
+    --   async = true,
+    -- },
     setup = {
       -- tsserver = function(_, opts)
       --   opts.capabilities.documentFormattingProvider = true
