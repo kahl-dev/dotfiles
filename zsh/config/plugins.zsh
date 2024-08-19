@@ -61,5 +61,6 @@ fi
 # Add in snippets
 # TODO; make notes for all usefull osx commands
 
-zi ice svn
-zi snippet OMZP::macos
+# not possible because of https://github.com/zdharma-continuum/zinit/issues/504
+# zinit ice svn
+# zinit snippet OMZP::macos
