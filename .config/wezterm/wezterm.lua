@@ -50,8 +50,8 @@ config.line_height = 1.1
 config.adjust_window_size_when_changing_font_size = false
 
 config.term = "xterm-256color"
-config.window_background_opacity = 0.7
-config.macos_window_background_blur = 50
+config.window_background_opacity = 0.8
+config.macos_window_background_blur = 90
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "AlwaysPrompt"
 config.scrollback_lines = 3000
@@ -66,7 +66,6 @@ config.inactive_pane_hsb = {
 }
 
 -- Tab bar
--- I don't like the look of "fancy" tab bar
 config.use_fancy_tab_bar = false
 config.status_update_interval = 1000
 config.tab_bar_at_bottom = true
@@ -110,15 +109,12 @@ wezterm.on("update-status", function(window, pane)
 	-- CWD and CMD could be nil (e.g. viewing log using Ctrl-Alt-l)
 	cmd = cmd and basename(cmd) or ""
 
-	-- Time
-	local time = wezterm.strftime("%H:%M")
-
 	-- Left status (left of the tab line)
 	window:set_left_status(wezterm.format({
-		{ Foreground = { Color = stat_color } },
-		{ Text = "  " },
-		{ Text = wezterm.nerdfonts.oct_table .. "  " .. stat },
-		{ Text = " |" },
+		-- { Foreground = { Color = stat_color } },
+		-- { Text = "  " },
+		-- { Text = wezterm.nerdfonts.oct_table .. "  " .. stat },
+		-- { Text = " |" },
 	}))
 
 	-- Right status
@@ -126,17 +122,12 @@ wezterm.on("update-status", function(window, pane)
 		-- Wezterm has a built-in nerd fonts
 		-- https://wezfurlong.org/wezterm/config/lua/wezterm/nerdfonts.html
 		{ Text = wezterm.nerdfonts.md_folder .. "  " .. cwd },
-		{ Text = " | " },
-		{ Foreground = { Color = "#e0af68" } },
-		{ Text = wezterm.nerdfonts.fa_code .. "  " .. cmd },
 		"ResetAttributes",
-		{ Text = " | " },
-		{ Text = wezterm.nerdfonts.md_clock .. "  " .. time },
 		{ Text = "  " },
 	}))
 end)
 
-config.enable_tab_bar = false
+config.enable_tab_bar = true
 config.window_padding = {
 	left = "1cell",
 	right = "1cell",
