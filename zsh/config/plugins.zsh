@@ -19,14 +19,14 @@ ZSH_AUTOSUGGEST_USE_ASYNC=true
 # https://github.com/hlissner/zsh-autopair
 zinit light hlissner/zsh-autopair
 
-# zoxide 
+# zoxide
 # easily jump to directories
 # https://github.com/ajeetdsouza/zoxide
 command_exists zoxide && eval "$(zoxide init --cmd cd zsh)"
 
 zinit ice as"command" from"gh-r" bpick"atuin-*.tar.gz" mv"atuin*/atuin -> atuin" \
-    atclone"./atuin init zsh > init.zsh; ./atuin gen-completions --shell zsh > _atuin" \
-    atpull"%atclone" src"init.zsh"
+  atclone"./atuin init zsh > init.zsh; ./atuin gen-completions --shell zsh > _atuin" \
+  atpull"%atclone" src"init.zsh"
 zinit light atuinsh/atuin
 
 # zinit light ajeetdsouza/zoxide
@@ -62,5 +62,7 @@ fi
 # TODO; make notes for all usefull osx commands
 
 # not possible because of https://github.com/zdharma-continuum/zinit/issues/504
-# zinit ice svn
-# zinit snippet OMZP::macos
+# if is_macos; then
+#   zi ice svn
+#   zi snippet OMZP::macos
+# fi
