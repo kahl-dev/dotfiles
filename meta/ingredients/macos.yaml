@@ -12,7 +12,6 @@
 - link:
     ~/.icloud: ~/Library/Mobile Documents/com~apple~CloudDocs/
 
-    ~/.ssh/rc: ./.ssh/rc
     ~/.ssh/config: ./.ssh/config
 
     ~/.finicky.js: ./.finicky.js

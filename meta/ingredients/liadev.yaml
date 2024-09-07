@@ -1,0 +1,15 @@
+- defaults:
+    link:
+      relink: true
+      force: true
+      relative: false
+
+- clean: ['~']
+
+- create:
+    - ~/.config
+
+- link:
+    ~/.ssh/rc: ./.ssh/rc
+
+- shell:
