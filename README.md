@@ -54,3 +54,11 @@ mackup restore
       MD013/line-length Line length [Expected: 80; Actual: 190]
 - [ ] Catpuchino theme for more apps ([catppuccin](https://github.com/catppuccin/catppuccin?tab=readme-ov-file))
 - [ ] look into [bat-extras](https://github.com/eth-p/bat-extras)
+- [ ] Fix neovim checkhealth:
+      ```
+      - Nvim node.js host: /home/kahl/.local/share/fnm/aliases/lts-latest/bin/node
+      - ERROR Failed to run: node /home/kahl/.local/share/fnm/aliases/lts-latest/bin/node --version
+        - ADVICE:
+          - Report this issue with the output of: 
+          - node /home/kahl/.local/share/fnm/aliases/lts-latest/bin/node --version
+      ```
