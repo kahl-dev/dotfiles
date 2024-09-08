@@ -4,7 +4,6 @@
 # It is sourced first, before ~/.zprofile, ~/.zshrc, and ~/.zlogin.
 # -----------------------------------------------------------------------------
 
-
 # Set DOTFILES to organize configuration files
 export DOTFILES="$HOME/.dotfiles"
 
@@ -66,6 +65,8 @@ fi
 if is_macos; then
   export HOMEBREW_CASK_OPTS="--no-quarantine"
   export HOMEBREW_BUNDLE_FILE_GLOBAL="$DOTFILES/brew/osx/.Brewfile"
+else
+  export HOMEBREW_BUNDLE_FILE_GLOBAL="$DOTFILES/brew/linux/.Brewfile"
 fi
 
 # Prevent intelephense from crashing
@@ -81,3 +82,5 @@ export NODE_DEFAULT_PACKAGES=(
   neovim
   @antfu/ni
 )
+
+file_exists $HOME/.dotfiles-local/.zshenv && source $HOME/.dotfiles-local/.zshenv

@@ -32,6 +32,7 @@ unsetopt BEEP
 
 # Add completion functions provided by Homebrew
 file_exists /opt/homebrew/share/zsh/site-functions/_brew ] && fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+fpath=($DOTFILES/zsh/config/_dotbot_completion $fpath)
 
 # Initialize and configure completions
 autoload -Uz compinit       # Load the compinit function to initialize the completion system

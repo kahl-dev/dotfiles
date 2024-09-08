@@ -81,6 +81,7 @@ _md() {
   fi
 }
 
+alias m='make'
 alias mi='_mi'
 alias mb='_mb'
 alias md='_md'
@@ -91,6 +92,8 @@ alias md='_md'
 
 # browser-sync
 command_exists browser-sync && alias bs='browser-sync'
+
+command_exists yazi && alias y='yazi'
 
 # tmux
 alias tmux-clear-resurrect='rm -rf ~/.tmux/resurrect/* && echo "Cleared all tmux-resurrect entries!"'
@@ -160,12 +163,12 @@ alias npmLs="npm ls --depth=0 "$@" 2>/dev/null"
 alias npmLsg="npm ls -g --depth=0 "$@" 2>/dev/null"
 alias npmid=_npm_install_global_default
 
-alias ya="yarn add"
-alias y="yarn"
-alias yb="yarn build"
-alias yd="yarn dev"
-alias yi="yarn"
-alias yin="yarn install"
+# alias ya="yarn add"
+# alias y="yarn"
+# alias yb="yarn build"
+# alias yd="yarn dev"
+# alias yi="yarn"
+# alias yin="yarn install"
 
 if command_exists fnm; then
   alias fnm_uninstall_all=_fnm_uninstall_all
@@ -377,6 +380,36 @@ if is_macos; then
   alias marked="_marked"
 
 fi
+
+# ############################## #
+# Work Specific Aliases
+# ############################## #
+
+# Execute the make sitebase command to get the URL and copy it to the clipboard
+alias lia-copyurl="{
+  if ! command -v make &> /dev/null; then
+    echo 'Error: make command not found.' >&2
+    return 1
+  fi
+
+  output=\$(make sitebase 2>&1)
+  if [[ \$? -ne 0 ]]; then
+    echo 'Error: make sitebase command failed.' >&2
+    echo \"\$output\" >&2
+    return 1
+  fi
+
+  selected_url=\$(echo \"\$output\" | grep -oP '(http|https)://[^ ]+' | sed 's/\[[0-9;]*m//g' | fzf-tmux)
+
+  if [[ -n \$SSH_CONNECTION ]]; then
+    # On remote, send via OSC52
+    printf '\e]52;c;%s\a' \$(printf '%s' \"\$selected_url\" | base64 | tr -d '\n')
+  fi
+  
+  # Echo the selected URL regardless of being remote or local
+  echo \"Selected URL: \$selected_url\"
+}"
+alias lcu='lia-copyurl'
 
 # ############################## #
 # Dotfiles

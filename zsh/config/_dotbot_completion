@@ -1,0 +1,19 @@
+#compdef install-profile install-standalone
+
+_install_profile() {
+  _files -W $DOTFILES/meta/recipes
+}
+
+_install_standalone() {
+  _files -W $DOTFILES/meta/ingredients
+}
+
+case $service in
+install-profile)
+  _install_profile
+  ;;
+install-standalone)
+  _install_standalone
+  ;;
+*) ;;
+esac
