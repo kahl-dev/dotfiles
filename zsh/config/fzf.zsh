@@ -8,7 +8,6 @@
 #     for junegunn/fzf
 # export PATH="$ZINIT_ROOT/plugins/junegunn---fzf/bin:$PATH"
 
-
 if command_exists fzf && command_exists fzf-tmux; then
 
   eval "$(fzf --zsh)"
@@ -43,8 +42,8 @@ if command_exists fzf && command_exists fzf-tmux; then
 
   _tm() {
     [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
-    
-    session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf -e --print-query --preview "tmux list-windows -t {}") 
+
+    session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf -e --print-query --preview "tmux list-windows -t {}")
 
     echo $session
 
@@ -63,25 +62,25 @@ if command_exists fzf && command_exists fzf-tmux; then
     _s() {
       # If arguments are provided, use the original ssh command
       if [ $# -gt 0 ]; then
-          # 'command' bypasses shell aliases and functions, calling the binary directly
-          command ssh "$@"
-          return
+        # 'command' bypasses shell aliases and functions, calling the binary directly
+        command ssh "$@"
+        return
       fi
 
       local ssh_config_file
       if [[ -f ~/.dotfiles-local/ssh-config ]]; then
-          ssh_config_file=~/.dotfiles-local/ssh-config
+        ssh_config_file=~/.dotfiles-local/ssh-config
       else
-          ssh_config_file=~/.ssh/config
+        ssh_config_file=~/.ssh/config
       fi
 
       local host
       # Get a list of aliases, ensuring each alias is on a new line
       host=$(awk '/^Host / { for (i=2; i<=NF; i++) print $i }' "$ssh_config_file" | fzf --height 40% --reverse)
-      
+
       if [[ -n $host ]]; then
-          # Use 'command' to call the original ssh binary with the selected host
-          command ssh "$host"
+        # Use 'command' to call the original ssh binary with the selected host
+        command ssh "$host"
       fi
     }
   fi
