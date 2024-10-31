@@ -350,7 +350,7 @@ alias gsts='git stash show --text'
 
 # Go to git root dir
 alias groot='cd "$(git rev-parse --show-toplevel)"'
-alias cdtl='cd "$(git rev-parse --show-toplevel)"'
+alias cdgr='cd "$(git rev-parse --show-toplevel)"'
 
 alias gup='git up'
 alias gupdate='git update'
