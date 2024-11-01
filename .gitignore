@@ -26,5 +26,7 @@ bin/*
 
 !.config/bat/themes/*
 
+# Allow specific files
+!tmux/plugins/tmux/custom/memory.sh
 
 alfred_scripts/script.log
