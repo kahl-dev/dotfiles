@@ -1,12 +1,12 @@
 #!/bin/bash
 
+# https://macos-defaults.com/
+
 source ./scripts/config.sh
 source ./scripts/functions.sh
 
 # Execute if not osx
-if ! _is_osx; then
-	exit
-fi
+! _is_osx && exit
 
 # Close any open System Preferences panes, to prevent them from overriding
 # settings we’re about to change
@@ -15,11 +15,11 @@ osascript -e 'tell application "System Preferences" to quit'
 # Ask for the administrator password upfront
 sudo -v
 
-# Keep-alive: update existing `sudo` time stamp until `.macos` has finished
+# Keep-alive: update existing `sudo` time stamp until `setup` has finished
 while true; do
-	sudo -n true
-	sleep 60
-	kill -0 "$$" || exit
+  sudo -n true
+  sleep 60
+  kill -0 "$$" || exit
 done 2>/dev/null &
 
 ### {{{ General UI/UX
@@ -29,8 +29,8 @@ done 2>/dev/null &
 # on the triangle next to the Location field to open the expanded save window.
 # This can be very confusing, with the following command you can enable the
 # expand save panel by default.
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+# defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+# defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
 
 # Expand print panel by default
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
@@ -157,9 +157,52 @@ chflags nohidden ~/Library
 sudo chflags nohidden /Volumes
 
 # Hide desktopicons
-# defaults write com.apple.finder CreateDesktop false;
+defaults write com.apple.finder CreateDesktop false
+
+# Show all file extensions in the Finder.
+defaults write NSGlobalDomain "AppleShowAllExtensions" -bool "true"
+
+# Show hidden files in the Finder. You can toggle the value using ⌘ cmd+⇧ shift+..
+defaults write com.apple.finder "AppleShowAllFiles" -bool "true"
+
+# Show path bar in the bottom of the Finder windows
+defaults write com.apple.finder "ShowPathbar" -bool "true"
+
+echo "Deleting all .DS_Store files in your home directory to apply the new settings."
+find ~/. -name ".DS_Store" -type f -delete
+
+# Set the default view style for folders without custom setting
+defaults write com.apple.finder "FXPreferredViewStyle" -string "Nlsv"
+
+# Keep folders on top when sorting by name
+defaults write com.apple.finder "_FXSortFoldersFirst" -bool "true"
+
+# Set the default search scope when performing a search
+defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf"
+
+# Remove items in the bin after 30 days
+defaults write com.apple.finder "FXRemoveOldTrashItems" -bool "true"
+
+# Disable the warning before emptying the Trash
+defaults write com.apple.finder "WarnOnEmptyTrash" -bool "false"
+
+# Always show folder icon before title in the title bar
+# ⚠️ This command requires to grant full disk access to the terminal (System Preferences → Security & Privacy → Full Disk Access)
+defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
 
 killall Finder
+
+### }}}
+
+### {{{ Dock, Dashboard, and hot corners
+
+# Choose whether to rearrange Spaces automatically.
+defaults write com.apple.dock "mru-spaces" -bool "false"
+
+# Disable Displays have separate Spaces. This is better for Aerospace to work correctly.
+defaults write com.apple.spaces "spans-displays" -bool "false" && killall SystemUIServer
+
+killall Dock
 
 ### }}}
 

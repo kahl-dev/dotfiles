@@ -1,0 +1,8 @@
+- defaults:
+    shell:
+      stdin: true
+      stdout: true
+      stderr: true
+
+- shell:
+    - $DOTFILES/scripts/setup_defaults_write.sh
