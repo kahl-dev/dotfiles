@@ -1,4 +1,6 @@
+tap "arl/arl"
 tap "colindean/fonts-nonfree"
+tap "ddev/ddev"
 tap "felixkratz/formulae"
 tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
@@ -6,7 +8,10 @@ tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "jesseduffield/lazydocker"
 tap "koekeishiya/formulae"
+tap "nikitabobko/tap"
 tap "supabase/tap"
+# Processes triangulated solid meshes
+brew "admesh"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
 # Programmable completion for Bash 3.2
@@ -18,15 +23,25 @@ brew "blueutil"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
 # Share macOS clipboard with tmux and other local and remote apps
-brew "clipper"
+brew "clipper", restart_service: true
 # Console Matrix
 brew "cmatrix"
-# CLI tool for Amazon ECS and AWS Fargate
-brew "copilot"
-# Open source suite of directory software
-brew "openldap"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
+# Libraries to talk to Microsoft SQL Server and Sybase databases
+brew "freetds"
+# Network authentication protocol
+brew "krb5"
+# C library for reading, creating, and modifying zip archives
+brew "libzip"
+# Open source suite of directory software
+brew "openldap"
+# General-purpose scripting language
+brew "php", restart_service: true
+# Dependency Manager for PHP
+brew "composer"
+# CLI tool for Amazon ECS and AWS Fargate
+brew "copilot"
 # Modern, maintained replacement for ls
 brew "eza"
 # Simple, fast and user-friendly alternative to find
@@ -45,8 +60,6 @@ brew "tesseract"
 brew "ffmpeg"
 # Fast and simple Node.js version manager
 brew "fnm"
-# Libraries to talk to Microsoft SQL Server and Sybase databases
-brew "freetds"
 # Command-line fuzzy finder written in Go
 brew "fzf"
 # GitHub command-line tool
@@ -67,14 +80,10 @@ brew "htop"
 brew "httpie"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
-# Network authentication protocol
-brew "krb5"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Pager program similar to more
 brew "less"
-# C library for reading, creating, and modifying zip archives
-brew "libzip"
 # LSP for LanguageTool with support for Latex, Markdown and Others
 brew "ltex-ls"
 # Keep your Mac's application settings in sync
@@ -85,6 +94,8 @@ brew "mas"
 brew "media-info"
 # Simple tool to make locally trusted development certificates
 brew "mkcert"
+# Feature-rich command-line audio/video downloader
+brew "yt-dlp"
 # Media player based on MPlayer and mplayer2
 brew "mpv"
 # Fast, highly customisable system info script
@@ -97,14 +108,14 @@ brew "nss"
 brew "pandoc"
 # Shell command parallelization utility
 brew "parallel"
-# General-purpose scripting language
-brew "php"
+# Execute binaries from Python packages in isolated environments
+brew "pipx"
 # Fast, disk space efficient package manager
 brew "pnpm"
 # Object-relational database system
 brew "postgresql@14", restart_service: true
 # Object-relational database system
-brew "postgresql@15"
+brew "postgresql@15", restart_service: true
 # Nicer 'git pull'
 brew "pygitup"
 # Interpreted, interactive, object-oriented programming language
@@ -137,30 +148,38 @@ brew "wget"
 brew "yazi"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
+# Git in your tmux status bar.
+brew "arl/arl/gitmux"
+# DDEV
+brew "ddev/ddev/ddev"
 # Custom macOS statusbar with shell plugin, interaction and graph support
 brew "felixkratz/formulae/sketchybar"
 # A simple terminal UI for docker, written in Go
 brew "jesseduffield/lazydocker/lazydocker"
-# Simple hotkey-daemon for macOS.
-brew "koekeishiya/formulae/skhd"
-# A tiling window manager for macOS based on binary space partitioning.
-brew "koekeishiya/formulae/yabai"
 # Supabase CLI
 brew "supabase/tap/supabase"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
+# AeroSpace is an i3-like tiling window manager for macOS
+cask "aerospace"
 # Menu bar tool to limit maximum charging percentage
 cask "aldente"
 # Application launcher and productivity software
 cask "alfred"
 # Chromium based browser
 cask "arc"
+# Electronics prototyping platform
+cask "arduino-ide"
+# 3D model slicing software for 3D printers, maintained by Bambu Lab
+cask "bambu-studio"
 # Menu bar icon organiser
 cask "bartender"
 # Display management tool
 cask "betterdisplay"
 # Tool to customise input devices and automate computer systems
 cask "bettertouchtool"
+# 3D creation suite
+cask "blender"
 # Web browser focusing on privacy
 cask "brave-browser"
 # Tool to list all active shortcuts of the current application
@@ -179,17 +198,11 @@ cask "elgato-wave-link"
 cask "finicky"
 # Web browser
 cask "firefox"
-# Developer targeted fonts with a high number of glyphs
 cask "font-droid-sans-mono-nerd-font"
-# Developer targeted fonts with a high number of glyphs
 cask "font-fira-code-nerd-font"
-# Developer targeted fonts with a high number of glyphs
 cask "font-hack-nerd-font"
-# Sans-serif, slab-serif, monospace and quasi‑proportional typeface family
 cask "font-iosevka"
-# Superfamily of fonts for code
 cask "font-monaspace"
-# Developer targeted fonts with a high number of glyphs
 cask "font-monoid-nerd-font"
 # Fujitsu ScanSnap Scanner software
 cask "fujitsu-scansnap-home"
@@ -216,8 +229,8 @@ cask "keycue"
 # Noise cancelling application
 cask "krisp"
 # Software for Logitech devices
-cask "logi-options-plus"
-# Web browser
+cask "logi-options+"
+# Multi-platform web browser
 cask "microsoft-edge"
 # Manage your windows in Mission Control
 cask "mission-control-plus"
@@ -231,10 +244,14 @@ cask "ngrok"
 cask "numi"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
+# G-code generator for 3D printers
+cask "orcaslicer"
 # WebKit based web browser
 cask "orion"
 # Collaboration platform for API development
 cask "postman"
+# G-code generator for 3D printers (RepRap, Makerbot, Ultimaker etc.)
+cask "prusaslicer"
 # Automatically hides or quits apps after periods of inactivity
 cask "quitter"
 # Network monitor and firewall
@@ -276,6 +293,7 @@ mas "Pages", id: 409201541
 mas "Reeder", id: 1529448980
 mas "Tampermonkey", id: 1482490089
 mas "Things", id: 904280696
+mas "TNEF's Enough", id: 986621173
 mas "Toggl Track", id: 1291898086
 mas "WISO Steuer 2023", id: 1635154215
 mas "Xcode", id: 497799835
@@ -312,6 +330,7 @@ vscode "simonsiefke.svg-preview"
 vscode "visualstudioexptteam.intellicode-api-usage-examples"
 vscode "visualstudioexptteam.vscodeintellicode"
 vscode "vitaliymaz.vscode-svg-previewer"
+vscode "vscjava.vscode-gradle"
 vscode "vscjava.vscode-java-debug"
 vscode "vscjava.vscode-java-dependency"
 vscode "vscjava.vscode-java-pack"
