@@ -419,9 +419,12 @@ alias lcu='lia-copyurl'
 alias dot='vim ${DOTFILES}'
 alias zshrc='vim ${ZDOTDIR}/.zshrc'
 
-_zsh-reload-all() {
+_zsh-update() {
   zinit self-update
   zinit update --all
+}
+
+_zsh-reload-all() {
   source $ZDOTDIR/.zshenv
   source $ZDOTDIR/.zprofile
   source $ZDOTDIR/.zshrc
