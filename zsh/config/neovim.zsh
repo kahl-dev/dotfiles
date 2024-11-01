@@ -1,7 +1,10 @@
 if command_exists nvim; then
   export EDITOR="nvim"
   export VISUAL="nvim"
-  export NEOVIM_NODE_HOST=$(fnm exec --using lts-latest  -- which node)
+
+  if command_exists fnm; then
+    export NEOVIM_NODE_HOST=$(fnm exec --using lts-latest  -- which node)
+  fi
 
   alias vimdiff='nvim -d'
 fi

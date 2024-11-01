@@ -18,8 +18,6 @@ help: ## Display this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## DEBUG: .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## DEBUG: "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 	@printf "\n\033[1;36m%s\033[0m\n" "Cleanup commands"
 	@grep -E '^[a-zA-Z_-]+:.*?## CLEANUP: .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## CLEANUP: "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-	
-
 
 # Installation commands
 
@@ -33,9 +31,6 @@ installBrewOsxPackages: ## INSTALLATION: Install osx brew packages
 installBrewBasePackages: ## INSTALLATION: Install base brew packages
 	@/usr/local/bin/brew bundle -v --no-upgrade --file "$(DOTFILES)/brew/Basebrew"
 
-installStarship: ## INSTALLATION: Install starship
-	@$(SCRIPTS_DIR)/installStarship.sh
-
 setupOsx: ## INSTALLATION: Setup Mac OSX
 	@$(SCRIPTS_DIR)/osx.sh
 
@@ -47,15 +42,8 @@ install: ## INSTALLATION: Install all Dotfiles
 	@make installAdditionalShellScripts
 	@make startServices
 
-installPi: ## INSTALLATION: Install all Dotfiles
-	@make createSymlinks
-	@make installStarship
-
 installAdditionalShellScripts: ## INSTALLATION: Innstall additional shell scripts
 	@$(SCRIPTS_DIR)/installAdditionalShellScripts.sh
-
-installNvimFromSource: ## INSTALLATION: Install neovim from source
-	@$(SCRIPTS_DIR)/installNvimFromSource.sh
 
 updateShell: ## MAINTENANCE: Update shell
 	source ~/.zshrc

@@ -12,6 +12,8 @@ source "$ZDOTDIR/config/zinit.zsh"
 source "$ZDOTDIR/config/history.zsh"
 source "$ZDOTDIR/config/node.zsh"
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 # Plugins and application files
 source "$ZDOTDIR/config/neovim.zsh"
 source "$ZDOTDIR/config/fzf.zsh"
@@ -84,3 +86,24 @@ file_exists $HOME/.zshrc-local && source $HOME/.zshrc-local
 . "$HOME/.atuin/bin/env"
 
 eval "$(atuin init zsh)"
+
+# fnm
+FNM_PATH="/home/pi/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="/home/pi/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
+
+# fnm
+FNM_PATH="/home/pi/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="/home/pi/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
+
+# fnm
+FNM_PATH="/home/pi/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="/home/pi/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi

@@ -1,0 +1,24 @@
+- shell:
+    - |
+      [ ! -d "$DOTFILES/build" ] && mkdir -p "$DOTFILES/build"
+      [ ! -d "$HOME/.local/bin" ] && mkdir -p "$HOME/.local/bin"
+
+      rm -f ~/.local/state/nvim/log
+      rm -f ~/.local/state/nvim/*.log
+
+      # Clone the Neovim repository
+      git clone git@github.com:neovim/neovim.git "$DOTFILES/build/neovim"
+      cd "$DOTFILES/build/neovim"
+      # git checkout stable  # Uncomment to use the stable branch if desired
+
+      # Remove any previous Neovim installation in .local/bin
+      rm -rf "$HOME/.local/bin/nvim"
+
+      # Build and install Neovim to .local/bin
+      make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX="$HOME/.local"
+
+      make install
+
+      # Clean up the build directory
+      cd $DOTFILES
+      rm -rf "$DOTFILES/build/neovim"

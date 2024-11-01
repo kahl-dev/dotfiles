@@ -3,5 +3,5 @@ if ! folder-exists ~/.atuin/bin; then;
 fi
 
 if command_exists atuin; then;
-  eval "$(fzf --zsh)"
+  eval "$(atuin init zsh)"
 fi

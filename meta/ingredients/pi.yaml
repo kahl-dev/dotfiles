@@ -1,0 +1,16 @@
+- defaults:
+    link:
+      relink: true
+      force: true
+      relative: false
+
+- clean: ['~']
+
+- create:
+    - ~/.config
+
+- link:
+    ~/.ssh/rc: ./.ssh/rc
+
+- shell:
+  - sudo apt install bat tmux vim fzf zoxide curl btop ripgrep gettext unzip
