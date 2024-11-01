@@ -41,7 +41,7 @@ mackup restore
 
 - [x] Rewrite to use `brew bundle` commands.
 - [x] Look into [Mackup](https://github.com/lra/mackup) for syncing application settings.
-- [ ] Disable mission control auto rearrange.
+- [x] Disable mission control auto rearrange.
 - [ ] Try out [yazi](https://github.com/sxyazi/yazi) as terminal file manager
 - [ ] Use trash-cli instead of rm on macOS
 - [ ] Move node/fnm/yarn/pnpm installation with dotbot
@@ -62,3 +62,7 @@ mackup restore
           - Report this issue with the output of: 
           - node /home/kahl/.local/share/fnm/aliases/lts-latest/bin/node --version
       ```
+- [ ] find a way to put encrypted files into dotfiles and kick .dotfiles-local
+- [ ] Add [fabric](https://github.com/danielmiessler/fabric) config to dotfiles
+- [ ] add some apps to show in all desktops on osx programmatically (like music, toggle, etc.). Can be done by right click on app in dock -> options -> all desktops
+- [ ] try out an [neovim extension](https://www.youtube.com/watch?v=ig_HLrssAYE) for making screenshots
