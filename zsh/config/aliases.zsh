@@ -419,17 +419,39 @@ alias lcu='lia-copyurl'
 alias dot='vim ${DOTFILES}'
 alias zshrc='vim ${ZDOTDIR}/.zshrc'
 
+# Update zinit and all plugins
 _zsh-update() {
-  zinit self-update
-  zinit update --all
+  echo "Updating zinit..."
+  if ! zinit self-update; then
+    echo "zinit self-update failed!" >&2
+    return 1
+  fi
+
+  echo "Updating all plugins..."
+  if ! zinit update --all; then
+    echo "zinit update failed!" >&2
+    return 1
+  fi
+  echo "Update complete."
 }
 
+# Reload all Zsh configurations
 _zsh-reload-all() {
-  source $ZDOTDIR/.zshenv
-  source $ZDOTDIR/.zprofile
-  source $ZDOTDIR/.zshrc
-  source $ZDOTDIR/.zlogin
-  source $ZDOTDIR/.zlogout
+  local ZSH_ENV="${ZDOTDIR:-$HOME/.zshenv}"
+  echo "Sourcing $ZSH_ENV..."
+  source "$ZSH_ENV"
+
+  for file in .zprofile .zshrc .zlogin .zlogout; do
+    local config_file="${ZDOTDIR:-$HOME}/$file"
+    if [[ -f "$config_file" ]]; then
+      echo "Sourcing $config_file..."
+      source "$config_file"
+    else
+      echo "Warning: $config_file not found!" >&2
+    fi
+  done
+
+  echo "Reload complete."
 }
 
 _zsh-reset() {
