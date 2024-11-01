@@ -50,7 +50,7 @@ config.line_height = 1.1
 config.adjust_window_size_when_changing_font_size = false
 
 config.term = "xterm-256color"
-config.window_background_opacity = 0.8
+config.window_background_opacity = 0.6
 config.macos_window_background_blur = 90
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "AlwaysPrompt"
@@ -69,7 +69,7 @@ config.inactive_pane_hsb = {
 config.use_fancy_tab_bar = false
 config.status_update_interval = 1000
 config.tab_bar_at_bottom = true
-config.hide_tab_bar_if_only_one_tab = false
+config.hide_tab_bar_if_only_one_tab = true
 wezterm.on("update-status", function(window, pane)
 	-- Workspace name
 	local stat = window:active_workspace()
