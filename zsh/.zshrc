@@ -15,6 +15,7 @@ source "$ZDOTDIR/config/node.zsh"
 # Plugins and application files
 source "$ZDOTDIR/config/neovim.zsh"
 source "$ZDOTDIR/config/fzf.zsh"
+source "$ZDOTDIR/config/atuin.zsh"
 source "$ZDOTDIR/config/plugins.zsh"
 
 # Enable useful options (see 'man zshoptions' for more details)
@@ -79,3 +80,7 @@ source "$ZDOTDIR/config/aliases.zsh"
 source "$ZDOTDIR/config/prompt.zsh"
 
 file_exists $HOME/.zshrc-local && source $HOME/.zshrc-local
+
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"

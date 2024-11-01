@@ -25,6 +25,11 @@ file_exists() {
   [[ -f "$1" ]]
 }
 
+# Check if a folder exists
+folder-exists() {
+  [[ -d "$1" ]]
+}
+
 # Check if a path exists
 path_exists() {
 	[[ -e "$1" ]]
