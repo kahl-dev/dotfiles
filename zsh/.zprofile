@@ -10,7 +10,7 @@ if is_macos && path_exists "/opt/homebrew/bin/brew"; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-if [ -d "/home/linuxbrew/.linuxbrew/bin" ]; then
+if path_exists "/home/linuxbrew/.linuxbrew/bin"; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
   export PATH="$(brew --prefix)/opt/python/libexec/bin:${PATH}"
 fi
@@ -26,3 +26,9 @@ FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 #   FPATH=~/.rbenv/completions:"$FPATH"
 #   export PATH="$HOME/.rbenv/bin:$PATH"
 # fi
+
+export PATH="$PATH:$HOME/.local/bin"
+
+if command_exists ngrok; then
+  eval "$(ngrok completion)"
+fi
