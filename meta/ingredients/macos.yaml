@@ -22,6 +22,7 @@
     ~/.config/wezterm: ./.config/wezterm/
     ~/.config/karabiner: ./.config/karabiner/
     ~/.config/sketchybar: ./.config/sketchybar/
+    ~/.config/aerospace: ./.config/aerospace/
 
     ~/.hammerspoon: ./.hammerspoon/
 
