@@ -3,6 +3,19 @@
 # Check if a command exists
 command_exists() {
 	command -v "$1" >/dev/null 2>&1
+# Fallback logic to ensure 'uname' works
+ensure_uname() {
+  if ! command_exists uname; then
+    # Specify the fallback path to uname (adjust this path as needed)
+    local fallback_uname="/usr/bin/uname"
+    
+    if [[ -x "$fallback_uname" ]]; then
+      alias uname="$fallback_uname"
+    else
+      echo "uname not found and fallback not executable."
+      return 1
+    fi
+  fi
 }
 
 # Check if the system is a Raspberry Pi
@@ -12,12 +25,14 @@ is_raspberry_pi() {
 
 # Check if the system is macOS
 is_macos() {
-	[[ "$(uname -s)" == "Darwin" ]]
+  ensure_uname
+  [[ "$(uname -s)" == "Darwin" ]]
 }
 
 # Check if the system is Linux
 is_linux() {
-	[[ "$(uname -s)" == "Linux" ]]
+  ensure_uname
+  [[ "$(uname -s)" == "Linux" ]]
 }
 
 # Check if a file exists
