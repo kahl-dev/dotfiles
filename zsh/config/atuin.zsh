@@ -1,4 +1,4 @@
-if ! folder-exists ~/.atuin/bin; then;
+if ! folder_exists ~/.atuin/bin; then;
   curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
 fi
 

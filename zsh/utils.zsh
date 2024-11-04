@@ -41,7 +41,7 @@ file_exists() {
 }
 
 # Check if a folder exists
-folder-exists() {
+folder_exists() {
   [[ -d "$1" ]]
 }
 
