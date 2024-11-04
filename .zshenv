@@ -12,7 +12,6 @@ source $DOTFILES/zsh/utils.zsh
 typeset -U path
 path=(
   "$ZINIT_ROOT/polaris/bin"
-  "$HOME/.local/bin"
   $DOTFILES/bin
   $path
 )
