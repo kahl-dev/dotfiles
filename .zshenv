@@ -12,8 +12,8 @@ source $DOTFILES/zsh/utils.zsh
 typeset -U path
 path=(
   "$ZINIT_ROOT/polaris/bin"
-  $DOTFILES/bin
-  $path
+  "$DOTFILES/bin"
+  "$path"
 )
 
 ! command_exists git-lia && file_exists "$DOTFILES/bin/git-lia/git-lia" && path+=("$DOTFILES/bin/git-lia/git-lia")
@@ -83,4 +83,4 @@ export NODE_DEFAULT_PACKAGES=(
   @antfu/ni
 )
 
-file_exists $HOME/.dotfiles-local/.zshenv && source $HOME/.dotfiles-local/.zshenv
+file_exists "$HOME/.dotfiles-local/.zshenv" && source "$HOME/.dotfiles-local/.zshenv"

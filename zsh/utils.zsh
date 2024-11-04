@@ -2,7 +2,9 @@
 
 # Check if a command exists
 command_exists() {
-	command -v "$1" >/dev/null 2>&1
+  command -v "$1" >/dev/null 2>&1
+}
+
 # Fallback logic to ensure 'uname' works
 ensure_uname() {
   if ! command_exists uname; then
@@ -20,7 +22,7 @@ ensure_uname() {
 
 # Check if the system is a Raspberry Pi
 is_raspberry_pi() {
-	command_exists raspi-config
+  command_exists raspi-config
 }
 
 # Check if the system is macOS
@@ -47,7 +49,7 @@ folder_exists() {
 
 # Check if a path exists
 path_exists() {
-	[[ -e "$1" ]]
+  [[ -e "$1" ]]
 }
 
 # Check if the script is running on an SSH client
@@ -58,7 +60,7 @@ is_ssh_client() {
 open_command() {
   local open_cmd
 
-  # define the open command
+  # Define the open command
   case "$OSTYPE" in
     darwin*)  open_cmd='open' ;;
     cygwin*)  open_cmd='cygstart' ;;
