@@ -32,11 +32,3 @@ fi
 if path_exists "$HOME/go/bin"; then
   export PATH="$PATH:$HOME/go/bin"
 fi
-
-if command_exists ngrok; then
-  eval "$(ngrok completion)"
-fi
-
-if command_exists fnm; then
-  eval "$(fnm env --use-on-cd --version-file-strategy=recursive)"
-fi

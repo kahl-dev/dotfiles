@@ -76,6 +76,7 @@ compdef mosh=ssh                     # Use ssh completion for mosh
 zmodload zsh/complist                # Load the complist module for advanced completion list features
 
 # Files needs to be loaded after completion or compinit
+source "$ZDOTDIR/config/ngrok.zsh"
 source "$ZDOTDIR/config/git-lia.zsh"
 source "$ZDOTDIR/config/keybindings.zsh"
 source "$ZDOTDIR/config/aliases.zsh"
