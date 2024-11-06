@@ -292,6 +292,18 @@ _gjirac() {
   fi
 }
 
+# Function to view diffs with preview and open selected files in the editor
+_gitdiffview() {
+  local branch repo_root
+  branch=$(_git_main_branch)
+  repo_root=$(git rev-parse --show-toplevel)
+  FZF_TMUX= git -C "$repo_root" diff --name-only "$branch" | fzf --multi --preview "git -C $repo_root diff --color=always $branch -- {}" | xargs -r $EDITOR
+}
+
+# Show git diff to base branch as fzf preview
+alias gitdiffview='_gitdiffview'
+alias gdv='_gitdiffview'
+
 alias g='git'
 alias ga='git add'
 alias gaa='git add --all'
