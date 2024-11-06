@@ -31,17 +31,17 @@ VALID_TYPES=("feat" "fix" "docs" "style" "refactor" "perf" "test" "chore")
 path_exists "$DOTFILES/bin" && alias glct="git-lia-toggl"
 
 _glct_completions() {
-    local -a commands
-    local cur_context="$curcontext" state line
+  local -a commands
+  local cur_context="$curcontext" state line
 
-    typeset -A opt_args
+  typeset -A opt_args
 
-    if (( CURRENT == 2 )); then
-        commands=('feat' 'fix' 'docs' 'style' 'refactor' 'perf' 'test' 'chore')
-        _describe -t commands "glct type" commands
-    fi
+  if ((CURRENT == 2)); then
+    commands=('feat' 'fix' 'docs' 'style' 'refactor' 'perf' 'test' 'chore')
+    _describe -t commands "glct type" commands
+  fi
 
-    return 1
+  return 1
 }
 
 compdef _glct_completions glct
@@ -76,34 +76,34 @@ _git-lia() {
     '*:: :->arg'
 
   case $state in
-    command)
-      _describe -t commands "git-lia commands" commands
-      ;;
+  command)
+    _describe -t commands "git-lia commands" commands
+    ;;
 
-    arg)
-      case $line[1] in
-        commit)
-          if [[ ${line[(I)-s]} -gt 0 && ${line[(I)-n]} -gt 0 ]]; then
-            # User has tried to use both -s and -n together
-            # Display an error message and prevent further completion
-            _message "Cannot use -s and -n together"
-          else
-            _arguments -C \
-              "-t[Specify the commit type]:Commit Type:_commit_types" \
-              '-s[Specify the commit scope]:Commit Scope:' \
-              '-m[Specify the commit message]:Commit Message:' \
-              '-b[Indicate a breaking change]' \
-              '-n[Commit without specifying a scope]'
-          fi
-          ;;
-        preview)
-          _arguments -C '-p[View GitLab pipeline status]'
-          ;;
-        finish)
-          _arguments -C '-p[View GitLab pipeline status]'
-          ;;
-      esac
+  arg)
+    case $line[1] in
+    commit)
+      if [[ ${line[(I) - s]} -gt 0 && ${line[(I) - n]} -gt 0 ]]; then
+        # User has tried to use both -s and -n together
+        # Display an error message and prevent further completion
+        _message "Cannot use -s and -n together"
+      else
+        _arguments -C \
+          "-t[Specify the commit type]:Commit Type:_commit_types" \
+          '-s[Specify the commit scope]:Commit Scope:' \
+          '-m[Specify the commit message]:Commit Message:' \
+          '-b[Indicate a breaking change]' \
+          '-n[Commit without specifying a scope]'
+      fi
       ;;
+    preview)
+      _arguments -C '-p[View GitLab pipeline status]'
+      ;;
+    finish)
+      _arguments -C '-p[View GitLab pipeline status]'
+      ;;
+    esac
+    ;;
 
   esac
 }
@@ -123,4 +123,3 @@ _commit_types() {
 }
 
 compdef _git-lia git-lia
-
