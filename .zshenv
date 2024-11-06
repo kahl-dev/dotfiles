@@ -13,8 +13,11 @@ typeset -U path
 path=(
   "$ZINIT_ROOT/polaris/bin"
   "$DOTFILES/bin"
-  "$path"
+  ${(s.:.)PATH}  # This expands the current PATH into an array in Zsh
 )
+
+# Re-export the PATH from the path array
+export PATH="${(j.:.)path}"
 
 ! command_exists git-lia && file_exists "$DOTFILES/bin/git-lia/git-lia" && path+=("$DOTFILES/bin/git-lia/git-lia")
 
