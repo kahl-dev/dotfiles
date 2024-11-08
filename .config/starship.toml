@@ -10,6 +10,7 @@ $directory\
 $git_branch\
 $git_state\
 $git_status\
+$custom\ 
 [](fg:surface2 bg:surface1)\
 $nodejs\
 $php\
@@ -89,6 +90,20 @@ up_to_date = ' ✓'
 style = "fg:blue bg:surface2"
 stashed = '\$$count '
 format = '[ $all_status$ahead_behind ]($style)'
+
+[custom.delete_indicator]
+command = """
+  if git rev-parse --git-dir > /dev/null 2>&1; then
+    # List branches merged into the current branch, excluding main branches
+    if [ "$(git branch --merged | grep -E -v 'master|main|dev|staging|preview|production' | wc -l)" -gt 0 ]; then
+      echo ""
+    fi
+  fi
+"""
+description = "Indicates if there are branches that can be deleted"
+when = "git rev-parse --is-inside-work-tree 2>/dev/null"
+style = "fg:blue bg:surface2"
+format = "[$output ](fg:blue bg:surface2)"
 
 [nodejs]
 symbol = ""
