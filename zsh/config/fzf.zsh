@@ -56,6 +56,8 @@ if command_exists fzf && command_exists fzf-tmux; then
     fi
   }
 
+  alias fal='alias | fzf --preview "echo {}" | awk -F "=" "{print \$1}" | xargs -I {} sh -c "{}"'
+
   if ! is_ssh_client; then
     # SSH into a host using fzf to select from your SSH config
     # runs the original ssh command if arguments are provided
