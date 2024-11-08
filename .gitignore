@@ -24,6 +24,7 @@ bin/*
 !bin/dot-cli
 !bin/git-lia-toggl
 !bin/vscode
+!bin/git-cleanup
 
 !.config/bat/themes/*
 

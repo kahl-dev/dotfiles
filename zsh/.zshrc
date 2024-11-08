@@ -81,6 +81,7 @@ source "$ZDOTDIR/config/git-lia.zsh"
 source "$ZDOTDIR/config/keybindings.zsh"
 source "$ZDOTDIR/config/aliases.zsh"
 source "$ZDOTDIR/config/prompt.zsh"
+source "$ZDOTDIR/config/check_git_cleanup.zsh"
 
 file_exists $HOME/.zshrc-local && source $HOME/.zshrc-local
 

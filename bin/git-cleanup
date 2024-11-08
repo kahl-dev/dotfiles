@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# Define the cleanup log paths
+CLEANUP_LOG="$HOME/.local/share/git-cleanup/cleanup-log"
+DETAILED_LOG="$HOME/.local/share/git-cleanup/cleanup-detailed.log"
+
+# Ensure the log directory exists
+mkdir -p "$(dirname "$CLEANUP_LOG")"
+
+# Color definitions
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+CYAN="\033[0;36m"
+RESET="\033[0m"
+
+# Get the path of the current Git repository
+REPO_PATH=$(git rev-parse --show-toplevel 2>/dev/null)
+
+if [ -z "$REPO_PATH" ]; then
+  echo -e "${RED}Not inside a Git repository.${RESET}"
+  exit 1
+fi
+
+# Fetch and prune remote-tracking branches
+echo -e "${CYAN}Fetching and pruning remote branches...${RESET}"
+git fetch --prune
+
+# Start logging details of the cleanup
+DATE=$(date '+%Y-%m-%d %H:%M:%S')
+echo -e "${CYAN}[$DATE] Starting cleanup for repository: $REPO_PATH${RESET}"
+echo "[$DATE] Cleanup started for repository: $REPO_PATH" >>"$DETAILED_LOG"
+
+# Measure the size of the repository before cleanup
+INITIAL_SIZE=$(du -sh "$REPO_PATH/.git" | awk '{print $1}')
+
+# List fully merged branches that are candidates for deletion
+MERGED_BRANCHES=$(git branch --merged | grep -E -v 'master|dev|main|staging|preview|production')
+
+# Delete fully merged branches locally and log each branch deleted
+DELETED_COUNT=0
+if [ -n "$MERGED_BRANCHES" ]; then
+  echo -e "${YELLOW}Deleting fully merged branches:${RESET}"
+  echo "[$DATE] Deleted the following branches:" >>"$DETAILED_LOG"
+  for branch in $MERGED_BRANCHES; do
+    git branch -d "$branch" && echo -e " - ${GREEN}$branch${RESET}" >>"$DETAILED_LOG" && ((DELETED_COUNT++))
+  done
+else
+  echo -e "${YELLOW}No fully merged branches to delete.${RESET}"
+  echo "[$DATE] No fully merged branches to delete." >>"$DETAILED_LOG"
+fi
+
+# Run Git garbage collection and log
+echo -e "${CYAN}Running git garbage collection...${RESET}"
+git gc --prune=now
+echo "[$DATE] Ran git garbage collection." >>"$DETAILED_LOG"
+
+# Measure the size of the repository after cleanup
+FINAL_SIZE=$(du -sh "$REPO_PATH/.git" | awk '{print $1}')
+
+# Calculate space freed with units
+SPACE_FREED=$(echo "$INITIAL_SIZE - $FINAL_SIZE" | bc)
+
+# Determine units based on output of du command
+echo -e "${GREEN}Cleanup completed.${RESET}"
+echo -e "Initial size: ${CYAN}$INITIAL_SIZE${RESET}, Final size: ${CYAN}$FINAL_SIZE${RESET}, Space freed: ${GREEN}$SPACE_FREED${RESET}"
+echo "[$DATE] Initial size: $INITIAL_SIZE, Final size: $FINAL_SIZE, Space freed: $SPACE_FREED" >>"$DETAILED_LOG"
+
+# Get the date of the last commit
+LAST_COMMIT_DATE=$(git log -1 --format="%ci")
+echo -e "Last commit date before cleanup: ${CYAN}$LAST_COMMIT_DATE${RESET}"
+echo "[$DATE] Last commit date before cleanup: $LAST_COMMIT_DATE" >>"$DETAILED_LOG"
+
+# Update the main cleanup log with the last cleanup date for this repository
+grep -v "^$REPO_PATH" "$CLEANUP_LOG" >"$CLEANUP_LOG.tmp" && mv "$CLEANUP_LOG.tmp" "$CLEANUP_LOG"
+echo "$REPO_PATH $DATE" >>"$CLEANUP_LOG"
+
+# Final message in the detailed log
+echo "[$DATE] Cleanup completed for $REPO_PATH. Branches deleted: $DELETED_COUNT, Space freed: $SPACE_FREED" >>"$DETAILED_LOG"
+echo -e "${GREEN}Branches deleted: $DELETED_COUNT${RESET}, Space freed: ${GREEN}$SPACE_FREED${RESET}"
