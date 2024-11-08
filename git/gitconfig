@@ -1,86 +1,85 @@
 [alias]
-  update  = !git pull && git submodule update --init --recursive
-	branchdate = "for-each-ref --count=20 --sort=-committerdate refs/remotes/origin --format=\"%(authordate:short)%09%(objectname:short)%09%(authorname)%09%1B[0;33m%(refname:short)%1B[m%09\""
-  delete-local-merged = "!git fetch && git branch --merged | egrep -v 'master|dev|main|staging'  | xargs git branch -d"
+update = !git pull && git submodule update --init --recursive
+branchdate = "for-each-ref --count=20 --sort=-committerdate refs/remotes/origin --format=\"%(authordate:short)%09%(objectname:short)%09%(authorname)%09%1B[0;33m%(refname:short)%1B[m%09\""
+delete-local-merged = "!git fetch && git branch --merged | egrep -v 'master|dev|main|staging' | xargs git branch -d"
 
 [user]
-  name = Patrick Kahl
-  email = patrick@kahl.dev
+name = Patrick Kahl
+email = patrick@kahl.dev
 
 [credential]
-  helper = cache --timeout 228800
+helper = cache --timeout 228800
 
 [push]
-	default = current
-	followTags = true
+default = current
+followTags = true
 
 [core]
-  pager = delta
-  excludesfile = ~/.gitignore_global
-  editor = "if command -v 'nvim' >/dev/null 2>&1; then ED='nvim'; else ED='vim'; fi; $ED"
-  compression = 0
+pager = delta
+excludesfile = ~/.gitignore_global
+editor = "if command -v 'nvim' >/dev/null 2>&1; then ED='nvim'; else ED='vim'; fi; $ED"
+compression = 0
 
 [interactive]
-  diffFilter = delta --color-only
+diffFilter = delta --color-only
 
 [init]
-  templatedir = ~/.gittemplate
-	defaultBranch = main
+templatedir = ~/.gittemplate
+defaultBranch = main
 
-# Allow local customizations in the .gitconfig_local file
 [include]
-  path = ~/.gitconfig-local
+path = ~/.gitconfig-local
 
 [pager]
-  # diff = diff-so-fancy | less --tabs=4 -RFXS --pattern '^(Date|added|deleted|modified): '
+# diff = diff-so-fancy | less --tabs=4 -RFXS --pattern '^(Date|added|deleted|modified): '
 
 [submodule]
-	recurse = true
+recurse = true
 
 [color]
-	ui = true
+ui = true
 
 [color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 52
-	newNormal = green bold
-	newHighlight = green bold 22
+oldNormal = red bold
+oldHighlight = red bold 52
+newNormal = green bold
+newHighlight = green bold 22
 
 [pull]
-	rebase = true
+rebase = true
 
 [rebase]
-	autoStash = true
+autoStash = true
 
 [merge]
-  conflictstyle = diff3
-	ff = false
+conflictstyle = diff3
+ff = false
 
 [diff]
-  colorMoved = default
-  renameLimit = 999999
-  # tool = vimdiff
+colorMoved = default
+renameLimit = 999999
+# tool = vimdiff
 
 [help]
-	autocorrect = 10
+autocorrect = 10
 
 [fetch]
-	prune = true
+prune = true
 
 [web]
-  browser = open
+browser = open
 
 [browser "open"]
-	cmd = open
+cmd = open
 
 [rerere]
-	enabled = true
+enabled = true
 
 [delta]
-  navigate = true    # use n and N to move between diff sections
-  light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
-  line-numbers = true
+navigate = true
+light = false
+line-numbers = true
 
 [git-up "fetch"]
-	prune = true
-	all = true
+prune = true
+all = true
