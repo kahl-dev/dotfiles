@@ -50,7 +50,7 @@ config.line_height = 1.1
 config.adjust_window_size_when_changing_font_size = false
 
 config.term = "xterm-256color"
-config.window_background_opacity = 0.6
+config.window_background_opacity = 0.83
 config.macos_window_background_blur = 90
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "AlwaysPrompt"
