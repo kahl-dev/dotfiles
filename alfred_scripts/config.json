@@ -1,0 +1,60 @@
+{
+  "monitor_mappings": {
+    "3": {
+      "workspaces": {
+        "1": "LG HDR 4K",
+        "3": "LG HDR 4K",
+        "4": "LG HDR 4K",
+        "5": "LG HDR 4K",
+        "6": "LG HDR 4K",
+        "T": "LG HDR 4K",
+        "2": "LG Ultra HD",
+        "G": "Built-in Retina Display",
+        "M": "Built-in Retina Display",
+        "7": "Built-in Retina Display",
+        "8": "Built-in Retina Display",
+        "9": "Built-in Retina Display"
+      }
+    },
+    "2": {
+      "workspaces": {
+        "1": "LG HDR 4K",
+        "3": "LG HDR 4K",
+        "4": "LG HDR 4K",
+        "2": "Built-in Retina Display",
+        "M": "Built-in Retina Display",
+        "G": "Built-in Retina Display"
+      }
+    },
+    "1": {
+      "workspaces": {
+        "1": "Built-in Retina Display",
+        "2": "Built-in Retina Display",
+        "3": "Built-in Retina Display",
+        "4": "Built-in Retina Display",
+        "5": "Built-in Retina Display",
+        "6": "Built-in Retina Display",
+        "7": "Built-in Retina Display",
+        "8": "Built-in Retina Display",
+        "9": "Built-in Retina Display",
+        "T": "Built-in Retina Display",
+        "G": "Built-in Retina Display",
+        "M": "Built-in Retina Display",
+        "N": "Built-in Retina Display",
+        "Z": "Built-in Retina Display"
+      }
+    }
+  },
+  "app_mappings": {
+    "WezTerm": "1",
+    "Code": "1",
+    "Microsoft Teams": "M",
+    "Slack": "M",
+    "Messages": "M",
+    "Arc": "2",
+    "Postman": "1",
+    "Toggl Track": "2",
+    "Music": "7",
+    "ChatGPT": "G"
+  }
+}
