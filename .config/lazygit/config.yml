@@ -16,3 +16,7 @@ customCommands:
       description: 'Git lia commit'
       command: 'git-lia-toggl'
       subprocess: true
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
