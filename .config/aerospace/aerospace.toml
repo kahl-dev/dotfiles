@@ -126,7 +126,7 @@ alt-9 = 'workspace 9'
 # alt-b = 'workspace B'
 # alt-c = 'workspace C'
 # alt-d = 'workspace D'
-# alt-e = 'workspace E'
+alt-e = 'workspace E'
 # alt-f = 'workspace F'
 alt-g = 'workspace G'
 # alt-i = 'workspace I'
@@ -159,7 +159,7 @@ alt-shift-9 = 'move-node-to-workspace 9'
 alt-shift-b = 'move-node-to-workspace B'
 # alt-shift-c = 'move-node-to-workspace C'
 # alt-shift-d = 'move-node-to-workspace D'
-# alt-shift-e = 'move-node-to-workspace E'
+alt-shift-e = 'move-node-to-workspace E'
 # alt-shift-f = 'move-node-to-workspace F'
 alt-shift-g = 'move-node-to-workspace G'
 # alt-shift-i = 'move-node-to-workspace I'
@@ -238,3 +238,23 @@ run = 'move-node-to-workspace --focus-follows-window M'
 [[on-window-detected]]
 if.app-id = 'net.whatsapp.WhatsApp'
 run = 'move-node-to-workspace --focus-follows-window M'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Music'
+run = ['layout floating', 'move-node-to-workspace --focus-follows-window E']
+
+[[on-window-detected]]
+if.app-id = 'com.elgato.WaveLink'
+run = ['layout floating', 'move-node-to-workspace --focus-follows-window E']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.reminders'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Notes'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.culturedcode.ThingsMac'
+run = ['layout floating']
