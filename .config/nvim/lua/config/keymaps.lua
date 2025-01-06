@@ -2,6 +2,10 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+-- Navigate cmdline completion popup with Ctrl+j and Ctrl+k
+vim.api.nvim_set_keymap("c", "<C-j>", "<C-n>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("c", "<C-k>", "<C-p>", { noremap = true, silent = true })
+
 -- Adjust the timeout length for key sequences
 vim.o.timeoutlen = 100
 
