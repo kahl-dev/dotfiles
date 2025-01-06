@@ -18,10 +18,10 @@ end
 local wk = require("which-key")
 wk.add({
   { mode = "n" },
-  { "<leader>k", group = "kahl's keymaps" },
-  { "<leader>ko", group = "Open or OCR52" },
-  { "<leader>kog", group = "Open GIT" },
-  { "<leader>koj", group = "Open JIRA" },
+  { "<leader>C", group = "Custom Keymaps" },
+  { "<leader>Co", group = "Open or OCR52" },
+  { "<leader>Cog", group = "Open GIT" },
+  { "<leader>Coj", group = "Open JIRA" },
   { "<leader>r", group = "reg" },
   { "<leader>z", group = "quickfix" },
 })
@@ -67,12 +67,12 @@ map("v", "<leader>rp", [["_dP]], { desc = "Paste without regitry overwrite" })
 map("n", "<leader>rd", [["_d]], { desc = "Delete without regitry overwrite" })
 map("v", "<leader>rd", [["_d]], { desc = "Delete without regitry overwrite" })
 
-map("n", "<leader>kt", "<cmd>lua require('toggl_handler').get_ticket_id()<CR>", { desc = "Toggle ID" })
-map("n", "<leader>kom", "<cmd>lua require('marked2_open').open_in_marked2()<CR>", { desc = "Marked 2" })
-map("n", "<leader>koc", "<cmd>lua require('url_utils').open_url()<CR>", { desc = "URL under cursor" })
-map("n", "<leader>kojb", "<cmd>lua require('url_utils').open_jira_from_branch()<CR>", { desc = "Git branch" })
-map("n", "<leader>kojc", "<cmd>lua require('url_utils').open_jira_from_commit()<CR>", { desc = "Git commit" })
-map("n", "<leader>kogr", "<cmd>lua require('url_utils').open_repo()<CR>", { desc = "Git repo" })
-map("n", "<leader>kogb", "<cmd>lua require('url_utils').open_branch()<CR>", { desc = "Git branch" })
-map("n", "<leader>kogc", "<cmd>lua require('url_utils').open_commit()<CR>", { desc = "Git commit" })
-map("n", "<leader>kogf", "<cmd>lua require('url_utils').open_file()<CR>", { desc = "Git file" })
+map("n", "<leader>Ct", "<cmd>lua require('toggl_handler').get_ticket_id()<CR>", { desc = "Toggle ID" })
+map("n", "<leader>Com", "<cmd>lua require('marked2_open').open_in_marked2()<CR>", { desc = "Marked 2" })
+map("n", "<leader>Coc", "<cmd>lua require('url_utils').open_url()<CR>", { desc = "URL under cursor" })
+map("n", "<leader>Cojb", "<cmd>lua require('url_utils').open_jira_from_branch()<CR>", { desc = "Git branch" })
+map("n", "<leader>Cojc", "<cmd>lua require('url_utils').open_jira_from_commit()<CR>", { desc = "Git commit" })
+map("n", "<leader>Cogr", "<cmd>lua require('url_utils').open_repo()<CR>", { desc = "Git repo" })
+map("n", "<leader>Cogb", "<cmd>lua require('url_utils').open_branch()<CR>", { desc = "Git branch" })
+map("n", "<leader>Cogc", "<cmd>lua require('url_utils').open_commit()<CR>", { desc = "Git commit" })
+map("n", "<leader>Cogf", "<cmd>lua require('url_utils').open_file()<CR>", { desc = "Git file" })
