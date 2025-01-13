@@ -93,6 +93,18 @@ return {
       --     },
       --   },
       -- },
+
+      vtsls = {
+        settings = {
+          typescript = {
+            tsserver = {
+              experimental = {
+                enableProjectDiagnostics = true,
+              },
+            },
+          },
+        },
+      },
     },
     -- format = {
     --   async = true,
