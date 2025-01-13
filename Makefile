@@ -53,6 +53,7 @@ updateShell: ## MAINTENANCE: Update shell
 nvimResetPackages: ## CLEANUP: Reset lazy.nvim packages
 	@rm -Rf ~/.local/share/nvim/lazy
 	@rm -Rf ~/.local/state/nvim/lazy
+	@rm -Rf ~/.cache/nvim
 
 uninstall: ## CLEANUP: Remove all created folder and symlinks
 	@make stopServices
