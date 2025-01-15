@@ -10,7 +10,7 @@ $line_break\
 $python\
 $character"""
 
-palette = "catppuccin_frappe"
+palette = "catppuccin_macchiato"
 
 [directory]
 style = "blue"
