@@ -258,3 +258,15 @@ run = ['layout floating']
 [[on-window-detected]]
 if.app-id = 'com.culturedcode.ThingsMac'
 run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.macpaw.CleanMyMac4'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'org.pqrs.Karabiner-Elements.Settings'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'org.pqrs.Karabiner-EventViewer'
+run = ['layout floating']
