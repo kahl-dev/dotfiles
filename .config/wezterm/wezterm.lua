@@ -12,46 +12,46 @@ end
 -- config.color_scheme = "Tokyo Night"
 config.color_scheme = "Catppuccin Mocha"
 
-wezterm.on("window-focus-changed", function(window)
-	local overrides = window:get_config_overrides() or {}
+-- wezterm.on("window-focus-changed", function(window)
+-- 	local overrides = window:get_config_overrides() or {}
+--
+-- 	if window:is_focused() then
+-- 		overrides.window_background_opacity = 0.9
+-- 		overrides.macos_window_background_blur = 30
+-- 	else
+-- 		overrides.window_background_opacity = 0.7
+-- 		overrides.macos_window_background_blur = 10
+-- 	end
+--
+-- 	window:set_config_overrides(overrides)
+-- end)
 
-	if window:is_focused() then
-		overrides.window_background_opacity = 0.9
-		overrides.macos_window_background_blur = 30
-	else
-		overrides.window_background_opacity = 0.7
-		overrides.macos_window_background_blur = 10
-	end
-
-	window:set_config_overrides(overrides)
-end)
-
-config.font = wezterm.font({ family = "Monaspace Argon" })
-config.font_rules = {
-	{
-		italic = true,
-		font = wezterm.font({
-			family = "Monaspace Radon",
-			style = "Italic",
-		}),
-	},
-	{
-		intensity = "Bold",
-		font = wezterm.font({
-			family = "Monaspace Argon",
-			weight = "Bold",
-		}),
-	},
-	{
-		intensity = "Bold",
-		italic = true,
-		font = wezterm.font({
-			family = "Monaspace Radon",
-			weight = "Bold",
-			style = "Italic",
-		}),
-	},
-}
+-- config.font = wezterm.font({ family = "Monaspace Argon" })
+-- config.font_rules = {
+-- 	{
+-- 		italic = true,
+-- 		font = wezterm.font({
+-- 			family = "Monaspace Radon",
+-- 			style = "Italic",
+-- 		}),
+-- 	},
+-- 	{
+-- 		intensity = "Bold",
+-- 		font = wezterm.font({
+-- 			family = "Monaspace Argon",
+-- 			weight = "Bold",
+-- 		}),
+-- 	},
+-- 	{
+-- 		intensity = "Bold",
+-- 		italic = true,
+-- 		font = wezterm.font({
+-- 			family = "Monaspace Radon",
+-- 			weight = "Bold",
+-- 			style = "Italic",
+-- 		}),
+-- 	},
+-- }
 
 -- config.font = wezterm.font_with_fallback({
 -- 	{ family = "FiraCode Nerd Font" },
@@ -64,7 +64,7 @@ config.line_height = 1.1
 config.adjust_window_size_when_changing_font_size = false
 
 config.term = "xterm-256color"
-config.window_background_opacity = 0.85
+config.window_background_opacity = 0.9
 config.macos_window_background_blur = 10
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "AlwaysPrompt"
