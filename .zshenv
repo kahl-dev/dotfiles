@@ -87,3 +87,5 @@ export NODE_DEFAULT_PACKAGES=(
 )
 
 file_exists "$HOME/.dotfiles-local/.zshenv" && source "$HOME/.dotfiles-local/.zshenv"
+
+export TERM=xterm-256color
