@@ -13,9 +13,7 @@ if is_macos; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
   fi
 
-  yabai --uninstall-service
   brew bundle --verbose --file=$HOMEBREW_BUNDLE_FILE_GLOBAL
-  yabai --start-service
 fi
 
 # TODO: Test this on a Linux machine
