@@ -6,7 +6,6 @@
                 "rules": [
                     {
                         "description": "R_U = Super ",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": { "key_code": "r" },
@@ -54,7 +53,6 @@
                     },
                     {
                         "description": "Home row mods - ctrl, opt, shift, command",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
@@ -835,7 +833,6 @@
                     },
                     {
                         "description": "Change caps_lock to left_control if pressed with other keys, change caps_lock to escape if pressed alone.",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
