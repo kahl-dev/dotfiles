@@ -18,11 +18,11 @@ after-startup-command = [
 ]
 
 # Notify Sketchybar about workspace change
-exec-on-workspace-change = [
-  '/bin/bash',
-  '-c',
-  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
-]
+# exec-on-workspace-change = [
+#   '/bin/bash',
+#   '-c',
+#   'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
+# ]
 
 # Start AeroSpace at login
 start-at-login = true
@@ -72,7 +72,8 @@ inner.horizontal = 24
 inner.vertical = 24
 outer.left = 24
 outer.bottom = 24
-outer.top = [{ monitor."Built-in Retina Display" = 24 }, 48]
+# outer.top = [{ monitor."Built-in Retina Display" = 24 }, 48]
+outer.top = 24
 outer.right = 24
 
 [workspace-to-monitor-force-assignment]
