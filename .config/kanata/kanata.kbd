@@ -1,18 +1,24 @@
-;; defsrc is still necessary
+;; Enable processing unmapped keys
 (defcfg
   process-unmapped-keys yes
 )
 
+;; Define source keys
 (defsrc
   f1   f2   f3   f4   f5   f6   f7   f8   f9   f10   f11   f12
+  r u
   caps a s d f j k l ;
-  fn
+  lsft
+  fn lctl lmet lalt
 )
+
+;; Tap and hold time variables
 (defvar
-  tap-time 150
+  tap-time 200
   hold-time 200
 )
 
+;; Define tap-hold mappings
 (defalias
   escctrl (tap-hold 150 150 esc lctl)
   a (tap-hold $tap-time $hold-time a lmet)
@@ -24,16 +30,25 @@
   l (tap-hold $tap-time $hold-time l ralt)
   ; (tap-hold $tap-time $hold-time ; rmet)
   fnl (tap-hold 200 200 fn (layer-toggle fn))
+
+  r (tap-hold $tap-time $hold-time r (multi lsft lctl lmet lalt))
+  u (tap-hold $tap-time $hold-time u (multi lsft lctl lmet lalt))
 )
 
+;; Base layer configuration
 (deflayer base
   brdn  brup  _    _    _    _   prev  pp  next  mute  vold  volu
-  @escctrl @a @s @d @f @j @k @l @;
-  @fnl
+  @r @u
+  @escctrl @a @s @d @f @j @k @l @; 
+  _
+  @fnl  _  _  _
 )
 
+;; Function layer configuration
 (deflayer fn
   f1   f2   f3   f4   f5   f6   f7   f8   f9   f10   f11   f12
-  @escctrl _ _ _ _ _ _ _ _
-  fn
+  _ _
+  @escctrl _ _ _ _ _ _ _ _ 
+  _
+  @fnl _ _ _
 )
