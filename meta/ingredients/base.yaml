@@ -32,6 +32,7 @@
     ~/.config/.nuxtrc: ./.config/.nuxtrc
     ~/.config/nvim: ./.config/nvim/
     ~/.config/starship.toml: ./.config/starship.toml
+    ~/.config/yazi: ./.config/yazi/
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
