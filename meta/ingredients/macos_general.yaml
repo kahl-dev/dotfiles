@@ -15,7 +15,6 @@
     ~/.ssh/config: ./.ssh/config
 
     ~/.finicky.js: ./.finicky.js
-    ~/.yabairc: ./.yabairc
     ~/.skhdrc: ./.skhdrc
     ~/.mackup.cfg: ./.mackup.cfg
 
