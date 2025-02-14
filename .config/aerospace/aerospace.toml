@@ -265,11 +265,15 @@ run = 'move-node-to-workspace --focus-follows-window M'
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Music'
-run = ['layout floating', 'move-node-to-workspace --focus-follows-window E']
+run = ['layout tiling', 'move-node-to-workspace --focus-follows-window E']
 
 [[on-window-detected]]
 if.app-id = 'com.elgato.WaveLink'
-run = ['layout floating', 'move-node-to-workspace --focus-follows-window E']
+run = ['layout tiling', 'move-node-to-workspace --focus-follows-window E']
+
+[[on-window-detected]]
+if.app-id = 'com.elgato.StreamDeck'
+run = ['layout tiling', 'move-node-to-workspace --focus-follows-window E']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.reminders'
@@ -298,3 +302,11 @@ run = ['layout floating']
 [[on-window-detected]]
 if.app-id = 'com.hegenberg.BetterTouchTool'
 run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.raycast.macos'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = '...'
+run = 'layout tiling'
