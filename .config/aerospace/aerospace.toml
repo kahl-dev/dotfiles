@@ -68,18 +68,20 @@ on-focus-changed = ['move-mouse window-lazy-center']
 #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
 #                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-inner.horizontal = 24
-inner.vertical = 24
-outer.left = 24
-outer.bottom = 24
+inner.horizontal = 12
+inner.vertical = 12
+outer.left = 12
+outer.bottom = 12
 # outer.top = [{ monitor."Built-in Retina Display" = 24 }, 48]
-outer.top = 24
-outer.right = 24
+outer.top = 12
+outer.right = 12
 
 [workspace-to-monitor-force-assignment]
 1 = 'LG HDR 4K'
 2 = 'LG Ultra HD'
+E = 'LG Ultra HD'
 9 = 'Built-in Retina Display'
+M = 'Built-in Retina Display'
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -110,110 +112,108 @@ outer.right = 24
 # end tell'
 # '''
 
-cmd-h = []     # Disable "hide application"
-cmd-alt-h = [] # Disable "hide others"
+cmd-h = [] # Disable "hide application"
+# cmd-alt-h = [] # Disable "hide others"
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-alt-slash = 'layout tiles horizontal vertical'
-alt-comma = 'layout accordion horizontal vertical'
+cmd-alt-slash = 'layout tiles horizontal vertical'
+cmd-alt-comma = 'layout accordion horizontal vertical'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-alt-h = 'focus left'
-alt-j = 'focus down'
-alt-k = 'focus up'
-alt-l = 'focus right'
+cmd-alt-h = 'focus left'
+cmd-alt-j = 'focus down'
+cmd-alt-k = 'focus up'
+cmd-alt-l = 'focus right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move
-alt-shift-h = 'move left'
-alt-shift-j = 'move down'
-alt-shift-k = 'move up'
-alt-shift-l = 'move right'
+cmd-alt-shift-h = 'move left'
+cmd-alt-shift-j = 'move down'
+cmd-alt-shift-k = 'move up'
+cmd-alt-shift-l = 'move right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
-alt-shift-minus = 'resize smart -50'
-alt-shift-equal = 'resize smart +50'
+cmd-alt-minus = 'resize smart -50'
+cmd-alt-equal = 'resize smart +50'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-alt-1 = 'workspace 1'
-alt-2 = 'workspace 2'
-alt-3 = 'workspace 3'
-alt-4 = 'workspace 4'
-alt-5 = 'workspace 5'
-alt-6 = 'workspace 6'
-alt-7 = 'workspace 7'
-alt-8 = 'workspace 8'
-alt-9 = 'workspace 9'
-# alt-a = 'workspace A' # In your config, you can drop workspace bindings that you don't need
-# alt-b = 'workspace B'
-# alt-c = 'workspace C'
-# alt-d = 'workspace D'
-# alt-e = 'workspace E'
-# alt-f = 'workspace F'
-alt-g = 'workspace G'
-# alt-i = 'workspace I'
-alt-m = 'workspace M'
-# alt-n = 'workspace N'
-# alt-o = 'workspace O'
-# alt-p = 'workspace P'
-# alt-q = 'workspace Q'
-# alt-r = 'workspace R'
-# alt-s = 'workspace S'
-# alt-t = 'workspace T'
-# alt-u = 'workspace U'
-# alt-v = 'workspace V'
-# alt-w = 'workspace W'
-# alt-x = 'workspace X'
-# alt-y = 'workspace Y'
-# alt-z = 'workspace Z'
+cmd-alt-1 = 'workspace 1'
+cmd-alt-2 = 'workspace 2'
+cmd-alt-3 = 'workspace 3'
+cmd-alt-4 = 'workspace 4'
+cmd-alt-5 = 'workspace 5'
+cmd-alt-6 = 'workspace 6'
+cmd-alt-7 = 'workspace 7'
+cmd-alt-8 = 'workspace 8'
+cmd-alt-9 = 'workspace 9'
+# cmd-alt-a = 'workspace A' # In your config, you can drop workspace bindings that you don't need
+# cmd-alt-b = 'workspace B'
+# cmd-alt-c = 'workspace C'
+# cmd-alt-d = 'workspace D'
+cmd-alt-e = 'workspace E'
+# cmd-alt-f = 'workspace F'
+cmd-alt-g = 'workspace G'
+# cmd-alt-i = 'workspace I'
+cmd-alt-m = 'workspace M'
+# cmd-alt-n = 'workspace N'
+# cmd-alt-o = 'workspace O'
+# cmd-alt-p = 'workspace P'
+# cmd-alt-q = 'workspace Q'
+# cmd-alt-r = 'workspace R'
+# cmd-alt-s = 'workspace S'
+# cmd-alt-t = 'workspace T'
+# cmd-alt-u = 'workspace U'
+# cmd-alt-v = 'workspace V'
+# cmd-alt-w = 'workspace W'
+# cmd-alt-x = 'workspace X'
+# cmd-alt-y = 'workspace Y'
+# cmd-alt-z = 'workspace Z'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-alt-shift-1 = 'move-node-to-workspace 1'
-alt-shift-2 = 'move-node-to-workspace 2'
-alt-shift-3 = 'move-node-to-workspace 3'
-alt-shift-4 = 'move-node-to-workspace 4'
-alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-6 = 'move-node-to-workspace 6'
-alt-shift-7 = 'move-node-to-workspace 7'
-alt-shift-8 = 'move-node-to-workspace 8'
-alt-shift-9 = 'move-node-to-workspace 9'
-# alt-shift-a = 'move-node-to-workspace A'
-# alt-shift-b = 'move-node-to-workspace B'
-# alt-shift-c = 'move-node-to-workspace C'
-# alt-shift-d = 'move-node-to-workspace D'
-# alt-shift-e = 'move-node-to-workspace E'
-# alt-shift-f = 'move-node-to-workspace F'
-alt-shift-g = 'move-node-to-workspace G'
-# alt-shift-i = 'move-node-to-workspace I'
-alt-shift-m = 'move-node-to-workspace M'
-# alt-shift-n = 'move-node-to-workspace N'
-# alt-shift-o = 'move-node-to-workspace O'
-# alt-shift-p = 'move-node-to-workspace P'
-# alt-shift-q = 'move-node-to-workspace Q'
-# alt-shift-r = 'move-node-to-workspace R'
-# alt-shift-s = 'move-node-to-workspace S'
-# alt-shift-t = 'move-node-to-workspace T'
-# alt-shift-u = 'move-node-to-workspace U'
-# alt-shift-v = 'move-node-to-workspace V'
-# alt-shift-w = 'move-node-to-workspace W'
-# alt-shift-x = 'move-node-to-workspace X'
-# alt-shift-y = 'move-node-to-workspace Y'
-# alt-shift-z = 'move-node-to-workspace Z'
+cmd-alt-shift-1 = 'move-node-to-workspace 1'
+cmd-alt-shift-2 = 'move-node-to-workspace 2'
+cmd-alt-shift-3 = 'move-node-to-workspace 3'
+cmd-alt-shift-4 = 'move-node-to-workspace 4'
+cmd-alt-shift-5 = 'move-node-to-workspace 5'
+cmd-alt-shift-6 = 'move-node-to-workspace 6'
+cmd-alt-shift-7 = 'move-node-to-workspace 7'
+cmd-alt-shift-8 = 'move-node-to-workspace 8'
+cmd-alt-shift-9 = 'move-node-to-workspace 9'
+# cmd-alt-shift-a = 'move-node-to-workspace A'
+# cmd-alt-shift-b = 'move-node-to-workspace B'
+# cmd-alt-shift-c = 'move-node-to-workspace C'
+# cmd-alt-shift-d = 'move-node-to-workspace D'
+cmd-alt-shift-e = 'move-node-to-workspace E'
+# cmd-alt-shift-f = 'move-node-to-workspace F'
+cmd-alt-shift-g = 'move-node-to-workspace G'
+# cmd-alt-shift-i = 'move-node-to-workspace I'
+cmd-alt-shift-m = 'move-node-to-workspace M'
+# cmd-alt-shift-n = 'move-node-to-workspace N'
+# cmd-alt-shift-o = 'move-node-to-workspace O'
+# cmd-alt-shift-p = 'move-node-to-workspace P'
+# cmd-alt-shift-q = 'move-node-to-workspace Q'
+# cmd-alt-shift-r = 'move-node-to-workspace R'
+# cmd-alt-shift-s = 'move-node-to-workspace S'
+# cmd-alt-shift-t = 'move-node-to-workspace T'
+# cmd-alt-shift-u = 'move-node-to-workspace U'
+# cmd-alt-shift-v = 'move-node-to-workspace V'
+# cmd-alt-shift-w = 'move-node-to-workspace W'
+# cmd-alt-shift-x = 'move-node-to-workspace X'
+# cmd-alt-shift-y = 'move-node-to-workspace Y'
+# cmd-alt-shift-z = 'move-node-to-workspace Z'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
-alt-tab = 'workspace-back-and-forth'
+# alt-tab = 'workspace-back-and-forth'
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
-alt-shift-ctrl-h = 'move-workspace-to-monitor --wrap-around prev'
-alt-shift-ctrl-l = 'move-workspace-to-monitor --wrap-around next'
+cmd-alt-shift-ctrl-h = 'move-workspace-to-monitor --wrap-around prev'
+cmd-alt-shift-ctrl-l = 'move-workspace-to-monitor --wrap-around next'
 
-alt-ctrl-h = 'move-node-to-monitor --wrap-around left --focus-follows-window'
-alt-ctrl-l = 'move-node-to-monitor --wrap-around right --focus-follows-window'
-alt-ctrl-j = 'move-node-to-monitor --wrap-around down --focus-follows-window'
-alt-ctrl-k = 'move-node-to-monitor --wrap-around up --focus-follows-window'
-
-alt-shift-f = 'fullscreen'
+# alt-ctrl-h = 'move-node-to-monitor --wrap-around left --focus-follows-window'
+# alt-ctrl-l = 'move-node-to-monitor --wrap-around right --focus-follows-window'
+# alt-ctrl-j = 'move-node-to-monitor --wrap-around down --focus-follows-window'
+# alt-ctrl-k = 'move-node-to-monitor --wrap-around up --focus-follows-window'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
-alt-shift-semicolon = 'mode service'
+cmd-alt-semicolon = 'mode service'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -221,16 +221,17 @@ alt-shift-semicolon = 'mode service'
 esc = ['reload-config', 'mode main']
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
-f = [
+f = ['fullscreen', 'mode main']
+x = [
   'layout floating tiling',
   'mode main',
 ] # Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
 
-alt-shift-h = ['join-with left', 'mode main']
-alt-shift-j = ['join-with down', 'mode main']
-alt-shift-k = ['join-with up', 'mode main']
-alt-shift-l = ['join-with right', 'mode main']
+cmd-alt-h = ['join-with left', 'mode main']
+cmd-alt-j = ['join-with down', 'mode main']
+cmd-alt-k = ['join-with up', 'mode main']
+cmd-alt-l = ['join-with right', 'mode main']
 
 [[on-window-detected]]
 if.app-id = 'com.github.wez.wezterm'
