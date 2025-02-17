@@ -112,108 +112,108 @@ M = 'Built-in Retina Display'
 # end tell'
 # '''
 
-cmd-h = [] # Disable "hide application"
-# cmd-alt-h = [] # Disable "hide others"
+cmd-h = []     # Disable "hide application"
+cmd-alt-h = [] # Disable "hide others"
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-cmd-alt-slash = 'layout tiles horizontal vertical'
-cmd-alt-comma = 'layout accordion horizontal vertical'
+ctrl-alt-slash = 'layout tiles horizontal vertical'
+ctrl-alt-comma = 'layout accordion horizontal vertical'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-cmd-alt-h = 'focus left'
-cmd-alt-j = 'focus down'
-cmd-alt-k = 'focus up'
-cmd-alt-l = 'focus right'
+ctrl-alt-h = 'focus left'
+ctrl-alt-j = 'focus down'
+ctrl-alt-k = 'focus up'
+ctrl-alt-l = 'focus right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move
-cmd-alt-shift-h = 'move left'
-cmd-alt-shift-j = 'move down'
-cmd-alt-shift-k = 'move up'
-cmd-alt-shift-l = 'move right'
+ctrl-alt-shift-h = 'move left'
+ctrl-alt-shift-j = 'move down'
+ctrl-alt-shift-k = 'move up'
+ctrl-alt-shift-l = 'move right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
-cmd-alt-minus = 'resize smart -50'
-cmd-alt-equal = 'resize smart +50'
+ctrl-alt-minus = 'resize smart -50'
+ctrl-alt-equal = 'resize smart +50'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-cmd-alt-1 = 'workspace 1'
-cmd-alt-2 = 'workspace 2'
-cmd-alt-3 = 'workspace 3'
-cmd-alt-4 = 'workspace 4'
-cmd-alt-5 = 'workspace 5'
-cmd-alt-6 = 'workspace 6'
-cmd-alt-7 = 'workspace 7'
-cmd-alt-8 = 'workspace 8'
-cmd-alt-9 = 'workspace 9'
-# cmd-alt-a = 'workspace A' # In your config, you can drop workspace bindings that you don't need
-# cmd-alt-b = 'workspace B'
-# cmd-alt-c = 'workspace C'
-# cmd-alt-d = 'workspace D'
-cmd-alt-e = 'workspace E'
-# cmd-alt-f = 'workspace F'
-cmd-alt-g = 'workspace G'
-# cmd-alt-i = 'workspace I'
-cmd-alt-m = 'workspace M'
-# cmd-alt-n = 'workspace N'
-# cmd-alt-o = 'workspace O'
-# cmd-alt-p = 'workspace P'
-# cmd-alt-q = 'workspace Q'
-# cmd-alt-r = 'workspace R'
-# cmd-alt-s = 'workspace S'
-# cmd-alt-t = 'workspace T'
-# cmd-alt-u = 'workspace U'
-# cmd-alt-v = 'workspace V'
-# cmd-alt-w = 'workspace W'
-# cmd-alt-x = 'workspace X'
-# cmd-alt-y = 'workspace Y'
-# cmd-alt-z = 'workspace Z'
+ctrl-alt-1 = 'workspace 1'
+ctrl-alt-2 = 'workspace 2'
+ctrl-alt-3 = 'workspace 3'
+ctrl-alt-4 = 'workspace 4'
+ctrl-alt-5 = 'workspace 5'
+ctrl-alt-6 = 'workspace 6'
+ctrl-alt-7 = 'workspace 7'
+ctrl-alt-8 = 'workspace 8'
+ctrl-alt-9 = 'workspace 9'
+# ctrl-alt-a = 'workspace A' # In your config, you can drop workspace bindings that you don't need
+# ctrl-alt-b = 'workspace B'
+# ctrl-alt-c = 'workspace C'
+# ctrl-alt-d = 'workspace D'
+ctrl-alt-e = 'workspace E'
+# ctrl-alt-f = 'workspace F'
+ctrl-alt-g = 'workspace G'
+# ctrl-alt-i = 'workspace I'
+ctrl-alt-m = 'workspace M'
+# ctrl-alt-n = 'workspace N'
+# ctrl-alt-o = 'workspace O'
+# ctrl-alt-p = 'workspace P'
+# ctrl-alt-q = 'workspace Q'
+# ctrl-alt-r = 'workspace R'
+# ctrl-alt-s = 'workspace S'
+# ctrl-alt-t = 'workspace T'
+# ctrl-alt-u = 'workspace U'
+# ctrl-alt-v = 'workspace V'
+# ctrl-alt-w = 'workspace W'
+# ctrl-alt-x = 'workspace X'
+# ctrl-alt-y = 'workspace Y'
+# ctrl-alt-z = 'workspace Z'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-cmd-alt-shift-1 = 'move-node-to-workspace 1'
-cmd-alt-shift-2 = 'move-node-to-workspace 2'
-cmd-alt-shift-3 = 'move-node-to-workspace 3'
-cmd-alt-shift-4 = 'move-node-to-workspace 4'
-cmd-alt-shift-5 = 'move-node-to-workspace 5'
-cmd-alt-shift-6 = 'move-node-to-workspace 6'
-cmd-alt-shift-7 = 'move-node-to-workspace 7'
-cmd-alt-shift-8 = 'move-node-to-workspace 8'
-cmd-alt-shift-9 = 'move-node-to-workspace 9'
-# cmd-alt-shift-a = 'move-node-to-workspace A'
-# cmd-alt-shift-b = 'move-node-to-workspace B'
-# cmd-alt-shift-c = 'move-node-to-workspace C'
-# cmd-alt-shift-d = 'move-node-to-workspace D'
-cmd-alt-shift-e = 'move-node-to-workspace E'
-# cmd-alt-shift-f = 'move-node-to-workspace F'
-cmd-alt-shift-g = 'move-node-to-workspace G'
-# cmd-alt-shift-i = 'move-node-to-workspace I'
-cmd-alt-shift-m = 'move-node-to-workspace M'
-# cmd-alt-shift-n = 'move-node-to-workspace N'
-# cmd-alt-shift-o = 'move-node-to-workspace O'
-# cmd-alt-shift-p = 'move-node-to-workspace P'
-# cmd-alt-shift-q = 'move-node-to-workspace Q'
-# cmd-alt-shift-r = 'move-node-to-workspace R'
-# cmd-alt-shift-s = 'move-node-to-workspace S'
-# cmd-alt-shift-t = 'move-node-to-workspace T'
-# cmd-alt-shift-u = 'move-node-to-workspace U'
-# cmd-alt-shift-v = 'move-node-to-workspace V'
-# cmd-alt-shift-w = 'move-node-to-workspace W'
-# cmd-alt-shift-x = 'move-node-to-workspace X'
-# cmd-alt-shift-y = 'move-node-to-workspace Y'
-# cmd-alt-shift-z = 'move-node-to-workspace Z'
+ctrl-alt-shift-1 = 'move-node-to-workspace 1'
+ctrl-alt-shift-2 = 'move-node-to-workspace 2'
+ctrl-alt-shift-3 = 'move-node-to-workspace 3'
+ctrl-alt-shift-4 = 'move-node-to-workspace 4'
+ctrl-alt-shift-5 = 'move-node-to-workspace 5'
+ctrl-alt-shift-6 = 'move-node-to-workspace 6'
+ctrl-alt-shift-7 = 'move-node-to-workspace 7'
+ctrl-alt-shift-8 = 'move-node-to-workspace 8'
+ctrl-alt-shift-9 = 'move-node-to-workspace 9'
+# ctrl-alt-shift-a = 'move-node-to-workspace A'
+# ctrl-alt-shift-b = 'move-node-to-workspace B'
+# ctrl-alt-shift-c = 'move-node-to-workspace C'
+# ctrl-alt-shift-d = 'move-node-to-workspace D'
+ctrl-alt-shift-e = 'move-node-to-workspace E'
+# ctrl-alt-shift-f = 'move-node-to-workspace F'
+ctrl-alt-shift-g = 'move-node-to-workspace G'
+# ctrl-alt-shift-i = 'move-node-to-workspace I'
+ctrl-alt-shift-m = 'move-node-to-workspace M'
+# ctrl-alt-shift-n = 'move-node-to-workspace N'
+# ctrl-alt-shift-o = 'move-node-to-workspace O'
+# ctrl-alt-shift-p = 'move-node-to-workspace P'
+# ctrl-alt-shift-q = 'move-node-to-workspace Q'
+# ctrl-alt-shift-r = 'move-node-to-workspace R'
+# ctrl-alt-shift-s = 'move-node-to-workspace S'
+# ctrl-alt-shift-t = 'move-node-to-workspace T'
+# ctrl-alt-shift-u = 'move-node-to-workspace U'
+# ctrl-alt-shift-v = 'move-node-to-workspace V'
+# ctrl-alt-shift-w = 'move-node-to-workspace W'
+# ctrl-alt-shift-x = 'move-node-to-workspace X'
+# ctrl-alt-shift-y = 'move-node-to-workspace Y'
+# ctrl-alt-shift-z = 'move-node-to-workspace Z'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 # alt-tab = 'workspace-back-and-forth'
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
-cmd-alt-shift-ctrl-h = 'move-workspace-to-monitor --wrap-around prev'
-cmd-alt-shift-ctrl-l = 'move-workspace-to-monitor --wrap-around next'
+ctrl-alt-shift-cmd-h = 'move-workspace-to-monitor --wrap-around prev'
+ctrl-alt-shift-cmd-l = 'move-workspace-to-monitor --wrap-around next'
 
-# alt-ctrl-h = 'move-node-to-monitor --wrap-around left --focus-follows-window'
-# alt-ctrl-l = 'move-node-to-monitor --wrap-around right --focus-follows-window'
-# alt-ctrl-j = 'move-node-to-monitor --wrap-around down --focus-follows-window'
-# alt-ctrl-k = 'move-node-to-monitor --wrap-around up --focus-follows-window'
+ctrl-alt-cmd-h = 'move-node-to-monitor --wrap-around left --focus-follows-window'
+ctrl-alt-cmd-l = 'move-node-to-monitor --wrap-around right --focus-follows-window'
+ctrl-alt-cmd-j = 'move-node-to-monitor --wrap-around down --focus-follows-window'
+ctrl-alt-cmd-k = 'move-node-to-monitor --wrap-around up --focus-follows-window'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
-cmd-alt-semicolon = 'mode service'
+ctrl-alt-semicolon = 'mode service'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -228,10 +228,10 @@ x = [
 ] # Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
 
-cmd-alt-h = ['join-with left', 'mode main']
-cmd-alt-j = ['join-with down', 'mode main']
-cmd-alt-k = ['join-with up', 'mode main']
-cmd-alt-l = ['join-with right', 'mode main']
+ctrl-alt-h = ['join-with left', 'mode main']
+ctrl-alt-j = ['join-with down', 'mode main']
+ctrl-alt-k = ['join-with up', 'mode main']
+ctrl-alt-l = ['join-with right', 'mode main']
 
 [[on-window-detected]]
 if.app-id = 'com.github.wez.wezterm'

@@ -21,14 +21,14 @@
 ;; Define tap-hold mappings
 (defalias
   escctrl (tap-hold 150 150 esc lctl)
-  a (tap-hold $tap-time $hold-time a lmet)
+  a (tap-hold $tap-time $hold-time a lctl)
   s (tap-hold $tap-time $hold-time s lalt)
   d (tap-hold $tap-time $hold-time d lsft)
-  f (tap-hold $tap-time $hold-time f lctl)
-  j (tap-hold $tap-time $hold-time j rctl)
+  f (tap-hold $tap-time $hold-time f lmet)
+  j (tap-hold $tap-time $hold-time j rmet)
   k (tap-hold $tap-time $hold-time k rsft)
   l (tap-hold $tap-time $hold-time l ralt)
-  ; (tap-hold $tap-time $hold-time ; rmet)
+  ; (tap-hold $tap-time $hold-time ; rctl)
   fnl (tap-hold 200 200 fn (layer-toggle fn))
 
   r (tap-hold $tap-time $hold-time r (multi lsft lctl lmet lalt))
