@@ -1,7 +1,7 @@
 # https://ghostty.org/docs
 
 # fonts
-font-size = 16
+font-size = 24
 font-style = medium
 bold-is-bright = true
 theme = dark:catppuccin-mocha,light:catppuccin-latte
@@ -40,7 +40,58 @@ shell-integration-features = true
 macos-option-as-alt = true
 macos-titlebar-style = hidden
 
-keybind = global:super+alt+ctrl+o=toggle_quick_terminal
+keybind = global:super+alt+shift+ctrl+o=toggle_quick_terminal
+
+# Disable window/split/tab management to because tmux is used
+
+# Close all windows, close tab, and close window/surface
+keybind = super+alt+shift+w=ignore
+keybind = super+alt+w=ignore
+keybind = super+shift+w=ignore
+# keybind = super+w=ignore
+
+# Split and tab navigation (goto_split and goto_tab)
+keybind = super+alt+up=ignore
+keybind = super+alt+down=ignore
+keybind = super+alt+right=ignore
+keybind = super+alt+left=ignore
+keybind = super+left_bracket=ignore
+keybind = super+right_bracket=ignore
+
+# Fullscreen, equalize, and resize splits
+keybind = super+ctrl+f=ignore
+keybind = super+enter=ignore
+keybind = super+ctrl+equal=ignore
+keybind = super+ctrl+up=ignore
+keybind = super+ctrl+down=ignore
+keybind = super+ctrl+right=ignore
+keybind = super+ctrl+left=ignore
+
+# New splits and toggle split zoom
+keybind = super+shift+d=ignore
+keybind = super+d=ignore
+keybind = super+shift+enter=ignore
+
+# Tab navigation and creation
+keybind = super+shift+left_bracket=ignore
+keybind = super+shift+right_bracket=ignore
+keybind = ctrl+shift+tab=ignore
+keybind = ctrl+tab=ignore
+keybind = super+t=ignore
+
+# New window
+# keybind = super+n=ignore
+
+# Disable direct tab selection (1-indexed) and last_tab
+keybind = super+physical:one=ignore
+keybind = super+physical:two=ignore
+keybind = super+physical:three=ignore
+keybind = super+physical:four=ignore
+keybind = super+physical:five=ignore
+keybind = super+physical:six=ignore
+keybind = super+physical:seven=ignore
+keybind = super+physical:eight=ignore
+keybind = super+physical:nine=ignore
 
 # Shaders found in this repo
 # https://github.com/hackr-sh/ghostty-shaders
