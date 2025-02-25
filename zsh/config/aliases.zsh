@@ -428,7 +428,7 @@ alias lcu='lia-copyurl'
 # Dotfiles
 # ############################## #
 
-alias dot='vim ${DOTFILES}'
+alias dot='cd ${DOTFILES} && v'
 alias zshrc='vim ${ZDOTDIR}/.zshrc'
 
 # Update zinit and all plugins
