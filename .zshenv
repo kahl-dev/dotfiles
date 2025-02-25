@@ -75,16 +75,7 @@ fi
 # Prevent intelephense from crashing
 export NODE_OPTIONS=--max_old_space_size=8192
 
-export NODE_DEFAULT_PACKAGES=(
-  yarn
-  prettier
-  tldr
-  diff-so-fancy
-  serve
-  browser-sync
-  neovim
-  @antfu/ni
-)
+export NODE_DEFAULT_PACKAGES="yarn prettier diff-so-fancy serve browser-sync neovim @antfu/ni @vue/language-server emmet-ls @tailwindcss/language-server @vtsls/language-server"
 
 file_exists "$HOME/.dotfiles-local/.zshenv" && source "$HOME/.dotfiles-local/.zshenv"
 

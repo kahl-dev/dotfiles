@@ -155,7 +155,7 @@ fi
 
 # install default packages from $DOTFILES/config/default-packages 
 _npm_install_global_default() {
-  echo "${NODE_DEFAULT_PACKAGES[@]}" | xargs npm install -g
+  echo "$NODE_DEFAULT_PACKAGES" | xargs npm install -g
 }
 
 # npm list without dependencies
