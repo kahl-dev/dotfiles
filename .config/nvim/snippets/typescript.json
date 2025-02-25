@@ -1,0 +1,65 @@
+{
+  "lia:qs": {
+    "prefix": "lia:qs",
+    "body": ["const ${1:element} = qs('${2:selector}', ${3:parent});", "$0"],
+    "description": "Query the DOM for a single element matching a CSS selector with type safety."
+  },
+
+  "lia:qsa": {
+    "prefix": "lia:qsa",
+    "body": ["const ${1:elements} = qsa('${2:selector}', ${3:parent});", "$0"],
+    "description": "Query the DOM for elements matching a CSS selector with type safety, utilizing the qsa function."
+  },
+
+  "lia:addGlobalEventListenerAsObject": {
+    "prefix": ["lia:ageo", "lia:addGlobalEventListenerAsObject"],
+    "body": [
+      "const listener = addGlobalEventListenerAsObject({",
+      "  type: '${1:click}',",
+      "  selector: '${2:selector}',",
+      "  callback: function (event) {",
+      "    event.preventDefault();",
+      "    console.log('${3:log}');",
+      "  }",
+      "  options: ${4:{}},",
+      "  parent: ${5:parent},",
+      "  selectorInPath: ${6|false,true|}",
+      "});",
+      "$0"
+    ],
+    "description": "Add a global event listener that can be easily removed, specified as an object."
+  },
+
+  "lia:addGlobalEventListener": {
+    "prefix": ["lia:age", "lia:addGlobalEventListener"],
+    "body": [
+      "const listener = addGlobalEventListener(",
+      "  '${1:click}',",
+      "  '${2:selector}',",
+      "  function (event) {",
+      "    event.preventDefault();",
+      "    console.log('${3:log}');",
+      "  }",
+      "  ${4:options},",
+      "  ${5:parent},",
+      "  ${6|false,true|",
+      ");",
+      "$0"
+    ],
+    "description": "Add a global event listener with detailed parameters."
+  },
+
+  "lia:createElement": {
+    "prefix": "lia:createElement",
+    "body": [
+      "const ${1:div} = createElement('${2:div}', {",
+      "  id: '$3',",
+      "  class: '$4',",
+      "  text: '${5:Lorem Ipsum}',",
+      "  $6",
+      "});",
+      "$0"
+    ],
+    "description": "Create an HTML element with specified attributes and content."
+  }
+}

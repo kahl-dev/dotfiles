@@ -14,7 +14,10 @@ return {
         providers = {
           snippets = {
             opts = {
-              search_paths = { "/home/kahl/dev/snippets/lia-typo3-vscode" },
+              search_paths = {
+                vim.fn.stdpath("config") .. "/snippets",
+                vim.fn.expand("~/dev/snippets/lia-typo3-vscode"),
+              },
             },
           },
         },

@@ -1,0 +1,48 @@
+{
+  "setupRename": {
+    "prefix": ["setupRename"],
+    "body": [
+      "<script lang=\"ts\">",
+      "export default {",
+      "  name: '${1:name}',",
+      "}",
+      "</script>",
+      "$0"
+    ],
+    "description": "Add setup to rename component."
+  },
+
+  "useJsonApi Composable": {
+    "prefix": "useJsonApi",
+    "body": [
+      "import useJsonApi from '@/composables/Lia/useJsonApi'",
+      "const { findAll } = useJsonApi<${1:Attr}${2:, ${3:string}, ${4:unknown}, ${5:string}}>('${6:endpoint}')",
+      "const { data, error, loadMore, pending } = findAll(${7:props.filter});",
+      "$0"
+    ],
+    "description": "Snippet for using useJsonApi composable with optional type parameters."
+  },
+
+  "useTranslations Composable": {
+    "prefix": "useTranslations",
+    "body": [
+      "import useTranslations from '~/composables/Lia/useTranslations'",
+      "const props = withDefaults(",
+      "  defineProps<{",
+      "    ${1:transLabel}: string",
+      "  }>(),",
+      "  {",
+      "    ${1:transLabel}: '${2:FooBar [T]}'",
+      "  }",
+      ")",
+      "",
+      "// Set translations",
+      "const { set } = useTranslations()",
+      "set({",
+      "  ${3:label}: props.${1:transLabel},",
+      "})",
+      "$0"
+    ],
+    "description": "Snippet for setting translations using useTranslations composable with customizable properties."
+  }
+}
