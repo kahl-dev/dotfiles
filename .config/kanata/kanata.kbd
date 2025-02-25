@@ -20,7 +20,7 @@
 
 ;; Define tap-hold mappings
 (defalias
-  escctrl (tap-hold 150 150 esc lctl)
+  escctrl (tap-hold 200 150 esc lctl)
   a (tap-hold $tap-time $hold-time a lctl)
   s (tap-hold $tap-time $hold-time s lalt)
   d (tap-hold $tap-time $hold-time d lsft)
