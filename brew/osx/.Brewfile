@@ -1,6 +1,8 @@
 tap "arl/arl"
+tap "benjiwolff/neovim-nightly"
 tap "colindean/fonts-nonfree"
 tap "ddev/ddev"
+tap "dotenvx/brew"
 tap "felixkratz/formulae"
 tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
@@ -9,6 +11,7 @@ tap "homebrew/services"
 tap "jesseduffield/lazydocker"
 tap "koekeishiya/formulae"
 tap "nikitabobko/tap"
+tap "olets/tap"
 tap "supabase/tap"
 # Processes triangulated solid meshes
 brew "admesh"
@@ -23,21 +26,17 @@ brew "blueutil"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
 # Share macOS clipboard with tmux and other local and remote apps
-brew "clipper", restart_service: true
+brew "clipper", restart_service: :changed
 # Console Matrix
 brew "cmatrix"
-# Get a file from an HTTP, HTTPS or FTP server
-brew "curl"
 # Libraries to talk to Microsoft SQL Server and Sybase databases
 brew "freetds"
 # Network authentication protocol
 brew "krb5"
 # C library for reading, creating, and modifying zip archives
 brew "libzip"
-# Open source suite of directory software
-brew "openldap"
 # General-purpose scripting language
-brew "php", restart_service: true
+brew "php", restart_service: :changed
 # Dependency Manager for PHP
 brew "composer"
 # CLI tool for Amazon ECS and AWS Fargate
@@ -66,12 +65,16 @@ brew "fzf"
 brew "gh"
 # Distributed revision control system
 brew "git"
+# Enable transparent encryption/decryption of files in a git repo
+brew "git-crypt"
 # Syntax-highlighting pager for git and diff output
 brew "git-delta"
 # Small git utilities
 brew "git-extras"
 # Render markdown on the CLI
 brew "glow"
+# GNU Pretty Good Privacy (PGP) package
+brew "gnupg"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
 # Improved top (interactive process viewer)
@@ -80,12 +83,16 @@ brew "htop"
 brew "httpie"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
+# Cross-platform software keyboard remapper for Linux, macOS and Windows
+brew "kanata"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Pager program similar to more
 brew "less"
 # LSP for LanguageTool with support for Latex, Markdown and Others
 brew "ltex-ls"
+# Package manager for the Lua programming language
+brew "luarocks"
 # Keep your Mac's application settings in sync
 brew "mackup"
 # Mac App Store command-line interface
@@ -100,8 +107,6 @@ brew "yt-dlp"
 brew "mpv"
 # Fast, highly customisable system info script
 brew "neofetch"
-# Ambitious Vim-fork focused on extensibility and agility
-brew "neovim", args: ["HEAD"]
 # Libraries for security-enabled client and server applications
 brew "nss"
 # Swiss-army knife of markup format conversion
@@ -113,9 +118,11 @@ brew "pipx"
 # Fast, disk space efficient package manager
 brew "pnpm"
 # Object-relational database system
-brew "postgresql@14", restart_service: true
+brew "postgresql@14", restart_service: :changed
 # Object-relational database system
-brew "postgresql@15", restart_service: true
+brew "postgresql@15", restart_service: :changed
+# OpenBSD and Darwin versions of pgrep, pkill, and pfind
+brew "proctools"
 # Nicer 'git pull'
 brew "pygitup"
 # Interpreted, interactive, object-oriented programming language
@@ -126,6 +133,8 @@ brew "reattach-to-user-namespace"
 brew "ripgrep"
 # Powerful, clean, object-oriented scripting language
 brew "ruby"
+# Safe, concurrent, practical language
+brew "rust"
 # Intuitive find & replace CLI
 brew "sd"
 # SOund eXchange: universal sound sample translator
@@ -142,6 +151,8 @@ brew "thefuck"
 brew "tmux"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Command-line unarchiving tools supporting multiple formats
+brew "unar"
 # Internet file retriever
 brew "wget"
 # Blazing fast terminal file manager written in Rust, based on async I/O
@@ -152,6 +163,10 @@ brew "zoxide"
 brew "arl/arl/gitmux"
 # DDEV
 brew "ddev/ddev/ddev"
+# Better dotenv–from the creator of `dotenv`
+brew "dotenvx/brew/dotenvx"
+# A window border system for macOS
+brew "felixkratz/formulae/borders"
 # Custom macOS statusbar with shell plugin, interaction and graph support
 brew "felixkratz/formulae/sketchybar"
 # A simple terminal UI for docker, written in Go
@@ -180,10 +195,6 @@ cask "betterdisplay"
 cask "bettertouchtool"
 # 3D creation suite
 cask "blender"
-# Web browser focusing on privacy
-cask "brave-browser"
-# Tool to list all active shortcuts of the current application
-cask "cheatsheet"
 # Tool to remove unnecessary files and folders from disk
 cask "cleanmymac"
 # Voice and text chat software
@@ -201,13 +212,14 @@ cask "firefox"
 cask "font-droid-sans-mono-nerd-font"
 cask "font-fira-code-nerd-font"
 cask "font-hack-nerd-font"
-cask "font-iosevka"
 cask "font-monaspace"
 cask "font-monoid-nerd-font"
 # Fujitsu ScanSnap Scanner software
 cask "fujitsu-scansnap-home"
 # Disk space cleaner that finds and deletes duplicated and similar files
 cask "gemini"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
 # Web browser
 cask "google-chrome"
 # Client for the Google Drive storage service
@@ -216,74 +228,55 @@ cask "google-drive"
 cask "hammerspoon"
 # System monitoring app
 cask "istat-menus"
-# Terminal emulator as alternative to Apple's Terminal app
-cask "iterm2"
 # Keyboard customiser
 cask "karabiner-elements"
-# Blocks all Keyboard and TouchBar input
-cask "keyboardcleantool"
 # Open-source keystroke visualiser
 cask "keycastr"
-# Finds, learns and remembers keyboard shortcuts
-cask "keycue"
-# Noise cancelling application
-cask "krisp"
 # Software for Logitech devices
 cask "logi-options+"
 # Multi-platform web browser
 cask "microsoft-edge"
 # Manage your windows in Mission Control
 cask "mission-control-plus"
-# Tool to control external monitor brightness & volume
-cask "monitorcontrol"
-# Silence embarrassing notifications while screensharing
-cask "muzzle"
+# Vim-fork focused on extensibility and usability
+cask "neovim-nightly"
 # Reverse proxy, secure introspectable tunnels to localhost
 cask "ngrok"
-# Calculator and converter application
-cask "numi"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
-# G-code generator for 3D printers
-cask "orcaslicer"
-# WebKit based web browser
-cask "orion"
+# PDF reader, editor and annotator
+cask "pdf-expert"
 # Collaboration platform for API development
 cask "postman"
-# G-code generator for 3D printers (RepRap, Makerbot, Ultimaker etc.)
-cask "prusaslicer"
-# Automatically hides or quits apps after periods of inactivity
-cask "quitter"
 # Network monitor and firewall
 cask "radio-silence"
 # Imaging utility to install operating systems to a microSD card
 cask "raspberry-pi-imager"
+# Control your tools with a few keystrokes
+cask "raycast"
 # Email client
 cask "readdle-spark"
-# Screenshot measurement and annotation tool
-cask "shottr"
 # Team communication and collaboration software
 cask "slack"
 # Manage the data on children's Ravensburger tip toi audio pen
 cask "tiptoi-manager"
 # File transfer application
 cask "transmit"
-# Control your data usage on slow or expensive networks
-cask "tripmode"
 # Open-source code editor
 cask "visual-studio-code"
 # GPU-accelerated cross-platform terminal emulator and multiplexer
 cask "wezterm"
 # Native desktop client for WhatsApp
 cask "whatsapp"
+# Video communication and virtual meeting platform
+cask "zoom"
 mas "1Password for Safari", id: 1569813296
 mas "Affinity Photo", id: 824183456
 mas "Amphetamine", id: 937984704
-mas "Autostarter", id: 6444444273
-mas "ColorSnapper2", id: 969418666
 mas "Controller", id: 1198176727
 mas "Gemini 2", id: 1090488118
 mas "iMovie", id: 408981434
+mas "Keka", id: 470158793
 mas "Keynote", id: 409183694
 mas "LanguageTool", id: 1534275760
 mas "Marked 2", id: 890031187
@@ -291,11 +284,10 @@ mas "Numbers", id: 409203825
 mas "Outbank", id: 1094255754
 mas "Pages", id: 409201541
 mas "Reeder", id: 1529448980
-mas "Tampermonkey", id: 1482490089
+mas "Tampermonkey Classic", id: 1482490089
 mas "Things", id: 904280696
 mas "TNEF's Enough", id: 986621173
 mas "Toggl Track", id: 1291898086
-mas "WISO Steuer 2023", id: 1635154215
 mas "Xcode", id: 497799835
 vscode "alefragnani.project-manager"
 vscode "andrsdc.base16-themes"
@@ -311,7 +303,7 @@ vscode "esbenp.prettier-vscode"
 vscode "github.copilot"
 vscode "github.copilot-chat"
 vscode "github.copilot-labs"
-vscode "github.heygithub"
+vscode "humao.rest-client"
 vscode "kamikillerto.vscode-colorize"
 vscode "kimuson.ts-type-expand"
 vscode "louis internet.lia-typo3-vscode"
@@ -322,9 +314,12 @@ vscode "ms-vscode-remote.remote-containers"
 vscode "ms-vscode-remote.remote-ssh"
 vscode "ms-vscode-remote.remote-ssh-edit"
 vscode "ms-vscode.remote-explorer"
+vscode "ms-vscode.vscode-speech"
+vscode "ms-vscode.vscode-typescript-next"
 vscode "ms-vsliveshare.vsliveshare"
 vscode "naumovs.color-highlight"
 vscode "octref.vetur"
+vscode "openai.openai-chatgpt-adhoc"
 vscode "redhat.java"
 vscode "simonsiefke.svg-preview"
 vscode "visualstudioexptteam.intellicode-api-usage-examples"
