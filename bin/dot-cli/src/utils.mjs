@@ -1,4 +1,4 @@
-import { $, os, question } from 'zx';
+import { $, os, question, spinner } from 'zx';
 
 export function isOSX() {
   return os.platform() === 'darwin'; // 'darwin' is the value returned by os.platform() for macOS
@@ -72,10 +72,7 @@ const spin = {
 };
 
 export const changeCommandWithSpinner = async function(spinnerMsg, cb) {
-  await spin.start(spinnerMsg)
-  await cb
-    .pipe(await spin.stop())
-    .pipe(process.stdout)
-    .pipe(await spin.start(spinnerMsg))
+  await spin.start(spinnerMsg);
+  await cb.pipe(process.stdout);
   await spin.stop();
-}
+};

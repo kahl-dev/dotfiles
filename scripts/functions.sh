@@ -42,8 +42,8 @@ _createPath() {
 }
 
 _removeSymlinkOrFile() {
-	file_path="$1"
-	temp_dir="$HOME/tmp_dir"
+        file_path="$1"
+        temp_dir="$HOME/temp_dir"
 
 	if [ -L "$file_path" ]; then
 		printf "${COLOR_CYAN}Removing symlink $file_path${COLOR_OFF}\n"
