@@ -1,38 +1,38 @@
 - defaults:
-    link:
-      relink: true
-      force: true
-      relative: false
+      link:
+          relink: true
+          force: true
+          relative: false
 
 - clean: ['~']
 
 - create:
-    - ~/.config
+      - ~/.config
 
 - link:
-    ~/.tmux: ./tmux
-    ~/.tmux.conf: ./tmux/tmux.conf
-    ~/.tmux/plugins/tmux/custom/memory.sh: ./tmux/custom/memory.sh
+      ~/.tmux: ./tmux
+      ~/.tmux.conf: ./tmux/tmux.conf
+      ~/.tmux/plugins/tmux/custom/memory.sh: ./tmux/custom/memory.sh
 
-    ~/.gitignore_global: ./git/gitignore_global
-    ~/.gitconfig: ./git/gitconfig
-    ~/.gittemplate: ./git/template
+      ~/.gitignore_global: ./git/gitignore_global
+      ~/.gitconfig: ./git/gitconfig
+      ~/.gittemplate: ./git/template
 
-    ~/.tern-config: ./.tern-config
-    ~/.prettierrc.js: ./.prettierrc.js
-    ~/.zshenv: ./.zshenv
-    ~/.agignore: ./.agignore
-    ~/.ripgreprc: ./.ripgreprc
-    # ~/.npmrc: ./.npmrc
+      ~/.tern-config: ./.tern-config
+      ~/.prettierrc.js: ./.prettierrc.js
+      ~/.zshenv: ./.zshenv
+      ~/.agignore: ./.agignore
+      ~/.ripgreprc: ./.ripgreprc
+      # ~/.npmrc: ./.npmrc
 
-    ~/.config/bat: ./.config/bat/
-    ~/.config/glow: ./.config/glow/
-    ~/.config/lazygit: ./.config/lazygit/
-    ~/.config/gh-copilot: ./.config/gh-copilot/
-    ~/.config/.nuxtrc: ./.config/.nuxtrc
-    ~/.config/nvim: ./.config/nvim/
-    ~/.config/starship.toml: ./.config/starship.toml
-    ~/.config/yazi: ./.config/yazi/
+      ~/.config/bat: ./.config/bat/
+      ~/.config/glow: ./.config/glow/
+      ~/.config/lazygit: ./.config/lazygit/
+      ~/.config/gh-copilot: ./.config/gh-copilot/
+      ~/.config/.nuxtrc: ./.config/.nuxtrc
+      ~/.config/nvim: ./.config/nvim/
+      ~/.config/starship.toml: ./.config/starship.toml
+      ~/.config/yazi: ./.config/yazi/
 
 - shell:
-    - [git submodule update --init --recursive, Installing submodules]
+      - [git submodule update --init --recursive, Installing submodules]
