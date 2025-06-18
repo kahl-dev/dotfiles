@@ -7,6 +7,10 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "auto_install_extensions": {
+    "html": true,
+    "catppuccin": true
+  },
   "edit_predictions": {
     "disabled_globs": [
       "**/.git",
