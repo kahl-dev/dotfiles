@@ -5,8 +5,6 @@ tap "ddev/ddev"
 tap "dotenvx/brew"
 tap "felixkratz/formulae"
 tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
-tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "jesseduffield/lazydocker"
 tap "koekeishiya/formulae"
@@ -29,6 +27,10 @@ brew "btop"
 brew "clipper", restart_service: :changed
 # Console Matrix
 brew "cmatrix"
+# Platform built on V8 to build network applications
+brew "node"
+# OpenAI's coding agent that runs in your terminal
+brew "codex"
 # Libraries to talk to Microsoft SQL Server and Sybase databases
 brew "freetds"
 # Network authentication protocol
@@ -107,6 +109,8 @@ brew "yt-dlp"
 brew "mpv"
 # Fast, highly customisable system info script
 brew "neofetch"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
 # Libraries for security-enabled client and server applications
 brew "nss"
 # Swiss-army knife of markup format conversion
@@ -143,6 +147,8 @@ brew "sox"
 brew "starship"
 # Opinionated Lua code formatter
 brew "stylua"
+# Change macOS audio source from the command-line
+brew "switchaudio-osx"
 # Send macOS User Notifications from the command-line
 brew "terminal-notifier"
 # Programmatically correct mistyped console commands
@@ -175,6 +181,8 @@ brew "jesseduffield/lazydocker/lazydocker"
 brew "supabase/tap/supabase"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
+# Command-line interface for 1Password
+cask "1password-cli"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "aerospace"
 # Menu bar tool to limit maximum charging percentage
@@ -238,8 +246,6 @@ cask "logi-options+"
 cask "microsoft-edge"
 # Manage your windows in Mission Control
 cask "mission-control-plus"
-# Vim-fork focused on extensibility and usability
-cask "neovim-nightly"
 # Reverse proxy, secure introspectable tunnels to localhost
 cask "ngrok"
 # Knowledge base that works on top of a local folder of plain text Markdown files
@@ -264,17 +270,23 @@ cask "tiptoi-manager"
 cask "transmit"
 # Open-source code editor
 cask "visual-studio-code"
+# Web browser with built-in email client focusing on customization and control
+cask "vivaldi"
 # GPU-accelerated cross-platform terminal emulator and multiplexer
 cask "wezterm"
 # Native desktop client for WhatsApp
 cask "whatsapp"
+# Multiplayer code editor
+cask "zed"
 # Video communication and virtual meeting platform
 cask "zoom"
 mas "1Password for Safari", id: 1569813296
 mas "Affinity Photo", id: 824183456
 mas "Amphetamine", id: 937984704
-mas "Controller", id: 1198176727
+mas "AusweisApp", id: 948660805
+mas "ControllerForHomeKit", id: 1198176727
 mas "Gemini 2", id: 1090488118
+mas "Home Assistant", id: 1099568401
 mas "iMovie", id: 408981434
 mas "Keka", id: 470158793
 mas "Keynote", id: 409183694
@@ -283,20 +295,25 @@ mas "Marked 2", id: 890031187
 mas "Numbers", id: 409203825
 mas "Outbank", id: 1094255754
 mas "Pages", id: 409201541
+mas "PerformanceTest", id: 1560051043
+mas "Raycast Companion", id: 6738274497
 mas "Reeder", id: 1529448980
 mas "Tampermonkey Classic", id: 1482490089
 mas "Things", id: 904280696
 mas "TNEF's Enough", id: 986621173
 mas "Toggl Track", id: 1291898086
+mas "WISO Steuer 2023", id: 1635154215
 mas "Xcode", id: 497799835
 vscode "alefragnani.project-manager"
 vscode "andrsdc.base16-themes"
 vscode "bengreenier.vscode-node-readme"
 vscode "blinkshellinc.blink-fs"
 vscode "bradlc.vscode-tailwindcss"
+vscode "builder.builder"
 vscode "codesandbox-io.codesandbox-projects"
 vscode "codespaces-contrib.codeswing"
 vscode "dbaeumer.vscode-eslint"
+vscode "docker.docker"
 vscode "eamodio.gitlens"
 vscode "editorconfig.editorconfig"
 vscode "esbenp.prettier-vscode"
@@ -308,6 +325,7 @@ vscode "kamikillerto.vscode-colorize"
 vscode "kimuson.ts-type-expand"
 vscode "louis internet.lia-typo3-vscode"
 vscode "mikestead.dotenv"
+vscode "ms-azuretools.vscode-containers"
 vscode "ms-azuretools.vscode-docker"
 vscode "ms-ceintl.vscode-language-pack-de"
 vscode "ms-vscode-remote.remote-containers"
