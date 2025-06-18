@@ -26,6 +26,7 @@
       # ~/.npmrc: ./.npmrc
 
       ~/.config/bat: ./.config/bat/
+      ~/.config/btop: ./.config/btop/
       ~/.config/glow: ./.config/glow/
       ~/.config/lazygit: ./.config/lazygit/
       ~/.config/gh-copilot: ./.config/gh-copilot/
