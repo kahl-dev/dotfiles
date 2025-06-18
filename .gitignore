@@ -32,3 +32,6 @@ bin/*
 !tmux/plugins/tmux/custom/memory.sh
 
 alfred_scripts/script.log
+
+.config/zed/settings_backup.json
+.config/zed/prompts/*
