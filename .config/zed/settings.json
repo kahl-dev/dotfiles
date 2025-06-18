@@ -7,11 +7,17 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+    // 1. Remote SSH connections
+    "ssh_connections": [
     ],
+
+    // 2. Extensions to auto-install when opening a project
     "auto_install_extensions": {
         "html": true,
         "catppuccin": true
     },
+
+    // 3. AI-powered editing & predictions
     "edit_predictions": {
         "disabled_globs": [
             "**/.git",
@@ -32,26 +38,21 @@
         "mode": "eager",
         "enabled_in_text_threads": true
     },
-    "show_completions_on_input": true,
+    "features": {
+        "edit_prediction_provider": "copilot"
+    },
+
+    // 4. UI & Appearance
     "icon_theme": "Catppuccin Mocha",
-    "notification_panel": {
-        "enabled": false,
-        "button": false
+    "theme": {
+        "mode": "dark",
+        "light": "One Light",
+        "dark": "Catppuccin Mocha"
     },
-
-    "show_edit_predictions": true,
-
-    "lsp": {},
-    "tab_size": 4,
-    "telemetry": {
-        "diagnostics": false,
-        "metrics": false
-    },
-    "vim_mode": true,
-    "relative_line_numbers": true,
-    "scrollbar": {
-        "show": "never"
-    },
+    "ui_font_size": 16,
+    "ui_font_family": "Hack Nerd Font Mono",
+    "buffer_font_size": 16,
+    "buffer_font_family": "Hack Nerd Font Mono",
     "tab_bar": {
         "show": true,
         "show_nav_history_buttons": false
@@ -60,40 +61,43 @@
         "file_icons": true,
         "git_status": true
     },
-    // Indentation, rainbow indentation
-    "indent_guides": {
-        "enabled": true,
-        "coloring": "indent_aware"
-    },
-    // Use zed commit editor
-    "terminal": {
-        "env": {
-            "EDITOR": "zed --wait"
-        },
-        "font_size": 16,
-        "font_family": "Hack Nerd Font Mono",
-        "detect_venv": {
-            "on": {
-                // Default directories to search for virtual environments, relative
-                // to the current working directory. We recommend overriding this
-                // in your project's settings, rather than globally.
-                "directories": [".venv", "venv"],
-                // Can also be `csh`, `fish`, and `nushell`
-                "activate_script": "default"
-            }
-        },
+    "notification_panel": {
+        "enabled": false,
         "button": false
     },
     "toolbar": {
         "title": false,
         "quick_actions": false
     },
-    // NOTE: Zen mode, refer https://github.com/zed-industries/zed/issues/4382 when it's resolved
     "centered_layout": {
+        // Zen mode padding
         "left_padding": 0.15,
         "right_padding": 0.15
     },
-    // File syntax highlighting
+
+    // 5. Editor behavior
+    "vim_mode": true,
+    "relative_line_numbers": true,
+    "scrollbar": {
+        "show": "never"
+    },
+    "indent_guides": {
+        "enabled": true,
+        "coloring": "indent_aware"
+    },
+    "show_completions_on_input": true,
+    "show_edit_predictions": true,
+    "autosave": "on_focus_change",
+    "preferred_line_length": 120,
+    "tab_size": 4,
+
+    // 6. Search & file scanning
+    "search": {
+        "whole_word": false,
+        "case_sensitive": false,
+        "include_ignored": false,
+        "regex": false
+    },
     "file_types": {
         "Dockerfile": ["Dockerfile", "Dockerfile.*"],
         "JSON": ["json", "jsonc", "*.code-snippets"]
@@ -114,63 +118,61 @@
         "**/build",
         "**/dist",
         "**/coverage",
-        "**/.venv",
-
-
-
-
+        "**/.venv"
     ],
     "file_scan_inclusions": [".env"],
-    // Move all panel to the right
+
+    // 7. Panels configuration
     "project_panel": {
         "button": true,
         "default_width": 300,
         "dock": "left",
-        "scrollbar": {
-            "show": "never"
-        }
+        "scrollbar": { "show": "never" }
     },
     "outline_panel": {
         "dock": "right",
         "button": true
     },
-    "ui_font_size": 16,
-    "buffer_font_size": 16,
-    "buffer_font_family": "Hack Nerd Font Mono",
-    "ui_font_family": "Hack Nerd Font Mono",
-    "autosave": "on_focus_change",
-    "theme": {
-        "mode": "dark",
-        "light": "One Light",
-        "dark": "Catppuccin Mocha"
+
+    // 8. Integrated terminal settings
+    "terminal": {
+        "env": { "EDITOR": "zed --wait" },
+        "font_size": 16,
+        "font_family": "Hack Nerd Font Mono",
+        "detect_venv": {
+            "on": {
+                "directories": [".venv", "venv"],
+                "activate_script": "default"
+            }
+        },
+        "button": false
     },
-    "search": {
-        "whole_word": false,
-        "case_sensitive": false,
-        "include_ignored": false,
-        "regex": false
-    },
-    "projects_online_by_default": false,
-    "preferred_line_length": 120,
+
+    // 9. Language servers & formatting
+    "lsp": {},
     "formatter": {
-        "language_server": {
-            "name": "biome"
-        }
+        "language_server": { "name": "biome" }
     },
     "code_actions_on_format": {
         "source.fixAll.biome": true,
         "source.organizeImports.biome": true
     },
 
-    "features": {
-        "edit_prediction_provider": "copilot"
-    },
-
+    // 10. AI assistant (agent) configuration
     "agent": {
         "default_model": {
             "provider": "openai",
             "model": "o4-mini"
         },
         "version": "2"
-    }
+    },
+
+    // 11. Telemetry & metrics
+    "telemetry": {
+        "diagnostics": false,
+        "metrics": false
+    },
+
+    // 12. Connectivity defaults
+    "projects_online_by_default": false
 }
