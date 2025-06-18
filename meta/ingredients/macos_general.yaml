@@ -22,7 +22,7 @@
     ~/.config/karabiner: ./.config/karabiner/
     ~/.config/sketchybar: ./.config/sketchybar/
     ~/.config/aerospace: ./.config/aerospace/
-    ~/.config/ghostty: ./.config/ghostty
+    ~/.config/ghostty: ./.config/ghostty/
     ~/.config/zed: ./.config/zed/
 
     ~/.hammerspoon: ./.hammerspoon/
