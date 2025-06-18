@@ -220,6 +220,7 @@ cask "firefox"
 cask "font-droid-sans-mono-nerd-font"
 cask "font-fira-code-nerd-font"
 cask "font-hack-nerd-font"
+cask "font-jetbrains-mono-nerd-font"
 cask "font-monaspace"
 cask "font-monoid-nerd-font"
 # Fujitsu ScanSnap Scanner software
