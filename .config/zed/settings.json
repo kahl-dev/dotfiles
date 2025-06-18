@@ -50,9 +50,9 @@
         "dark": "Catppuccin Mocha"
     },
     "ui_font_size": 16,
-    "ui_font_family": "Hack Nerd Font Mono",
+    "ui_font_family": "JetBrainsMono Nerd Font Mono",
     "buffer_font_size": 16,
-    "buffer_font_family": "Hack Nerd Font Mono",
+    "buffer_font_family": "JetBrainsMono Nerd Font Mono",
     "tab_bar": {
         "show": true,
         "show_nav_history_buttons": false
@@ -138,25 +138,25 @@
     "terminal": {
         "env": { "EDITOR": "zed --wait" },
         "font_size": 16,
-        "font_family": "Hack Nerd Font Mono",
+        "font_family": "JetBrainsMono Nerd Font Mono",
         "detect_venv": {
             "on": {
                 "directories": [".venv", "venv"],
                 "activate_script": "default"
             }
         },
-        "button": false
+        "button": true
     },
 
     // 9. Language servers & formatting
     "lsp": {},
-    "formatter": {
-        "language_server": { "name": "biome" }
-    },
-    "code_actions_on_format": {
-        "source.fixAll.biome": true,
-        "source.organizeImports.biome": true
-    },
+    // "formatter": {
+    //     "language_server": { "name": "biome" }
+    // },
+    // "code_actions_on_format": {
+    //     "source.fixAll.biome": true,
+    //     "source.organizeImports.biome": true
+    // },
 
     // 10. AI assistant (agent) configuration
     "agent": {
@@ -169,8 +169,8 @@
 
     // 11. Telemetry & metrics
     "telemetry": {
-        "diagnostics": false,
-        "metrics": false
+        "diagnostics": true,
+        "metrics": true
     },
 
     // 12. Connectivity defaults
