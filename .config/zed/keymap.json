@@ -7,7 +7,7 @@
 // from the command palette.
 [
     {
-        "context": "Workspace",
+        "context": "Workspacel && VimControl && !VimWaiting && !menu",
         "bindings": {
             "space space": "file_finder::Toggle"
         }
@@ -28,7 +28,6 @@
             "ctrl-/": "workspace::ToggleBottomDock"
         }
     },
-
     // Window's navigation
     {
         "context": "Dock || Terminal || Editor",
@@ -111,7 +110,7 @@
             // Refactoring
             "space c r ": "editor::Rename",
             // Chat with AI
-            "space a a": "assistant::ToggleFocus",
+            "space a a": "agent::ToggleFocus",
             "ctrl-\\": "workspace::ToggleRightDock",
             "cmd-k": "workspace::ToggleRightDock",
             "space a e": "assistant::InlineAssist",
