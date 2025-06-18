@@ -40,117 +40,8 @@
     },
 
     "show_edit_predictions": true,
-    "languages": {
-        "Python": {
-            "language_servers": ["ruff", "basedpyright", "!pyright"],
-            "formatter": [
-                {
-                    "code_actions": {
-                        "source.organizeImports.ruff": true,
-                        "source.fixAll.ruff": true
-                    }
-                },
-                {
-                    "language_server": {
-                        "name": "ruff"
-                    }
-                }
-            ]
-        }
-    },
-    "lsp": {
-        "basedpyright": {
-            "settings": {
-                "python": {
-                    "pythonPath": "./.venv/bin/python"
-                },
-                "basedpyright.analysis": {
-                    "diagnosticMode": "workspace",
-                    "inlayHints": {
-                        "callArgumentNames": false
-                    }
-                }
-            }
-        },
-        "gopls": {
-            "gofumpt": true,
-            "initialization_options": {
-                "gofumpt": true
-            }
-        },
-        "yaml-language-server": {
-            "settings": {
-                "yaml": {
-                    "validate": false,
-                    "customTags": [
-                        "!And scalar",
-                        "!And mapping",
-                        "!And sequence",
-                        "!If scalar",
-                        "!If mapping",
-                        "!If sequence",
-                        "!Not scalar",
-                        "!Not mapping",
-                        "!Not sequence",
-                        "!Equals scalar",
-                        "!Equals mapping",
-                        "!Equals sequence",
-                        "!Or scalar",
-                        "!Or mapping",
-                        "!Or sequence",
-                        "!FindInMap scalar",
-                        "!FindInMap mapping",
-                        "!FindInMap sequence",
-                        "!Base64 scalar",
-                        "!Base64 mapping",
-                        "!Base64 sequence",
-                        "!Cidr scalar",
-                        "!Cidr mapping",
-                        "!Cidr sequence",
-                        "!Ref scalar",
-                        "!Ref mapping",
-                        "!Ref sequence",
-                        "!Sub scalar",
-                        "!Sub mapping",
-                        "!Sub sequence",
-                        "!GetAtt scalar",
-                        "!GetAtt mapping",
-                        "!GetAtt sequence",
-                        "!GetAZs scalar",
-                        "!GetAZs mapping",
-                        "!GetAZs sequence",
-                        "!ImportValue scalar",
-                        "!ImportValue mapping",
-                        "!ImportValue sequence",
-                        "!Select scalar",
-                        "!Select mapping",
-                        "!Select sequence",
-                        "!Split scalar",
-                        "!Split mapping",
-                        "!Split sequence",
-                        "!Join scalar",
-                        "!Join mapping",
-                        "!Join sequence",
-                        "!Condition scalar",
-                        "!Condition mapping",
-                        "!Condition sequence"
-                    ],
-                    "format": {
-                        "enable": true,
-                        "singleQuote": true
-                    },
-                    "editor": {
-                        "tabSize": 4
-                    },
-                    "schemas": {
-                        "https://raw.githubusercontent.com/lalcebo/json-schema/master/serverless/reference.json": [
-                            "/*"
-                        ]
-                    }
-                }
-            }
-        }
-    },
+
+    "lsp": {},
     "tab_size": 4,
     "telemetry": {
         "diagnostics": false,
@@ -224,10 +115,10 @@
         "**/dist",
         "**/coverage",
         "**/.venv",
-        "**/__pycache__",
-        "**/.ropeproject",
-        "**/.pytest_cache",
-        "**/.ruff_cache"
+
+
+
+
     ],
     "file_scan_inclusions": [".env"],
     // Move all panel to the right
