@@ -32,3 +32,10 @@ fi
 if path_exists "$HOME/go/bin"; then
   export PATH="$PATH:$HOME/go/bin"
 fi
+
+# Source local zshrc in login shells
+if [ -f "$HOME/.dotfiles-local/zshrc" ]; then
+  source "$HOME/.dotfiles-local/zshrc"
+elif [ -f "$HOME/.zshrc-local" ]; then
+  source "$HOME/.zshrc-local"
+fi

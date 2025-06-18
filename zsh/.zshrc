@@ -83,7 +83,11 @@ source "$ZDOTDIR/config/aliases.zsh"
 source "$ZDOTDIR/config/prompt.zsh"
 source "$ZDOTDIR/config/check_git_cleanup.zsh"
 
-file_exists $HOME/.zshrc-local && source $HOME/.zshrc-local
+if [ -f "$HOME/.dotfiles-local/zshrc" ]; then
+  source "$HOME/.dotfiles-local/zshrc"
+elif [ -f "$HOME/.zshrc-local" ]; then
+  source "$HOME/.zshrc-local"
+fi
 
 . "$HOME/.atuin/bin/env"
 
