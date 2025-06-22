@@ -1,0 +1,9 @@
+{
+  "model": "codex-mini-latest",
+  "approvalMode": "auto-edit",
+  "fullAutoErrorMode": "ask-user",
+  "notify": true,
+  "history": {
+    "saveHistory": true
+  }
+}

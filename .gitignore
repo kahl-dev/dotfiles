@@ -35,3 +35,7 @@ alfred_scripts/script.log
 
 .config/zed/settings_backup.json
 .config/zed/prompts/*
+
+.codex/sessions
+.codex/history.json
+.codex/update-check.json
