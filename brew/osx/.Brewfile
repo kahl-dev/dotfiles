@@ -121,10 +121,12 @@ brew "parallel"
 brew "pipx"
 # Fast, disk space efficient package manager
 brew "pnpm"
+# Tool for managing OCI containers and pods
+brew "podman"
 # Object-relational database system
-brew "postgresql@14", restart_service: :changed
+brew "postgresql@14", restart_service: :changed, link: false
 # Object-relational database system
-brew "postgresql@15", restart_service: :changed
+brew "postgresql@15", restart_service: :changed, link: true
 # OpenBSD and Darwin versions of pgrep, pkill, and pfind
 brew "proctools"
 # Nicer 'git pull'
@@ -208,7 +210,7 @@ cask "cleanmymac"
 # Voice and text chat software
 cask "discord"
 # App to build and share containerised applications and microservices
-cask "docker"
+cask "docker-desktop"
 # Assign keys, and then decorate and label them
 cask "elgato-stream-deck"
 # Software custom-built for content creation
@@ -253,6 +255,8 @@ cask "ngrok"
 cask "obsidian"
 # PDF reader, editor and annotator
 cask "pdf-expert"
+# Browse, manage, inspect containers and images
+cask "podman-desktop"
 # Collaboration platform for API development
 cask "postman"
 # Network monitor and firewall
@@ -279,6 +283,8 @@ cask "wezterm"
 cask "whatsapp"
 # Multiplayer code editor
 cask "zed"
+# Multiplayer code editor
+cask "zed@preview"
 # Video communication and virtual meeting platform
 cask "zoom"
 mas "1Password for Safari", id: 1569813296
@@ -350,5 +356,4 @@ vscode "vscjava.vscode-java-dependency"
 vscode "vscjava.vscode-java-pack"
 vscode "vscjava.vscode-java-test"
 vscode "vscjava.vscode-maven"
-vscode "vscodevim.vim"
 vscode "vue.volar"
