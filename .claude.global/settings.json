@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "mcp-server-figma": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-figma"],
+      "env": {
+        "FIGMA_API_KEY": "op://fam-kahl.1password.com/Private/figma-api/credential"
+      }
+    },
+    "mcp-server-context7": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-context7"],
+      "env": {
+        "DEFAULT_MINIMUM_TOKENS": "10000"
+      }
+    },
+    "mcp-server-supabase": {
+      "command": "npx", 
+      "args": ["@modelcontextprotocol/server-supabase"],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "op://fam-kahl.1password.com/Private/supabase-api/credential",
+        "READ_ONLY": "false"
+      }
+    }
+  }
+}

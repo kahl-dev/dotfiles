@@ -44,7 +44,10 @@ alfred_scripts/script.log
 .claude.global/projects/
 .claude.global/todos/
 .claude.global/statsig/
-.claude.global/settings.json
 
 # Allow Claude configuration
 !.claude.global/CLAUDE.md
+!.claude.global/settings.json
+
+# Zed local settings with sensitive SSH configs
+.config/zed/settings.local.json
