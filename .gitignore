@@ -39,3 +39,12 @@ alfred_scripts/script.log
 .codex/sessions
 .codex/history.json
 .codex/update-check.json
+
+# Claude Code sensitive data
+.claude.global/projects/
+.claude.global/todos/
+.claude.global/statsig/
+.claude.global/settings.json
+
+# Allow Claude configuration
+!.claude.global/CLAUDE.md
