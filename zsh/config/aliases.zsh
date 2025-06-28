@@ -34,8 +34,8 @@ alias trail='<<<${(F)path}'
 # ############################## #
 
 if command_exists fzf; then
-  _fcd() { 
-    cd "$(find . -type d -not -path '*/.*' -not -path '*/node_modules/*' | fzf)" && ls; 
+  _fcd() {
+    cd "$(find . -type d -not -path '*/.*' -not -path '*/node_modules/*' | fzf)" && ls;
   }
 
 
@@ -153,7 +153,7 @@ fi
 # Node/NPM/Yarn
 # ############################## #
 
-# install default packages from $DOTFILES/config/default-packages 
+# install default packages from $DOTFILES/config/default-packages
 _npm_install_global_default() {
   echo "$NODE_DEFAULT_PACKAGES" | xargs npm install -g
 }
@@ -418,11 +418,27 @@ alias lia-copyurl="{
     # On remote, send via OSC52
     printf '\e]52;c;%s\a' \$(printf '%s' \"\$selected_url\" | base64 | tr -d '\n')
   fi
-  
+
   # Echo the selected URL regardless of being remote or local
   echo \"Selected URL: \$selected_url\"
 }"
 alias lcu='lia-copyurl'
+
+# ############################## #
+# Podman (Docker replacement)
+# ############################## #
+
+if command_exists podman; then
+  alias docker='podman'
+
+  # Override docker-compose if podman-compose is available
+  command_exists podman-compose && alias docker-compose='podman-compose'
+
+  # Podman-specific aliases
+  alias podman-clean='podman system prune -a'
+  alias podman-clean-all='podman system prune -a --volumes'
+  alias podman-reset='podman system reset'
+fi
 
 # ############################## #
 # Dotfiles
