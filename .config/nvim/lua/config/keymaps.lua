@@ -42,6 +42,7 @@ if not is_remote() then
   })
 
   -- Key mappings specific to Obsidian features
+  map("n", "<leader>oS", "<cmd>lua require('lazy').load({plugins={'obsidian.nvim'}})<CR>", { desc = "Start Obsidian" })
   map("n", "<leader>on", "<cmd>ObsidianNew<CR>", { desc = "New note" })
   map("n", "<leader>os", "<cmd>ObsidianSearch<CR>", { desc = "Search notes" })
 else

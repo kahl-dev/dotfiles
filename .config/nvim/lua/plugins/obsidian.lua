@@ -12,8 +12,13 @@ return {
     "epwalsh/obsidian.nvim",
     version = "*",
     lazy = true,
-    ft = "markdown",
     enabled = not is_remote(),
+    cond = function()
+      -- Don't load for Makefiles or any non-markdown files
+      local filetype = vim.bo.filetype
+      local filename = vim.fn.expand("%:t")
+      return filetype ~= "make" and not string.match(filename:lower(), "makefile")
+    end,
     cmd = {
       "ObsidianOpen",
       "ObsidianQuickSwitch",
