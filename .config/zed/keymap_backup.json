@@ -1,0 +1,133 @@
+[
+  // File operations
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-n": "workspace::NewFile",
+      "cmd-o": "file_finder::Toggle",
+      "cmd-s": "workspace::Save",
+      "cmd-shift-s": "workspace::SaveAs",
+      "cmd-w": "pane::CloseActiveItem",
+      "cmd-shift-w": "workspace::CloseWindow",
+      "cmd-shift-t": "pane::ReopenClosedItem",
+      "cmd-p": "file_finder::Toggle",
+      "cmd-shift-p": "command_palette::Toggle"
+    }
+  },
+
+  // Edit operations
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-z": "editor::Undo",
+      "cmd-shift-z": "editor::Redo",
+      "cmd-x": "editor::Cut",
+      "cmd-c": "editor::Copy",
+      "cmd-v": "editor::Paste",
+      "cmd-a": "editor::SelectAll",
+      "cmd-d": "editor::SelectNext",
+      "cmd-l": "editor::SelectLine",
+      "cmd-shift-l": "editor::SplitSelectionIntoLines",
+      "cmd-j": "editor::JoinLines",
+      "cmd-shift-k": "editor::DeleteLine",
+      "cmd-backspace": "editor::DeleteToBeginningOfLine",
+      "cmd-delete": "editor::DeleteToEndOfLine"
+    }
+  },
+
+  // Search and replace
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-f": "buffer_search::Deploy",
+      "cmd-shift-f": "workspace::NewSearch",
+      "cmd-g": "search::SelectNextMatch",
+      "cmd-shift-g": "search::SelectPrevMatch"
+    }
+  },
+
+  // Navigation
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-left": "editor::MoveToBeginningOfLine",
+      "cmd-right": "editor::MoveToEndOfLine",
+      "cmd-up": "editor::MoveToBeginning",
+      "cmd-down": "editor::MoveToEnd",
+      "cmd-shift-left": "editor::SelectToBeginningOfLine",
+      "cmd-shift-right": "editor::SelectToEndOfLine",
+      "cmd-shift-up": "editor::SelectToBeginning",
+      "cmd-shift-down": "editor::SelectToEnd",
+      "alt-left": "editor::MoveToPreviousWordStart",
+      "alt-right": "editor::MoveToNextWordEnd",
+      "alt-shift-left": "editor::SelectToPreviousWordStart",
+      "alt-shift-right": "editor::SelectToNextWordEnd",
+      "cmd-]": "editor::Indent",
+      "cmd-[": "editor::Outdent"
+    }
+  },
+
+  // Go to
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-alt-right": "pane::ActivateNextItem",
+      "cmd-alt-left": "pane::ActivatePreviousItem",
+      "ctrl-g": "go_to_line::Toggle",
+      "cmd-t": "file_finder::Toggle",
+      "cmd-shift-o": "outline::Toggle",
+      "cmd-alt-r": "editor::FindAllReferences",
+      "f12": "editor::GoToDefinition"
+    }
+  },
+
+  // View
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-k cmd-b": "workspace::ToggleLeftDock",
+      "cmd-shift-e": "workspace::ToggleLeftDock",
+      "cmd-plus": "zed::IncreaseBufferFontSize",
+      "cmd-minus": "zed::DecreaseBufferFontSize",
+      "cmd-0": "zed::ResetBufferFontSize"
+    }
+  },
+
+  // Code formatting and actions
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-shift-f": "editor::Format",
+      "f2": "editor::Rename",
+      "cmd-slash": "editor::ToggleComments"
+    }
+  },
+
+  // Terminal
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-backtick": "workspace::ToggleBottomDock"
+    }
+  },
+
+  // Multiple cursors
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-u": "editor::UndoSelection",
+      "cmd-shift-u": "editor::RedoSelection",
+      "escape": "editor::Cancel"
+    }
+  },
+
+  // Pane management
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-k cmd-shift-\\": "pane::SplitRight",
+      "cmd-k cmd-\\": "pane::SplitDown",
+      "cmd-k cmd-w": "pane::CloseAllItems"
+    }
+  }
+]

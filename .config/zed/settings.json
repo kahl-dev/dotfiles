@@ -51,7 +51,7 @@
     },
     "ui_font_size": 16,
     "ui_font_family": "JetBrainsMono Nerd Font Mono",
-    "buffer_font_size": 16,
+    "buffer_font_size": null,
     "buffer_font_family": "JetBrainsMono Nerd Font Mono",
     "tab_bar": {
         "show": true,
@@ -149,20 +149,169 @@
     },
 
     // 9. Language servers & formatting
-    "lsp": {},
-    // "formatter": {
-    //     "language_server": { "name": "biome" }
+    // "lsp": {
+    //     "eslint": {
+    //         "settings": {
+    //             "codeActionOnSave": {
+    //                 "rules": ["import/order"]
+    //             }
+    //         }
+    //     }
     // },
-    // "code_actions_on_format": {
-    //     "source.fixAll.biome": true,
-    //     "source.organizeImports.biome": true
-    // },
+
+    "language_servers": ["vtsls", "typescript-language-server", "eslint"],
+    "language_server_options": {
+        "vtsls": {
+            "language_ids": ["typescript", "javascript", "typescriptreact", "javascriptreact"]
+        },
+        "typescript-language-server": {
+            "language_ids": ["typescript", "javascript", "typescriptreact", "javascriptreact"],
+            "initialization_options": {
+                "preferences": {
+                    "includeInlayParameterNameHints": "all",
+                    "includeInlayParameterNameHintsWhenArgumentMatchesName": true,
+                    "includeInlayFunctionParameterTypeHints": true,
+                    "includeInlayVariableTypeHints": true,
+                    "includeInlayVariableTypeHintsWhenTypeMatchesName": false,
+                    "includeInlayPropertyDeclarationTypeHints": true,
+                    "includeInlayFunctionLikeReturnTypeHints": true,
+                    "includeInlayEnumMemberValueHints": true
+                }
+            }
+        },
+        "eslint": {
+            "language_ids": ["typescript", "javascript", "typescriptreact", "javascriptreact"],
+            "initialization_options": {
+                "run_formatter": true
+            }
+        }
+    },
+    "languages": {
+        // "TypeScript": {
+        //     "formatter": "prettier",
+        //     "code_actions_on_format": {
+        //         "source.fixAll.eslint": true
+        //     },
+        //     "format_on_save": {
+        //         "external": {
+        //             "command": "prettier",
+        //             "arguments": ["--stdin-filepath", "{buffer_path}"]
+        //         }
+        //     }
+        // },
+        "TSX": {
+            // "formatter": "prettier",
+            "code_actions_on_format": {
+                "source.fixAll.eslint": true
+            },
+            "format_on_save": "on"
+        },
+        "JavaScript": {
+            // "formatter": "prettier",
+            "code_actions_on_format": {
+                "source.fixAll.eslint": true
+            },
+            "format_on_save": "on"
+        },
+        "PHP": {
+            "formatter": {
+                "external": {
+                    "command": "php-cs-fixer",
+                    "arguments": ["fix", "--using-cache=no", "--diff", "--rules=@PSR12", "-"]
+                }
+            },
+            "format_on_save": "on"
+        }
+    },
+    "formatter": {
+        "code_actions": {
+            "source.fixAll.eslint": true
+        }
+    },
 
     // 10. AI assistant (agent) configuration
     "agent": {
+        "default_profile": "claude-sonnet-4",
+        "profiles": {
+            "claude-sonnet-4": {
+                "name": "Claude Sonnet 4",
+                "tools": {
+                    "open": true,
+                    "copy_path": true,
+                    "create_directory": true,
+                    "delete_path": true,
+                    "diagnostics": true,
+                    "edit_file": true,
+                    "fetch": true,
+                    "list_directory": true,
+                    "move_path": true,
+                    "now": true,
+                    "find_path": true,
+                    "read_file": true,
+                    "grep": true,
+                    "terminal": true,
+                    "thinking": true,
+                    "web_search": true
+                },
+                "enable_all_context_servers": true,
+                "context_servers": {
+                    "mcp-server-supabase": {
+                        "tools": {
+                            "get_cost": true,
+                            "get_anon_key": true,
+                            "get_advisors": true,
+                            "generate_typescript_types": true,
+                            "execute_sql": true,
+                            "deploy_edge_function": true,
+                            "delete_branch": true,
+                            "create_project": true,
+                            "create_branch": true,
+                            "get_logs": true,
+                            "get_organization": true,
+                            "list_branches": true,
+                            "get_project_url": true,
+                            "get_project": true,
+                            "list_edge_functions": true,
+                            "list_extensions": true,
+                            "list_projects": true,
+                            "list_organizations": true,
+                            "list_migrations": true,
+                            "search_docs": true,
+                            "restore_project": true,
+                            "reset_branch": true,
+                            "rebase_branch": true,
+                            "pause_project": true,
+                            "merge_branch": true,
+                            "list_tables": true
+                        }
+                    },
+                    "postgres-context-server": {
+                        "tools": {
+                            "query": false,
+                            "pg-schema": false
+                        }
+                    },
+                    // "nuxt-mcp": {
+                    //     "settings": {},
+                    //     // "source": "custom",
+                    //     "command": {
+                    //         "path": "npx",
+                    //         "args": ["-y", "nuxt-mcp"],
+                    //         "env": {}
+                    //     }
+                    // },
+                    // "nuxt-ui-mcp": {
+                    //     "source": "url",
+                    //     "url": "http://localhost:3005/"
+                    // }
+                }
+            }
+        },
+        "play_sound_when_agent_done": true,
+        "always_allow_tool_actions": true,
         "default_model": {
-            "provider": "openai",
-            "model": "o4-mini"
+            "provider": "anthropic",
+            "model": "claude-sonnet-4-latest"
         },
         "version": "2"
     },
