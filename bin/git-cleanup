@@ -12,7 +12,37 @@ RED="\033[0;31m"
 GREEN="\033[0;32m"
 YELLOW="\033[0;33m"
 CYAN="\033[0;36m"
+BLUE="\033[0;34m"
 RESET="\033[0m"
+
+# Parse command line arguments
+FORCE=0
+DRY_RUN=0
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -f|--force)
+      FORCE=1
+      shift
+      ;;
+    -n|--dry-run)
+      DRY_RUN=1
+      shift
+      ;;
+    -h|--help)
+      echo "Usage: git-cleanup [OPTIONS]"
+      echo "Options:"
+      echo "  -f, --force    Skip confirmation prompts"
+      echo "  -n, --dry-run  Show what would be deleted without actually doing it"
+      echo "  -h, --help     Show this help message"
+      exit 0
+      ;;
+    *)
+      echo -e "${RED}Unknown option: $1${RESET}"
+      exit 1
+      ;;
+  esac
+done
 
 # Get the path of the current Git repository
 REPO_PATH=$(git rev-parse --show-toplevel 2>/dev/null)
@@ -20,6 +50,19 @@ REPO_PATH=$(git rev-parse --show-toplevel 2>/dev/null)
 if [ -z "$REPO_PATH" ]; then
   echo -e "${RED}Not inside a Git repository.${RESET}"
   exit 1
+fi
+
+# Check for uncommitted changes
+if ! git diff-index --quiet HEAD -- 2>/dev/null; then
+  echo -e "${YELLOW}⚠️  Warning: You have uncommitted changes.${RESET}"
+  if [[ $FORCE -eq 0 ]]; then
+    read -p "Continue anyway? (y/N) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      echo -e "${RED}Cleanup cancelled.${RESET}"
+      exit 0
+    fi
+  fi
 fi
 
 # Fetch and prune remote-tracking branches
@@ -34,47 +77,128 @@ echo "[$DATE] Cleanup started for repository: $REPO_PATH" >>"$DETAILED_LOG"
 # Measure the size of the repository before cleanup
 INITIAL_SIZE=$(du -sh "$REPO_PATH/.git" | awk '{print $1}')
 
-# List fully merged branches that are candidates for deletion
-MERGED_BRANCHES=$(git branch --merged | grep -E -v 'master|dev|main|staging|preview|production')
+# Convert size to bytes for accurate calculation
+size_to_bytes() {
+  local size=$1
+  local value=$(echo "$size" | sed 's/[A-Za-z]//g')
+  local unit=$(echo "$size" | sed 's/[0-9.,]//g' | tr '[:lower:]' '[:upper:]')
+  
+  case $unit in
+    B) echo "$value" ;;
+    K|KB) echo "$(echo "$value * 1024" | bc -l | cut -d. -f1)" ;;
+    M|MB) echo "$(echo "$value * 1024 * 1024" | bc -l | cut -d. -f1)" ;;
+    G|GB) echo "$(echo "$value * 1024 * 1024 * 1024" | bc -l | cut -d. -f1)" ;;
+    T|TB) echo "$(echo "$value * 1024 * 1024 * 1024 * 1024" | bc -l | cut -d. -f1)" ;;
+    *) echo "$value" ;;
+  esac
+}
 
-# Delete fully merged branches locally and log each branch deleted
+# List fully merged branches that are candidates for deletion
+MERGED_BRANCHES=$(git branch --merged | grep -E -v '(master|dev|main|staging|preview|production|develop|release)' | sed 's/^[ *]*//')
+
+# Show what branches would be deleted and get confirmation
 DELETED_COUNT=0
 if [ -n "$MERGED_BRANCHES" ]; then
-  echo -e "${YELLOW}Deleting fully merged branches:${RESET}"
-  echo "[$DATE] Deleted the following branches:" >>"$DETAILED_LOG"
-  for branch in $MERGED_BRANCHES; do
-    git branch -d "$branch" && echo -e " - ${GREEN}$branch${RESET}" >>"$DETAILED_LOG" && ((DELETED_COUNT++))
-  done
+  echo -e "${YELLOW}The following fully merged branches will be deleted:${RESET}"
+  echo "$MERGED_BRANCHES" | sed 's/^/  - /'
+  
+  if [[ $DRY_RUN -eq 1 ]]; then
+    echo -e "${BLUE}[DRY RUN] Would delete $(echo "$MERGED_BRANCHES" | wc -l) branches${RESET}"
+    DELETED_COUNT=$(echo "$MERGED_BRANCHES" | wc -l)
+  else
+    if [[ $FORCE -eq 0 ]]; then
+      echo
+      read -p "Delete these branches? (y/N) " -n 1 -r
+      echo
+      if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "${YELLOW}Branch deletion skipped.${RESET}"
+        echo "[$DATE] Branch deletion skipped by user." >>"$DETAILED_LOG"
+      else
+        echo -e "${YELLOW}Deleting fully merged branches:${RESET}"
+        echo "[$DATE] Deleted the following branches:" >>"$DETAILED_LOG"
+        echo "$MERGED_BRANCHES" | while read -r branch; do
+          if [ -n "$branch" ]; then
+            git branch -d "$branch" && echo -e " - ${GREEN}$branch${RESET}" && echo " - $branch" >>"$DETAILED_LOG" && ((DELETED_COUNT++))
+          fi
+        done
+      fi
+    else
+      echo -e "${YELLOW}Deleting fully merged branches (forced):${RESET}"
+      echo "[$DATE] Deleted the following branches (forced):" >>"$DETAILED_LOG"
+      echo "$MERGED_BRANCHES" | while read -r branch; do
+        if [ -n "$branch" ]; then
+          git branch -d "$branch" && echo -e " - ${GREEN}$branch${RESET}" && echo " - $branch" >>"$DETAILED_LOG" && ((DELETED_COUNT++))
+        fi
+      done
+    fi
+  fi
 else
   echo -e "${YELLOW}No fully merged branches to delete.${RESET}"
   echo "[$DATE] No fully merged branches to delete." >>"$DETAILED_LOG"
 fi
 
 # Run Git garbage collection and log
-echo -e "${CYAN}Running git garbage collection...${RESET}"
-git gc --prune=now
-echo "[$DATE] Ran git garbage collection." >>"$DETAILED_LOG"
+if [[ $DRY_RUN -eq 1 ]]; then
+  echo -e "${BLUE}[DRY RUN] Would run git garbage collection${RESET}"
+  echo "[$DATE] [DRY RUN] Would run git garbage collection." >>"$DETAILED_LOG"
+  FINAL_SIZE=$INITIAL_SIZE
+else
+  echo -e "${CYAN}Running git garbage collection...${RESET}"
+  git gc --prune=now
+  echo "[$DATE] Ran git garbage collection." >>"$DETAILED_LOG"
+  
+  # Measure the size of the repository after cleanup
+  FINAL_SIZE=$(du -sh "$REPO_PATH/.git" | awk '{print $1}')
+fi
 
-# Measure the size of the repository after cleanup
-FINAL_SIZE=$(du -sh "$REPO_PATH/.git" | awk '{print $1}')
+# Calculate space freed with proper unit handling
+INITIAL_BYTES=$(size_to_bytes "$INITIAL_SIZE")
+FINAL_BYTES=$(size_to_bytes "$FINAL_SIZE")
+SPACE_FREED_BYTES=$((INITIAL_BYTES - FINAL_BYTES))
 
-# Calculate space freed with units
-SPACE_FREED=$(echo "$INITIAL_SIZE - $FINAL_SIZE" | bc)
+# Convert bytes back to human readable format
+if [ $SPACE_FREED_BYTES -gt 1073741824 ]; then
+  SPACE_FREED=$(echo "scale=1; $SPACE_FREED_BYTES / 1073741824" | bc -l)"GB"
+elif [ $SPACE_FREED_BYTES -gt 1048576 ]; then
+  SPACE_FREED=$(echo "scale=1; $SPACE_FREED_BYTES / 1048576" | bc -l)"MB"
+elif [ $SPACE_FREED_BYTES -gt 1024 ]; then
+  SPACE_FREED=$(echo "scale=1; $SPACE_FREED_BYTES / 1024" | bc -l)"KB"
+else
+  SPACE_FREED="${SPACE_FREED_BYTES}B"
+fi
 
-# Determine units based on output of du command
+# Final output
 echo -e "${GREEN}Cleanup completed.${RESET}"
-echo -e "Initial size: ${CYAN}$INITIAL_SIZE${RESET}, Final size: ${CYAN}$FINAL_SIZE${RESET}, Space freed: ${GREEN}$SPACE_FREED${RESET}"
+if [[ $DRY_RUN -eq 1 ]]; then
+  echo -e "Repository size: ${CYAN}$INITIAL_SIZE${RESET}"
+  echo -e "${BLUE}[DRY RUN] Estimated space that would be freed: ${GREEN}$SPACE_FREED${RESET}"
+else
+  echo -e "Initial size: ${CYAN}$INITIAL_SIZE${RESET}, Final size: ${CYAN}$FINAL_SIZE${RESET}"
+  if [ $SPACE_FREED_BYTES -gt 0 ]; then
+    echo -e "Space freed: ${GREEN}$SPACE_FREED${RESET}"
+  else
+    echo -e "Space freed: ${YELLOW}0B (no space saved)${RESET}"
+  fi
+fi
+
 echo "[$DATE] Initial size: $INITIAL_SIZE, Final size: $FINAL_SIZE, Space freed: $SPACE_FREED" >>"$DETAILED_LOG"
 
 # Get the date of the last commit
-LAST_COMMIT_DATE=$(git log -1 --format="%ci")
-echo -e "Last commit date before cleanup: ${CYAN}$LAST_COMMIT_DATE${RESET}"
-echo "[$DATE] Last commit date before cleanup: $LAST_COMMIT_DATE" >>"$DETAILED_LOG"
+LAST_COMMIT_DATE=$(git log -1 --format="%ci" 2>/dev/null || echo "No commits found")
+echo -e "Last commit date: ${CYAN}$LAST_COMMIT_DATE${RESET}"
+echo "[$DATE] Last commit date: $LAST_COMMIT_DATE" >>"$DETAILED_LOG"
 
-# Update the main cleanup log with the last cleanup date for this repository
-grep -v "^$REPO_PATH" "$CLEANUP_LOG" >"$CLEANUP_LOG.tmp" && mv "$CLEANUP_LOG.tmp" "$CLEANUP_LOG"
-echo "$REPO_PATH $DATE" >>"$CLEANUP_LOG"
+# Update the main cleanup log with the last cleanup date for this repository (only for real runs)
+if [[ $DRY_RUN -eq 0 ]]; then
+  grep -v "^$REPO_PATH" "$CLEANUP_LOG" >"$CLEANUP_LOG.tmp" && mv "$CLEANUP_LOG.tmp" "$CLEANUP_LOG"
+  echo "$REPO_PATH $DATE" >>"$CLEANUP_LOG"
+fi
 
-# Final message in the detailed log
-echo "[$DATE] Cleanup completed for $REPO_PATH. Branches deleted: $DELETED_COUNT, Space freed: $SPACE_FREED" >>"$DETAILED_LOG"
-echo -e "${GREEN}Branches deleted: $DELETED_COUNT${RESET}, Space freed: ${GREEN}$SPACE_FREED${RESET}"
+# Final summary
+if [[ $DRY_RUN -eq 1 ]]; then
+  echo -e "${BLUE}[DRY RUN] Summary: Would delete $DELETED_COUNT branches${RESET}"
+  echo "[$DATE] [DRY RUN] Cleanup simulation completed for $REPO_PATH. Would delete: $DELETED_COUNT branches" >>"$DETAILED_LOG"
+else
+  echo -e "${GREEN}Summary: Deleted $DELETED_COUNT branches${RESET}, Space freed: ${GREEN}$SPACE_FREED${RESET}"
+  echo "[$DATE] Cleanup completed for $REPO_PATH. Branches deleted: $DELETED_COUNT, Space freed: $SPACE_FREED" >>"$DETAILED_LOG"
+fi

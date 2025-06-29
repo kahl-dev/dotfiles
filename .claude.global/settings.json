@@ -1,5 +1,9 @@
 {
   "editorMode": "vim",
+  "autoAccept": true,
+  "permissions": {
+    "allow": ["Read(*)", "Search(*)", "Edit(*)", "Write(*)"]
+  },
   "mcpServers": {
     "mcp-server-figma": {
       "command": "npx",
@@ -16,7 +20,7 @@
       }
     },
     "mcp-server-supabase": {
-      "command": "npx", 
+      "command": "npx",
       "args": ["@modelcontextprotocol/server-supabase"],
       "env": {
         "SUPABASE_ACCESS_TOKEN": "op://fam-kahl.1password.com/Private/supabase-api/credential",

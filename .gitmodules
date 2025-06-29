@@ -2,3 +2,6 @@
 	path = meta/dotbot
 	url = https://github.com/anishathalye/dotbot
 	ignore = dirty
+[submodule ".config/claude-sync"]
+	path = .config/claude-sync
+	url = git@github.com:kahl-dev/claude-sync.git
