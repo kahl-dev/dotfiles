@@ -137,3 +137,4 @@ The zsh setup uses modular configuration files in `zsh/config/`:
 - Configuration files use XDG Base Directory specification where possible
 - Mackup handles syncing of application settings via iCloud Drive
 - The system is designed for personal use and includes specific tools/preferences
+- **DO NOT commit Zed settings** - these are personal and machine-specific configurations
