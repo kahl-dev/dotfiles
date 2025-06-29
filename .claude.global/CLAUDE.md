@@ -152,4 +152,111 @@ After any code modifications, run the project's quality assurance tools:
 
 ---
 
+---
+
+## 9. Memory Management Guidelines
+
+### Memory MCP Usage Principles
+
+- **What to Remember**: Project architecture, user preferences, recurring patterns, important decisions, and context that spans sessions
+- **What NOT to Remember**: Temporary data, sensitive information (API keys, passwords), large code dumps, or session-specific debugging info
+- **Privacy First**: Never store personal identifiable information, credentials, or proprietary business logic in memory
+- **Contextual Storage**: Store information that helps maintain continuity across sessions without duplicating what's already in the codebase
+
+### Memory Best Practices
+
+1. **Quality over Quantity**: Store concise, actionable insights rather than verbose logs
+2. **Regular Cleanup**: Periodically review and update stored memories to keep them relevant
+3. **Project-Specific Context**: Remember project conventions, architectural decisions, and user workflow preferences
+4. **Development Patterns**: Store recurring solutions, common debugging approaches, and preferred tooling choices
+
+### What Should Be Remembered
+
+- User's preferred code style and conventions
+- Project-specific architectural decisions
+- Recurring issues and their solutions
+- Tool preferences (testing frameworks, linting rules, etc.)
+- Workflow patterns and common tasks
+- Important project context that isn't in documentation
+
+### What Should NOT Be Remembered
+
+- Sensitive credentials or API keys
+- Large code blocks (reference files instead)
+- Temporary debugging information
+- Personal or proprietary business information
+- Session-specific error logs
+- Information already documented in the codebase
+
+### Other MCP Server Guidelines
+
+**General MCP Principles:**
+- Only add trusted, verified MCP servers
+- Use minimal required permissions and credentials
+- Configure with appropriate scope (local/project/user)
+- Regularly review and audit configured servers
+
+**Common MCP Server Rules:**
+
+**GitHub MCP** (`@modelcontextprotocol/server-github`):
+- Use OAuth authentication only - never store tokens in code
+- Limit to read-only operations when possible
+- Use for repository exploration, not sensitive operations
+- Commands: `/mcp__github__list_prs`, `/mcp__github__pr_review`
+
+**Postgres MCP** (`@modelcontextprotocol/server-postgres`):
+- Use read-only database credentials
+- Only for schema inspection and safe queries
+- Never use for production database modifications
+- Ensure connection strings use minimal required permissions
+
+**Filesystem MCP** (`@modelcontextprotocol/server-filesystem`):
+- Restrict access to specific directories only
+- Never grant access to sensitive system directories
+- Use for project-specific file operations
+- Reference files with `@docs:file://path` syntax
+
+**Brave Search MCP** (`@modelcontextprotocol/server-brave-search`):
+- Use for research and documentation lookup only
+- Be mindful of API rate limits
+- Don't rely on for sensitive or critical information verification
+
+**Supabase MCP** (`@modelcontextprotocol/server-supabase`):
+- Write access is enabled - use with extreme caution
+- Never modify production data without explicit user permission
+- Always confirm database operations before execution
+- Use for development and staging environments primarily
+
+**Shell MCP** (`@modelcontextprotocol/server-shell`):
+- Never run destructive commands without user confirmation
+- Avoid commands that modify system settings
+- Prefer project-specific scripts over raw shell commands
+- Always explain what shell commands will do before execution
+
+**Docker MCP** (`@modelcontextprotocol/server-docker`):
+- Only use for development containers
+- Never manipulate production containers
+- Always check container status before operations
+- Prefer docker-compose commands when available
+
+**Sentry MCP** (`@modelcontextprotocol/server-sentry`):
+- Use for error monitoring and debugging only
+- Never modify production error settings
+- Focus on read-only operations for investigation
+- Respect rate limits and API quotas
+
+**Figma MCP** (`@modelcontextprotocol/server-figma`):
+- Use for design system documentation and asset retrieval
+- Never modify production design files
+- Prefer read-only operations unless explicitly requested
+- Coordinate with design team for any changes
+
+**Context7 MCP** (`@modelcontextprotocol/server-context7`):
+- Use for enhanced context management
+- Configured with 10000 minimum tokens
+- Leverage for complex codebase analysis
+- Ideal for large-scale refactoring tasks
+
+---
+
 _These general guidelines ensure consistent, safe, and effective AI-driven code assistance across projects._

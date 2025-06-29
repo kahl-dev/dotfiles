@@ -1,4 +1,5 @@
 {
+  "editorMode": "vim",
   "mcpServers": {
     "mcp-server-figma": {
       "command": "npx",
@@ -21,6 +22,62 @@
         "SUPABASE_ACCESS_TOKEN": "op://fam-kahl.1password.com/Private/supabase-api/credential",
         "READ_ONLY": "false"
       }
+    },
+    "mcp-server-docker": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-docker"]
+    },
+    "mcp-server-git": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-git"]
+    },
+    "mcp-server-github": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "op://fam-kahl.1password.com/Private/github-token/credential"
+      }
+    },
+    "mcp-server-filesystem": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-filesystem"]
+    },
+    "mcp-server-shell": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-shell"]
+    },
+    "mcp-server-fetch": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-fetch"]
+    },
+    "mcp-server-puppeteer": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-puppeteer"]
+    },
+    "mcp-server-axios": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-axios"]
+    },
+    "mcp-server-sentry": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-sentry"],
+      "env": {
+        "SENTRY_AUTH_TOKEN": "op://fam-kahl.1password.com/Private/sentry-token/credential",
+        "SENTRY_ORG": "lia",
+        "SENTRY_URL": "https://sentry-ng.louis.info"
+      }
+    },
+    "mcp-server-gitlab": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-gitlab"],
+      "env": {
+        "GITLAB_TOKEN": "op://fam-kahl.1password.com/Private/gitlab-token/credential",
+        "GITLAB_URL": "https://gitlab.louis-net.de"
+      }
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-memory"]
     }
   }
 }
