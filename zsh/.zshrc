@@ -4,6 +4,9 @@
 # It is sourced after ~/.zshenv and ~/.zprofile.
 # -----------------------------------------------------------------------------
 
+# Exit early if not an interactive shell (prevents loading plugins in non-interactive contexts)
+[[ $- == *i* ]] || return
+
 # https://www.youtube.com/watch?v=ud7YxC33Z3w
 # https://github.com/dreamsofautonomy/zensh/blob/main/.zshrc
 
@@ -89,23 +92,7 @@ elif [ -f "$HOME/.zshrc-local" ]; then
   source "$HOME/.zshrc-local"
 fi
 
-. "$HOME/.atuin/bin/env"
-
-eval "$(atuin init zsh)"
-
-# fnm
-FNM_PATH="/home/pi/.local/share/fnm"
-if [ -d "$FNM_PATH" ]; then
-  export PATH="/home/pi/.local/share/fnm:$PATH"
-  eval "`fnm env`"
-fi
-
-# fnm
-FNM_PATH="/home/pi/.local/share/fnm"
-if [ -d "$FNM_PATH" ]; then
-  export PATH="/home/pi/.local/share/fnm:$PATH"
-  eval "`fnm env`"
-fi
+# Atuin is initialized in config/atuin.zsh - no need to duplicate here
 
 # fnm
 FNM_PATH="/home/pi/.local/share/fnm"

@@ -3,6 +3,9 @@ LAST_CLEANUP_DIR=""
 LAST_REMINDER_TIME=0
 
 function check_git_cleanup() {
+  # Only run in interactive shells
+  [[ $- == *i* ]] || return
+  
   # Check if we're in a Git repository
   if [ -d .git ]; then
     # Get the top-level path of the current Git repository

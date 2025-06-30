@@ -88,5 +88,5 @@ if command_exists fzf && command_exists fzf-tmux; then
   fi
 
 else
-  echo "fzf or fzf-tmux not found"
+  [[ $- == *i* ]] && echo "fzf or fzf-tmux not found"
 fi

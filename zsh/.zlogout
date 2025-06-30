@@ -5,4 +5,4 @@
 # -----------------------------------------------------------------------------
 
 # Logout-specific commands
-echo "Goodbye, $USER!"
+[[ $- == *i* ]] && echo "Goodbye, $USER!"
