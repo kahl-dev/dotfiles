@@ -5,4 +5,4 @@
 # -----------------------------------------------------------------------------
 
 source $ZDOTDIR/utils.zsh
-command_exists neofetch && neofetch
+command_exists neofetch && [[ $- == *i* ]] && neofetch
