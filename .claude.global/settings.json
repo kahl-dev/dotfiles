@@ -2,7 +2,21 @@
   "editorMode": "vim",
   "autoAccept": true,
   "permissions": {
-    "allow": ["Read(*)", "Search(*)", "Edit(*)", "Write(*)"]
+    "allow": [
+      "Read(*)",
+      "Search(*)",
+      "Edit(*)",
+      "Write(*)",
+      "WebFetch(domain:*)",
+      "Bash(git reset:*)",
+      "Bash(git add:*)",
+      "Bash(git stash push:*)",
+      "Bash(git commit:*)",
+      "Bash(ls:*)",
+      "Bash(echo $PATH)",
+      "Bash(find:*)",
+      "Bash(ln:*)"
+    ]
   },
   "mcpServers": {
     "mcp-server-figma": {
