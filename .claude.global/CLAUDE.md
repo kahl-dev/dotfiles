@@ -14,20 +14,81 @@ This document defines general behavioral guidelines for AI assistants working wi
 
 ## 2. Preferred Tooling Order
 
-1. **grep** – locate code by content (functions, constants)
-2. **find_path** – locate files by name or glob
-3. **read_file** – inspect file contents once you have the path
-4. **list_directory** – explore directory structure
-5. **edit_file** – create or modify source files
-6. **create_directory** – add new directories
-7. **move_path / copy_path / delete_path** – refactor or restructure files
-8. **terminal** – run one-off shell commands (e.g. `make dev`, `docker ps`, `npm test`)
+1. **Grep** – locate code by content (functions, constants, patterns)
+2. **Glob** – locate files by name patterns or wildcards
+3. **Read** – inspect file contents once you have the path
+4. **LS** – explore directory structure and list files
+5. **Edit/MultiEdit** – create or modify source files
+6. **Write** – create new files when absolutely necessary
+7. **Task** – delegate complex search tasks to specialized agents
+8. **Bash** – run project-specific commands (e.g. `make dev`, `npm test`, linting)
 
-> Always prefer project-specific tools over free-form shell commands.
+> Always prefer project-specific scripts and tools over ad-hoc shell commands.
 
 ---
 
-## 3. Markdown & Code Block Conventions
+## 3. Task Management & Planning
+
+### TodoWrite/TodoRead Usage
+
+**When to Use Todo Lists:**
+- Complex multi-step tasks requiring 3+ distinct operations
+- User provides multiple tasks or requirements
+- Large-scale refactoring or system-wide changes
+- When explicit task tracking would benefit user visibility
+
+**When NOT to Use Todo Lists:**
+- Single, straightforward tasks
+- Trivial operations requiring <3 steps
+- Purely conversational or informational requests
+
+**Best Practices:**
+- Create todos BEFORE starting work on complex tasks
+- Mark tasks as `in_progress` when beginning work
+- Complete tasks IMMEDIATELY after finishing (don't batch)
+- Only have ONE task `in_progress` at a time
+- Use descriptive, actionable task names
+- Break large tasks into smaller, manageable steps
+
+**Task States:**
+- `pending`: Not yet started
+- `in_progress`: Currently working on (limit to one)
+- `completed`: Finished successfully
+
+**Example Workflow:**
+```
+1. User requests complex feature
+2. Create todo list with specific steps
+3. Mark first task as in_progress
+4. Complete task, mark as completed
+5. Move to next task
+6. Repeat until all tasks completed
+```
+
+### Plan Mode Guidelines
+
+**When to Use Plan Mode:**
+- Complex implementation tasks requiring code changes
+- Multi-file modifications or refactoring
+- System architecture changes
+- Large feature implementations
+
+**When NOT to Use Plan Mode:**
+- Research tasks or information gathering
+- Simple file reads or searches
+- Understanding existing code
+- Answering questions about codebases
+
+**Plan Mode Process:**
+1. Analyze requirements thoroughly
+2. Research existing codebase patterns
+3. Create detailed implementation plan
+4. Present plan via `exit_plan_mode`
+5. Wait for user approval before proceeding
+
+---
+
+## 4. Markdown & Code Block Conventions
 
 - Use path-anchored, language-labeled backtick blocks with the path immediately following the label:
 
@@ -44,23 +105,17 @@ This document defines general behavioral guidelines for AI assistants working wi
 
 ### File & Path Management
 
-- **Never** guess or hard-code file paths; always discover via `grep` or `find_path`
+- **Never** guess or hard-code file paths; always discover via Grep or Glob
 - **Do not** add new dependencies unless declared in `package.json` or explicitly approved
 - Ask clarifying questions if a request is ambiguous
+- **Prefer existing files**: Always edit existing files rather than creating new ones
 
 ### Git & Version Control
 
 - **NEVER commit unless explicitly requested** by the user - always wait for explicit permission to commit
 - **Each commit requires individual authorization** - no wildcards or blanket permissions for multiple commits
 - **Only use Git commands when explicitly requested** by the user
-- **When committing on user request**, adhere to these rules:
-  - Use Conventional Commit format: `<type>(TICKET-ID): clear description of change`
-  - Types include: `feat`, `fix`, `chore`, `docs`, `style`, `refactor`, `test`, `perf`
-  - Always include the ticket/issue ID in parentheses immediately after the type
-  - The commit message subject must be concise (≤ 72 characters) and start lowercase
-  - Provide a longer commit description in the body, wrapping lines around ~100 characters
-  - Stage only the files directly modified for the requested change
-  - **NEVER include AI generation attribution** in commit messages (no "Generated with Claude Code" or similar)
+- **Use dedicated commit rules**: When committing, reference and follow dedicated commit guidelines/prompts rather than using ad-hoc commit messages
 
 ### Code Quality & Standards
 
@@ -71,24 +126,28 @@ This document defines general behavioral guidelines for AI assistants working wi
 
 ---
 
-## 5. AI Assistant Best Practices
+## 5. Parallel Execution & Error Handling
 
-### Always Do First
+### Parallel Tool Execution
 
-- **NEVER commit unless explicitly requested** - only commit when user specifically asks
-- **Each commit needs individual user authorization** - no assumptions or batch commits
-- **Ask for ticket/issue ID** if not provided for commits
-- **Analyze actual file changes for commit messages** - focus on real code modifications
-- **Study existing patterns** before proposing solutions
-- **Use project tools** - prefer project-specific scripts over ad-hoc commands
+- **Batch Independent Operations**: Use multiple tool calls in a single response when possible
+- **Git Operations**: Always run `git status`, `git diff`, and `git log` in parallel for commits
+- **Search Operations**: Run multiple Grep/Glob searches concurrently when exploring codebases
+- **Quality Checks**: Execute linting, testing, and security checks simultaneously after changes
 
-### Common Mistakes to Avoid
+### Error Handling & Recovery
 
-- Making commits without proper authorization
-- Suggesting shell commands instead of project scripts
-- Adding dependencies without checking compatibility
-- Guessing file paths instead of discovering them
-- Not following existing code patterns and conventions
+- **Failed Operations**: Always explain what went wrong and suggest alternatives
+- **Missing Dependencies**: Check project configuration before suggesting installations
+- **Permission Issues**: Guide users through proper authorization steps
+- **Tool Failures**: Provide fallback approaches when primary tools fail
+
+### Workflow Optimization
+
+- **Study Patterns First**: Always analyze existing code patterns before implementing
+- **Use Project Tools**: Prefer project-specific scripts over generic commands
+- **Validate Changes**: Run appropriate quality checks after modifications
+- **Incremental Progress**: Break complex tasks into smaller, testable steps
 
 ---
 
@@ -101,13 +160,23 @@ This document defines general behavioral guidelines for AI assistants working wi
 3. **Confirm Before Implementation**: Before implementing any significant changes, confirm the chosen approach with the user
 4. **Ask for Clarification**: If the user's request could be interpreted in multiple ways, ask for clarification rather than assuming
 5. **Respect User Decisions**: Once the user makes a choice, implement exactly what they requested without second-guessing
+6. **Progress Communication**: Keep users informed of progress on complex tasks using todo lists
+7. **Error Transparency**: Clearly explain what went wrong and suggest solutions when tools fail
+
+### Response Guidelines
+
+- **Conciseness**: Provide clear, direct answers without unnecessary elaboration
+- **Code Context**: Include file paths and line numbers when referencing specific code locations
+- **Actionable Feedback**: Always provide next steps or actionable recommendations
+- **Scope Awareness**: Focus on the specific request without expanding scope unnecessarily
 
 ### Information Sharing
 
 - **Configuration**: Environment variables are in `.env` files (never share actual values)
-- **API Keys**: Reference them by environment variable names only
+- **API Keys**: Reference them by environment variable names only  
 - **User Data**: Follow GDPR principles and never expose personal information
 - **Debugging**: Share sanitized logs without sensitive information
+- **File References**: Use format `file_path:line_number` for easy navigation
 
 ---
 
@@ -116,6 +185,7 @@ This document defines general behavioral guidelines for AI assistants working wi
 ### Post-Change Quality Checks
 
 After any code modifications, run the project's quality assurance tools:
+
 1. **Auto-fix and format**: Run linting tools with auto-fix flags (e.g., `eslint --cache --fix`)
 2. **Verify compliance**: Run linting tools to verify all rules pass
 3. **Security checks**: Run security validation when applicable
@@ -152,111 +222,127 @@ After any code modifications, run the project's quality assurance tools:
 
 ---
 
----
+## 9. MCP Server Guidelines
 
-## 9. Memory Management Guidelines
-
-### Memory MCP Usage Principles
-
-- **What to Remember**: Project architecture, user preferences, recurring patterns, important decisions, and context that spans sessions
-- **What NOT to Remember**: Temporary data, sensitive information (API keys, passwords), large code dumps, or session-specific debugging info
-- **Privacy First**: Never store personal identifiable information, credentials, or proprietary business logic in memory
-- **Contextual Storage**: Store information that helps maintain continuity across sessions without duplicating what's already in the codebase
-
-### Memory Best Practices
-
-1. **Quality over Quantity**: Store concise, actionable insights rather than verbose logs
-2. **Regular Cleanup**: Periodically review and update stored memories to keep them relevant
-3. **Project-Specific Context**: Remember project conventions, architectural decisions, and user workflow preferences
-4. **Development Patterns**: Store recurring solutions, common debugging approaches, and preferred tooling choices
-
-### What Should Be Remembered
-
-- User's preferred code style and conventions
-- Project-specific architectural decisions
-- Recurring issues and their solutions
-- Tool preferences (testing frameworks, linting rules, etc.)
-- Workflow patterns and common tasks
-- Important project context that isn't in documentation
-
-### What Should NOT Be Remembered
-
-- Sensitive credentials or API keys
-- Large code blocks (reference files instead)
-- Temporary debugging information
-- Personal or proprietary business information
-- Session-specific error logs
-- Information already documented in the codebase
-
-### Other MCP Server Guidelines
+### MCP Best Practices
 
 **General MCP Principles:**
-- Only add trusted, verified MCP servers
+- Only add trusted, verified MCP servers from official sources
 - Use minimal required permissions and credentials
 - Configure with appropriate scope (local/project/user)
 - Regularly review and audit configured servers
+- Test MCP servers in development before production use
+- Document MCP server configurations and their purposes
 
-**Common MCP Server Rules:**
+**Security Guidelines:**
+- Never store credentials in MCP configurations
+- Use environment variables for sensitive data
+- Limit MCP server access to necessary directories only
+- Regularly update MCP servers to latest versions
+- Monitor MCP server activity and resource usage
 
-**GitHub MCP** (`@modelcontextprotocol/server-github`):
-- Use OAuth authentication only - never store tokens in code
-- Limit to read-only operations when possible
-- Use for repository exploration, not sensitive operations
-- Commands: `/mcp__github__list_prs`, `/mcp__github__pr_review`
+**Performance Considerations:**
+- Disable unused MCP servers to reduce overhead
+- Use specific, targeted MCP servers rather than generic ones
+- Monitor response times and adjust configurations accordingly
+- Consider caching when appropriate for frequently accessed data
 
-**Postgres MCP** (`@modelcontextprotocol/server-postgres`):
-- Use read-only database credentials
-- Only for schema inspection and safe queries
-- Never use for production database modifications
-- Ensure connection strings use minimal required permissions
+### Common MCP Server Examples
 
 **Filesystem MCP** (`@modelcontextprotocol/server-filesystem`):
-- Restrict access to specific directories only
-- Never grant access to sensitive system directories
-- Use for project-specific file operations
-- Reference files with `@docs:file://path` syntax
+- **Purpose**: Safe file system operations within defined boundaries
+- **Security**: Restrict to project directories only, never system directories
+- **Use Cases**: Project file management, safe code exploration
 
-**Brave Search MCP** (`@modelcontextprotocol/server-brave-search`):
-- Use for research and documentation lookup only
-- Be mindful of API rate limits
-- Don't rely on for sensitive or critical information verification
+**GitHub MCP** (`@modelcontextprotocol/server-github`):
+- **Purpose**: Repository management and collaboration
+- **Security**: Use read-only tokens when possible, OAuth authentication
+- **Use Cases**: PR reviews, issue tracking, repository exploration
 
-**Supabase MCP** (`@modelcontextprotocol/server-supabase`):
-- Write access is enabled - use with extreme caution
-- Never modify production data without explicit user permission
-- Always confirm database operations before execution
-- Use for development and staging environments primarily
+**Postgres MCP** (`@modelcontextprotocol/server-postgres`):
+- **Purpose**: Database schema inspection and safe queries
+- **Security**: Use read-only credentials, never production write access
+- **Use Cases**: Schema analysis, development database queries
 
-**Shell MCP** (`@modelcontextprotocol/server-shell`):
-- Never run destructive commands without user confirmation
-- Avoid commands that modify system settings
-- Prefer project-specific scripts over raw shell commands
-- Always explain what shell commands will do before execution
+**Context7 MCP** (`@upstash/context7-mcp`):
 
-**Docker MCP** (`@modelcontextprotocol/server-docker`):
-- Only use for development containers
-- Never manipulate production containers
-- Always check container status before operations
-- Prefer docker-compose commands when available
-
-**Sentry MCP** (`@modelcontextprotocol/server-sentry`):
-- Use for error monitoring and debugging only
-- Never modify production error settings
-- Focus on read-only operations for investigation
-- Respect rate limits and API quotas
-
-**Figma MCP** (`@modelcontextprotocol/server-figma`):
-- Use for design system documentation and asset retrieval
-- Never modify production design files
-- Prefer read-only operations unless explicitly requested
-- Coordinate with design team for any changes
-
-**Context7 MCP** (`@modelcontextprotocol/server-context7`):
-- Use for enhanced context management
-- Configured with 10000 minimum tokens
-- Leverage for complex codebase analysis
-- Ideal for large-scale refactoring tasks
+- **Purpose**: Real-time, version-specific documentation provider for libraries and frameworks
+- **Primary Use Cases**:
+  - Get up-to-date official documentation for any library or framework
+  - Access version-specific code examples and API references
+  - Eliminate outdated documentation issues in AI coding assistance
+- **Available Tools**:
+  - `resolve-library-id`: Convert general library names to Context7-compatible IDs
+  - `get-library-docs`: Fetch current documentation for specified libraries
+- **Best Practices**:
+  - Use when working with external libraries/frameworks to ensure accuracy
+  - Particularly valuable for rapidly evolving libraries (React, Next.js, Nuxt, Nuxt UI v3, etc.)
+  - Always specify version numbers when possible for precise documentation
+  - Leverage before implementing new features with unfamiliar APIs
+- **When to Use**:
+  - Starting new projects with external dependencies
+  - Upgrading libraries and need migration guidance
+  - Debugging issues with third-party APIs
+  - Learning new frameworks or libraries
+  - Ensuring code examples match current library versions
+- **Performance**: Fetches documentation on-demand, minimal overhead
 
 ---
 
-_These general guidelines ensure consistent, safe, and effective AI-driven code assistance across projects._
+## 10. Continuous Improvement & Adaptation
+
+### Learning from User Preferences
+
+- **Document Patterns**: When discovering user preferences or project-specific patterns, suggest adding them to CLAUDE.md files
+- **Configuration Updates**: Recommend improvements to project configurations based on observed workflows
+- **Tool Usage**: Adapt tool selection based on project characteristics and user feedback
+
+### Quality Assurance
+
+- **Post-Implementation Review**: After completing tasks, verify results match user expectations
+- **Error Pattern Recognition**: Learn from failures to improve future approaches
+- **Best Practice Evolution**: Update approaches based on successful patterns and user feedback
+
+### Knowledge Management
+
+- **Context Preservation**: Maintain awareness of project architecture and conventions across sessions
+- **Documentation Gaps**: Identify and suggest improvements to project documentation
+- **Configuration Management**: Help users maintain and improve their development environment configurations
+
+_These guidelines ensure continuous improvement and adaptation in AI-assisted development workflows._
+
+---
+
+## 11. Task Management System
+
+### Task Organization
+
+- **Task Location**: `.tasks/` in each project (active/backlog/done/scripts folders)
+- **Always Check First**: Scan `.tasks/active/` before starting any work
+- **JIRA Integration**: Include JIRA ticket IDs in task files and commit messages
+- **Continuity**: Reference existing tasks when continuing work across sessions
+
+### Available Commands
+
+- `/task-new` - Create new task from context, plans, or arguments
+- `/task-from-text` - Convert scratchpad notes or todos into structured tasks
+- `/task-list` - Show all open tasks with filtering options
+- `/task-continue` - Resume work on existing tasks
+- `/task-help` - Display usage guide and examples
+
+### Task File Format
+
+Tasks use structured markdown with YAML frontmatter:
+- **Status**: active, backlog, or done
+- **Type**: feature, bug, refactor, etc.
+- **JIRA**: Ticket ID for traceability
+- **Steps**: Actionable checkboxes for progress tracking
+- **Context**: Background information and requirements
+
+### Workflow Integration
+
+- **TodoWrite Integration**: Load tasks into todo lists for progress tracking
+- **Commit Message Generation**: Automatically include JIRA IDs in conventional commits
+- **Context Preservation**: Maintain task awareness across Claude sessions
+- **Progress Tracking**: Update task files as work progresses
+
