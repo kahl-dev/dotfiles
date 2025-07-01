@@ -6,17 +6,46 @@ vim.g.node_host_prog = os.getenv("NEOVIM_NODE_HOST")
 
 vim.g.root_spec = { { ".git" }, "cwd" }
 
-if vim.env.SSH_TTY then
-  vim.g.clipboard = {
-    name = "Tmux clipboard",
-    copy = {
-      ["+"] = { "tmux", "load-buffer", "-" },
-      ["*"] = { "tmux", "load-buffer", "-" },
-    },
-    paste = {
-      ["+"] = { "tmux", "save-buffer", "-" },
-      ["*"] = { "tmux", "save-buffer", "-" },
-    },
-    cache_enabled = 1,
-  }
-end
+-- Universal clipboard configuration for all environments
+-- Detects local, SSH, nested tmux automatically
+vim.g.clipboard = {
+  name = "Universal clipboard",
+  copy = {
+    ["+"] = { "universal-clipboard" },
+    ["*"] = { "universal-clipboard" },
+  },
+  paste = {
+    -- For paste, try multiple sources in order of preference
+    ["+"] = function()
+      -- Try tmux buffer first (fastest for tmux environments)
+      if vim.env.TMUX then
+        local handle = io.popen("tmux save-buffer - 2>/dev/null")
+        if handle then
+          local result = handle:read("*a")
+          handle:close()
+          if result and result ~= "" then
+            return vim.split(result, "\n")
+          end
+        end
+      end
+      
+      -- Fallback to pbpaste for local environments
+      if not vim.env.SSH_TTY and vim.fn.executable("pbpaste") == 1 then
+        local handle = io.popen("pbpaste")
+        if handle then
+          local result = handle:read("*a")
+          handle:close()
+          if result then
+            return vim.split(result, "\n")
+          end
+        end
+      end
+      
+      return {}
+    end,
+    ["*"] = function()
+      return vim.g.clipboard.paste["+"]()
+    end,
+  },
+  cache_enabled = 0, -- Disable cache to ensure fresh data
+}
