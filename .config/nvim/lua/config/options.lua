@@ -11,8 +11,17 @@ vim.g.root_spec = { { ".git" }, "cwd" }
 vim.g.clipboard = {
   name = "Universal clipboard",
   copy = {
-    ["+"] = { "universal-clipboard" },
-    ["*"] = { "universal-clipboard" },
+    ["+"] = function(lines)
+      local text = table.concat(lines, "\n")
+      local handle = io.popen("universal-clipboard", "w")
+      if handle then
+        handle:write(text)
+        handle:close()
+      end
+    end,
+    ["*"] = function(lines)
+      return vim.g.clipboard.copy["+"](lines)
+    end,
   },
   paste = {
     -- For paste, try multiple sources in order of preference
