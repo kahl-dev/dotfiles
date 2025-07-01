@@ -37,6 +37,9 @@
       ~/.config/claude-sync: ./.config/claude-sync/
       ~/.codex: ./.codex
       ~/.claude: ./.claude.global
+      
+      # Make claude-sync accessible in PATH
+      bin/claude-sync: ./.config/claude-sync/claude-sync
 
 - shell:
       - [git submodule update --init --recursive, Installing submodules]
