@@ -1,4 +1,5 @@
 {
+  "includeCoAuthoredBy": false,
   "editorMode": "vim",
   "autoAccept": true,
   "permissions": {
