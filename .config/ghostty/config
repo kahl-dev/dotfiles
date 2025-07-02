@@ -38,9 +38,8 @@ auto-update-channel = stable
 quit-after-last-window-closed = true
 shell-integration-features = true
 
-# bell notifications
-audible-bell = true
-visual-bell = true
+# bell notifications - not yet implemented in Ghostty
+# Bell functionality is planned for future releases
 
 # macos
 macos-option-as-alt = true
