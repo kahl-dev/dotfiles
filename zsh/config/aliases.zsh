@@ -375,6 +375,28 @@ unset git_version
 alias gjirab="_gjirab"
 alias gjirac="_gjirac"
 
+# Git worktree switcher
+wt() {
+  if [ -z "$1" ]; then
+    local selected=$(git worktree list | fzf --prompt="Select worktree: " --height=40% --reverse)
+    if [ -n "$selected" ]; then
+      local path=$(echo "$selected" | awk '{print $1}')
+      builtin cd "$path" 2>/dev/null
+      zoxide add "$path" 2>/dev/null
+    fi
+    return
+  fi
+  
+  local path=$(git worktree list --porcelain | awk -v pattern="$1" '/^worktree / && $0 ~ pattern {gsub(/^worktree /, ""); print; exit}')
+  if [ -n "$path" ]; then
+    builtin cd "$path" 2>/dev/null
+    zoxide add "$path" 2>/dev/null
+  else
+    echo "Worktree not found: $1"
+    git worktree list
+  fi
+}
+
 # ############################## #
 # macOS Specific Aliases
 # ############################## #
