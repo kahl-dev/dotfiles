@@ -36,6 +36,10 @@ auto-update-channel = stable
 quit-after-last-window-closed = true
 shell-integration-features = true
 
+# bell notifications
+audible-bell = true
+visual-bell = false
+
 # macos
 macos-option-as-alt = true
 macos-titlebar-style = hidden

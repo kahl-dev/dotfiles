@@ -59,11 +59,34 @@ send_osc52() {
     # Base64 encode the text
     encoded=$(printf '%s' "$text" | base64 | tr -d '\n')
     
-    # Send OSC 52 sequence
-    # The sequence: ESC]52;c;BASE64_TEXT\007
-    printf '\033]52;c;%s\007' "$encoded"
+    # Multiple OSC 52 sequence formats for better compatibility
+    if [[ -n "${TMUX:-}" ]]; then
+        # Inside tmux, use tmux's clipboard integration
+        printf '\033Ptmux;\033\033]52;c;%s\007\033\\' "$encoded"
+        debug "Sent OSC 52 via tmux passthrough"
+    else
+        # Direct OSC 52 sequence
+        printf '\033]52;c;%s\007' "$encoded"
+        debug "Sent direct OSC 52 sequence"
+    fi
     
-    debug "Sent OSC 52 sequence (${#encoded} chars)"
+    # Alternative sequence for terminals that prefer ST instead of BEL
+    printf '\033]52;c;%s\033\\' "$encoded"
+    debug "Sent OSC 52 with ST terminator (${#encoded} chars)"
+}
+
+# Test if OSC 52 is actually working
+test_osc52_support() {
+    # Send a test OSC 52 sequence and check if it gets processed
+    # If the sequence gets echoed back, OSC 52 is not supported
+    local test_seq='\033]52;c;dGVzdA==\007'
+    
+    # This is a simple heuristic - in practice, detecting OSC 52 support is complex
+    # For now, assume OSC 52 doesn't work in SSH sessions unless specifically enabled
+    if [[ -n "${SSH_TTY:-}" ]] && [[ -z "${OSC52_ENABLED:-}" ]]; then
+        return 1  # OSC 52 likely not supported
+    fi
+    return 0  # OSC 52 likely supported
 }
 
 # Main clipboard copy function
@@ -83,13 +106,24 @@ copy_to_clipboard() {
         debug "Copied to local pbcopy"
     fi
     
-    # Method 2: OSC 52 (works through SSH and nested tmux)
-    send_osc52 "$text"
-    
-    # Method 3: tmux buffer (for local tmux integration)
+    # Method 2: tmux buffer (most reliable for SSH scenarios)
     if [[ -n "${TMUX:-}" ]]; then
         printf '%s' "$text" | tmux load-buffer -
         debug "Loaded to tmux buffer"
+        
+        # Also try to trigger tmux's OSC 52 if it's configured
+        if tmux show-options -g set-clipboard 2>/dev/null | grep -q on; then
+            # Let tmux handle OSC 52
+            tmux save-buffer - | tmux load-buffer -
+            debug "Triggered tmux OSC 52"
+        fi
+    fi
+    
+    # Method 3: OSC 52 (only if likely to work)
+    if test_osc52_support; then
+        send_osc52 "$text"
+    else
+        debug "Skipping OSC 52 (not supported in this environment)"
     fi
     
     # Method 4: X11 clipboard (Linux)

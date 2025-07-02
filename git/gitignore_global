@@ -10,3 +10,5 @@ node_modules
 
 # Claude Code local settings
 *.local.*
+.tasks/
+CLAUDE.md

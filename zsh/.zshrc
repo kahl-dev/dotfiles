@@ -92,8 +92,6 @@ elif [ -f "$HOME/.zshrc-local" ]; then
   source "$HOME/.zshrc-local"
 fi
 
-# Atuin is initialized in config/atuin.zsh - no need to duplicate here
-
 # fnm
 FNM_PATH="/home/pi/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then

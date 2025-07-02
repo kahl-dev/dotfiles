@@ -47,9 +47,12 @@ When user requests a commit in LIA projects:
 1. **Check Status**: `git status` to see current state
 2. **Review Changes**: `git diff` to understand modifications
 3. **Check History**: `git log --oneline -5` for context and existing patterns
-4. **Extract Jira Ticket**: 
-   - Try to extract from current branch name (e.g., `feature/LIA-123-description`)
-   - If not found, **ask user for ticket ID**
+4. **Extract Jira Ticket** (priority order):
+   - Try `toggl-current-issue` script to get ticket from current Toggl time entry
+   - If no Toggl entry, try to extract from current branch name (e.g., `feature/LIA-123-description`)
+   - If no branch ticket, extract from last commit message
+   - If last commit has ticket, ask user: "Last commit used ticket: ABC-123. Use this ticket ID? (y/N)"
+   - If all methods fail, **ask user for ticket ID**
    - Validate format matches `[A-Z]+-[0-9]+` pattern
 5. **Stage Files**: Add relevant files to staging area
 6. **Analyze Changes**: Determine appropriate type based on actual modifications
