@@ -4,6 +4,21 @@
   "autoAccept": true,
   "permissions": {
     "allow": [
+      "Bash(make status:*)",
+      "Bash(chmod:*)",
+      "Bash(make:*)",
+      "Bash(gunzip:*)",
+      "Bash(grep:*)",
+      "Bash(yarn:*)",
+      "Bash(eslint:*)",
+      "Bash(rg:*)",
+      "Bash(yarn assign:super-admin:*)",
+      "Bash(yarn sync:users:*)",
+      "Bash(yarn setup:local-auth:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(curl:*)",
+      "Bash(yarn eslint:*)",
       "Read(*)",
       "Search(*)",
       "Edit(*)",
@@ -17,8 +32,12 @@
       "Bash(echo $PATH)",
       "Bash(find:*)",
       "Bash(ln:*)",
-      "Bash(toggl-current-issue)"
-    ]
+      "Bash(toggl-current-issue)",
+      "Bash(ln:*)",
+      "mcp__*",
+      "WebFetch"
+    ],
+    "deny": []
   },
   "mcpServers": {
     "mcp-server-figma": {
@@ -26,13 +45,6 @@
       "args": ["@modelcontextprotocol/server-figma"],
       "env": {
         "FIGMA_API_KEY": "op://fam-kahl.1password.com/Private/figma-api/credential"
-      }
-    },
-    "mcp-server-context7": {
-      "command": "npx",
-      "args": ["@modelcontextprotocol/server-context7"],
-      "env": {
-        "DEFAULT_MINIMUM_TOKENS": "10000"
       }
     },
     "mcp-server-supabase": {
