@@ -398,7 +398,7 @@ wt() {
 }
 
 # Claude Code commit helper
-alias gcommit='claude "/commit"'
+alias gcommit='claude -p "/commit"'
 
 # ############################## #
 # macOS Specific Aliases
