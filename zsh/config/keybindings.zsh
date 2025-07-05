@@ -48,3 +48,7 @@ bindkey '^E' edit-command-line
 
 bindkey -s '^U' 'tm^M'
 bindkey -s '^N' 'nvim $(fzf)^M'
+
+# Bind atuin to Ctrl+R in both insert and command modes
+bindkey -M viins '^R' atuin-search
+bindkey -M vicmd '^R' atuin-search
