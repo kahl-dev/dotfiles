@@ -466,6 +466,76 @@ if command_exists podman; then
 fi
 
 # ############################## #
+# Atuin Environment Variables
+# ############################## #
+
+# Quick access to atuin env var commands
+alias av='atuin dotfiles var'
+alias avs='atuin dotfiles var set'
+alias avl='atuin dotfiles var list'
+alias avd='atuin dotfiles var delete'
+
+# Interactive env var setter with confirmation
+_avset() {
+  if [[ $# -lt 2 ]]; then
+    echo "Usage: avset KEY VALUE"
+    return 1
+  fi
+  
+  local key="$1"
+  local value="$2"
+  
+  echo "Setting environment variable:"
+  echo "  Key: $key"
+  echo "  Value: ${value:0:20}${#value -gt 20 && echo "..."}"
+  read -q "REPLY?Continue? (y/n): "
+  echo
+  
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    atuin dotfiles var set "$key" "$value"
+    echo "✅ Set $key"
+  else
+    echo "❌ Cancelled"
+  fi
+}
+
+# Interactive env var deleter with confirmation
+_avdel() {
+  if [[ $# -lt 1 ]]; then
+    echo "Usage: avdel KEY"
+    return 1
+  fi
+  
+  local key="$1"
+  
+  echo "Deleting environment variable: $key"
+  read -q "REPLY?Are you sure? (y/n): "
+  echo
+  
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    atuin dotfiles var delete "$key"
+    echo "✅ Deleted $key"
+  else
+    echo "❌ Cancelled"
+  fi
+}
+
+# Show env vars with nice formatting
+_avshow() {
+  echo "🔑 Atuin Environment Variables:"
+  echo "================================"
+  atuin dotfiles var list
+}
+
+alias avset='_avset'
+alias avdel='_avdel'
+alias avshow='_avshow'
+
+# Atuin sync shortcuts
+alias async='atuin sync'
+alias astatus='atuin status'
+
+# ############################## #
 # Dotfiles
 # ############################## #
 
