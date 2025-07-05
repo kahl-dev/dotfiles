@@ -6,6 +6,7 @@ return {
       max_length = 0, -- Maximum length of selection (0 for no limit)
       silent = false, -- Disable message on successful copy
       trim = false, -- Trim surrounding whitespaces before copy
+      tmux_passthrough = true, -- Enable tmux passthrough for tmux 3.5a compatibility
     })
     -- local function copy()
     --   if (vim.v.event.operator == "y" or vim.v.event.operator == "d") and vim.v.event.regname == "" then

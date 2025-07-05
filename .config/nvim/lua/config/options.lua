@@ -7,23 +7,12 @@ vim.g.node_host_prog = os.getenv("NEOVIM_NODE_HOST")
 vim.g.root_spec = { { ".git" }, "cwd" }
 
 -- Universal clipboard configuration for all environments
--- Prioritizes tmux buffer for SSH scenarios, OSC 52 for local
+-- Detects local, SSH, nested tmux automatically
 vim.g.clipboard = {
   name = "Universal clipboard",
   copy = {
-    ["+"] = function(lines)
-      local text = table.concat(lines, "\n")
-      
-      -- Use universal-clipboard script which handles all scenarios
-      local handle = io.popen("universal-clipboard", "w")
-      if handle then
-        handle:write(text)
-        handle:close()
-      end
-    end,
-    ["*"] = function(lines)
-      return vim.g.clipboard.copy["+"](lines)
-    end,
+    ["+"] = { "universal-clipboard" },
+    ["*"] = { "universal-clipboard" },
   },
   paste = {
     -- For paste, try multiple sources in order of preference
