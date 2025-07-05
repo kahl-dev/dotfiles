@@ -1,0 +1,73 @@
+- defaults:
+    link:
+      relink: true
+      create: true
+    shell:
+      quiet: false
+      stderr: true
+
+- clean: []
+
+- link: {}
+
+- shell:
+    - description: "Clone claude-store repository"
+      command: |
+        if [ ! -d "$HOME/.claude.store" ]; then
+          echo "Cloning claude-store repository..."
+          git clone git@github.com:kahl-dev/.claude.store.git "$HOME/.claude.store"
+        else
+          echo "Claude-store repository already exists"
+          cd "$HOME/.claude.store"
+          git pull origin main
+        fi
+
+    - description: "Create symlink for entire claude directory"
+      command: |
+        # Remove existing ~/.claude directory/symlink completely
+        rm -rf "$HOME/.claude"
+        
+        # Create symlink to entire user-level directory
+        ln -sf "$HOME/.claude.store/user-level" "$HOME/.claude"
+        
+        echo "Created symlink: ~/.claude -> ~/.claude.store/user-level"
+
+    - description: "Update hostname in configuration"
+      command: |
+        # Update hostname in existing config.json
+        cd "$HOME/.claude.store"
+        if [ -f "config.json" ]; then
+          jq --arg hostname "$(hostname)" '.hostname = $hostname' config.json > config.json.tmp
+          mv config.json.tmp config.json
+          echo "Updated hostname in configuration to $(hostname)"
+        fi
+
+    - description: "Add claude alias to shell configuration"
+      command: |
+        # Check if claude alias already exists anywhere
+        if command -v claude >/dev/null 2>&1 || \
+           grep -r "alias claude=" "$HOME/.dotfiles/zsh/" 2>/dev/null | grep -q "claude=" || \
+           grep -q "alias claude=" "$HOME/.zshrc" "$HOME/.bashrc" "$HOME/.profile" 2>/dev/null; then
+          echo "Claude alias already exists in shell configuration"
+        else
+          echo "" >> "$HOME/.zshrc"
+          echo "# Claude Storage System alias" >> "$HOME/.zshrc"
+          echo "alias claude='$HOME/.claude.store/bin/claude-wrapper'" >> "$HOME/.zshrc"
+          echo "Claude alias added to .zshrc"
+        fi
+
+    - description: "Display installation summary"
+      command: |
+        echo ""
+        echo "🎉 Claude Storage System installed successfully!"
+        echo ""
+        echo "📁 Location: $HOME/.claude.store"
+        echo "🔗 Symlink: ~/.claude -> ~/.claude.store/user-level"
+        echo "⚙️  Mode: $(jq -r '.mode' $HOME/.claude.store/config.json)"
+        echo "🖥️  Hostname: $(jq -r '.hostname' $HOME/.claude.store/config.json)"
+        echo ""
+        echo "Next steps:"
+        echo "1. Use 'claude' command as normal - files will be managed automatically"
+        echo "2. Use 'claude-wrapper status' to check current status"
+        echo "3. Use 'claude-wrapper toggle' to change project management behavior"
+        echo ""
