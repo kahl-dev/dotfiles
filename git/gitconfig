@@ -1,8 +1,11 @@
 [alias]
-update = !git pull && git submodule update --init --recursive
+update = pull --rebase --autostash
 branchdate = "for-each-ref --count=20 --sort=-committerdate refs/remotes/origin --format=\"%(authordate:short)%09%(objectname:short)%09%(authorname)%09%1B[0;33m%(refname:short)%1B[m%09\""
 delete-local-merged = "!git fetch && git branch --merged | egrep -v 'master|dev|main|staging' | xargs git branch -d"
 cleanup = git-cleanup
+	up = pull --rebase --autostash
+	sync = pull --rebase --autostash
+	pullup = pull --rebase --autostash
 
 [user]
 name = Patrick Kahl
@@ -80,7 +83,3 @@ enabled = true
 navigate = true
 light = false
 line-numbers = true
-
-[git-up "fetch"]
-prune = true
-all = true
