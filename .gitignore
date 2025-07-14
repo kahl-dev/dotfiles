@@ -51,3 +51,5 @@ alfred_scripts/script.log
 
 # Zed local settings with sensitive SSH configs
 .config/zed/settings.local.json
+
+logs
