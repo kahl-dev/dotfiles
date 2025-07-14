@@ -376,7 +376,7 @@ alias gjirab="_gjirab"
 alias gjirac="_gjirac"
 
 # Git worktree switcher
-wt() {
+wts() {
   if [ -z "$1" ]; then
     local selected=$(git worktree list | fzf --prompt="Select worktree: " --height=40% --reverse)
     if [ -n "$selected" ]; then
@@ -534,6 +534,17 @@ alias avshow='_avshow'
 # Atuin sync shortcuts
 alias async='atuin sync'
 alias astatus='atuin status'
+
+# ############################## #
+# Lia
+# ############################## #
+
+alias lia-rebuild-nuxt='original_dir=$(pwd) && cdgr && cd nuxt && make install && make build; cd "$original_dir"'
+alias lia-rebuild-lia-package='original_dir=$(pwd) && cdgr && cd tpl && make install && make build; cd "$original_dir"'
+alias lia-rebuild-all='liaRebuildNuxt && liaRebuildLiaPackage'
+alias lrn='lia-rebuild-nuxt'
+alias lrp='lia-rebuild-lia-package'
+alias lra='lia-rebuild-all'
 
 # ############################## #
 # Dotfiles
