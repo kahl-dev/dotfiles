@@ -1,0 +1,257 @@
+#!/usr/bin/env bash
+# SSH Agent Debug Tool
+# Comprehensive diagnostics for SSH agent forwarding issues
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+print_header() {
+    echo -e "${BLUE}=== $1 ===${NC}"
+}
+
+print_success() {
+    echo -e "${GREEN}✓ $1${NC}"
+}
+
+print_warning() {
+    echo -e "${YELLOW}⚠ $1${NC}"
+}
+
+print_error() {
+    echo -e "${RED}✗ $1${NC}"
+}
+
+# Check if we're in a remote session
+check_remote_session() {
+    print_header "Remote Session Check"
+    
+    if [[ -n "${SSH_CLIENT:-}" ]]; then
+        print_success "Running in SSH session"
+        echo "SSH_CLIENT: $SSH_CLIENT"
+    else
+        print_warning "Not in SSH session"
+        echo "This tool is designed for remote SSH sessions"
+    fi
+    
+    if [[ -n "${SSH_CONNECTION:-}" ]]; then
+        echo "SSH_CONNECTION: $SSH_CONNECTION"
+    fi
+    
+    if [[ -n "${SSH_TTY:-}" ]]; then
+        echo "SSH_TTY: $SSH_TTY"
+    fi
+    
+    echo
+}
+
+# Check tmux status
+check_tmux_status() {
+    print_header "Tmux Status"
+    
+    if [[ -n "${TMUX:-}" ]]; then
+        print_success "Running in tmux session"
+        echo "TMUX: $TMUX"
+        
+        # Check if tmux config includes remote config
+        if tmux show-options -g | grep -q "SSH_AUTH_SOCK"; then
+            print_success "Tmux has SSH_AUTH_SOCK configured"
+        else
+            print_warning "Tmux SSH_AUTH_SOCK not found in global options"
+        fi
+    else
+        print_warning "Not in tmux session"
+    fi
+    
+    echo
+}
+
+# Check SSH agent keeper status
+check_ssh_agent_keeper() {
+    print_header "SSH Agent Keeper Status"
+    
+    local pid_file="$HOME/.ssh/ssh-agent-keeper.pid"
+    local log_file="$HOME/.ssh/ssh-agent-keeper.log"
+    
+    if [[ -f "$pid_file" ]]; then
+        local pid=$(cat "$pid_file")
+        if kill -0 "$pid" 2>/dev/null; then
+            print_success "SSH agent keeper is running (PID: $pid)"
+        else
+            print_error "SSH agent keeper not running (stale PID file)"
+        fi
+    else
+        print_error "SSH agent keeper not running (no PID file)"
+    fi
+    
+    if [[ -f "$log_file" ]]; then
+        echo "Recent log entries:"
+        tail -5 "$log_file" | sed 's/^/  /'
+    else
+        print_warning "No log file found"
+    fi
+    
+    echo
+}
+
+# Check SSH agent socket
+check_ssh_agent_socket() {
+    print_header "SSH Agent Socket"
+    
+    local socket_link="$HOME/.ssh/ssh_auth_sock"
+    
+    echo "SSH_AUTH_SOCK: ${SSH_AUTH_SOCK:-<not set>}"
+    
+    if [[ -L "$socket_link" ]]; then
+        local target=$(readlink "$socket_link")
+        echo "Symlink: $socket_link -> $target"
+        
+        if [[ -S "$target" ]]; then
+            print_success "Symlink target is valid socket"
+        else
+            print_error "Symlink target is not a valid socket"
+        fi
+    else
+        print_error "SSH agent symlink not found"
+    fi
+    
+    # Test current SSH_AUTH_SOCK
+    if [[ -n "${SSH_AUTH_SOCK:-}" ]]; then
+        if [[ -S "$SSH_AUTH_SOCK" ]]; then
+            print_success "SSH_AUTH_SOCK points to valid socket"
+        else
+            print_error "SSH_AUTH_SOCK points to invalid socket"
+        fi
+    else
+        print_error "SSH_AUTH_SOCK not set"
+    fi
+    
+    echo
+}
+
+# Test SSH agent functionality
+test_ssh_agent() {
+    print_header "SSH Agent Test"
+    
+    if [[ -n "${SSH_AUTH_SOCK:-}" ]]; then
+        if ssh-add -l >/dev/null 2>&1; then
+            print_success "SSH agent responds to queries"
+            echo "Loaded keys:"
+            ssh-add -l | sed 's/^/  /'
+        else
+            local exit_code=$?
+            if [[ $exit_code -eq 1 ]]; then
+                print_warning "SSH agent has no keys loaded"
+            else
+                print_error "SSH agent not responding (exit code: $exit_code)"
+            fi
+        fi
+    else
+        print_error "Cannot test SSH agent (SSH_AUTH_SOCK not set)"
+    fi
+    
+    echo
+}
+
+# Check git SSH functionality
+test_git_ssh() {
+    print_header "Git SSH Test"
+    
+    if command -v git >/dev/null 2>&1; then
+        echo "Testing git SSH connection..."
+        if timeout 10 ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+            print_success "Git SSH authentication works"
+        else
+            print_error "Git SSH authentication failed"
+            echo "Try running: ssh -T git@github.com"
+        fi
+    else
+        print_warning "Git not found"
+    fi
+    
+    echo
+}
+
+# Check system SSH sockets
+check_system_sockets() {
+    print_header "System SSH Sockets"
+    
+    echo "Finding SSH agent sockets:"
+    for socket in /tmp/ssh-*/agent.* /tmp/ssh-*/ssh_auth_sock.* /tmp/ssh-*; do
+        if [[ -S "$socket" ]]; then
+            echo "  Found: $socket"
+            if SSH_AUTH_SOCK="$socket" ssh-add -l >/dev/null 2>&1; then
+                echo "    Status: WORKING"
+            else
+                echo "    Status: NOT WORKING"
+            fi
+        fi
+    done
+    
+    echo
+}
+
+# Show environment variables
+show_environment() {
+    print_header "Environment Variables"
+    
+    local vars=(
+        "SSH_CLIENT"
+        "SSH_CONNECTION" 
+        "SSH_TTY"
+        "SSH_AUTH_SOCK"
+        "SSH_AGENT_PID"
+        "TMUX"
+        "DISPLAY"
+        "TERM"
+    )
+    
+    for var in "${vars[@]}"; do
+        echo "$var: ${!var:-<not set>}"
+    done
+    
+    echo
+}
+
+# Main function
+main() {
+    echo -e "${BLUE}SSH Agent Debug Tool${NC}"
+    echo "===================="
+    echo
+    
+    check_remote_session
+    check_tmux_status
+    check_ssh_agent_keeper
+    check_ssh_agent_socket
+    test_ssh_agent
+    test_git_ssh
+    check_system_sockets
+    show_environment
+    
+    print_header "Recommendations"
+    
+    if [[ -z "${SSH_CLIENT:-}" ]]; then
+        echo "• This tool should be run from a remote SSH session"
+    fi
+    
+    if [[ ! -f "$HOME/.ssh/ssh-agent-keeper.pid" ]] || ! kill -0 "$(cat "$HOME/.ssh/ssh-agent-keeper.pid" 2>/dev/null)" 2>/dev/null; then
+        echo "• Start SSH agent keeper: ssh-agent-start"
+    fi
+    
+    if [[ -z "${TMUX:-}" ]]; then
+        echo "• Run this from within tmux for full diagnosis"
+    fi
+    
+    echo "• Manual refresh: tmux set-environment -g SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock"
+    echo "• Tmux key binding: <prefix>R to refresh SSH agent"
+    echo "• Logs: ssh-agent-logs"
+    echo "• Status: ssh-agent-status"
+}
+
+# Run main function
+main "$@"

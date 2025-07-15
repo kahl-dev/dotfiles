@@ -1,0 +1,150 @@
+#!/usr/bin/env bash
+# SSH Agent Keeper - Maintains SSH agent forwarding in tmux sessions
+# Only activates on remote servers (when SSH_CLIENT is set)
+# Keeps SSH agent socket accessible across connection changes
+
+set -euo pipefail
+
+# Only run on remote servers
+if [[ -z "${SSH_CLIENT:-}" ]]; then
+    exit 0
+fi
+
+# Configuration
+SSH_AUTH_SOCK_LINK="$HOME/.ssh/ssh_auth_sock"
+LOG_FILE="$HOME/.ssh/ssh-agent-keeper.log"
+PID_FILE="$HOME/.ssh/ssh-agent-keeper.pid"
+
+# Debug mode
+DEBUG=${SSH_AGENT_DEBUG:-0}
+debug() {
+    [[ $DEBUG -eq 1 ]] && echo "[SSH-AGENT-KEEPER] $*" | tee -a "$LOG_FILE" >&2
+}
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "$LOG_FILE"
+}
+
+# Check if already running
+if [[ -f "$PID_FILE" ]]; then
+    old_pid=$(cat "$PID_FILE")
+    if kill -0 "$old_pid" 2>/dev/null; then
+        debug "SSH agent keeper already running (PID: $old_pid)"
+        exit 0
+    else
+        debug "Removing stale PID file"
+        rm -f "$PID_FILE"
+    fi
+fi
+
+# Create PID file
+echo $$ > "$PID_FILE"
+
+# Cleanup on exit
+cleanup() {
+    debug "Cleaning up SSH agent keeper"
+    rm -f "$PID_FILE"
+    exit 0
+}
+trap cleanup EXIT INT TERM
+
+# Create SSH directory if it doesn't exist
+mkdir -p "$HOME/.ssh"
+chmod 700 "$HOME/.ssh"
+
+# Function to update SSH agent socket
+update_ssh_agent_socket() {
+    local current_socket="${SSH_AUTH_SOCK:-}"
+    
+    if [[ -z "$current_socket" ]]; then
+        debug "No SSH_AUTH_SOCK set, skipping update"
+        return 1
+    fi
+    
+    if [[ ! -S "$current_socket" ]]; then
+        debug "SSH_AUTH_SOCK points to non-existent socket: $current_socket"
+        return 1
+    fi
+    
+    # Check if symlink needs updating
+    if [[ -L "$SSH_AUTH_SOCK_LINK" ]]; then
+        local current_target
+        current_target=$(readlink "$SSH_AUTH_SOCK_LINK")
+        if [[ "$current_target" == "$current_socket" ]]; then
+            debug "SSH agent socket already up to date"
+            return 0
+        fi
+    fi
+    
+    # Update symlink
+    ln -sf "$current_socket" "$SSH_AUTH_SOCK_LINK"
+    chmod 600 "$SSH_AUTH_SOCK_LINK"
+    
+    log "Updated SSH agent socket: $current_socket -> $SSH_AUTH_SOCK_LINK"
+    debug "SSH agent socket updated successfully"
+    
+    # Update tmux environment if tmux is running
+    if command -v tmux >/dev/null 2>&1 && tmux list-sessions >/dev/null 2>&1; then
+        # Update all tmux sessions
+        tmux set-environment -g SSH_AUTH_SOCK "$SSH_AUTH_SOCK_LINK"
+        debug "Updated tmux environment with new SSH_AUTH_SOCK"
+        
+        # Refresh existing sessions
+        tmux list-sessions -F '#{session_name}' 2>/dev/null | while read -r session; do
+            tmux refresh-client -S -t "$session" 2>/dev/null || true
+        done
+    fi
+    
+    return 0
+}
+
+# Function to test SSH agent
+test_ssh_agent() {
+    local socket="$1"
+    
+    if [[ ! -S "$socket" ]]; then
+        return 1
+    fi
+    
+    # Test if agent responds
+    SSH_AUTH_SOCK="$socket" ssh-add -l >/dev/null 2>&1
+    return $?
+}
+
+# Initial setup
+log "Starting SSH agent keeper on $(hostname)"
+debug "SSH_CLIENT: ${SSH_CLIENT:-}"
+debug "SSH_AUTH_SOCK: ${SSH_AUTH_SOCK:-}"
+
+# Initial update
+update_ssh_agent_socket
+
+# Monitor for changes
+previous_socket="${SSH_AUTH_SOCK:-}"
+while true; do
+    current_socket="${SSH_AUTH_SOCK:-}"
+    
+    # Check if socket changed
+    if [[ "$current_socket" != "$previous_socket" ]]; then
+        debug "SSH agent socket changed: $previous_socket -> $current_socket"
+        if update_ssh_agent_socket; then
+            previous_socket="$current_socket"
+        fi
+    fi
+    
+    # Check if current socket is still valid
+    if [[ -n "$current_socket" ]] && ! test_ssh_agent "$current_socket"; then
+        debug "Current SSH agent socket is no longer valid"
+        # Try to find a new valid socket
+        for socket in /tmp/ssh-*/agent.* /tmp/ssh-*/ssh_auth_sock.*; do
+            if [[ -S "$socket" ]] && test_ssh_agent "$socket"; then
+                debug "Found alternative SSH agent socket: $socket"
+                export SSH_AUTH_SOCK="$socket"
+                update_ssh_agent_socket
+                break
+            fi
+        done
+    fi
+    
+    sleep 5
+done
