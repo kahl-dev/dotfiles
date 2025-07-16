@@ -68,6 +68,7 @@ fi
 if is_macos; then
   export HOMEBREW_CASK_OPTS="--no-quarantine"
   export HOMEBREW_BUNDLE_FILE_GLOBAL="$DOTFILES/brew/osx/.Brewfile"
+  export HOMEBREW_UPGRADE_EXCLUDE_PACKAGES="elgato-wave-link elgato-stream-deck raycast aldente"
 else
   export HOMEBREW_BUNDLE_FILE_GLOBAL="$DOTFILES/brew/linux/.Brewfile"
 fi

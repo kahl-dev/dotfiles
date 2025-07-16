@@ -22,15 +22,72 @@
           git pull origin main
         fi
 
-    - description: "Create symlink for entire claude directory"
+    - description: "Backup existing ~/.claude data if present"
       command: |
-        # Remove existing ~/.claude directory/symlink completely
-        rm -rf "$HOME/.claude"
+        if [ -d "$HOME/.claude" ] && [ ! -L "$HOME/.claude" ]; then
+          echo "Backing up existing ~/.claude directory..."
+          BACKUP_DIR="$HOME/.claude.backup.$(date +%Y%m%d_%H%M%S)"
+          cp -r "$HOME/.claude" "$BACKUP_DIR"
+          echo "Backup created at: $BACKUP_DIR"
+          
+          # Also preserve the backup location for potential restore
+          echo "$BACKUP_DIR" > "$HOME/.claude.store/.last_backup_location"
+        elif [ -L "$HOME/.claude" ]; then
+          echo "~/.claude is already a symlink, no backup needed"
+        else
+          echo "No existing ~/.claude directory found"
+        fi
+
+    - description: "Migrate existing data to claude-store structure"
+      command: |
+        if [ -f "$HOME/.claude.store/.last_backup_location" ]; then
+          BACKUP_DIR=$(cat "$HOME/.claude.store/.last_backup_location")
+          if [ -d "$BACKUP_DIR" ]; then
+            echo "Migrating data from backup to claude-store..."
+            
+            # Ensure target directory exists
+            mkdir -p "$HOME/.claude.store/user-level"
+            
+            # Copy all content from backup to user-level directory
+            # Use rsync to preserve permissions and handle conflicts gracefully
+            if command -v rsync >/dev/null 2>&1; then
+              rsync -av --update "$BACKUP_DIR/" "$HOME/.claude.store/user-level/"
+            else
+              # Fallback to cp if rsync not available
+              cp -r "$BACKUP_DIR/"* "$HOME/.claude.store/user-level/" 2>/dev/null || true
+            fi
+            
+            echo "Data migration completed"
+            
+            # Verify migration success
+            if [ -d "$HOME/.claude.store/user-level" ]; then
+              echo "✅ Migration verification: user-level directory exists"
+              echo "   Files in user-level: $(ls -la "$HOME/.claude.store/user-level" | wc -l) items"
+            fi
+          fi
+        fi
+
+    - description: "Create safe symlink for claude directory"
+      command: |
+        # Only remove ~/.claude if backup was successful or it's already a symlink
+        if [ -L "$HOME/.claude" ]; then
+          rm "$HOME/.claude"
+          echo "Removed existing symlink"
+        elif [ -d "$HOME/.claude" ] && [ -f "$HOME/.claude.store/.last_backup_location" ]; then
+          rm -rf "$HOME/.claude"
+          echo "Removed original directory (backup preserved)"
+        fi
         
-        # Create symlink to entire user-level directory
+        # Create new symlink
         ln -sf "$HOME/.claude.store/user-level" "$HOME/.claude"
         
-        echo "Created symlink: ~/.claude -> ~/.claude.store/user-level"
+        # Verify symlink creation
+        if [ -L "$HOME/.claude" ] && [ -d "$HOME/.claude" ]; then
+          echo "✅ Created symlink: ~/.claude -> ~/.claude.store/user-level"
+        else
+          echo "❌ Failed to create symlink"
+          exit 1
+        fi
 
     - description: "Update hostname in configuration"
       command: |

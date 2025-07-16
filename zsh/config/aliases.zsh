@@ -131,7 +131,8 @@ fi
 
 # Brew
 if command_exists brew; then
-  alias brewup='brew update; brew upgrade; brew cleanup'
+  alias brewup='brew update; brew upgrade $(brew list --formula); brew cleanup'
+  alias brewupCask='brew update; brew upgrade $(brew list | grep --invert-match $HOMEBREW_UPGRADE_EXCLUDE_PACKAGES); brew cleanup'
   alias brewdump='brew bundle dump --force --describe --file=$HOMEBREW_BUNDLE_FILE_GLOBAL'
 fi
 
@@ -547,38 +548,20 @@ alias lrp='lia-rebuild-lia-package'
 alias lra='lia-rebuild-all'
 
 # ############################## #
+# Claude
+# ############################## #
+
+# Claude Storage System aliases
+alias cw='$HOME/.claude.store/bin/claude-wrapper'
+alias claudem='$HOME/.claude.store/bin/claude-wrapper'
+alias ccu='npx ccusage'
+
+# ############################## #
 # Dotfiles
 # ############################## #
 
 alias dot='cd ${DOTFILES} && v'
 alias zshrc='vim ${ZDOTDIR}/.zshrc'
-
-# Claude Storage System aliases
-alias cw='$HOME/.claude.store/bin/claude-wrapper'
-alias claudem='$HOME/.claude.store/bin/claude-wrapper'
-
-# Interactive Claude selector
-_claude_selector() {
-  echo "Which Claude do you want to use?"
-  echo "1) Claude wrapper (recommended)"
-  echo "2) Base Claude"
-  read -r "choice?Enter your choice (1 or 2): "
-  
-  case $choice in
-    1|"")
-      $HOME/.claude.store/bin/claude-wrapper "$@"
-      ;;
-    2)
-      command claude "$@"
-      ;;
-    *)
-      echo "Invalid choice. Using Claude wrapper..."
-      $HOME/.claude.store/bin/claude-wrapper "$@"
-      ;;
-  esac
-}
-
-# alias claude='_claude_selector'
 
 
 # Update zinit and all plugins

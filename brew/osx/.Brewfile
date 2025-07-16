@@ -21,14 +21,14 @@ brew "bash-completion"
 brew "bat"
 # Get/set bluetooth power and discoverable state
 brew "blueutil"
-# Resource monitor. C++ version and continuation of bashtop and bpytop
-brew "btop"
-# Share macOS clipboard with tmux and other local and remote apps
-brew "clipper", restart_service: :changed
-# Console Matrix
-brew "cmatrix"
 # Platform built on V8 to build network applications
 brew "node"
+# CLI of the open-source IDE For exploring and testing APIs
+brew "bruno-cli"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
+# Console Matrix
+brew "cmatrix"
 # OpenAI's coding agent that runs in your terminal
 brew "codex"
 # Libraries to talk to Microsoft SQL Server and Sybase databases
@@ -124,8 +124,6 @@ brew "pnpm"
 # Tool for managing OCI containers and pods
 brew "podman"
 # Object-relational database system
-brew "postgresql@14", restart_service: :changed, link: false
-# Object-relational database system
 brew "postgresql@15", restart_service: :changed, link: true
 # OpenBSD and Darwin versions of pgrep, pkill, and pfind
 brew "proctools"
@@ -173,10 +171,6 @@ brew "arl/arl/gitmux"
 brew "ddev/ddev/ddev"
 # Better dotenv–from the creator of `dotenv`
 brew "dotenvx/brew/dotenvx"
-# A window border system for macOS
-brew "felixkratz/formulae/borders"
-# Custom macOS statusbar with shell plugin, interaction and graph support
-brew "felixkratz/formulae/sketchybar"
 # A simple terminal UI for docker, written in Go
 brew "jesseduffield/lazydocker/lazydocker"
 # Supabase CLI
@@ -205,6 +199,8 @@ cask "betterdisplay"
 cask "bettertouchtool"
 # 3D creation suite
 cask "blender"
+# Open source IDE for exploring and testing APIs
+cask "bruno"
 # Tool to remove unnecessary files and folders from disk
 cask "cleanmymac"
 # Voice and text chat software
