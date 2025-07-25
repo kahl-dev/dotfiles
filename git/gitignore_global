@@ -7,8 +7,3 @@ node_modules
 **/.tern-port
 
 .tool-versions
-
-# Claude Code local settings
-*.local.*
-.tasks/
-CLAUDE.md
