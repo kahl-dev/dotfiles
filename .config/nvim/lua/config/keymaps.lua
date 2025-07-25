@@ -77,3 +77,8 @@ map("n", "<leader>Cogr", "<cmd>lua require('url_utils').open_repo()<CR>", { desc
 map("n", "<leader>Cogb", "<cmd>lua require('url_utils').open_branch()<CR>", { desc = "Git branch" })
 map("n", "<leader>Cogc", "<cmd>lua require('url_utils').open_commit()<CR>", { desc = "Git commit" })
 map("n", "<leader>Cogf", "<cmd>lua require('url_utils').open_file()<CR>", { desc = "Git file" })
+
+-- Copy to system clipboard with leader+y
+map("n", "<leader>y", '"+y', { desc = "Copy to system clipboard" })
+map("v", "<leader>y", '"+y', { desc = "Copy to system clipboard" })
+map("n", "<leader>Y", '"+Y', { desc = "Copy line to system clipboard" })
