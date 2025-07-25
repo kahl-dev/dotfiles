@@ -809,9 +809,7 @@ alias mcc='make clearcache'
 # Claude
 # ############################## #
 
-# Claude Storage System aliases
-alias cw='$HOME/.claude.store/bin/claude-wrapper'
-alias claudem='$HOME/.claude.store/bin/claude-wrapper'
+# Claude aliases
 alias cc='claude -c'
 alias ccu='npx ccusage'
 

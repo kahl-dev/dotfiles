@@ -1,0 +1,169 @@
+{
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "allow": [
+      "Bash(bun:*)",
+      "Bash(cargo:*)",
+      "Bash(cat:*)",
+      "Bash(chmod:*)",
+      "Bash(cp:*)",
+      "Bash(curl:*)",
+      "Bash(docker:*)",
+      "Bash(echo:*)",
+      "Bash(eslint:*)",
+      "Bash(find:*)",
+      "Bash(git add:*)",
+      "Bash(git blame:*)",
+      "Bash(git branch:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git reset:*)",
+      "Bash(git show:*)",
+      "Bash(git stash:*)",
+      "Bash(git status:*)",
+      "Bash(go:*)",
+      "Bash(grep:*)",
+      "Bash(gunzip:*)",
+      "Bash(head:*)",
+      "Bash(jest:*)",
+      "Bash(ln:*)",
+      "Bash(ls:*)",
+      "Bash(make:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vue-tsc:*)",
+      "Bash(pip:*)",
+      "Bash(pnpm:*)",
+      "Bash(poetry:*)",
+      "Bash(pytest:*)",
+      "Bash(python:*)",
+      "Bash(rg:*)",
+      "Bash(sort:*)",
+      "Bash(tail:*)",
+      "Bash(touch:*)",
+      "Bash(uniq:*)",
+      "Bash(vitest:*)",
+      "Bash(wc:*)",
+      "Bash(yarn:*)",
+      "Edit",
+      "WebFetch",
+      "Write",
+      "context7 - resolve-library-id (MCP)(*)",
+      "context7 - get-library-docs(*)",
+      "mcp__gitlab__search_repositories",
+      "mcp__gitlab__get_file_contents",
+      "mcp__mcp-nova__memory",
+      "mcp__mcp-nova__workflow",
+      "mcp__mcp-nova__board",
+      "mcp__mcp-nova__relationships",
+      "mcp__mcp-nova__analysis",
+      "mcp__mcp-nova__project",
+      "mcp__mcp-nova__settings",
+      "mcp__mcp-nova__quick",
+      "mcp__mcp-nova__help",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "mcp__playwright__browser_close",
+      "mcp__playwright__browser_resize",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_handle_dialog",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_file_upload",
+      "mcp__playwright__browser_install",
+      "mcp__playwright__browser_press_key",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_navigate_back",
+      "mcp__playwright__browser_navigate_forward",
+      "mcp__playwright__browser_network_requests",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_drag",
+      "mcp__playwright__browser_hover",
+      "mcp__playwright__browser_select_option",
+      "mcp__playwright__browser_tab_list",
+      "mcp__playwright__browser_tab_new",
+      "mcp__playwright__browser_tab_select",
+      "mcp__playwright__browser_tab_close",
+      "mcp__playwright__browser_wait_for",
+      "mcp__gitlab__search_repositories",
+      "mcp__gitlab__get_file_contents",
+      "mcp__github__create_or_update_file",
+      "mcp__github__search_repositories",
+      "mcp__github__get_file_contents",
+      "mcp__github__list_commits",
+      "mcp__github__list_issues",
+      "mcp__github__search_code",
+      "mcp__github__search_issues",
+      "mcp__github__search_users",
+      "mcp__github__get_issue",
+      "mcp__github__get_pull_request",
+      "mcp__github__list_pull_requests",
+      "supabase-remote - search_docs(*)"
+    ],
+    "deny": [
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git push:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run serve:*)",
+      "Bash(npm run start &)",
+      "Bash(npm run start:*)",
+      "Bash(rm -rf: *)",
+      "Bash(yarn run dev:*)",
+      "Bash(yarn dev:*)",
+      "Bash(make dev:*)"
+    ]
+  },
+  "model": "sonnet",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/safety-guard.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/smart-lint.sh"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notification-handler.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/enhanced-notify.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+- 🔧 Run `just precommit` (if a `justfile` exists and contains a `precommit` recipe)
+- 📦 Stage individually using `git add <file1> <file2> ...`
+  - Only stage changes that you remember editing yourself.
+  - Avoid commands like `git add .` and `git add -A` and `git commit -am` which stage all changes
+- Use single quotes around file names containing `$` characters
+  - Example: `git add 'app/routes/_protected.foo.$bar.tsx'`
+- 🐛 If the user's prompt was a compiler or linter error, create a `fixup!` commit message.
+- Otherwise:
+- Commit messages should:
+  - Start with a present-tense verb (Fix, Add, Implement, etc.)
+  - Not include adjectives that sound like praise (comprehensive, best practices, essential)
+  - Be concise (60-120 characters)
+  - Be a single line
+  - Sound like the title of the issue we resolved, and not include the implementation details we learned during implementation
+  - End with a period.
+  - Describe the intent of the original prompt
+- Commit messages should not include a Claude attribution footer
+  - Don't write: 🤖 Generated with [Claude Code](https://claude.ai/code)
+  - Don't write: Co-Authored-By: Claude <noreply@anthropic.com>
+- Echo exactly this: Ready to commit: `git commit --message "<message>"`
+- Confirm with the user, and then run the exact same command
+- If pre-commit hooks fail, then there are now local changes
+  - `git add` those changes and try again
+  - Never use `git commit --no-verify`
