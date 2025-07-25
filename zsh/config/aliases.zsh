@@ -376,19 +376,112 @@ unset git_version
 alias gjirab="_gjirab"
 alias gjirac="_gjirac"
 
-# Git worktree switcher
-wts() {
+# Git worktree helpers
+
+# Add new worktree with automatic config file copying
+_gwta() {
+  local branch_name="$1"
+  local path="$2"
+  
+  if [ -z "$branch_name" ]; then
+    echo "Usage: gwta <branch-name> [path]"
+    echo "       gwta <existing-branch> [path]"
+    return 1
+  fi
+  
+  # If no path specified, use default worktree directory
+  if [ -z "$path" ]; then
+    # Default path: ~/public_html/public/<branch-name>
+    path="$HOME/public_html/public/$branch_name"
+  else
+    # If path doesn't start with / or ~ or .., treat it as a folder name in default directory
+    if [[ ! "$path" =~ ^[/~] ]] && [[ ! "$path" =~ ^\.\./ ]]; then
+      path="$HOME/public_html/public/$path"
+    fi
+  fi
+  
+  # Check if branch exists using absolute path to git
+  if /usr/bin/git show-ref --verify --quiet "refs/heads/$branch_name"; then
+    echo "Checking out existing branch '$branch_name' in new worktree..."
+    PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH" /usr/bin/git worktree add "$path" "$branch_name"
+  else
+    echo "Creating new branch '$branch_name' in new worktree..."
+    PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH" /usr/bin/git worktree add -b "$branch_name" "$path"
+  fi
+  
+  if [ $? -eq 0 ]; then
+    echo "✅ Worktree created at: $path"
+    
+    # Get the main worktree for config file copying
+    # Look for config files in the current directory first, then in the main worktree
+    local config_source_dir=""
+    
+    # Check current directory first
+    if [ -f "config/localconf_local.php" ] || [ -f "nuxt/.env.local" ]; then
+      config_source_dir="$(pwd)"
+    else
+      # Fallback to main worktree
+      config_source_dir="$HOME/public_html/public/hoermann-retec-2020"
+    fi
+    
+    # Copy config files if they exist
+    if [ -f "$config_source_dir/config/localconf_local.php" ]; then
+      /bin/mkdir -p "$path/config"
+      /bin/cp "$config_source_dir/config/localconf_local.php" "$path/config/"
+      echo "📄 Copied config/localconf_local.php from $config_source_dir"
+    else
+      echo "⚠️  No config/localconf_local.php found in $config_source_dir"
+    fi
+    
+    if [ -f "$config_source_dir/nuxt/.env.local" ]; then
+      /bin/mkdir -p "$path/nuxt"
+      /bin/cp "$config_source_dir/nuxt/.env.local" "$path/nuxt/"
+      echo "📄 Copied nuxt/.env.local from $config_source_dir"
+    else
+      echo "⚠️  No nuxt/.env.local found in $config_source_dir"
+    fi
+    
+    # Switch to the new worktree
+    echo "📍 Switching to new worktree at: $path"
+    {
+      cd "$path"
+      
+      # Update zoxide database
+      if command -v zoxide >/dev/null 2>&1; then
+        zoxide add "$path" 2>/dev/null
+      fi
+    } 2>/dev/null
+    
+    echo "✅ Now in: $(pwd)"
+  fi
+}
+
+# Enhanced worktree switcher with preview
+_gwts() {
   if [ -z "$1" ]; then
-    local selected=$(git worktree list | fzf --prompt="Select worktree: " --height=40% --reverse)
+    local selected
+    selected=$(git worktree list --porcelain | \
+      /usr/bin/awk '/^worktree / {wt=$2; gsub(/^worktree /, "", wt)} 
+           /^HEAD / {head=$2} 
+           /^branch / {branch=$2; gsub(/^refs\/heads\//, "", branch); 
+                      printf "%-50s %-30s %s\n", wt, branch, head}' | \
+      fzf --prompt="Select worktree: " \
+          --height=60% \
+          --reverse \
+          --preview 'echo "📁 Path: {1}"; echo "🌿 Branch: {2}"; echo "📝 Last commit:"; git -C {1} log -1 --oneline; echo; echo "📊 Status:"; git -C {1} status -s' \
+          --preview-window=right:50%)
+    
     if [ -n "$selected" ]; then
-      local path=$(echo "$selected" | awk '{print $1}')
+      local path
+      path=$(echo "$selected" | /usr/bin/awk '{print $1}')
       builtin cd "$path" 2>/dev/null
       zoxide add "$path" 2>/dev/null
     fi
     return
   fi
   
-  local path=$(git worktree list --porcelain | awk -v pattern="$1" '/^worktree / && $0 ~ pattern {gsub(/^worktree /, ""); print; exit}')
+  local path
+  path=$(git worktree list --porcelain | /usr/bin/awk -v pattern="$1" '/^worktree / && $0 ~ pattern {gsub(/^worktree /, ""); print; exit}')
   if [ -n "$path" ]; then
     builtin cd "$path" 2>/dev/null
     zoxide add "$path" 2>/dev/null
@@ -397,6 +490,162 @@ wts() {
     git worktree list
   fi
 }
+
+# List worktrees with formatted output
+_gwtl() {
+  echo "🌳 Git Worktrees:"
+  echo "=================="
+  
+  local current_path
+  current_path=$(pwd)
+  
+  git worktree list --porcelain | \
+  awk -v current="$current_path" '
+    /^worktree / {
+      if (path) {
+        # Output previous entry before starting new one
+        if (path == current) {
+          printf "→ %-50s %-30s %s\n", path, branch, substr(head, 1, 8)
+        } else {
+          printf "  %-50s %-30s %s\n", path, branch, substr(head, 1, 8)
+        }
+      }
+      wt=$2; gsub(/^worktree /, "", wt); path=wt
+    } 
+    /^HEAD / {head=$2} 
+    /^branch / {branch=$2; gsub(/^refs\/heads\//, "", branch)} 
+    END {
+      # Output the last entry
+      if (path) {
+        if (path == current) {
+          printf "→ %-50s %-30s %s\n", path, branch, substr(head, 1, 8)
+        } else {
+          printf "  %-50s %-30s %s\n", path, branch, substr(head, 1, 8)
+        }
+      }
+    }'
+}
+
+# Git worktree help
+_gwth() {
+  echo "🌳 Git Worktree Helper Commands"
+  echo "================================"
+  echo
+  echo "📚 Commands:"
+  echo "  gwta <branch> [path]  - Add new worktree with automatic config file copying"
+  echo "  gwts [pattern]        - Switch between worktrees (interactive or by pattern)"
+  echo "  gwtl                  - List all worktrees with current branch info"
+  echo "  gwtr [path]           - Remove worktree with safety checks"
+  echo "  gwth                  - Show this help message"
+  echo
+  echo "✨ Features:"
+  echo "  • Auto-copies config/localconf_local.php and nuxt/.env.local to new worktrees"
+  echo "  • Interactive selection with fzf when no arguments provided"
+  echo "  • Preview shows branch info, last commit, and file status"
+  echo "  • Safety checks prevent removing worktrees with uncommitted changes"
+  echo "  • Automatically updates zoxide for quick navigation"
+  echo
+  echo "💡 Examples:"
+  echo "  gwta feature/new-ui              # Create at ~/public_html/public/feature/new-ui"
+  echo "  gwta hotfix-123                  # Create at ~/public_html/public/hotfix-123"
+  echo "  gwta existing-branch project-v2  # Checkout existing-branch at ~/public_html/public/project-v2"
+  echo "  gwta fix ../sibling-dir          # Create at relative path (outside default dir)"
+  echo "  gwta fix ~/custom-path           # Create at absolute custom path"
+  echo "  gwts                             # Interactive worktree switcher"
+  echo "  gwts feature                     # Switch to first worktree matching 'feature'"
+  echo "  gwtl                             # Show all worktrees"
+  echo "  gwtr                             # Interactive worktree removal"
+  echo "  gwtr ../project-feature          # Remove specific worktree"
+  echo
+  echo "📝 Notes:"
+  echo "  • Default location: ~/public_html/public/<branch-name>"
+  echo "  • Main worktree config files are automatically copied to new worktrees"
+  echo "  • Use 'git worktree prune' to clean up deleted worktrees"
+  echo "  • Worktrees share the same git history and remote configuration"
+}
+
+# Remove worktree with safety check
+_gwtr() {
+  local worktree_path="$1"
+  
+  if [ -z "$worktree_path" ]; then
+    # Interactive selection - show all worktrees except the current one
+    local current_worktree=$(pwd)
+    local selected
+    selected=$(git worktree list --porcelain | \
+      awk -v current="$current_worktree" '
+        /^worktree / {
+          if (wt && wt != current) {
+            # Output previous entry before starting new one
+            printf "%-50s %s\n", wt, branch
+          }
+          wt=$2; gsub(/^worktree /, "", wt)
+        } 
+        /^branch / {branch=$2; gsub(/^refs\/heads\//, "", branch)} 
+        END {
+          # Output the last entry
+          if (wt && wt != current) {
+            printf "%-50s %s\n", wt, branch
+          }
+        }' | \
+      fzf --prompt="Select worktree to remove: " \
+          --height=60% \
+          --reverse \
+          --preview 'echo "⚠️  Will remove worktree: {1}"; echo "🌿 Branch: {2}"; echo; echo "📊 Status:"; git -C {1} status -s; echo; echo "📤 Unpushed commits:"; git -C {1} log --oneline @{u}..HEAD 2>/dev/null || echo "No upstream branch"')
+    
+    if [ -n "$selected" ]; then
+      worktree_path=$(echo "$selected" | awk '{print $1}')
+    else
+      return
+    fi
+  fi
+  
+  # Get the branch name for this worktree
+  local branch_name=$(git -C "$worktree_path" branch --show-current)
+  
+  # Check for uncommitted changes
+  if ! git -C "$worktree_path" diff --quiet || ! git -C "$worktree_path" diff --staged --quiet; then
+    echo "❌ Error: Worktree has uncommitted changes"
+    echo "   Path: $worktree_path"
+    echo "   Branch: $branch_name"
+    echo ""
+    echo "Options:"
+    echo "  1. Commit your changes: cd $worktree_path && git commit"
+    echo "  2. Stash your changes: cd $worktree_path && git stash"
+    echo "  3. Discard changes and force remove: git worktree remove --force $worktree_path"
+    return 1
+  fi
+  
+  # Check for unpushed commits
+  local unpushed_count=$(git -C "$worktree_path" rev-list --count @{u}..HEAD 2>/dev/null || echo "0")
+  if [ "$unpushed_count" -gt 0 ]; then
+    echo "❌ Error: Worktree has $unpushed_count unpushed commit(s)"
+    echo "   Path: $worktree_path"
+    echo "   Branch: $branch_name"
+    echo ""
+    echo "Unpushed commits:"
+    git -C "$worktree_path" log --oneline @{u}..HEAD
+    echo ""
+    echo "Options:"
+    echo "  1. Push your commits: cd $worktree_path && git push"
+    echo "  2. Force remove anyway: git worktree remove --force $worktree_path"
+    echo ""
+    echo "Note: The branch '$branch_name' will NOT be deleted, only the worktree directory."
+    return 1
+  fi
+  
+  echo "✅ Removing worktree: $worktree_path"
+  echo "   Branch '$branch_name' will be preserved"
+  git worktree remove "$worktree_path"
+  echo "✅ Worktree removed successfully"
+}
+
+# Git worktree aliases
+alias gwta='_gwta'
+alias gwts='_gwts'
+alias gwtl='_gwtl'
+alias gwtr='_gwtr'
+alias gwth='_gwth'
 
 # Claude Code commit helper
 alias gcommit='claude -p "/commit"'
@@ -555,6 +804,8 @@ alias lia-rebuild-all='liaRebuildNuxt && liaRebuildLiaPackage'
 alias lrn='lia-rebuild-nuxt'
 alias lrp='lia-rebuild-lia-package'
 alias lra='lia-rebuild-all'
+
+alias mcc='make clearcache'
 
 # ############################## #
 # Claude
