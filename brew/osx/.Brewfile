@@ -119,6 +119,8 @@ brew "pandoc"
 brew "parallel"
 # Execute binaries from Python packages in isolated environments
 brew "pipx"
+# Paste PNG into files
+brew "pngpaste"
 # Fast, disk space efficient package manager
 brew "pnpm"
 # Tool for managing OCI containers and pods
@@ -169,8 +171,10 @@ brew "zoxide"
 brew "arl/arl/gitmux"
 # DDEV
 brew "ddev/ddev/ddev"
-# Better dotenv–from the creator of `dotenv`
+# Secure dotenv–from the creator of `dotenv`
 brew "dotenvx/brew/dotenvx"
+# A window border system for macOS
+brew "felixkratz/formulae/borders"
 # A simple terminal UI for docker, written in Go
 brew "jesseduffield/lazydocker/lazydocker"
 # Supabase CLI
@@ -185,28 +189,22 @@ cask "aerospace"
 cask "aldente"
 # Application launcher and productivity software
 cask "alfred"
+# Application uninstaller
+cask "appcleaner"
 # Chromium based browser
 cask "arc"
-# Electronics prototyping platform
-cask "arduino-ide"
 # 3D model slicing software for 3D printers, maintained by Bambu Lab
 cask "bambu-studio"
 # Menu bar icon organiser
 cask "bartender"
 # Display management tool
 cask "betterdisplay"
-# Tool to customise input devices and automate computer systems
-cask "bettertouchtool"
 # 3D creation suite
 cask "blender"
 # Open source IDE for exploring and testing APIs
 cask "bruno"
-# Tool to remove unnecessary files and folders from disk
-cask "cleanmymac"
 # Voice and text chat software
 cask "discord"
-# App to build and share containerised applications and microservices
-cask "docker-desktop"
 # Assign keys, and then decorate and label them
 cask "elgato-stream-deck"
 # Software custom-built for content creation
@@ -215,16 +213,9 @@ cask "elgato-wave-link"
 cask "finicky"
 # Web browser
 cask "firefox"
-cask "font-droid-sans-mono-nerd-font"
-cask "font-fira-code-nerd-font"
-cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
-cask "font-monaspace"
-cask "font-monoid-nerd-font"
 # Fujitsu ScanSnap Scanner software
 cask "fujitsu-scansnap-home"
-# Disk space cleaner that finds and deletes duplicated and similar files
-cask "gemini"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
 # Web browser
@@ -249,16 +240,8 @@ cask "mission-control-plus"
 cask "ngrok"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
-# PDF reader, editor and annotator
-cask "pdf-expert"
 # Browse, manage, inspect containers and images
 cask "podman-desktop"
-# Collaboration platform for API development
-cask "postman"
-# Network monitor and firewall
-cask "radio-silence"
-# Imaging utility to install operating systems to a microSD card
-cask "raspberry-pi-imager"
 # Control your tools with a few keystrokes
 cask "raycast"
 # Email client
@@ -271,24 +254,15 @@ cask "tiptoi-manager"
 cask "transmit"
 # Open-source code editor
 cask "visual-studio-code"
-# Web browser with built-in email client focusing on customization and control
-cask "vivaldi"
-# GPU-accelerated cross-platform terminal emulator and multiplexer
-cask "wezterm"
 # Native desktop client for WhatsApp
 cask "whatsapp"
 # Multiplayer code editor
 cask "zed"
-# Multiplayer code editor
-cask "zed@preview"
-# Video communication and virtual meeting platform
-cask "zoom"
 mas "1Password for Safari", id: 1569813296
 mas "Affinity Photo", id: 824183456
 mas "Amphetamine", id: 937984704
 mas "AusweisApp", id: 948660805
 mas "ControllerForHomeKit", id: 1198176727
-mas "Gemini 2", id: 1090488118
 mas "Home Assistant", id: 1099568401
 mas "iMovie", id: 408981434
 mas "Keka", id: 470158793
