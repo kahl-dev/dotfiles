@@ -101,3 +101,12 @@ if [ -d "$FNM_PATH" ]; then
   export PATH="/home/pi/.local/share/fnm:$PATH"
   eval "`fnm env`"
 fi
+
+
+
+
+
+# LIA Cleanup Tool integration
+if command_exists lia-cleanup; then
+[[ $- == *i* ]] && eval "$(lia-cleanup shell-hook 2>/dev/null)"
+fi
