@@ -101,6 +101,94 @@ The zsh setup uses modular configuration files in `zsh/config/`:
 - `plugins.zsh` - Plugin management via zinit
 - `prompt.zsh` - Starship prompt configuration
 
+#### ZSH Helper Functions
+
+The repository includes a comprehensive set of helper functions in `zsh/utils.zsh` for common operations. **Always use these helpers instead of raw shell commands** for consistency and better error handling.
+
+##### System Detection
+```bash
+# Check if commands/tools exist before using them
+if command_exists nvim; then
+  # Use neovim
+fi
+
+# Platform detection
+if is_macos; then
+  # macOS-specific code
+elif is_linux; then
+  # Linux-specific code
+fi
+
+# Environment detection
+if is_raspberry_pi; then
+  # Raspberry Pi specific setup
+fi
+
+if is_ssh_client; then
+  # SSH-specific configuration
+fi
+```
+
+##### File System Checks
+```bash
+# Always check existence before operations
+if file_exists "$HOME/.config/app/config.json"; then
+  # Process config file
+fi
+
+if folder_exists "$HOME/.local/share/app"; then
+  # Work with directory
+fi
+
+if path_exists "$HOME/.tool-versions"; then
+  # Path exists (file or directory)
+fi
+```
+
+##### Cross-Platform Operations
+```bash
+# Open files/URLs cross-platform
+open_command "https://example.com"
+open_command "/path/to/file.pdf"
+
+# Interactive user prompts
+prompt_user "Install development tools?" \
+  "echo 'Installing tools...'" \
+  "echo 'Skipping installation'"
+```
+
+##### Usage Examples in Dotfiles
+```bash
+# ✅ Good - using helpers
+if command_exists fzf; then
+  alias preview='fzf --preview "cat {}"'
+fi
+
+# ❌ Bad - raw commands
+if which fzf >/dev/null 2>&1; then
+  alias preview='fzf --preview "cat {}"'
+fi
+
+# ✅ Good - consistent path checking
+path_exists "$DOTFILES/bin" && export PATH="$DOTFILES/bin:$PATH"
+
+# ❌ Bad - inconsistent checking
+[ -d "$DOTFILES/bin" ] && export PATH="$DOTFILES/bin:$PATH"
+```
+
+##### Available Helper Functions
+- `command_exists <cmd>` - Check if command is available
+- `file_exists <path>` - Check if file exists
+- `folder_exists <path>` - Check if directory exists  
+- `path_exists <path>` - Check if path exists (file or directory)
+- `is_macos` - Detect macOS system
+- `is_linux` - Detect Linux system
+- `is_raspberry_pi` - Detect Raspberry Pi
+- `is_ssh_client` - Detect SSH environment
+- `open_command <path/url>` - Cross-platform open command
+- `prompt_user <question> <yes_action> <no_action>` - Interactive prompts
+- `ensure_uname` - Internal helper for uname availability
+
 ## Key Tools & Their Configs
 
 ### Terminal & Shell
