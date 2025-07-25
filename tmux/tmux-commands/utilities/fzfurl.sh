@@ -29,5 +29,7 @@ all_urls=$(extract_urls "$all_content")
 # Use fzf to select a URL
 selected_url=$(echo "$all_urls" | tac | awk '!visited[$0]++' | fzf)
 
-# @TODO: Send url to local clipboard or better open in browser
-echo "$selected_url"
+# Open the selected URL using ropen
+if [ -n "$selected_url" ]; then
+    ropen "$selected_url"
+fi

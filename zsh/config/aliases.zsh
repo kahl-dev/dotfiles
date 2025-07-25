@@ -689,13 +689,11 @@ alias lia-copyurl="{
 
   selected_url=\$(echo \"\$output\" | grep -oP '(http|https)://[^ ]+' | sed 's/\[[0-9;]*m//g' | fzf-tmux)
 
-  if [[ -n \$SSH_CONNECTION ]]; then
-    # On remote, send via OSC52
-    printf '\e]52;c;%s\a' \$(printf '%s' \"\$selected_url\" | base64 | tr -d '\n')
+  if [[ -n \"\$selected_url\" ]]; then
+    # Use rclip for clipboard operations - it handles local/remote automatically
+    echo \"\$selected_url\" | rclip
+    echo \"Selected URL: \$selected_url\"
   fi
-
-  # Echo the selected URL regardless of being remote or local
-  echo \"Selected URL: \$selected_url\"
 }"
 alias lcu='lia-copyurl'
 

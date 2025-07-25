@@ -1,35 +1,13 @@
 local M = {}
-local osc52 = require("osc52")
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 local builtins = require("telescope.builtin")
 
--- Determine if Neovim is running locally or remotely
-local function is_remote()
-  return vim.env.SSH_CONNECTION ~= nil
-end
-
-local function execute_remote_action(url)
-  if url then
-    print("Copying URL to clipboard: " .. url)
-    osc52.copy(url)
-  end
-end
-
-local function execute_local_action(url)
-  if url then
-    print("Opening URL in browser: " .. url)
-    vim.fn.jobstart("open " .. vim.fn.shellescape(url), { detach = true })
-  end
-end
-
+-- Always use ropen for URL handling - it handles local/remote detection
 local function handle_action(url)
   if url then
-    if is_remote() then
-      execute_remote_action(url)
-    else
-      execute_local_action(url)
-    end
+    print("Opening URL: " .. url)
+    vim.fn.jobstart("ropen " .. vim.fn.shellescape(url), { detach = true })
   else
     vim.api.nvim_echo({ { "No valid URL provided", "ErrorMsg" } }, false, {})
   end
