@@ -537,6 +537,15 @@ alias async='atuin sync'
 alias astatus='atuin status'
 
 # ############################## #
+# AeroSpace
+# ############################## #
+
+alias as='aerospace'
+ff() {
+    aerospace list-windows --all | fzf --bind 'enter:execute(bash -c "aerospace focus --window-id {1}")+abort'
+}
+
+# ############################## #
 # Lia
 # ############################## #
 
@@ -554,6 +563,7 @@ alias lra='lia-rebuild-all'
 # Claude Storage System aliases
 alias cw='$HOME/.claude.store/bin/claude-wrapper'
 alias claudem='$HOME/.claude.store/bin/claude-wrapper'
+alias cc='claude -c'
 alias ccu='npx ccusage'
 
 # ############################## #
