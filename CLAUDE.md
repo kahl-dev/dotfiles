@@ -6,6 +6,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a comprehensive macOS dotfiles repository that uses **dotbot** for configuration management and **Makefile** for installation orchestration. The repository follows a modular architecture with "ingredients" (individual configuration modules) and "recipes" (combined installation profiles).
 
+### Claude Code Configuration
+
+Global Claude Code instructions and configuration are stored in `.claude.global/` and symlinked to `~/.claude/` for version control:
+
+- **`.claude.global/GLOBAL.CLAUDE.md`** - Main global instructions file with imports
+- **`.claude.global/instructions/`** - Modular instruction files  
+- **`.claude.global/commands/`** - Custom slash commands
+- **`.claude.global/hooks/`** - Hook scripts for tool execution events
+- **`.claude.global/settings.json`** - Global Claude Code settings
+
+These provide consistent Claude behavior across all projects and machines.
+
 ## Architecture & Structure
 
 ### Core Components
