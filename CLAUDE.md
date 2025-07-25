@@ -206,6 +206,10 @@ path_exists "$DOTFILES/bin" && export PATH="$DOTFILES/bin:$PATH"
 - **macOS defaults**: System settings via `scripts/setup_defaults_write.sh`
 - **Window management**: AeroSpace, Hammerspoon, Karabiner configs
 
+## Remote Bridge System
+
+@.claude/instructions/remote-bridge.md
+
 ## Troubleshooting
 
 ### Common Issues
