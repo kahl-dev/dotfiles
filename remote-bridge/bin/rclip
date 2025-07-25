@@ -15,6 +15,7 @@ show_help() {
 rclip - Send data to local clipboard via Remote Bridge
 
 Usage:
+    rclip "text to copy"             # Copy text directly
     echo "text" | rclip              # Pipe text to clipboard
     rclip < file.txt                 # Send file contents
     cat image.png | rclip --type image  # Send binary data
@@ -29,6 +30,9 @@ Environment:
     REMOTE_BRIDGE_PORT    Port for Remote Bridge (default: 8377)
 
 Examples:
+    # Copy text directly
+    rclip "Hello World"
+    
     # Copy command output
     ls -la | rclip
     
@@ -36,7 +40,7 @@ Examples:
     rclip < ~/.ssh/id_rsa.pub
     
     # Copy with metadata
-    echo "important data" | rclip --tag work
+    rclip "important data" --tag work
     
     # Copy image
     cat screenshot.png | rclip --type image
@@ -49,6 +53,7 @@ EOF
 CONTENT_TYPE="text"
 TAG=""
 JSON_MODE=false
+ARGS=()
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -68,22 +73,36 @@ while [[ $# -gt 0 ]]; do
             show_help
             exit 0
             ;;
-        *)
+        -*)
             echo "Unknown option: $1" >&2
             show_help
             exit 1
+            ;;
+        *)
+            # Collect non-option arguments
+            ARGS+=("$1")
+            shift
             ;;
     esac
 done
 
 # Read input
-if [ -t 0 ]; then
-    echo "Error: No input provided. Pipe data to rclip or use redirection." >&2
-    echo "Example: echo 'Hello' | rclip" >&2
+if [ -t 0 ] && [ ${#ARGS[@]} -eq 0 ]; then
+    echo "Error: No input provided. Pipe data to rclip or provide as arguments." >&2
+    echo "Examples:" >&2
+    echo "  echo 'Hello' | rclip" >&2
+    echo "  rclip 'Hello World'" >&2
     exit 1
 fi
 
-INPUT=$(cat)
+# Get input from arguments or stdin
+if [ ${#ARGS[@]} -gt 0 ]; then
+    # Join arguments with spaces
+    INPUT="${ARGS[*]}"
+else
+    # Read from stdin
+    INPUT=$(cat)
+fi
 
 # Check if Remote Bridge is available
 check_bridge() {
