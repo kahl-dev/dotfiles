@@ -1,98 +1,127 @@
-# Claude User-Level Configuration
+# Claude Global Configuration
 
-This directory contains the modular configuration system for Claude Code, providing a clean separation of concerns and improved maintainability.
+This directory contains the comprehensive global configuration system for Claude Code, providing centralized instructions, commands, and automation across all projects.
 
 ## 📁 Directory Structure
 
 ```
-user-level/
-├── CLAUDE.md              # Main configuration file with @includes
+.claude.global/
+├── GLOBAL.CLAUDE.md       # Main global configuration with @includes
 ├── settings.json          # Claude settings, permissions, and hooks
 ├── commands/              # Custom slash commands
-│   ├── check.md          # /check - Run project checks
-│   ├── comments.md       # /comments - Remove code comments
-│   ├── commit.md         # /commit - Create conventional commits
-│   ├── emoji.md          # /emoji - Add contextual emojis
-│   ├── learn.md          # /learn - Document learned solutions
-│   ├── lia-commit.md     # /lia-commit - JIRA-integrated commits
-│   ├── rebase.md         # /rebase - Handle rebase conflicts
-│   ├── task-*.md         # /task-* - Task management commands
-│   └── todo.md           # /todo - Manage .llm/todo.md
+│   ├── analyze.md         # /analyze - Comprehensive codebase analysis
+│   ├── claude/            # Claude-specific development tools
+│   │   └── prompt.md      # /claude/prompt - Prompt engineering expert
+│   ├── commit.md          # /commit - Create conventional commits
+│   └── review-prod-ready.md # /review-prod-ready - Production readiness review
 ├── instructions/          # Modular instruction files
-│   ├── build-commands.md # Build and verification guidelines
-│   ├── code-style.md     # Human-readable code style rules
-│   ├── conversation.md   # Communication style guidelines
-│   ├── llm-code-style.md # LLM-specific code patterns
-│   ├── llm-context.md    # Context management (.llm/ directory)
-│   ├── llm-git-commits.md# Git commit conventions
-│   ├── tests.md          # Testing guidelines
-│   └── tool-use.md       # Tool usage patterns and priorities
-├── hooks/                 # Git hooks and automation
-│   ├── smart-lint.sh     # Intelligent linting with auto-fix
-│   └── pushover-notify.sh# Notification integration
-└── shared/               # Shared resources
-    └── comment-removal-rules.md # Rules for comment removal
+│   ├── build-commands.md  # Build and verification guidelines
+│   ├── code-principles.md # Core coding principles
+│   ├── code-style.md      # Human-readable code style rules
+│   ├── constraints.md     # Essential development constraints
+│   ├── conversation.md    # Communication style guidelines
+│   ├── efficiency.md      # Development efficiency patterns
+│   ├── hook-errors.md     # Hook error handling protocols
+│   ├── llm-code-style.md  # LLM-specific code patterns
+│   ├── llm-context.md     # Context management (.llm/ directory)
+│   ├── llm-git-commits.md # Git commit conventions
+│   ├── mcp-integration.md # MCP server usage patterns
+│   ├── problem-solving.md # Problem-solving methodologies
+│   ├── security.md        # Security and safety guidelines
+│   ├── tests.md           # Testing guidelines
+│   ├── tool-use.md        # Tool usage patterns and priorities
+│   └── workflow.md        # Core development workflow
+├── hooks/                 # Automation and validation hooks
+└── shared/               # Shared resources and utilities
 
 ```
 
 ## 🔧 Key Features
 
+### Comprehensive System Knowledge
+The `GLOBAL.CLAUDE.md` file includes extensive documentation for:
+- **Hooks System**: Development best practices, security guidelines, debugging tools
+- **Slash Commands**: Command development, security patterns, testing approaches
+- **Settings Configuration**: Precedence rules, key options, integration patterns
+- **MCP Integration**: Context7, GitHub/GitLab, Playwright, Figma, Cloudinary usage
+
 ### Modular Instructions
-The main `CLAUDE.md` file uses `@instructions/filename.md` syntax to include modular instruction files. This allows:
-- Easy updates to specific aspects without touching the main file
-- Better version control and diff visibility
-- Shared instructions across multiple projects
+The configuration uses `@instructions/filename.md` syntax for modular organization:
+- **Core Workflow**: Research → Plan → Implement → Validate methodology
+- **Essential Constraints**: Security-first development boundaries
+- **Code Principles**: Architecture, quality, and maintainability guidelines
+- **Communication**: Concise, direct interaction patterns
 
-### Smart Hooks
-The `smart-lint.sh` hook automatically:
-- Detects ESLint and TypeScript configurations
-- Attempts auto-fix before reporting errors
-- Supports Vue files with vue-tsc
-- Provides clear, actionable error messages
+### Expert Command Suite
+Slash commands provide specialized capabilities:
+- **`/analyze`**: Senior architect-level codebase analysis with actionable insights
+- **`/claude/prompt`**: Expert prompt engineering for custom command development
+- **`/review-prod-ready`**: Comprehensive production readiness assessment
+- **`/commit`**: Conventional commit message generation
 
-### Enhanced Security
-- Explicit allow/deny lists in `settings.json`
-- Blocked dangerous operations (`rm -rf`, `git push --force`)
-- No hardcoded credentials or MCP server configs
-
-### Custom Commands
-Slash commands provide quick access to common workflows:
-- Task management with JIRA integration
-- Smart comment removal with configurable rules
-- Automated commit message generation
-- Interactive rebase conflict resolution
+### Development Integration
+- **Context7 Priority**: Always check latest documentation before implementation
+- **Parallel Operations**: Batch tool calls for optimal performance  
+- **Security Hardening**: Input validation, credential protection, safe defaults
+- **Hook Error Handling**: Immediate resolution protocol for blocking issues
 
 ## 🚀 Usage
 
-1. **Global Configuration**: This configuration applies to all Claude Code sessions
-2. **Project-Specific Overrides**: Projects can have their own `.claude/CLAUDE.md`
-3. **Hook Integration**: Hooks run automatically on file modifications
-4. **Command Access**: Type `/` in Claude to see available commands
+1. **Global Configuration**: Symlinked to `~/.claude/` for consistent behavior across all projects
+2. **Dotbot Integration**: Managed through dotfiles repository for version control
+3. **Project Overrides**: Individual projects can extend with local `.claude/CLAUDE.md`
+4. **Command Access**: Type `/` followed by command name in Claude Code sessions
+
+### Expert Commands
+- **`/analyze`**: Comprehensive codebase analysis with architectural insights
+- **`/claude/prompt`**: Expert prompt engineering and command development
+- **`/review-prod-ready`**: Production readiness assessment and code review
+- **`/commit`**: Conventional commit message generation with proper formatting
 
 ## 📝 Maintenance
 
 ### Adding New Instructions
 1. Create a new `.md` file in `instructions/`
-2. Add the reference in `CLAUDE.md` using `@instructions/newfile.md`
+2. Add the reference in `GLOBAL.CLAUDE.md` using `@instructions/newfile.md`
+3. Follow modular organization principles
 
 ### Creating New Commands
-1. Add a new `.md` file in `commands/`
-2. Follow the existing format with emoji header and clear instructions
+1. Add a new `.md` file in `commands/` (use subdirectories for organization)
+2. Include frontmatter with description: `description: "Command purpose"`
+3. Use expert-level prompt engineering techniques
+4. Follow security guidelines (no shell injection, input validation)
 
-### Updating Hooks
-1. Modify hook scripts in `hooks/`
-2. Ensure proper error handling and exit codes
-3. Test with various file types and project structures
+### System Evolution
+1. **Context7 Integration**: Always fetch latest docs before major changes
+2. **Security Review**: Validate all new hooks and commands for safety
+3. **Performance Optimization**: Batch operations and use specialized tools
+4. **Documentation Sync**: Keep README aligned with actual file structure
 
-## 🔐 Security Notes
+## 🔐 Security Framework
 
-- All paths must be absolute (security requirement)
-- Credentials should use environment variables
-- Dangerous operations are explicitly denied
-- File operations validate against path traversal
+### Core Security Principles
+- **Input Validation**: All user inputs sanitized and validated
+- **Path Security**: Absolute paths required, traversal attack prevention
+- **Credential Protection**: Environment variables only, no hardcoded secrets
+- **Command Safety**: Dangerous operations explicitly blocked
+- **Hook Validation**: Timeout limits, proper error handling, shell injection prevention
 
-## 📚 Related Documentation
+### Security Checklist for New Commands
+- [ ] Input validation implemented
+- [ ] No hardcoded secrets or credentials
+- [ ] Appropriate error handling with timeouts
+- [ ] Permissions verified and documented
+- [ ] Shell injection prevention measures
+- [ ] Testing with malicious inputs completed
 
-- Main system documentation: `/home/kahl/.claude.store/README.md`
-- Security audit: `/home/kahl/.claude.store/SECURITY-AUDIT.md`
-- Global CLAUDE.md: `/home/kahl/.claude/CLAUDE.md`
+## 📚 Architecture Overview
+
+This global configuration system provides a foundation for consistent, secure, and efficient Claude Code usage across all development projects. It emphasizes:
+
+- **Research-Driven Development**: Context7 integration for up-to-date documentation
+- **Security-First Approach**: Multiple layers of protection and validation
+- **Expert-Level Tooling**: Sophisticated analysis and development capabilities
+- **Modular Organization**: Easy maintenance and evolution
+- **Version Control Integration**: Full dotfiles repository management
+
+The system is designed to scale from individual developer productivity to team-wide standardization while maintaining flexibility for project-specific needs.
