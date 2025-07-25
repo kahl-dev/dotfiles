@@ -104,6 +104,12 @@ else
     INPUT=$(cat)
 fi
 
+# Check for empty input
+if [ -z "$INPUT" ]; then
+    echo "Warning: Empty input - nothing to copy" >&2
+    exit 0
+fi
+
 # Check if Remote Bridge is available
 check_bridge() {
     curl -sf "${BRIDGE_URL%/clipboard}/health" >/dev/null 2>&1
