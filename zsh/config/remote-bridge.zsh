@@ -4,6 +4,11 @@
 # Export port for CLI tools
 export REMOTE_BRIDGE_PORT=8377
 
+# Add Remote Bridge CLI tools to PATH
+if [[ -d "$DOTFILES/remote-bridge/bin" ]]; then
+    export PATH="$DOTFILES/remote-bridge/bin:$PATH"
+fi
+
 # Helper function to check if Remote Bridge is available
 remote-bridge-check() {
     curl -sf "http://localhost:${REMOTE_BRIDGE_PORT}/health" >/dev/null 2>&1

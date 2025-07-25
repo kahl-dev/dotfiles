@@ -3,12 +3,6 @@
 - link:
     # Configuration
     ~/.config/remote-bridge: .config/remote-bridge
-    
-    # CLI tools to dotfiles bin
-    bin/rclip: remote-bridge/bin/rclip
-    bin/ropen: remote-bridge/bin/ropen
-    bin/rnotify: remote-bridge/bin/rnotify
-    bin/remote-bridge: remote-bridge/bin/remote-bridge
 
 - shell:
     - description: Installing Remote Bridge dependencies
