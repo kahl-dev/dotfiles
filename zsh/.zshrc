@@ -85,6 +85,7 @@ source "$ZDOTDIR/config/keybindings.zsh"
 source "$ZDOTDIR/config/aliases.zsh"
 # source "$ZDOTDIR/config/claude-store.zsh"
 source "$ZDOTDIR/config/ssh-agent.zsh"
+source "$ZDOTDIR/config/remote-bridge.zsh"
 source "$ZDOTDIR/config/prompt.zsh"
 source "$ZDOTDIR/config/check_git_cleanup.zsh"
 
