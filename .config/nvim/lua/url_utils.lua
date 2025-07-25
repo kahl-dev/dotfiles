@@ -1,7 +1,4 @@
 local M = {}
-local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
-local builtins = require("telescope.builtin")
 
 -- Always use ropen for URL handling - it handles local/remote detection
 local function handle_action(url)
@@ -96,6 +93,15 @@ end
 
 -- Open JIRA ticket from a selected commit using Telescope
 function M.open_jira_from_commit()
+  local ok, builtins = pcall(require, "telescope.builtin")
+  if not ok then
+    vim.api.nvim_echo({ { "Telescope not available. Install telescope.nvim plugin.", "ErrorMsg" } }, false, {})
+    return
+  end
+  
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
+  
   builtins.git_commits({
     attach_mappings = function(prompt_bufnr)
       actions.select_default:replace(function()
