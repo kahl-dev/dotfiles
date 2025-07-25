@@ -48,6 +48,29 @@ installAdditionalShellScripts: ## INSTALLATION: Innstall additional shell script
 updateShell: ## MAINTENANCE: Update shell
 	source ~/.zshrc
 
+# Remote Bridge commands
+
+installRemoteBridge: ## INSTALLATION: Install Remote Bridge service
+	@echo "Installing Remote Bridge..."
+	@cd remote-bridge && pnpm install --silent
+	@./remote-bridge/bin/remote-bridge install
+	@echo "Remote Bridge installed. Run 'make startRemoteBridge' to activate."
+
+startRemoteBridge: ## MAINTENANCE: Start Remote Bridge service
+	@./remote-bridge/bin/remote-bridge start
+
+stopRemoteBridge: ## MAINTENANCE: Stop Remote Bridge service
+	@./remote-bridge/bin/remote-bridge stop
+
+restartRemoteBridge: ## MAINTENANCE: Restart Remote Bridge service
+	@./remote-bridge/bin/remote-bridge restart
+
+statusRemoteBridge: ## MAINTENANCE: Check Remote Bridge status
+	@./remote-bridge/bin/remote-bridge status
+
+logsRemoteBridge: ## DEBUG: View Remote Bridge logs
+	@./remote-bridge/bin/remote-bridge logs
+
 # Cleanup commands
 
 nvimResetPackages: ## CLEANUP: Reset lazy.nvim packages

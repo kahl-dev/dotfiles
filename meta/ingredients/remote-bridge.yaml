@@ -1,0 +1,35 @@
+# Remote Bridge - SSH tunnel communication system
+
+- link:
+    # Configuration
+    ~/.config/remote-bridge: .config/remote-bridge
+    
+    # CLI tools to dotfiles bin
+    bin/rclip: remote-bridge/bin/rclip
+    bin/ropen: remote-bridge/bin/ropen
+    bin/rnotify: remote-bridge/bin/rnotify
+    bin/remote-bridge: remote-bridge/bin/remote-bridge
+
+- shell:
+    - description: Installing Remote Bridge dependencies
+      command: cd remote-bridge && pnpm install --silent
+      stdin: false
+      stdout: true
+      stderr: true
+    
+    - description: Setting up Remote Bridge service
+      command: |
+        if [[ "$(uname)" == "Darwin" ]]; then
+          # Only install service on macOS
+          if ! launchctl list | grep -q "com.kahl-dev.remote-bridge"; then
+            ./remote-bridge/bin/remote-bridge install
+            echo "Remote Bridge service installed. Run 'remote-bridge start' to activate."
+          else
+            echo "Remote Bridge service already installed."
+          fi
+        else
+          echo "Remote Bridge service is macOS only. CLI tools are available."
+        fi
+      stdin: false
+      stdout: true
+      stderr: true

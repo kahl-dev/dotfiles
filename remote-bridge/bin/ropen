@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+
+# Remote URL opener
+# Opens URLs on local machine via Remote Bridge
+
+set -euo pipefail
+
+# Configuration
+BRIDGE_PORT="${REMOTE_BRIDGE_PORT:-8377}"
+BRIDGE_URL="http://localhost:${BRIDGE_PORT}/browser"
+
+# Help text
+show_help() {
+    cat << EOF
+ropen - Open URLs on local machine via Remote Bridge
+
+Usage:
+    ropen <url>                      # Open single URL
+    ropen <url1> <url2> ...         # Open multiple URLs
+    echo "url" | ropen              # Pipe URL
+    ropen --batch < urls.txt        # Read URLs from file
+
+Options:
+    --no-validate    Skip URL validation
+    --app <name>     Open in specific application
+    --batch          Read URLs from stdin (one per line)
+    -h, --help       Show this help message
+
+Environment:
+    REMOTE_BRIDGE_PORT    Port for Remote Bridge (default: 8377)
+
+Examples:
+    # Open website
+    ropen "https://example.com"
+    
+    # Open in specific browser
+    ropen --app "Google Chrome" "https://example.com"
+    
+    # Open local development URL
+    ropen --no-validate "http://localhost:3000"
+    
+    # Open multiple URLs
+    ropen "https://github.com" "https://google.com"
+    
+    # From file
+    cat bookmarks.txt | ropen --batch
+EOF
+}
+
+# Parse arguments
+NO_VALIDATE=false
+APP=""
+BATCH_MODE=false
+URLS=()
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --no-validate)
+            NO_VALIDATE=true
+            shift
+            ;;
+        --app)
+            APP="$2"
+            shift 2
+            ;;
+        --batch)
+            BATCH_MODE=true
+            shift
+            ;;
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        -*)
+            echo "Unknown option: $1" >&2
+            show_help
+            exit 1
+            ;;
+        *)
+            URLS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+# Check if Remote Bridge is available
+check_bridge() {
+    curl -sf "${BRIDGE_URL%/browser}/health" >/dev/null 2>&1
+}
+
+# Send URL via Remote Bridge
+send_url() {
+    local url="$1"
+    
+    # Base64 encode URL
+    local encoded_url=$(echo -n "$url" | base64)
+    
+    # Build metadata
+    local metadata=$(jq -n \
+        --arg host "$(hostname -s)" \
+        --arg session "${TMUX_PANE:-$$}" \
+        --arg user "$USER" \
+        --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        '$ARGS.named')
+    
+    # Build options
+    local options="{\"noValidate\": $NO_VALIDATE"
+    [ -n "$APP" ] && options="$options, \"app\": \"$APP\""
+    options="$options}"
+    
+    # Send request
+    local response=$(curl -sS -X POST "$BRIDGE_URL" \
+        -H "Content-Type: application/json" \
+        -d "$(jq -n \
+            --arg data "$encoded_url" \
+            --argjson metadata "$metadata" \
+            --argjson options "$options" \
+            '{data: $data, metadata: $metadata, options: $options}')" \
+        2>&1)
+    
+    local exit_code=$?
+    
+    if [ $exit_code -eq 0 ]; then
+        # Check if response contains error
+        if echo "$response" | jq -e '.error' >/dev/null 2>&1; then
+            local error=$(echo "$response" | jq -r '.error')
+            echo "Error opening $url: $error" >&2
+            return 1
+        fi
+        echo "✓ Opened: $url"
+        return 0
+    else
+        echo "Failed to open $url: $response" >&2
+        return 1
+    fi
+}
+
+# Collect URLs
+if [ "$BATCH_MODE" = true ] || ([ ${#URLS[@]} -eq 0 ] && [ ! -t 0 ]); then
+    # Read from stdin
+    while IFS= read -r url; do
+        [ -n "$url" ] && URLS+=("$url")
+    done
+fi
+
+# Validate we have URLs
+if [ ${#URLS[@]} -eq 0 ]; then
+    echo "Error: No URLs provided" >&2
+    show_help
+    exit 1
+fi
+
+# Check bridge availability
+if ! check_bridge; then
+    echo "Error: Remote Bridge is not available on port $BRIDGE_PORT" >&2
+    echo "Make sure:" >&2
+    echo "1. Remote Bridge service is running on your local machine" >&2
+    echo "2. SSH tunnel is active (RemoteForward $BRIDGE_PORT localhost:$BRIDGE_PORT)" >&2
+    exit 1
+fi
+
+# Process URLs
+failed=0
+for url in "${URLS[@]}"; do
+    if ! send_url "$url"; then
+        ((failed++))
+    fi
+done
+
+# Exit with error if any failed
+[ $failed -eq 0 ] || exit 1

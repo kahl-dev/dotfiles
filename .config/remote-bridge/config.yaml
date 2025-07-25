@@ -1,0 +1,48 @@
+# Remote Bridge Configuration
+
+service:
+  port: 8377
+  logLevel: info
+
+# Notification rules
+notifications:
+  rules:
+    # Claude notifications - high priority with interaction
+    - type: "claude-hook"
+      requiresInteraction: true
+      sound: "Glass"
+      priority: "high"
+    
+    # Build/CI notifications
+    - type: "build-success"
+      sound: "Ping"
+      priority: "normal"
+    
+    - type: "build-error"
+      sound: "Basso"
+      priority: "high"
+    
+    # Test notifications
+    - type: "test-*"
+      sound: "Pop"
+      priority: "normal"
+  
+  defaultSound: "Pop"
+
+# Rate limits
+rateLimit:
+  windowMs: 60000
+  maxRequests: 60
+  maxPerHost: 20
+
+# Logging
+logging:
+  level: info
+  file: ~/.local/share/remote-bridge/activity.log
+  maxSize: 10MB
+  maxFiles: 5
+
+# Plugins - uncomment to enable
+plugins:
+  enabled: []
+  # enabled: ["claude-handler"]

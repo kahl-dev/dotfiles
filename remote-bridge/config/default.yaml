@@ -1,0 +1,65 @@
+# Remote Bridge Default Configuration
+# Copy this to ~/.config/remote-bridge/config.yaml and customize
+
+service:
+  port: 8377
+  logLevel: info
+
+# Notification rules - matched in order
+notifications:
+  rules:
+    # Claude hook notifications
+    - type: "claude-hook"
+      requiresInteraction: true
+      sound: "Glass"
+      priority: "high"
+    
+    # Build notifications
+    - type: "build-success"
+      sound: "Ping"
+      priority: "normal"
+    
+    - type: "build-error"
+      sound: "Sosumi"
+      priority: "high"
+    
+    # Test notifications
+    - type: "test-pass"
+      sound: "Pop"
+      priority: "normal"
+      
+    - type: "test-fail"
+      sound: "Basso"
+      priority: "high"
+    
+    # Deployment notifications
+    - type: "deployment-*"
+      sound: "Hero"
+      priority: "high"
+  
+  # Default sound for unmatched notifications
+  defaultSound: "Pop"
+
+# Rate limiting configuration
+rateLimit:
+  windowMs: 60000      # 1 minute window
+  maxRequests: 60      # Max total requests per window
+  maxPerHost: 20       # Max requests per host per window
+
+# Logging configuration
+logging:
+  level: info
+  file: ~/.local/share/remote-bridge/activity.log
+  maxSize: 10MB
+  maxFiles: 5
+
+# Plugin configuration
+plugins:
+  enabled: []  # Add plugin names here, e.g., ["claude-handler", "screenshot-processor"]
+  
+  # Plugin-specific settings
+  settings:
+    # Example plugin settings
+    # claude-handler:
+    #   logPath: ~/.local/share/claude-hooks.log
+    #   alertOnError: true

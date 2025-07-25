@@ -1,0 +1,172 @@
+#!/usr/bin/env bash
+
+# Remote clipboard tool
+# Sends data to local clipboard via Remote Bridge
+
+set -euo pipefail
+
+# Configuration
+BRIDGE_PORT="${REMOTE_BRIDGE_PORT:-8377}"
+BRIDGE_URL="http://localhost:${BRIDGE_PORT}/clipboard"
+
+# Help text
+show_help() {
+    cat << EOF
+rclip - Send data to local clipboard via Remote Bridge
+
+Usage:
+    echo "text" | rclip              # Pipe text to clipboard
+    rclip < file.txt                 # Send file contents
+    cat image.png | rclip --type image  # Send binary data
+
+Options:
+    --type <type>    Content type (text, image, etc.)
+    --tag <tag>      Add a tag to the clipboard entry
+    --json           Input is already base64 encoded JSON
+    -h, --help       Show this help message
+
+Environment:
+    REMOTE_BRIDGE_PORT    Port for Remote Bridge (default: 8377)
+
+Examples:
+    # Copy command output
+    ls -la | rclip
+    
+    # Copy file contents
+    rclip < ~/.ssh/id_rsa.pub
+    
+    # Copy with metadata
+    echo "important data" | rclip --tag work
+    
+    # Copy image
+    cat screenshot.png | rclip --type image
+
+If Remote Bridge is not available, falls back to OSC52 escape sequence.
+EOF
+}
+
+# Parse arguments
+CONTENT_TYPE="text"
+TAG=""
+JSON_MODE=false
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --type)
+            CONTENT_TYPE="$2"
+            shift 2
+            ;;
+        --tag)
+            TAG="$2"
+            shift 2
+            ;;
+        --json)
+            JSON_MODE=true
+            shift
+            ;;
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1" >&2
+            show_help
+            exit 1
+            ;;
+    esac
+done
+
+# Read input
+if [ -t 0 ]; then
+    echo "Error: No input provided. Pipe data to rclip or use redirection." >&2
+    echo "Example: echo 'Hello' | rclip" >&2
+    exit 1
+fi
+
+INPUT=$(cat)
+
+# Check if Remote Bridge is available
+check_bridge() {
+    curl -sf "${BRIDGE_URL%/clipboard}/health" >/dev/null 2>&1
+}
+
+# Send via Remote Bridge
+send_via_bridge() {
+    local data="$1"
+    
+    # Base64 encode if not in JSON mode
+    if [ "$JSON_MODE" = false ]; then
+        data=$(echo -n "$data" | base64)
+    fi
+    
+    # Build metadata
+    local metadata=$(jq -n \
+        --arg host "$(hostname -s)" \
+        --arg session "${TMUX_PANE:-$$}" \
+        --arg user "$USER" \
+        --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        '$ARGS.named')
+    
+    # Build options
+    local options="{\"type\": \"$CONTENT_TYPE\""
+    [ -n "$TAG" ] && options="$options, \"tag\": \"$TAG\""
+    options="$options}"
+    
+    # Send request
+    local response=$(curl -sS -X POST "$BRIDGE_URL" \
+        -H "Content-Type: application/json" \
+        -d "$(jq -n \
+            --arg data "$data" \
+            --argjson metadata "$metadata" \
+            --argjson options "$options" \
+            '{data: $data, metadata: $metadata, options: $options}')" \
+        2>&1)
+    
+    local exit_code=$?
+    
+    if [ $exit_code -eq 0 ]; then
+        # Check if response contains error
+        if echo "$response" | jq -e '.error' >/dev/null 2>&1; then
+            local error=$(echo "$response" | jq -r '.error')
+            echo "Error: $error" >&2
+            return 1
+        fi
+        return 0
+    else
+        echo "Failed to send to Remote Bridge: $response" >&2
+        return 1
+    fi
+}
+
+# Fallback to OSC52
+send_via_osc52() {
+    local data="$1"
+    local encoded=$(echo -n "$data" | base64 | tr -d '\n')
+    
+    # Use screen/tmux aware OSC52
+    if [ -n "$TMUX" ]; then
+        # tmux
+        printf "\033Ptmux;\033\033]52;c;%s\007\033\\" "$encoded"
+    elif [ "$TERM" = "screen" ]; then
+        # screen
+        printf "\033P\033]52;c;%s\007\033\\" "$encoded"
+    else
+        # regular terminal
+        printf "\033]52;c;%s\007" "$encoded"
+    fi
+    
+    echo "(Sent via OSC52 - Remote Bridge not available)" >&2
+}
+
+# Main logic
+if check_bridge; then
+    if send_via_bridge "$INPUT"; then
+        echo "✓ Clipboard updated"
+    else
+        # Fallback to OSC52
+        send_via_osc52 "$INPUT"
+    fi
+else
+    # Direct OSC52 fallback
+    send_via_osc52 "$INPUT"
+fi

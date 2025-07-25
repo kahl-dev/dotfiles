@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -x  # Enable debugging
+
+BRIDGE_PORT="${REMOTE_BRIDGE_PORT:-8377}"
+BRIDGE_URL="http://localhost:${BRIDGE_PORT}/notify"
+
+MESSAGE="$1"
+TITLE="$2"
+
+# Simple test
+ENCODED_MESSAGE=$(echo -n "$MESSAGE" | base64)
+METADATA='{"host":"test","session":"test","user":"test","timestamp":"2024-01-01T00:00:00Z"}'
+OPTIONS='{"title":"'"$TITLE"'","sound":"Glass"}'
+
+echo "=== Debug Info ==="
+echo "ENCODED_MESSAGE: $ENCODED_MESSAGE"
+echo "METADATA: $METADATA"
+echo "OPTIONS: $OPTIONS"
+echo "=================="
+
+# Build JSON payload
+PAYLOAD=$(jq -n \
+    --arg data "$ENCODED_MESSAGE" \
+    --argjson metadata "$METADATA" \
+    --argjson options "$OPTIONS" \
+    '{data: $data, metadata: $metadata, options: $options}')
+
+echo "PAYLOAD: $PAYLOAD"
+
+# Send request
+curl -v -X POST "$BRIDGE_URL" \
+    -H "Content-Type: application/json" \
+    -d "$PAYLOAD"

@@ -1,0 +1,232 @@
+#!/usr/bin/env bash
+
+# Remote notification tool
+# Sends notifications to local machine via Remote Bridge
+
+set -euo pipefail
+
+# Configuration
+BRIDGE_PORT="${REMOTE_BRIDGE_PORT:-8377}"
+BRIDGE_URL="http://localhost:${BRIDGE_PORT}/notify"
+
+# Help text
+show_help() {
+    cat << EOF
+rnotify - Send notifications to local machine via Remote Bridge
+
+Usage:
+    rnotify <message>                    # Simple notification
+    rnotify <message> [options]          # Notification with options
+    echo "message" | rnotify [options]   # Pipe message
+    
+Options:
+    --title <title>      Notification title
+    --subtitle <sub>     Notification subtitle  
+    --type <type>        Notification type (for rule matching)
+    --sound <sound>      Override notification sound
+    --timeout <sec>      Notification timeout in seconds
+    --data <json>        Attach JSON data (or use --json for stdin)
+    --json               Read JSON data from stdin
+    --reply              Enable reply/interaction
+    -h, --help           Show this help message
+
+Environment:
+    REMOTE_BRIDGE_PORT    Port for Remote Bridge (default: 8377)
+
+Notification Types:
+    claude-hook          Claude hook notifications
+    build-success        Build completed successfully
+    build-error          Build failed
+    test-pass            Tests passed
+    test-fail            Tests failed
+    deployment           Deployment notifications
+    custom               Custom notifications
+
+macOS Sounds:
+    Basso, Blow, Bottle, Frog, Funk, Glass, Hero, Morse, Ping,
+    Pop, Purr, Sosumi, Submarine, Tink
+
+Examples:
+    # Simple notification
+    rnotify "Build complete"
+    
+    # With title and type
+    rnotify "All tests passed" --title "Test Suite" --type test-pass
+    
+    # Claude hook with interaction
+    rnotify "Permission denied" --type claude-hook --reply \\
+        --data '{"tool": "bash", "command": "rm -rf /"}'
+    
+    # From command output
+    make test 2>&1 | tail -n 1 | rnotify --title "Test Results"
+    
+    # With JSON data from stdin
+    echo '{"errors": 5, "warnings": 2}' | \\
+        rnotify "Build completed with issues" --type build-error --json
+EOF
+}
+
+# Parse arguments
+MESSAGE=""
+TITLE=""
+SUBTITLE=""
+TYPE=""
+SOUND=""
+TIMEOUT=""
+DATA=""
+JSON_MODE=false
+REPLY=false
+
+# First, check for piped input
+if [ ! -t 0 ]; then
+    PIPED_INPUT=$(cat)
+fi
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --title)
+            TITLE="$2"
+            shift 2
+            ;;
+        --subtitle)
+            SUBTITLE="$2"
+            shift 2
+            ;;
+        --type)
+            TYPE="$2"
+            shift 2
+            ;;
+        --sound)
+            SOUND="$2"
+            shift 2
+            ;;
+        --timeout)
+            TIMEOUT="$2"
+            shift 2
+            ;;
+        --data)
+            DATA="$2"
+            shift 2
+            ;;
+        --json)
+            JSON_MODE=true
+            shift
+            ;;
+        --reply)
+            REPLY=true
+            shift
+            ;;
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        -*)
+            echo "Unknown option: $1" >&2
+            show_help
+            exit 1
+            ;;
+        *)
+            MESSAGE="$1"
+            shift
+            ;;
+    esac
+done
+
+# Determine message source
+if [ -z "$MESSAGE" ] && [ -n "$PIPED_INPUT" ]; then
+    if [ "$JSON_MODE" = true ]; then
+        DATA="$PIPED_INPUT"
+        MESSAGE="Notification"  # Default message when using JSON mode
+    else
+        MESSAGE="$PIPED_INPUT"
+    fi
+elif [ -z "$MESSAGE" ]; then
+    echo "Error: No message provided" >&2
+    show_help
+    exit 1
+fi
+
+# Check if Remote Bridge is available
+check_bridge() {
+    curl -sf "${BRIDGE_URL%/notify}/health" >/dev/null 2>&1
+}
+
+if ! check_bridge; then
+    echo "Error: Remote Bridge is not available on port $BRIDGE_PORT" >&2
+    echo "Make sure:" >&2
+    echo "1. Remote Bridge service is running on your local machine" >&2
+    echo "2. SSH tunnel is active (RemoteForward $BRIDGE_PORT localhost:$BRIDGE_PORT)" >&2
+    exit 1
+fi
+
+# Base64 encode message
+ENCODED_MESSAGE=$(echo -n "$MESSAGE" | base64)
+
+# Build metadata
+METADATA=$(jq -n \
+    --arg host "$(hostname -s)" \
+    --arg session "${TMUX_PANE:-$$}" \
+    --arg user "$USER" \
+    --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    '$ARGS.named')
+
+# Build options
+OPTIONS="{"
+FIRST=true
+
+add_option() {
+    local key="$1"
+    local value="$2"
+    if [ -n "$value" ]; then
+        [ "$FIRST" = true ] && FIRST=false || OPTIONS="$OPTIONS,"
+        if [[ "$value" =~ ^[0-9]+$ ]] || [ "$value" = "true" ] || [ "$value" = "false" ]; then
+            OPTIONS="$OPTIONS\"$key\":$value"
+        else
+            OPTIONS="$OPTIONS\"$key\":\"$value\""
+        fi
+    fi
+}
+
+add_option "title" "$TITLE"
+add_option "subtitle" "$SUBTITLE"
+add_option "type" "$TYPE"
+add_option "sound" "$SOUND"
+add_option "timeout" "$TIMEOUT"
+add_option "reply" "$REPLY"
+
+# Add data if provided
+if [ -n "$DATA" ]; then
+    ENCODED_DATA=$(echo -n "$DATA" | base64)
+    [ "$FIRST" = true ] && FIRST=false || OPTIONS="$OPTIONS,"
+    OPTIONS="$OPTIONS\"data\":\"$ENCODED_DATA\""
+fi
+
+OPTIONS="$OPTIONS}"
+
+# Build the complete JSON payload
+JSON_PAYLOAD=$(jq -n \
+    --arg data "$ENCODED_MESSAGE" \
+    --argjson metadata "$METADATA" \
+    --argjson options "$OPTIONS" \
+    '{data: $data, metadata: $metadata, options: $options}')
+
+# Send request
+RESPONSE=$(curl -sS -X POST "$BRIDGE_URL" \
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD" \
+    2>&1)
+
+EXIT_CODE=$?
+
+if [ $EXIT_CODE -eq 0 ]; then
+    # Check if response contains error
+    if echo "$RESPONSE" | jq -e '.error' >/dev/null 2>&1; then
+        ERROR=$(echo "$RESPONSE" | jq -r '.error')
+        echo "Error: $ERROR" >&2
+        exit 1
+    fi
+    echo "✓ Notification sent"
+else
+    echo "Failed to send notification: $RESPONSE" >&2
+    exit 1
+fi

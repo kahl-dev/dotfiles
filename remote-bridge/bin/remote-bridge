@@ -1,0 +1,214 @@
+#!/usr/bin/env node
+
+const yargs = require('yargs/yargs');
+const { hideBin } = require('yargs/helpers');
+const { spawn, exec } = require('child_process');
+const fs = require('fs').promises;
+const path = require('path');
+const os = require('os');
+
+const SERVICE_NAME = 'com.kahl-dev.remote-bridge';
+const PLIST_PATH = path.join(os.homedir(), 'Library', 'LaunchAgents', `${SERVICE_NAME}.plist`);
+const SERVER_PATH = path.join(__dirname, '..', 'src', 'server.js');
+const LOG_DIR = path.join(os.homedir(), '.local', 'share', 'remote-bridge');
+
+yargs(hideBin(process.argv))
+  .command('start', 'Start the Remote Bridge service', {}, startService)
+  .command('stop', 'Stop the Remote Bridge service', {}, stopService)
+  .command('restart', 'Restart the Remote Bridge service', {}, restartService)
+  .command('status', 'Check service status', {}, checkStatus)
+  .command('logs', 'View service logs', {
+    follow: {
+      alias: 'f',
+      describe: 'Follow log output',
+      type: 'boolean'
+    },
+    lines: {
+      alias: 'n',
+      describe: 'Number of lines to show',
+      type: 'number',
+      default: 50
+    }
+  }, viewLogs)
+  .command('install', 'Install the service', {}, installService)
+  .command('uninstall', 'Uninstall the service', {}, uninstallService)
+  .command('dev', 'Run in development mode', {}, runDev)
+  .command('test-tunnel', 'Test SSH tunnel connectivity', {}, testTunnel)
+  .demandCommand(1, 'You must provide a command')
+  .help()
+  .alias('help', 'h')
+  .parse();
+
+async function startService() {
+  try {
+    await exec(`launchctl load -w ${PLIST_PATH}`, (error) => {
+      if (error) {
+        console.error('Failed to start service:', error.message);
+        process.exit(1);
+      }
+      console.log('Remote Bridge service started');
+    });
+  } catch (error) {
+    console.error('Error:', error.message);
+    process.exit(1);
+  }
+}
+
+async function stopService() {
+  try {
+    await exec(`launchctl unload ${PLIST_PATH}`, (error) => {
+      if (error) {
+        console.error('Failed to stop service:', error.message);
+        process.exit(1);
+      }
+      console.log('Remote Bridge service stopped');
+    });
+  } catch (error) {
+    console.error('Error:', error.message);
+    process.exit(1);
+  }
+}
+
+async function restartService() {
+  await stopService();
+  setTimeout(() => startService(), 1000);
+}
+
+async function checkStatus() {
+  exec(`launchctl list | grep ${SERVICE_NAME}`, (error, stdout) => {
+    if (error || !stdout) {
+      console.log('Service is not running');
+      return;
+    }
+    
+    const parts = stdout.trim().split('\t');
+    const pid = parts[0];
+    const status = parts[1];
+    
+    console.log(`Service is running (PID: ${pid}, Status: ${status})`);
+    
+    // Check if service is responding
+    exec('curl -s http://localhost:8377/health', (error, stdout) => {
+      if (error) {
+        console.log('Service is not responding on port 8377');
+      } else {
+        try {
+          const health = JSON.parse(stdout);
+          console.log(`Service version: ${health.version}`);
+          console.log(`Uptime: ${Math.floor(health.uptime)}s`);
+          console.log(`Plugins: ${health.plugins.join(', ')}`);
+        } catch {
+          console.log('Service is responding');
+        }
+      }
+    });
+  });
+}
+
+async function viewLogs(argv) {
+  const logFile = path.join(LOG_DIR, 'activity.log');
+  
+  try {
+    await fs.access(logFile);
+  } catch {
+    console.error('Log file not found:', logFile);
+    return;
+  }
+  
+  if (argv.follow) {
+    spawn('tail', ['-f', logFile], { stdio: 'inherit' });
+  } else {
+    spawn('tail', ['-n', argv.lines, logFile], { stdio: 'inherit' });
+  }
+}
+
+async function installService() {
+  // Create directories
+  await fs.mkdir(LOG_DIR, { recursive: true });
+  await fs.mkdir(path.dirname(PLIST_PATH), { recursive: true });
+  
+  // Create plist file
+  const plistContent = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>${SERVICE_NAME}</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>${process.execPath}</string>
+        <string>${SERVER_PATH}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>${path.join(LOG_DIR, 'service.log')}</string>
+    <key>StandardErrorPath</key>
+    <string>${path.join(LOG_DIR, 'service.error.log')}</string>
+    <key>WorkingDirectory</key>
+    <string>${path.join(__dirname, '..')}</string>
+</dict>
+</plist>`;
+  
+  await fs.writeFile(PLIST_PATH, plistContent);
+  console.log('Service installed successfully');
+  console.log(`LaunchAgent created at: ${PLIST_PATH}`);
+  console.log('\nTo start the service run: remote-bridge start');
+}
+
+async function uninstallService() {
+  try {
+    // Stop service first
+    await new Promise((resolve) => {
+      exec(`launchctl unload ${PLIST_PATH}`, () => resolve());
+    });
+    
+    // Remove plist
+    await fs.unlink(PLIST_PATH);
+    console.log('Service uninstalled successfully');
+  } catch (error) {
+    console.error('Error uninstalling service:', error.message);
+  }
+}
+
+function runDev() {
+  console.log('Starting Remote Bridge in development mode...');
+  const server = spawn(process.execPath, [SERVER_PATH, '--dev'], {
+    stdio: 'inherit',
+    env: { ...process.env, NODE_ENV: 'development' }
+  });
+  
+  process.on('SIGINT', () => {
+    server.kill('SIGTERM');
+    process.exit(0);
+  });
+}
+
+async function testTunnel() {
+  console.log('Testing SSH tunnel connectivity...');
+  
+  exec('curl -s http://localhost:8377/health', (error, stdout) => {
+    if (error) {
+      console.log('❌ Service not accessible on localhost:8377');
+      console.log('\nMake sure:');
+      console.log('1. The service is running: remote-bridge status');
+      console.log('2. SSH config includes: RemoteForward 8377 localhost:8377');
+      console.log('3. You are connected via SSH with the tunnel active');
+    } else {
+      console.log('✅ Service is accessible on localhost:8377');
+      
+      try {
+        const health = JSON.parse(stdout);
+        console.log(`\nService Details:`);
+        console.log(`- Version: ${health.version}`);
+        console.log(`- Status: ${health.status}`);
+        console.log(`- Uptime: ${Math.floor(health.uptime)}s`);
+      } catch {
+        console.log('\nService is responding but returned unexpected data');
+      }
+    }
+  });
+}
+

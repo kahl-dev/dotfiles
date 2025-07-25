@@ -1,0 +1,135 @@
+// Claude Hook Handler Plugin
+// Rename to claude-handler.js and enable in config.yaml to use
+
+const fs = require('fs').promises;
+const path = require('path');
+const os = require('os');
+
+module.exports = {
+  name: 'claude-handler',
+  version: '1.0.0',
+  
+  hooks: {
+    beforeNotification: async function(data, metadata) {
+      // Only process claude-hook notifications
+      if (data.options?.type !== 'claude-hook') {
+        return data;
+      }
+      
+      // Enhance notification
+      data.options.title = data.options.title || `Claude - ${metadata.host}`;
+      data.options.subtitle = `Session: ${metadata.session}`;
+      
+      // Parse custom data if provided
+      if (data.options.data) {
+        try {
+          const customData = JSON.parse(
+            Buffer.from(data.options.data, 'base64').toString('utf-8')
+          );
+          
+          // Adjust notification based on hook type
+          if (customData.event === 'tool-blocked') {
+            data.options.sound = 'Sosumi';  // Alert sound
+            data.options.reply = true;      // Enable interaction
+          } else if (customData.event === 'completion') {
+            data.options.sound = 'Glass';   // Success sound
+          }
+          
+          // Log the event
+          await this.logClaudeEvent({
+            timestamp: metadata.timestamp,
+            host: metadata.host,
+            session: metadata.session,
+            event: customData
+          });
+          
+        } catch (error) {
+          console.error('Failed to parse Claude data:', error);
+        }
+      }
+      
+      return data;
+    }
+  },
+  
+  endpoints: [
+    {
+      path: '/claude/history',
+      method: 'GET',
+      handler: async function(req, res) {
+        try {
+          const history = await this.getClaudeHistory(
+            parseInt(req.query.limit) || 50
+          );
+          res.json(history);
+        } catch (error) {
+          res.status(500).json({ error: error.message });
+        }
+      }
+    },
+    
+    {
+      path: '/claude/clear',
+      method: 'POST',
+      handler: async function(req, res) {
+        try {
+          await this.clearClaudeHistory();
+          res.json({ success: true });
+        } catch (error) {
+          res.status(500).json({ error: error.message });
+        }
+      }
+    }
+  ],
+  
+  initialize: async function(server) {
+    this.server = server;
+    this.logPath = path.join(
+      os.homedir(),
+      '.local/share/remote-bridge/claude-hooks.log'
+    );
+    
+    // Ensure log directory exists
+    const logDir = path.dirname(this.logPath);
+    await fs.mkdir(logDir, { recursive: true }).catch(() => {});
+  },
+  
+  // Helper methods
+  logClaudeEvent: async function(event) {
+    try {
+      const logEntry = JSON.stringify(event) + '\n';
+      await fs.appendFile(this.logPath, logEntry);
+    } catch (error) {
+      console.error('Failed to log Claude event:', error);
+    }
+  },
+  
+  getClaudeHistory: async function(limit) {
+    try {
+      const content = await fs.readFile(this.logPath, 'utf8');
+      const lines = content.trim().split('\n').filter(Boolean);
+      const recent = lines.slice(-limit);
+      
+      return recent.map(line => {
+        try {
+          return JSON.parse(line);
+        } catch {
+          return { raw: line };
+        }
+      }).reverse();
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        return [];
+      }
+      throw error;
+    }
+  },
+  
+  clearClaudeHistory: async function() {
+    try {
+      await fs.writeFile(this.logPath, '');
+    } catch (error) {
+      throw new Error(`Failed to clear history: ${error.message}`);
+    }
+  }
+};
