@@ -785,6 +785,25 @@ alias async='atuin sync'
 alias astatus='atuin status'
 
 # ############################## #
+# Remote Bridge Clipboard Aliases
+# ############################## #
+
+# Make clipboard tools use rclip for remote compatibility
+if command_exists rclip; then
+  # Common clipboard commands mapped to rclip
+  alias xclip='rclip'
+  alias xsel='rclip'
+  alias wl-copy='rclip'
+  alias pbcopy='rclip'
+  
+  # For commands that expect stdin by default
+  alias 'xclip -selection clipboard'='rclip'
+  alias 'xclip -sel clip'='rclip'
+  alias 'xsel --clipboard'='rclip'
+  alias 'xsel -b'='rclip'
+fi
+
+# ############################## #
 # AeroSpace
 # ############################## #
 
