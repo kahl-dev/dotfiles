@@ -160,7 +160,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/enhanced-notify.sh"
+            "command": "~/.claude/hooks/enhanced-notify-wrapper.sh"
           }
         ]
       }
