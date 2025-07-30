@@ -10,6 +10,7 @@
 - clean: []
 
 - link:
+    ~/.claude/agents: ./.claude.global/agents
     ~/.claude/commands: ./.claude.global/commands
     ~/.claude/hooks: ./.claude.global/hooks
     ~/.claude/instructions: ./.claude.global/instructions
@@ -32,6 +33,7 @@
         echo ""
         echo "📁 Claude directory: ~/.claude"
         echo "🔗 Symlinks created:"
+        echo "   agents     -> .claude.global/agents"
         echo "   commands   -> .claude.global/commands"
         echo "   hooks      -> .claude.global/hooks" 
         echo "   instructions -> .claude.global/instructions"
