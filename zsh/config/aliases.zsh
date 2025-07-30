@@ -346,6 +346,7 @@ alias gdp='git up; git checkout $(_git_production_branch); git up; git merge --c
 alias gdpg='gdp; make glab-production'
 
 alias gp='git push'
+alias gpcc='git push -o ci.variable="CLEAR_CACHE=1"'
 
 alias gsb='git status -sb'
 alias gss='git status -s'
