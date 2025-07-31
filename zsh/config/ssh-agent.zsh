@@ -20,8 +20,7 @@ ssh-agent-start() {
     fi
     
     echo "Starting SSH agent keeper..."
-    nohup "$HOME/.dotfiles/bin/ssh-agent-keeper" >/dev/null 2>&1 &
-    disown
+    (nohup "$HOME/.dotfiles/bin/ssh-agent-keeper" >/dev/null 2>&1 &)
     
     # Wait a moment to check if it started successfully
     sleep 1
@@ -141,8 +140,7 @@ if [[ -o interactive ]]; then
     if [[ -n "${SSH_AUTH_SOCK:-}" ]]; then
         if [[ ! -f "$HOME/.ssh/ssh-agent-keeper.pid" ]] || ! kill -0 "$(cat "$HOME/.ssh/ssh-agent-keeper.pid" 2>/dev/null)" 2>/dev/null; then
             # Start silently
-            nohup "$HOME/.dotfiles/bin/ssh-agent-keeper" >/dev/null 2>&1 &
-            disown
+            (nohup "$HOME/.dotfiles/bin/ssh-agent-keeper" >/dev/null 2>&1 &)
         fi
     fi
 fi
