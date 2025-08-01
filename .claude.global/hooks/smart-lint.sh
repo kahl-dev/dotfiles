@@ -121,7 +121,7 @@ sanitize_file_path() {
     fi
     
     # Check specifically for dangerous command substitution patterns
-    if [[ "$file_path" == *'${'* ]] || [[ "$file_path" == *'$('* ]]; then
+    if [[ "$file_path" == *\$\{* ]] || [[ "$file_path" == *\$\(* ]]; then
         return 1
     fi
     
@@ -136,7 +136,10 @@ sanitize_file_path() {
     fi
     
     # Check for null bytes (which could truncate validation)
-    if [[ "$file_path" == *$'\0'* ]]; then
+    # Use length-based comparison to avoid false positives
+    local byte_count
+    byte_count=$(printf '%s' "$file_path" | wc -c)
+    if [[ ${#file_path} -ne $byte_count ]]; then
         return 1
     fi
     
@@ -160,12 +163,20 @@ run_with_timeout() {
     local cmd=("$@")
     
     # Create restricted environment for sandboxing
+    # Include fnm multishell path if available to use correct Node.js version
+    local fnm_path=""
+    if [[ -n "${FNM_MULTISHELL_PATH:-}" && -d "${FNM_MULTISHELL_PATH}/bin" ]]; then
+        fnm_path="${FNM_MULTISHELL_PATH}/bin:"
+    fi
+    
     local -a env_vars=(
-        "PATH=/usr/local/bin:/usr/bin:/bin"
+        "PATH=${fnm_path}/home/linuxbrew/.linuxbrew/bin:/usr/local/bin:/usr/bin:/bin"
         "HOME=$HOME"
         "USER=${USER:-unknown}"
         "LANG=${LANG:-C}"
         "LC_ALL=C"
+        "FNM_MULTISHELL_PATH=${FNM_MULTISHELL_PATH:-}"
+        "FNM_DIR=${FNM_DIR:-}"
     )
     
     # Properly escape all command arguments to prevent injection

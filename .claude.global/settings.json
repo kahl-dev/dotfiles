@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
@@ -121,7 +122,9 @@
       "mcp__jira__getJiraIssueRemoteIssueLinks",
       "mcp__jira__getVisibleJiraProjects",
       "mcp__jira__getJiraProjectIssueTypesMetadata",
-      "supabase-remote - search_docs(*)"
+      "supabase-remote - search_docs(*)",
+      "Bash($HOME/.claude/shared/get-screenshots.sh:*)",
+      "Read($HOME/.screenshots/*)"
     ],
     "deny": [
       "Bash(git push --force:*)",
@@ -135,6 +138,9 @@
       "Bash(yarn run dev:*)",
       "Bash(yarn dev:*)",
       "Bash(make dev:*)"
+    ],
+    "additionalDirectories": [
+      "/home/kahl/.screenshots"
     ]
   },
   "model": "sonnet",
@@ -154,6 +160,10 @@
       {
         "matcher": "Write|Edit|MultiEdit",
         "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/file-type-tracker.sh"
+          },
           {
             "type": "command",
             "command": "~/.claude/hooks/smart-lint.sh"
@@ -183,5 +193,8 @@
         ]
       }
     ]
+  },
+  "feedbackSurveyState": {
+    "lastShownTime": 1754054473359
   }
 }
