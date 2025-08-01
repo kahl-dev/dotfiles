@@ -1,0 +1,7 @@
+name: <%= File.basename(`git rev-parse --show-toplevel 2>/dev/null`.strip) rescue File.basename(Dir.pwd) %>
+root: <%= @settings["cwd"] %>
+
+windows:
+  - claude:
+      panes:
+        - claude

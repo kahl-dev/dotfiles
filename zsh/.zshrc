@@ -83,6 +83,7 @@ source "$ZDOTDIR/config/ngrok.zsh"
 source "$ZDOTDIR/config/git-lia.zsh"
 source "$ZDOTDIR/config/keybindings.zsh"
 source "$ZDOTDIR/config/aliases.zsh"
+source "$ZDOTDIR/config/tmuxinator.zsh"
 # source "$ZDOTDIR/config/claude-store.zsh"
 source "$ZDOTDIR/config/ssh-agent.zsh"
 source "$ZDOTDIR/config/remote-bridge.zsh"
@@ -106,7 +107,8 @@ fi
 
 
 
-# LIA Cleanup Tool integration
 if command_exists lia-cleanup; then
-[[ $- == *i* ]] && eval "$(lia-cleanup shell-hook 2>/dev/null)"
 fi
+
+# LIA Cleanup Tool integration
+[[ $- == *i* ]] && eval "$(lia-cleanup shell-hook 2>/dev/null)"
