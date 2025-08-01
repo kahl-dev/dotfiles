@@ -16,8 +16,6 @@ brew "dbus"
 brew "sqlite"
 # Collection of Linux utilities
 brew "util-linux"
-# Network authentication protocol
-brew "krb5"
 # Portable Foreign Function Interface library
 brew "libffi"
 # Perl compatible regular expressions library with a new API
@@ -36,8 +34,6 @@ brew "fd"
 brew "fnm"
 # Command-line fuzzy finder written in Go
 brew "fzf"
-# C/C++ and Java libraries for Unicode and globalization
-brew "icu4c"
 # GNOME XML library
 brew "libxml2"
 # GitHub command-line tool
@@ -50,8 +46,12 @@ brew "git-extras"
 brew "glow"
 # User-friendly cURL replacement (command-line HTTP client)
 brew "httpie"
+# C/C++ and Java libraries for Unicode and globalization
+brew "icu4c@76"
 # New file format for still image compression
 brew "jpeg-xl"
+# Network authentication protocol
+brew "krb5"
 # Asynchronous event library
 brew "libevent"
 # Version of the SSL/TLS protocol forked from OpenSSL
@@ -62,6 +62,8 @@ brew "libyaml"
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Command-line Git information tool
+brew "onefetch"
 # Cryptography and SSL/TLS Toolkit
 brew "openssl@1.1"
 # Fast, disk space efficient package manager
@@ -80,10 +82,16 @@ brew "ripgrep"
 brew "ruby"
 # Database of common MIME types
 brew "shared-mime-info"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Terminal multiplexer
 brew "tmux"
+# Manage complex tmux sessions easily
+brew "tmuxinator"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
 # Shell extension to navigate your filesystem faster
