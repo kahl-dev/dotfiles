@@ -1,5 +1,5 @@
-name: <%= File.basename(`git rev-parse --show-toplevel 2>/dev/null`.strip) rescue File.basename(Dir.pwd) %>
-root: <%= @settings["cwd"] %>
+name: <%= File.basename(Dir.pwd).gsub(/^\./, '') %>
+root: <%= Dir.pwd %>
 
 windows:
   - claude:

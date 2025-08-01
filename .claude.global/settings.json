@@ -139,9 +139,7 @@
       "Bash(yarn dev:*)",
       "Bash(make dev:*)"
     ],
-    "additionalDirectories": [
-      "/home/kahl/.screenshots"
-    ]
+    "additionalDirectories": ["/home/kahl/.screenshots"]
   },
   "model": "sonnet",
   "hooks": {
@@ -195,6 +193,7 @@
     ]
   },
   "feedbackSurveyState": {
-    "lastShownTime": 1754054473359
+    "lastShownTime": 1754058073483
   }
 }
+

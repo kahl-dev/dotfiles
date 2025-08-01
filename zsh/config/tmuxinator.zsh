@@ -10,13 +10,13 @@ alias muxc='tmuxinator start -p claude'
 # Start Claude TYPO3 development session (current folder name)  
 alias muxct='tmuxinator start -p claude-typo3'
 
-# Interactive session manager for existing sessions
+# Interactive tmuxinator project starter
 _muxs() {
-  local session
-  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --prompt="Select tmux session: " --height=40% --reverse)
+  local project
+  project=$(tmuxinator list | tail -n +2 | tr ' ' '\n' | grep -v '^$' | fzf --prompt="Select tmuxinator project to start: " --height=40% --reverse)
   
-  if [ -n "$session" ]; then
-    tmux attach-session -t "$session"
+  if [ -n "$project" ]; then
+    tmuxinator start "$project"
   fi
 }
 
