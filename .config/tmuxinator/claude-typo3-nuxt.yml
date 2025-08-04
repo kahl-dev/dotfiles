@@ -12,7 +12,8 @@ windows:
         - nvim
   - build:
       panes:
-        - make install
+        - cd nuxt && make install && make dev
+        - make install && cd tpl && make dev
   - git:
       panes:
         - git

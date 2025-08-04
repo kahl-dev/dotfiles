@@ -177,20 +177,29 @@ run_with_timeout() {
         "LC_ALL=C"
         "FNM_MULTISHELL_PATH=${FNM_MULTISHELL_PATH:-}"
         "FNM_DIR=${FNM_DIR:-}"
+        "NODE_PATH=${NODE_PATH:-}"
+        "PWD=$(pwd)"
     )
     
-    # Properly escape all command arguments to prevent injection
-    local -a escaped_cmd=()
-    for arg in "${cmd[@]}"; do
-        escaped_cmd+=("$(printf '%q' "$arg")")
-    done
+    # Handle npx commands specially - they need to be split properly
+    local final_cmd=()
+    if [[ "${cmd[0]}" == *"npx --prefix"* ]]; then
+        # Split npx command into proper arguments
+        read -ra final_cmd <<< "${cmd[0]}"
+        # Add remaining arguments
+        for ((i=1; i<${#cmd[@]}; i++)); do
+            final_cmd+=("${cmd[i]}")
+        done
+    else
+        final_cmd=("${cmd[@]}")
+    fi
     
     # Use timeout command with restricted environment if available
     if command -v timeout >/dev/null 2>&1; then
-        env -i "${env_vars[@]}" timeout "$timeout_seconds" bash -c "${escaped_cmd[*]}" 2>&1
+        env -i "${env_vars[@]}" timeout "$timeout_seconds" "${final_cmd[@]}" 2>&1
     else
         # Fallback for systems without timeout command
-        env -i "${env_vars[@]}" bash -c "${escaped_cmd[*]}" 2>&1
+        env -i "${env_vars[@]}" "${final_cmd[@]}" 2>&1
     fi
 }
 
@@ -210,6 +219,80 @@ sanitize_for_json() {
     
     # Use printf to safely escape the string for jq
     printf '%s' "$input"
+}
+
+# Function to find package.json with specific dependency
+find_package_json_with_dependency() {
+    local file_path="$1"
+    local dependency="$2"
+    local dir
+    dir="$(dirname "$file_path")"
+    
+    local search_dir="$dir"
+    while [[ "$search_dir" != "/" ]]; do
+        if [[ -f "$search_dir/package.json" ]]; then
+            # Check if package.json contains the dependency
+            if jq -e --arg dep "$dependency" '.dependencies[$dep] // .devDependencies[$dep] // .peerDependencies[$dep]' "$search_dir/package.json" >/dev/null 2>&1; then
+                echo "$search_dir"
+                return 0
+            fi
+        fi
+        search_dir="$(dirname "$search_dir")"
+    done
+    return 1
+}
+
+# Function to get project's Node.js version from various sources
+get_project_node_version() {
+    local project_dir="$1"
+    
+    # Check .nvmrc
+    if [[ -f "$project_dir/.nvmrc" ]]; then
+        tr -d '\n\r' < "$project_dir/.nvmrc"
+        return 0
+    fi
+    
+    # Check .node-version
+    if [[ -f "$project_dir/.node-version" ]]; then
+        tr -d '\n\r' < "$project_dir/.node-version"
+        return 0
+    fi
+    
+    # Check package.json engines.node
+    if [[ -f "$project_dir/package.json" ]]; then
+        local node_version
+        node_version=$(jq -r '.engines.node // empty' "$project_dir/package.json" 2>/dev/null)
+        if [[ -n "$node_version" && "$node_version" != "null" ]]; then
+            echo "$node_version"
+            return 0
+        fi
+    fi
+    
+    return 1
+}
+
+# Function to ensure correct Node.js version is being used
+setup_node_environment() {
+    local project_dir="$1"
+    local required_node_version
+    
+    if required_node_version=$(get_project_node_version "$project_dir"); then
+        echo -e "${BLUE}📦 Project requires Node.js version: $required_node_version${NC}"
+        
+        # If fnm is available, try to use the correct version
+        if command -v fnm >/dev/null 2>&1; then
+            if fnm use "$required_node_version" >/dev/null 2>&1; then
+                echo -e "${GREEN}✓ Using Node.js version: $(node --version)${NC}"
+                return 0
+            else
+                echo -e "${YELLOW}⚠ fnm cannot use Node.js $required_node_version, using current: $(node --version)${NC}"
+            fi
+        else
+            echo -e "${YELLOW}⚠ fnm not found, using system Node: $(node --version)${NC}"
+        fi
+    fi
+    
+    return 1
 }
 
 # Function to find the nearest ESLint config with caching
@@ -269,6 +352,7 @@ find_eslint_config() {
 # Function to check if ESLint is available in a directory with caching
 check_eslint_available() {
     local dir="$1"
+    local file_path="$2"
     local cache_key="eslint:$dir"
     
     # Check cache first
@@ -281,15 +365,38 @@ check_eslint_available() {
         fi
     fi
     
-    # Check for local eslint
+    # Find project root with eslint dependency
+    local project_dir
+    if project_dir=$(find_package_json_with_dependency "$file_path" "eslint"); then
+        # Setup Node environment for this project
+        setup_node_environment "$project_dir" >/dev/null 2>&1 || true
+        
+        # Prefer npx to respect project version
+        if [[ -f "$project_dir/package.json" ]]; then
+            # Use npx from the project directory to ensure correct version
+            local eslint_cmd="npx --prefix $project_dir eslint"
+            TOOL_AVAILABILITY_CACHE[$cache_key]="$eslint_cmd"
+            
+            # Log version information for debugging
+            local version_info
+            version_info=$(command cd "$project_dir" && npx eslint --version 2>/dev/null || echo "unknown")
+            echo -e "${BLUE}📋 Using ESLint version: $version_info (from $project_dir)${NC}" >&2
+            
+            echo "$eslint_cmd"
+            return 0
+        fi
+    fi
+    
+    # Fallback: Check for local eslint binary
     if [[ -f "$dir/node_modules/.bin/eslint" ]]; then
         TOOL_AVAILABILITY_CACHE[$cache_key]="$dir/node_modules/.bin/eslint"
         echo "$dir/node_modules/.bin/eslint"
         return 0
     fi
     
-    # Check for global eslint
+    # Fallback: Check for global eslint (with warning)
     if command -v eslint &> /dev/null; then
+        echo -e "${YELLOW}⚠ Using global ESLint (project version preferred)${NC}" >&2
         TOOL_AVAILABILITY_CACHE[$cache_key]="eslint"
         echo "eslint"
         return 0
@@ -347,6 +454,7 @@ find_tsconfig() {
 check_typescript_available() {
     local dir="$1"
     local is_vue_file="$2"
+    local file_path="$3"
     local cache_key="typescript:$dir:$is_vue_file"
     
     # Check cache first
@@ -359,7 +467,57 @@ check_typescript_available() {
         fi
     fi
     
-    # For Vue files, prefer vue-tsc
+    # Find project root with typescript dependency
+    local project_dir
+    local dep_name="typescript"
+    if [[ "$is_vue_file" == "true" ]]; then
+        # For Vue files, also check for vue-tsc
+        if project_dir=$(find_package_json_with_dependency "$file_path" "vue-tsc"); then
+            dep_name="vue-tsc"
+        elif project_dir=$(find_package_json_with_dependency "$file_path" "typescript"); then
+            dep_name="typescript"
+        fi
+    else
+        project_dir=$(find_package_json_with_dependency "$file_path" "typescript")
+    fi
+    
+    if [[ -n "$project_dir" ]]; then
+        # Setup Node environment for this project
+        setup_node_environment "$project_dir" >/dev/null 2>&1 || true
+        
+        # Use npx to respect project version, but verify installation first
+        if [[ "$is_vue_file" == "true" && "$dep_name" == "vue-tsc" ]]; then
+            # Verify vue-tsc is actually available before proceeding
+            if command cd "$project_dir" && npx vue-tsc --version >/dev/null 2>&1; then
+                local tsc_cmd="npx --prefix $project_dir vue-tsc"
+                TOOL_AVAILABILITY_CACHE[$cache_key]="$tsc_cmd"
+                
+                # Log version information for debugging
+                local version_info
+                version_info=$(command cd "$project_dir" && npx vue-tsc --version 2>/dev/null || echo "unknown")
+                echo -e "${BLUE}📋 Using vue-tsc version: $version_info (from $project_dir)${NC}" >&2
+                
+                echo "$tsc_cmd"
+                return 0
+            fi
+        else
+            # Verify tsc is actually available before proceeding
+            if command cd "$project_dir" && npx tsc --version >/dev/null 2>&1; then
+                local tsc_cmd="npx --prefix $project_dir tsc"
+                TOOL_AVAILABILITY_CACHE[$cache_key]="$tsc_cmd"
+                
+                # Log version information for debugging
+                local version_info
+                version_info=$(command cd "$project_dir" && npx tsc --version 2>/dev/null || echo "unknown")
+                echo -e "${BLUE}📋 Using TypeScript version: $version_info (from $project_dir)${NC}" >&2
+                
+                echo "$tsc_cmd"
+                return 0
+            fi
+        fi
+    fi
+    
+    # Fallback: For Vue files, prefer vue-tsc
     if [[ "$is_vue_file" == "true" ]]; then
         # Check for local vue-tsc
         if [[ -f "$dir/node_modules/.bin/vue-tsc" ]]; then
@@ -370,21 +528,23 @@ check_typescript_available() {
         
         # Check for global vue-tsc
         if command -v vue-tsc &> /dev/null; then
+            echo -e "${YELLOW}⚠ Using global vue-tsc (project version preferred)${NC}" >&2
             TOOL_AVAILABILITY_CACHE[$cache_key]="vue-tsc"
             echo "vue-tsc"
             return 0
         fi
     fi
     
-    # Check for local tsc
+    # Fallback: Check for local tsc
     if [[ -f "$dir/node_modules/.bin/tsc" ]]; then
         TOOL_AVAILABILITY_CACHE[$cache_key]="$dir/node_modules/.bin/tsc"
         echo "$dir/node_modules/.bin/tsc"
         return 0
     fi
     
-    # Check for global tsc
+    # Fallback: Check for global tsc
     if command -v tsc &> /dev/null; then
+        echo -e "${YELLOW}⚠ Using global TypeScript (project version preferred)${NC}" >&2
         TOOL_AVAILABILITY_CACHE[$cache_key]="tsc"
         echo "tsc"
         return 0
@@ -456,7 +616,7 @@ check_makefile() {
     fi
     
     # Run make dry-run to check syntax with timeout
-    if output=$(cd "$temp_dir" && run_with_timeout "$COMMAND_TIMEOUT" make -n); then
+    if output=$(command cd "$temp_dir" && run_with_timeout "$COMMAND_TIMEOUT" make -n); then
         echo -e "${GREEN}✓ $file_name passed syntax checking${NC}"
         return 0
     else
@@ -580,7 +740,7 @@ check_typescript() {
     fi
     
     # Check if TypeScript compiler is available
-    if ! tsc_cmd=$(check_typescript_available "$config_dir" "$is_vue_file"); then
+    if ! tsc_cmd=$(check_typescript_available "$config_dir" "$is_vue_file" "$absolute_path"); then
         echo -e "${YELLOW}⚠ TypeScript compiler not found for $file_path${NC}"
         if [[ "$is_vue_file" == "true" ]]; then
             echo -e "${YELLOW}  Install: cd $config_dir && npm install --save-dev vue-tsc typescript${NC}"
@@ -593,11 +753,20 @@ check_typescript() {
     # Run TypeScript type checking
     local output
     
-    # Change to the config directory
-    cd "$config_dir" 2>/dev/null || true
+    # Calculate relative path from config directory for better TypeScript resolution
+    local file_path_for_tsc
+    if [[ "$absolute_path" = "$config_dir"/* ]]; then
+        # File is within the config directory - use relative path
+        file_path_for_tsc="${absolute_path#"$config_dir"/}"
+        # Change to config directory for proper context
+        command cd "$config_dir" 2>/dev/null || true
+    else
+        # File is outside config directory - use absolute path and don't change directory
+        file_path_for_tsc="$absolute_path"
+    fi
     
     # Run tsc with --noEmit to only check types
-    if output=$("$tsc_cmd" --noEmit "$absolute_path" 2>&1); then
+    if output=$(run_with_timeout "$COMMAND_TIMEOUT" "$tsc_cmd" --noEmit "$file_path_for_tsc"); then
         echo -e "${GREEN}✓ $file_name passed type checking${NC}"
         return 0
     else
@@ -690,8 +859,8 @@ process_eslint_batch() {
     
     echo -e "${BLUE}→ Batch checking ${#file_array[@]} files in $config_dir${NC}"
     
-    # Check if ESLint is available
-    if ! eslint_cmd=$(check_eslint_available "$config_dir"); then
+    # Check if ESLint is available (use first file for dependency checking)
+    if ! eslint_cmd=$(check_eslint_available "$config_dir" "${file_array[0]}"); then
             echo -e "${RED}❌ ESLint not installed in $config_dir${NC}" >&2
             echo -e "${RED}   To fix: cd $config_dir && npm install --save-dev eslint${NC}" >&2
             BLOCKING_ERRORS+=("ESLint not installed. Run: cd $config_dir && npm install --save-dev eslint")
@@ -726,7 +895,7 @@ process_eslint_batch() {
         
         # Run ESLint on all files at once with timeout
         local output
-        cd "$config_dir" 2>/dev/null || true
+        command cd "$config_dir" 2>/dev/null || true
         if output=$(run_with_timeout "$COMMAND_TIMEOUT" "$eslint_cmd" "${relative_paths[@]}"); then
             echo -e "${GREEN}✓ All ${#file_array[@]} files passed linting${NC}"
         else
