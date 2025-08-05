@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # File Type Tracker Hook
 # Tracks file extensions that Claude edits for later linter analysis

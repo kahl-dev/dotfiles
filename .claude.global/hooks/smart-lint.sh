@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Smart Lint Hook for JavaScript, TypeScript, Vue, Shell, and Makefile files
 # This hook runs ESLint on JS/TS/Vue files, ShellCheck on shell scripts, and syntax checking on Makefiles, providing clear feedback to Claude
