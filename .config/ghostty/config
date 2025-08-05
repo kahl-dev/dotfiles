@@ -1,7 +1,7 @@
 # https://ghostty.org/docs
 
 # fonts
-font-size = 12
+font-size = 16
 font-style = medium
 bold-is-bright = true
 theme = dark:catppuccin-mocha,light:catppuccin-latte
