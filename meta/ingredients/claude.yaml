@@ -19,6 +19,11 @@
     ~/.claude/CLAUDE.md: ./.claude.global/GLOBAL.CLAUDE.md
 
 - shell:
+    - description: "Create screenshots directory for Claude"
+      command: |
+        mkdir -p ~/.screenshots
+        echo "📸 Created ~/.screenshots directory for Claude Code"
+
     - description: "Set secure permissions on Claude configuration"
       command: |
         # Set restrictive permissions on .claude.global directory and contents

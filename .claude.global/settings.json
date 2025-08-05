@@ -140,7 +140,7 @@
       "Bash(make dev:*)"
     ],
     "additionalDirectories": [
-      "/home/kahl/.screenshots"
+      "~/.screenshots"
     ]
   },
   "model": "sonnet",
