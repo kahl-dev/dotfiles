@@ -20,32 +20,5 @@
 
 - shell:
     - description: "Create screenshots directory for Claude"
-      command: |
-        mkdir -p ~/.screenshots
-        echo "📸 Created ~/.screenshots directory for Claude Code"
-
-    - description: "Set secure permissions on Claude configuration"
-      command: |
-        # Set restrictive permissions on .claude.global directory and contents
-        chmod 700 ~/.dotfiles/.claude.global
-        find ~/.dotfiles/.claude.global -type f -exec chmod 600 {} \;
-        find ~/.dotfiles/.claude.global -type d -exec chmod 700 {} \;
-        echo "🔒 Set secure permissions on .claude.global (owner only)"
-
-    - description: "Verify Claude configuration setup"
-      command: |
-        echo "🎉 Claude configuration installed successfully!"
-        echo ""
-        echo "📁 Claude directory: ~/.claude"
-        echo "🔗 Symlinks created:"
-        echo "   agents     -> .claude.global/agents"
-        echo "   commands   -> .claude.global/commands"
-        echo "   hooks      -> .claude.global/hooks" 
-        echo "   instructions -> .claude.global/instructions"
-        echo "   shared     -> .claude.global/shared"
-        echo "   settings.json -> .claude.global/settings.json"
-        echo "   CLAUDE.md -> .claude.global/GLOBAL.CLAUDE.md"
-        echo ""
-        echo "🔒 Permissions: Owner only (700/600)"
-        echo "✅ Claude Code configuration is ready to use"
+      command: mkdir -p ~/.screenshots
 
