@@ -2,6 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "includeCoAuthoredBy": false,
   "permissions": {
+    "defaultMode": "acceptEdits",
     "allow": [
       "Bash(bun:*)",
       "Bash(cargo:*)",
