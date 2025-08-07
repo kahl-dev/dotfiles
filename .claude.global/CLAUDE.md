@@ -114,6 +114,31 @@ cat ~/.claude/settings.json | jq '.'  # Validate settings file
 
 ### Slash Commands & Custom Prompts
 
+#### 📋 Command Organization Structure
+
+**Primary Categories:**
+- `/lia:*` - LIA/work commands (Jira operations, company development workflows)
+- `/user:*` - Personal commands (productivity tools, analysis, personal development)
+- `/claude:*` - System commands (memory management, prompt configuration)
+
+**LIA/Work Commands (`/lia:`):**
+- `jira/` - Jira operations (fetch-issue, estimate)
+- `development/` - Company development workflows (commit)
+
+**Personal Commands (`/user:`):**
+- `productivity/` - Personal productivity tools (screenshots, changelog, docs, todo)
+- `development/` - Personal development commands (check, commit)
+- `analysis/` - Code analysis and review tools (analyze, review)
+
+**System Commands (`/claude:`):**
+- Core Claude configuration (memory, prompt)
+
+**Usage Examples:**
+- `/lia:jira:fetch-issue PROJ-123` - Fetch complete Jira ticket data
+- `/user:productivity:screenshots 3` - Show last 3 screenshots
+- `/user:development:commit` - Personal commit workflow
+- `/claude:memory` - Edit Claude memory
+
 #### 📚 Documentation & Research
 
 Before creating or modifying commands:

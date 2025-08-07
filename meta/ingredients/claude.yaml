@@ -19,6 +19,13 @@
     ~/.claude/CLAUDE.md: ./.claude.global/GLOBAL.CLAUDE.md
 
 - shell:
-    - description: "Create screenshots directory for Claude"
-      command: mkdir -p ~/.screenshots
+    - description: "Create AI workspace directories for Claude"
+      command: |
+        mkdir -p ~/tmp/ai/screenshots \
+                 ~/tmp/ai/jira \
+                 ~/tmp/ai/exports \
+                 ~/tmp/ai/figma \
+                 ~/tmp/ai/downloads \
+                 ~/tmp/ai/analysis \
+                 ~/tmp/ai/cache
 

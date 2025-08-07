@@ -87,3 +87,9 @@ These files are symlinked to `~/.claude/` via dotbot configuration for version c
   - Behind an htaccess authentication
   - When using tools like Playwright, MCP, or other calls on Linux typo3, use the `BURRITODEV_HTACCESS_USER` and `BURRITODEV_HTACCESS_PW` environment variables to access the URLs
 
+## 📚 Claude Code System Knowledge
+
+This section imports comprehensive documentation about Claude Code features, system configuration, hooks, and slash commands.
+
+@.claude.global/CLAUDE.md
+
