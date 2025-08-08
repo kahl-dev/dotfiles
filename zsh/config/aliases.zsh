@@ -115,6 +115,11 @@ if command_exists nvim; then
   alias vimdiff='nvim -d'
 fi
 
+# Cursor
+if command_exists cursor-agent; then
+  alias cursor='cursor-agent'
+fi
+
 # Bat
 if command_exists bat; then
   alias cat='bat --paging=never'

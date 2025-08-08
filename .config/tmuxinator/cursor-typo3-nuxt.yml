@@ -1,0 +1,19 @@
+name: <%= File.basename(Dir.pwd).gsub(/^\./, '') %>
+root: <%= Dir.pwd %>
+
+startup_window: cursor
+
+windows:
+  - cursor:
+      panes:
+        - cursor
+  - nvim:
+      panes:
+        - nvim
+  - build:
+      panes:
+        - cd nuxt && make install && make dev
+        - make install && cd tpl && make dev
+  - git:
+      panes:
+        - git
