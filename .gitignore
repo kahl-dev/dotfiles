@@ -52,4 +52,9 @@ alfred_scripts/script.log
 # Zed local settings with sensitive SSH configs
 .config/zed/settings.local.json
 
+# Cursor IDE session data
+.cursor/prompt_history.json
+.cursor/argv.json
+*.rfile
+
 logs
