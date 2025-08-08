@@ -310,10 +310,9 @@
         "play_sound_when_agent_done": true,
         "always_allow_tool_actions": true,
         "default_model": {
-            "provider": "anthropic",
-            "model": "claude-sonnet-4-latest"
+            "provider": "openai",
+            "model": "gpt-5"
         },
-        "version": "2"
     },
 
     // 11. Telemetry & metrics
