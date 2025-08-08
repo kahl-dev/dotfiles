@@ -1,0 +1,34 @@
+{
+  "mcpServers": {
+    "Playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"],
+      "env": {}
+    },
+    "Context7": {
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {}
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "jira": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@atlassian-dc-mcp/jira"
+      ],
+      "env": {
+        "JIRA_HOST": "louis-internet.atlassian.net",
+        "JIRA_API_TOKEN": "${JIRA_CLAUDE_KEY}"
+      }
+    }
+  }
+}
