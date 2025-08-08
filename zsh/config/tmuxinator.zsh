@@ -29,11 +29,7 @@ _check_tmux_deps() {
 # Tmuxinator shortcut alias
 alias mux='tmuxinator'
 
-# Start simple Claude session (current folder name)
-alias muxc='tmuxinator start -p claude'
-
-# Start Claude TYPO3 development session (current folder name)  
-alias muxct='tmuxinator start -p claude-typo3'
+# (Removed) muxc/muxct aliases per user request
 
 # Interactive tmuxinator project starter
 _muxs() {

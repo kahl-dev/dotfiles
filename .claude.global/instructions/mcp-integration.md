@@ -5,6 +5,7 @@
 - Always check before implementing: `mcp__context7__resolve-library-id`
 - Get latest docs: `mcp__context7__get-library-docs`
 - Use before adding dependencies or implementing library features
+- MUST check Context7 for up-to-date documentation when working with 3rd party libraries, packages, frameworks
 
 **GitHub/GitLab - CODE DISCOVERY:**
 
@@ -18,6 +19,7 @@
 - Navigate: `mcp__playwright__browser_navigate`
 - Interact: click/type/select_option with element descriptions
 - Debug: `mcp__playwright__browser_console_messages`
+- MUST use Playwright MCP server when making visual changes to front-end to check your work
 
 **Figma - DESIGN INTEGRATION:**
 

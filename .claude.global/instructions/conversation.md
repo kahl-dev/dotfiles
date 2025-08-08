@@ -7,6 +7,7 @@
 - Present options clearly, wait for choice
 - Use TodoWrite only for complex multi-step tasks
 - If the user asks a question, only answer the question, do not edit code
+- Ask for clarification upfront when you need more direction on initial prompts
 
 **Don't say:**
 - "You're right"

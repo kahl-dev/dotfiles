@@ -79,6 +79,18 @@ These files are symlinked to `~/.claude/` via dotbot configuration for version c
 
 @instructions/efficiency.md
 
+## 🎨 Visual Development
+
+- Use Playwright MCP server when making visual changes to front-end to check your work
+- Always validate visual changes with browser snapshots
+- Test user interactions after implementing UI components
+
+## 🧭 Guidance & Clarification
+
+- Ask for clarification upfront when you need more direction on initial prompts
+- Present clear options and wait for user choice when approach is ambiguous
+- Request specific requirements when user requests are too broad
+
 ## 🖥️ Server Environments
 
 - When working on a "Linux typo3" remove server, note that it is:
