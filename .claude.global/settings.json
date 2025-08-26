@@ -146,7 +146,7 @@
       "~/tmp/ai"
     ]
   },
-  "model": "sonnet",
+  "model": "opusplan",
   "hooks": {
     "PreToolUse": [
       {
@@ -196,6 +196,11 @@
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 0
   },
   "feedbackSurveyState": {
     "lastShownTime": 1754119245892
