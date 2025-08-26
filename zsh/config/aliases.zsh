@@ -837,6 +837,7 @@ alias mcc='make clearcache'
 # Claude aliases
 alias cc='claude -c'
 alias ccu='npx ccusage'
+alias cyolo='claude --dangerously-skip-permissions'
 
 # ############################## #
 # Dotfiles
