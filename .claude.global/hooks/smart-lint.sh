@@ -18,6 +18,7 @@ declare -A ESLINT_CONFIG_CACHE
 declare -A TYPESCRIPT_CONFIG_CACHE  
 declare -A TOOL_AVAILABILITY_CACHE
 declare -A ABSOLUTE_PATH_CACHE
+declare -A NUXT_CONFIG_CACHE
 
 # File to store linting errors from all tools
 LINT_ERRORS_FILE="$HOME/.claude/smart_lint_errors.json"
@@ -450,6 +451,46 @@ find_tsconfig() {
     return 1
 }
 
+# Function to find the nearest nuxt.config.* file with caching
+find_nuxt_config() {
+    local file_path="$1"
+    local dir
+    dir="$(dirname "$file_path")"
+    
+    # Check cache first
+    if [[ -n "${NUXT_CONFIG_CACHE[$dir]:-}" ]]; then
+        if [[ "${NUXT_CONFIG_CACHE[$dir]}" == "NOT_FOUND" ]]; then
+            return 1
+        else
+            echo "${NUXT_CONFIG_CACHE[$dir]}"
+            return 0
+        fi
+    fi
+    
+    # Skip if file is in .nuxt directory
+    if [[ "$file_path" =~ /\.nuxt/ ]]; then
+        NUXT_CONFIG_CACHE[$dir]="NOT_FOUND"
+        return 1
+    fi
+    
+    local search_dir="$dir"
+    while [[ "$search_dir" != "/" ]]; do
+        # Check for various Nuxt config files
+        for config in "nuxt.config.ts" "nuxt.config.js" "nuxt.config.mjs" "nuxt.config.cjs"; do
+            if [[ -f "$search_dir/$config" ]]; then
+                NUXT_CONFIG_CACHE[$dir]="$search_dir"
+                echo "$search_dir"
+                return 0
+            fi
+        done
+        search_dir="$(dirname "$search_dir")"
+    done
+    
+    # Cache negative result
+    NUXT_CONFIG_CACHE[$dir]="NOT_FOUND"
+    return 1
+}
+
 # Function to check if TypeScript compiler is available with caching
 check_typescript_available() {
     local dir="$1"
@@ -730,6 +771,59 @@ check_typescript() {
     local absolute_path
     absolute_path="$(get_absolute_path "$file_path")"
     
+    # Check if this file is in a Nuxt project
+    if nuxt_root=$(find_nuxt_config "$absolute_path"); then
+        echo -e "${BLUE}→ Detected Nuxt project for $file_name${NC}"
+        
+        # Check if .nuxt directory exists
+        if [[ -d "$nuxt_root/.nuxt" ]]; then
+            echo -e "${BLUE}→ Running Nuxt type checking for $file_name${NC}"
+            
+            # Run nuxi typecheck
+            local output
+            # Change to Nuxt root for proper context
+            command cd "$nuxt_root" 2>/dev/null || true
+            
+            if output=$(run_with_timeout "$COMMAND_TIMEOUT" npx nuxi typecheck 2>&1); then
+                echo -e "${GREEN}✓ $file_name passed Nuxt type checking${NC}"
+                return 0
+            else
+                # Check if the error is related to the current file
+                if echo "$output" | grep -q "$file_name"; then
+                    echo -e "${RED}❌ $file_name has type errors:${NC}" >&2
+                    
+                    # Extract relevant errors for this file
+                    local relevant_errors
+                    relevant_errors=$(echo "$output" | grep -A 2 -B 2 "$file_name" | head -40)
+                    echo "$relevant_errors" >&2
+                    
+                    # Store error for JSON output
+                    local session_id="${CLAUDE_SESSION_ID:-unknown}"
+                    local error_json
+                    error_json=$(jq -n \
+                        --arg file "$(sanitize_for_json "$absolute_path")" \
+                        --arg errors "$(sanitize_for_json "Nuxt TypeScript: $relevant_errors")" \
+                        --arg session "$(sanitize_for_json "$session_id")" \
+                        '{file_path: $file, errors: $errors, session_id: $session}')
+                    ERROR_ENTRIES+=("$error_json")
+                    
+                    BLOCKING_ERRORS+=("$file_name has Nuxt TypeScript type errors")
+                    ERRORS_FOUND=true
+                    return 1
+                else
+                    # Errors exist but not in this file
+                    echo -e "${YELLOW}⚠ Nuxt project has type errors (not in $file_name)${NC}"
+                    return 0
+                fi
+            fi
+        else
+            echo -e "${YELLOW}⚠ Skipping TypeScript for $file_name (.nuxt not built yet)${NC}"
+            echo -e "${YELLOW}  Run 'npm run dev' or 'npm run build' to enable type checking${NC}"
+            return 0  # Don't block on this
+        fi
+    fi
+    
+    # Not a Nuxt project - continue with regular TypeScript checking
     echo -e "${BLUE}→ Type checking $file_name${NC}"
     
     # Find the nearest tsconfig.json
@@ -966,12 +1060,14 @@ unset ESLINT_CONFIG_CACHE
 unset TYPESCRIPT_CONFIG_CACHE
 unset TOOL_AVAILABILITY_CACHE
 unset ABSOLUTE_PATH_CACHE
+unset NUXT_CONFIG_CACHE
 
 # Reinitialize cache arrays
 declare -A ESLINT_CONFIG_CACHE
 declare -A TYPESCRIPT_CONFIG_CACHE
 declare -A TOOL_AVAILABILITY_CACHE
 declare -A ABSOLUTE_PATH_CACHE
+declare -A NUXT_CONFIG_CACHE
 
 # Early exit optimization: check if any tools are available
 TOOLS_AVAILABLE=false
