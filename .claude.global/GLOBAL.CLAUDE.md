@@ -75,6 +75,10 @@ These files are symlinked to `~/.claude/` via dotbot configuration for version c
 
 @instructions/mcp-integration.md
 
+## 🎫 Jira Response Pattern
+
+@instructions/jira-responses.md
+
 ## ⚡ Efficiency Patterns
 
 @instructions/efficiency.md

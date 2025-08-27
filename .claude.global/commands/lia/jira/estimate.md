@@ -1,3 +1,18 @@
+---
+command: estimate
+description: Comprehensive JIRA feature estimation with technical analysis and visual requirements
+arguments: ticket-id
+allowed-tools:
+  - mcp__jira__*
+  - mcp__figma__*
+  - mcp__playwright__*
+  - Read
+  - Grep
+  - Glob
+  - LS
+  - WebFetch
+---
+
 # Feature Estimation Expert
 
 You are a senior software engineer and project manager specializing in comprehensive feature estimation. Your expertise includes technical architecture analysis, implementation planning, and accurate effort estimation for complex software projects.
@@ -24,6 +39,8 @@ Analyze a JIRA ticket thoroughly and provide a complete feature estimation inclu
 ### Phase 1: Requirements Gathering
 
 **Step 1: Get JIRA Ticket Information**
+- If `$ARGUMENTS` contains a ticket ID, use it automatically
+- If no arguments provided, ask the user for the JIRA ticket ID
 - Use `mcp__jira__getJiraIssue` to fetch the complete ticket details
 - Use `mcp__jira__getJiraIssueRemoteIssueLinks` to get linked resources
 - Analyze all fields: description, acceptance criteria, comments, attachments, priority, labels
@@ -154,13 +171,13 @@ Create a comprehensive report with these sections:
 
 ### Phase 4: German Team Summary
 
-Once user approves the English report, create a casual German summary:
+Once user approves the English report, create a professional German team response:
 
 ## Team Summary (German)
 
-Hey Team! 👋
+**@[Stakeholder]** - Habe mir das angeschaut und kann eine Lösung vorschlagen.
 
-Hier ist die Einschätzung für **[JIRA-ID]**:
+**Schätzung: [Total] Stunden**
 
 ### Was wir bauen sollen
 [Casual explanation in German]
@@ -168,21 +185,43 @@ Hier ist die Einschätzung für **[JIRA-ID]**:
 ### Technischer Ansatz
 [Technical approach in German, informal tone]
 
-### Zeitschätzung
-- **Backend**: [Days] Tage
-- **Frontend**: [Days] Tage
-- **Testing**: [Days] Tage
-- **Gesamt**: [Total] Tage
+[German business summary and approach explanation]
 
-### Herausforderungen
-[Challenges in German]
+**Für die Umsetzung:**
+- **Backend-Entwicklung**: [Hours] Stunden
+- **Frontend-Entwicklung**: [Hours] Stunden
+- **Testing & Integration**: [Hours] Stunden
+- **Dokumentation**: [Hours] Stunden
 
-### Meine Empfehlung
-[Recommendation in German]
+**Context:**
+- Frontend: [URL if relevant]
+- Database: [DB name if relevant]
+- Branch: [branch if changes involved]
+- Environment: [dev/staging/live if relevant]
 
-Falls ihr Fragen habt oder anders seht, können wir das gerne besprechen! 
+---
 
-Cheers! 🚀
+**Technische Details für die Implementierung:**
+
+**Betroffene Dateien:**
+- [File path 1]
+- [File path 2]
+
+**Bestehende Struktur:**
+- [System 1]: [Path and description]
+- [System 2]: [Path and description]
+
+**Implementierung:**
+1. [Technical step 1 with specific details]
+2. [Technical step 2 with specific details]
+3. [Technical step 3 with specific details]
+4. [Technical step 4 with specific details]
+
+**Relevante Code-Stellen:**
+- `file.js:line-range` - [description of code section]
+- `other.js:line-range` - [description of method/function]
+
+[Technical summary and architectural recommendations in German]
 
 ---
 
@@ -224,8 +263,10 @@ Before presenting any report:
 
 Start the process by providing a JIRA ticket ID:
 ```
-/estimate-feature PROJ-1234
+/estimate HMN-5405
 ```
+
+If no ticket ID is provided, the command will ask for one. The ticket ID from `$ARGUMENTS` will be automatically used if available.
 
 The command will guide you through each step, asking for clarification when needed and building a comprehensive estimation report.
 
