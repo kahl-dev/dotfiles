@@ -29,12 +29,10 @@ brew "bruno-cli"
 brew "btop"
 # Console Matrix
 brew "cmatrix"
-# OpenAI's coding agent that runs in your terminal
-brew "codex"
-# Libraries to talk to Microsoft SQL Server and Sybase databases
-brew "freetds"
 # Network authentication protocol
 brew "krb5"
+# Libraries to talk to Microsoft SQL Server and Sybase databases
+brew "freetds"
 # C library for reading, creating, and modifying zip archives
 brew "libzip"
 # General-purpose scripting language
@@ -137,8 +135,6 @@ brew "python@3.11"
 brew "reattach-to-user-namespace"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
-# Powerful, clean, object-oriented scripting language
-brew "ruby"
 # Safe, concurrent, practical language
 brew "rust"
 # Intuitive find & replace CLI
@@ -157,6 +153,8 @@ brew "terminal-notifier"
 brew "thefuck"
 # Terminal multiplexer
 brew "tmux"
+# Manage complex tmux sessions easily
+brew "tmuxinator"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Command-line unarchiving tools supporting multiple formats
@@ -203,6 +201,8 @@ cask "betterdisplay"
 cask "blender"
 # Open source IDE for exploring and testing APIs
 cask "bruno"
+# Write, edit, and chat about your code with AI
+cask "cursor"
 # Voice and text chat software
 cask "discord"
 # Assign keys, and then decorate and label them
@@ -230,6 +230,8 @@ cask "istat-menus"
 cask "karabiner-elements"
 # Open-source keystroke visualiser
 cask "keycastr"
+# Use Vim in input fields and non input fields
+cask "kindavim"
 # Software for Logitech devices
 cask "logi-options+"
 # Multi-platform web browser
