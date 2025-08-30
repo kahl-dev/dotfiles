@@ -36,10 +36,6 @@ alfred_scripts/script.log
 .config/zed/settings_backup.json
 .config/zed/prompts/*
 
-.codex/sessions
-.codex/history.json
-.codex/update-check.json
-
 # Claude Code sensitive data
 .claude.global/projects/
 .claude.global/todos/
@@ -51,10 +47,5 @@ alfred_scripts/script.log
 
 # Zed local settings with sensitive SSH configs
 .config/zed/settings.local.json
-
-# Cursor IDE session data
-.cursor/prompt_history.json
-.cursor/argv.json
-*.rfile
 
 logs

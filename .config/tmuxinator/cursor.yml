@@ -1,7 +1,0 @@
-name: <%= File.basename(Dir.pwd).gsub(/^\./, '') %>
-root: <%= Dir.pwd %>
-
-windows:
-  - cursor:
-      panes:
-        - cursor

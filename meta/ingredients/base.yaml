@@ -34,7 +34,6 @@
       ~/.config/nvim: ./.config/nvim/
       ~/.config/starship.toml: ./.config/starship.toml
       ~/.config/yazi: ./.config/yazi/
-      ~/.codex: ./.codex
       ~/.claude: ./.claude.global
 
 - shell:
