@@ -57,8 +57,8 @@
       "Edit",
       "WebFetch",
       "Write",
-      "Context7 - resolve-library-id (MCP)(*)",
-      "Context7 - get-library-docs(*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
       "mcp__gitlab__search_repositories",
       "mcp__gitlab__get_file_contents",
       "mcp__mcp-nova__memory",
@@ -136,7 +136,7 @@
       "Bash(git push --force:*)",
       "Bash(git push -f:*)",
       "Bash(git push:*)",
-      "Bash(rm -rf: *)"
+      "Bash(rm -rf:*)"
     ],
     "defaultMode": "acceptEdits",
     "additionalDirectories": ["~/tmp/ai"]
