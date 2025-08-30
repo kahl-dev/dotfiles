@@ -1,6 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "includeCoAuthoredBy": false,
+  "env": {
+    "BASH_DEFAULT_TIMEOUT_MS": "600000",
+    "BASH_MAX_TIMEOUT_MS": "1800000"
+  },
   "permissions": {
     "allow": [
       "Bash(bun:*)",
@@ -155,6 +159,10 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/safety-guard.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/suggest-background.sh"
           }
         ]
       }
