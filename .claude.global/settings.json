@@ -136,14 +136,7 @@
       "Bash(git push --force:*)",
       "Bash(git push -f:*)",
       "Bash(git push:*)",
-      "Bash(npm run dev:*)",
-      "Bash(npm run serve:*)",
-      "Bash(npm run start &)",
-      "Bash(npm run start:*)",
-      "Bash(rm -rf: *)",
-      "Bash(yarn run dev:*)",
-      "Bash(yarn dev:*)",
-      "Bash(make dev:*)"
+      "Bash(rm -rf: *)"
     ],
     "defaultMode": "acceptEdits",
     "additionalDirectories": [
