@@ -57,8 +57,8 @@
       "Edit",
       "WebFetch",
       "Write",
-      "context7 - resolve-library-id (MCP)(*)",
-      "context7 - get-library-docs(*)",
+      "Context7 - resolve-library-id (MCP)(*)",
+      "Context7 - get-library-docs(*)",
       "mcp__gitlab__search_repositories",
       "mcp__gitlab__get_file_contents",
       "mcp__mcp-nova__memory",
@@ -126,7 +126,7 @@
       "mcp__jira__getJiraIssueRemoteIssueLinks",
       "mcp__jira__getVisibleJiraProjects",
       "mcp__jira__getJiraProjectIssueTypesMetadata",
-      "supabase-remote - search_docs(*)",
+      "Supabase-remote - search_docs(*)",
       "Bash($HOME/.claude/shared/get-screenshots.sh:*)",
       "Read($HOME/tmp/ai/screenshots/*)",
       "Bash(fetch-jira-tickets:*)",
@@ -139,9 +139,7 @@
       "Bash(rm -rf: *)"
     ],
     "defaultMode": "acceptEdits",
-    "additionalDirectories": [
-      "~/tmp/ai"
-    ]
+    "additionalDirectories": ["~/tmp/ai"]
   },
   "model": "opusplan",
   "hooks": {
