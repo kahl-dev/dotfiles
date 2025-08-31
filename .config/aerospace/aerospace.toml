@@ -46,10 +46,6 @@ run = 'layout floating'
 [[on-window-detected]]
 if.app-name-regex-substring = 'finder'
 run = 'layout floating'
-
-[[on-window-detected]]
-if.app-name-regex-substring = 'safari'
-run = 'layout floating'
  
 [[on-window-detected]]
 if.app-name-regex-substring = 'camera'
@@ -81,6 +77,10 @@ run = ['layout floating']
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'karabiner'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'superwisper'
 run = ['layout floating']
 
 # Possible values: (qwerty|dvorak|colemak)
