@@ -18,6 +18,28 @@ Global Claude Code instructions and configuration are stored in `.claude.global/
 
 These provide consistent Claude behavior across all projects and machines.
 
+## Claude Code Performance Optimization
+
+This repository includes special optimizations for Claude Code's shell environment:
+
+### How It Works
+1. Claude Code sets `CLAUDECODE=1` environment variable when running
+2. `.zshrc` detects this (line 8) and loads only `zsh/config/claude-code.zsh`
+3. Claude gets performance-optimized tool aliases without any personal configuration
+
+### What Claude Gets
+- `grep` → ripgrep (100x faster for large searches)
+- `find` → fd (100x faster for file discovery)  
+- `sed` → sd (simpler syntax, fewer errors)
+
+### Why This Architecture
+- Claude's shell is non-interactive, so normal `.zshrc` doesn't load
+- This gives Claude exactly what benefits it (fast tools) without personal config
+- 100% guarantee Claude uses fast tools (can't accidentally use slow ones)
+
+### Maintenance
+All Claude-specific optimizations are in `zsh/config/claude-code.zsh`
+
 ## Architecture & Structure
 
 ### Core Components

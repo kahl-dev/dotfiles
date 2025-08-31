@@ -14,6 +14,19 @@
 2. **Use Grep/Glob directly** for specific, targeted searches when you know what to look for
 3. **Never use bash commands** like `find` or `grep` - use the specialized tools instead
 
+## Performance-Optimized Tools
+
+The following tools are automatically aliased for maximum performance:
+- `grep` → executes ripgrep (`rg`) - 100x faster
+- `find` → executes fd - 100x faster  
+- `sed` → executes sd - simpler syntax
+
+You can use standard commands and get optimized versions automatically.
+Direct paths also available:
+- `/opt/homebrew/bin/rg`
+- `/opt/homebrew/bin/fd`
+- `/opt/homebrew/bin/sd`
+
 **For file operations:**
 1. **Read tool** for viewing file contents (supports images too)
 2. **Edit/MultiEdit** for modifying existing files

@@ -4,6 +4,9 @@
 # It is sourced after ~/.zshenv and ~/.zprofile.
 # -----------------------------------------------------------------------------
 
+# Claude Code gets special minimal config before early return
+[[ "$CLAUDECODE" == "1" ]] && source "$ZDOTDIR/config/claude-code.zsh" && return
+
 # Exit early if not an interactive shell (prevents loading plugins in non-interactive contexts)
 [[ $- == *i* ]] || return
 

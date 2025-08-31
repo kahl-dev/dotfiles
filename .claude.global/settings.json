@@ -71,6 +71,8 @@
       "Bash(jq:*)",
       "Bash(yarn:*)",
       "Bash(pnpm:*)",
+      "Bash(fd:*)",
+      "Bash(sd:*)",
       "Bash(pip:*)",
       "Bash(python:*)",
       "Bash(python3:*)",
