@@ -83,15 +83,15 @@ claude mcp add-json -s user n8n '{
 #   "SENTRY_DSN": "$SENTRY_DSN"
 # }
 
-# claude mcp add-json -s user sentry '{
-#   "command": "npx",
-#   "args": [
-#     "-y",
-#     "@sentry/mcp-server@latest",
-#     "--access-token='$SENTRY_ACCESS_TOKEN'",
-#     "--host='$SENTRY_HOST'"
-#   ]
-# }'
+claude mcp add-json -s user sentry '{
+  "command": "npx",
+  "args": [
+    "-y",
+    "@sentry/mcp-server@latest",
+    "--access-token='$SENTRY_ACCESS_TOKEN'",
+    "--host='$SENTRY_HOST'"
+  ]
+}'
 
 # claude mcp add fetch uvx mcp-server-fetch
 # https://cloudinary.com/documentation/cloudinary_llm_mcp
