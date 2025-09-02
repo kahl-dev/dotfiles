@@ -101,11 +101,12 @@ update_session() {
   # Determine status based on action
   local new_status
   case "$action" in
-    start)     new_status="starting" ;;
-    activity)  new_status="working" ;;
-    stop)      new_status="waiting" ;;
-    end)       new_status="idle" ;;
-    *)         new_status="unknown" ;;
+    start)      new_status="starting" ;;
+    activity)   new_status="working" ;;
+    permission) new_status="asking" ;;
+    stop)       new_status="waiting" ;;
+    end)        new_status="idle" ;;
+    *)          new_status="unknown" ;;
   esac
   
   # Check if session exists

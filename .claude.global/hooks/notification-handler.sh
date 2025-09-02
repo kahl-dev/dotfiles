@@ -117,6 +117,12 @@ handle_notification() {
 
 echo -e "${GREEN}🔔 Notification handler processing...${NC}"
 
+# Update session status to show permission request
+track_session_path="$HOME/.claude.global/hooks/track-session.sh"
+if [[ -x "$track_session_path" ]]; then
+    "$track_session_path" permission
+fi
+
 handle_notification "$@"
 
 echo -e "${GREEN}✅ Notification handler completed${NC}"

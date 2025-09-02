@@ -9,24 +9,10 @@ _cx() {
 alias ..='cd ..'
 alias ...='cd ../..'
 
-# Claude Code Dashboard System
-alias claude-dashboard='~/.claude/shared/tmux-claude-dashboard.sh'
-alias ccd='~/.claude/shared/tmux-claude-dashboard.sh'
-alias claude-dashboard-gui='~/.claude/shared/tmux-claude-dashboard-gui.sh'
-alias ccd-gui='~/.claude/shared/tmux-claude-dashboard-gui.sh'
-alias claude-dashboard-enhanced='~/.claude/shared/tmux-claude-dashboard-enhanced.sh'
-alias ccd-enhanced='~/.claude/shared/tmux-claude-dashboard-enhanced.sh'
-alias claude-monitor='~/.claude/shared/tmux-claude-monitor.sh'
-alias ccm='~/.claude/shared/tmux-claude-monitor.sh'
+# Claude Code Dashboard System - removed, files deleted
 
-# Quick access shortcuts
-alias ccd-waiting='~/.claude/shared/tmux-claude-dashboard-enhanced.sh --waiting-only'
-alias ccd-ready='~/.claude/shared/tmux-claude-dashboard-enhanced.sh --waiting-only'
-
-# Claude Code Status Bar
-alias claude-status-toggle='tmux if-shell "[ \"\$(tmux show -gv status)\" = \"2\" ]" "set -g status on" "set -g status 2"'
-alias claude-status-on='tmux set -g status 2'
-alias claude-status-off='tmux set -g status on'
+# Tmux Custom Status Bar
+alias tmux-status-reload='tmux source-file ~/.dotfiles/tmux/custom-status.conf'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias mkcd="_mkcd"
