@@ -8,6 +8,25 @@ _cx() {
 
 alias ..='cd ..'
 alias ...='cd ../..'
+
+# Claude Code Dashboard System
+alias claude-dashboard='~/.claude/shared/tmux-claude-dashboard.sh'
+alias ccd='~/.claude/shared/tmux-claude-dashboard.sh'
+alias claude-dashboard-gui='~/.claude/shared/tmux-claude-dashboard-gui.sh'
+alias ccd-gui='~/.claude/shared/tmux-claude-dashboard-gui.sh'
+alias claude-dashboard-enhanced='~/.claude/shared/tmux-claude-dashboard-enhanced.sh'
+alias ccd-enhanced='~/.claude/shared/tmux-claude-dashboard-enhanced.sh'
+alias claude-monitor='~/.claude/shared/tmux-claude-monitor.sh'
+alias ccm='~/.claude/shared/tmux-claude-monitor.sh'
+
+# Quick access shortcuts
+alias ccd-waiting='~/.claude/shared/tmux-claude-dashboard-enhanced.sh --waiting-only'
+alias ccd-ready='~/.claude/shared/tmux-claude-dashboard-enhanced.sh --waiting-only'
+
+# Claude Code Status Bar
+alias claude-status-toggle='tmux if-shell "[ \"\$(tmux show -gv status)\" = \"2\" ]" "set -g status on" "set -g status 2"'
+alias claude-status-on='tmux set -g status 2'
+alias claude-status-off='tmux set -g status on'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias mkcd="_mkcd"
@@ -914,3 +933,328 @@ alias zsh-reload-all='_zsh-reload-all'
 alias zsh-reset='_zsh-reset'
 alias dot-clean-home='_dot-clean-home'
 alias dot-run-color-test='sh $DOTFILES/scripts/run_color_test.zsh'
+
+# Claude Code background process management
+
+# Automatic cleanup of orphaned processes on shell exit
+claude-cleanup() {
+  local orphaned_processes
+  orphaned_processes=$(ps aux | grep -E "(npm.*dev|yarn.*dev|pnpm.*dev|bun.*dev|vitest.*watch|jest.*watch|pytest.*watch|docker.*up|webpack.*serve|vite.*dev|mcp-server-|context7-mcp|sentry-mcp|n8n-mcp|figma-developer-mcp)" | grep -v grep | grep -v "shell-snapshots")
+  
+  if [[ -n "$orphaned_processes" ]]; then
+    echo "🧹 Cleaning up potentially orphaned processes (including MCP servers)..."
+    echo "$orphaned_processes" | awk '{print $2}' | xargs -r kill 2>/dev/null || true
+  fi
+}
+
+# Register cleanup on shell exit
+trap claude-cleanup EXIT
+function claude-ps() {
+  local processes orphaned_processes all_processes
+  
+  # Find actively marked Claude processes
+  processes=$(ps aux | grep -E "shell-snapshots.*claude-" | grep -v grep)
+  
+  # Find potentially orphaned Claude processes (dev servers + MCP servers)
+  orphaned_processes=$(ps aux | grep -E "(npm.*dev|yarn.*dev|pnpm.*dev|bun.*dev|vitest.*watch|jest.*watch|pytest.*watch|docker.*up|webpack.*serve|vite.*dev|mcp-server-|context7-mcp|sentry-mcp|n8n-mcp|figma-developer-mcp)" | grep -v grep | grep -v "shell-snapshots")
+  
+  # Combine both sets
+  all_processes=$(printf "%s\n%s" "$processes" "$orphaned_processes" | sort -u)
+  
+  if [[ -z "$all_processes" ]]; then
+    echo "✅ No Claude Code or orphaned background processes running"
+    return
+  fi
+  
+  if [[ -n "$orphaned_processes" && -z "$processes" ]]; then
+    echo "⚠️  Found potentially orphaned processes (Claude was interrupted):"
+  elif [[ -n "$orphaned_processes" && -n "$processes" ]]; then
+    echo "🔍 Found active Claude processes + potentially orphaned ones:"
+  fi
+  
+  if command_exists fzf; then
+    echo "$all_processes" | \
+      awk '{pid=$2; $1=$2=""; cmd=substr($0,3); gsub(/.*eval '\''/, "", cmd); gsub(/'\''.*/, "", cmd); if(cmd=="") cmd=substr($0,3); printf "%s | %s\n", pid, cmd}' | \
+      fzf --header="Claude Code & Orphaned Background Processes (ESC to exit)" \
+          --preview="ps -p {1} -o pid,ppid,etime,pcpu,pmem,cmd --no-headers" \
+          --bind="enter:accept" \
+          --no-multi > /dev/null
+  else
+    echo "🤖 All Background Processes:"
+    echo "$all_processes" | while read line; do
+      pid=$(echo "$line" | awk '{print $2}')
+      cmd=$(echo "$line" | sed 's/.*eval '\''\(.*\)'\''.*/\1/')
+      [[ -z "$cmd" ]] && cmd=$(echo "$line" | awk '{$1=$2=""; print substr($0,3)}')
+      echo "  PID: $pid | CMD: $cmd"
+    done
+  fi
+}
+
+function claude-kill() {
+  local processes orphaned_processes all_processes
+  
+  # Find actively marked Claude processes
+  processes=$(ps aux | grep -E "shell-snapshots.*claude-" | grep -v grep)
+  
+  # Find potentially orphaned Claude processes (dev servers + MCP servers)
+  orphaned_processes=$(ps aux | grep -E "(npm.*dev|yarn.*dev|pnpm.*dev|bun.*dev|vitest.*watch|jest.*watch|pytest.*watch|docker.*up|webpack.*serve|vite.*dev|mcp-server-|context7-mcp|sentry-mcp|n8n-mcp|figma-developer-mcp)" | grep -v grep | grep -v "shell-snapshots")
+  
+  # Combine both sets
+  all_processes=$(printf "%s\n%s" "$processes" "$orphaned_processes" | sort -u)
+  
+  if [[ -z "$all_processes" ]]; then
+    echo "✅ No background processes to kill"
+    return
+  fi
+  
+  if command_exists fzf; then
+    local selected
+    selected=$(echo "$all_processes" | \
+      awk '{pid=$2; $1=$2=""; cmd=substr($0,3); gsub(/.*eval '\''/, "", cmd); gsub(/'\''.*/, "", cmd); if(cmd=="") cmd=substr($0,3); printf "%s | %s\n", pid, cmd}' | \
+      fzf --multi \
+          --header="Select processes to kill (TAB=multi-select, ENTER=kill, ESC=cancel)" \
+          --preview="ps -p {1} -o pid,ppid,etime,pcpu,pmem,cmd --no-headers" \
+          --bind="ctrl-a:select-all,ctrl-d:deselect-all")
+    
+    if [[ -n "$selected" ]]; then
+      echo "$selected" | awk -F' | ' '{print $1}' | xargs -r kill
+      echo "✅ Selected processes terminated"
+    else
+      echo "❌ No processes selected"
+    fi
+  else
+    echo "🛑 Kill all Claude Code background processes? (y/N)"
+    read -r response
+    if [[ "$response" =~ ^[Yy]$ ]]; then
+      echo "$processes" | awk '{print $2}' | xargs -r kill
+      echo "✅ All Claude Code background processes terminated"
+    else
+      echo "❌ Operation cancelled"
+    fi
+  fi
+}
+
+function claude-logs() {
+  local processes
+  processes=$(ps aux | grep -E "shell-snapshots.*claude-" | grep -v grep)
+  
+  if [[ -z "$processes" ]]; then
+    echo "✅ No Claude Code background processes running"
+    return
+  fi
+  
+  if command_exists fzf; then
+    local selected
+    selected=$(echo "$processes" | \
+      awk '{pid=$2; $1=$2=""; cmd=substr($0,3); gsub(/.*eval '\''/, "", cmd); gsub(/'\''.*/, "", cmd); printf "%s | %s\n", pid, cmd}' | \
+      fzf --header="Select process to view logs (ENTER=view, ESC=cancel)" \
+          --preview="ps -p {1} -o pid,ppid,etime,pcpu,pmem,cmd --no-headers" \
+          --no-multi)
+    
+    if [[ -n "$selected" ]]; then
+      local pid=$(echo "$selected" | awk -F' | ' '{print $1}')
+      local cmd=$(echo "$selected" | awk -F' | ' '{print $2}')
+      
+      echo "📋 Logs for PID $pid: $cmd"
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      
+      # Try to find associated log files or output
+      local log_files=()
+      
+      # Check common log locations
+      local temp_dir="/var/folders"
+      local claude_temp=$(find "$temp_dir" -name "*claude-*" -type f 2>/dev/null | head -10)
+      
+      if [[ -n "$claude_temp" ]]; then
+        echo "📁 Found potential log files:"
+        echo "$claude_temp" | while read logfile; do
+          if [[ -f "$logfile" && -r "$logfile" ]]; then
+            echo "   $logfile"
+          fi
+        done
+        echo ""
+        
+        # Show the most recent log file content
+        local latest_log=$(echo "$claude_temp" | head -1)
+        if [[ -f "$latest_log" && -r "$latest_log" ]]; then
+          echo "📄 Content from: $latest_log"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          tail -50 "$latest_log" 2>/dev/null || echo "❌ Could not read log file"
+        fi
+      else
+        echo "⚠️  No associated log files found."
+        echo "💡 Process output might be redirected or stored elsewhere."
+        echo ""
+        echo "🔍 Process details:"
+        ps -p "$pid" -o pid,ppid,etime,pcpu,pmem,cmd
+      fi
+      
+      echo ""
+      echo "💡 Tips:"
+      echo "   - Use 'tail -f /path/to/logfile' to follow logs in real-time"
+      echo "   - Check project directory for .log files"
+      echo "   - Some processes output to stdout/stderr directly"
+    fi
+  else
+    echo "🤖 Claude Code Background Processes:"
+    echo "$processes" | while read line; do
+      pid=$(echo "$line" | awk '{print $2}')
+      cmd=$(echo "$line" | sed 's/.*eval '\''\(.*\)'\''.*/\1/')
+      echo "  PID: $pid | CMD: $cmd"
+    done
+    echo ""
+    echo "💡 Use 'claude-logs' with fzf installed for interactive log viewing"
+  fi
+}
+
+function claude-tail() {
+  local processes
+  processes=$(ps aux | grep -E "shell-snapshots.*claude-" | grep -v grep)
+  
+  if [[ -z "$processes" ]]; then
+    echo "✅ No Claude Code background processes running"
+    return
+  fi
+  
+  if command_exists fzf; then
+    local selected
+    selected=$(echo "$processes" | \
+      awk '{pid=$2; $1=$2=""; cmd=substr($0,3); gsub(/.*eval '\''/, "", cmd); gsub(/'\''.*/, "", cmd); printf "%s | %s\n", pid, cmd}' | \
+      fzf --header="Select process to tail logs (ENTER=follow, ESC=cancel)" \
+          --preview="ps -p {1} -o pid,ppid,etime,pcpu,pmem,cmd --no-headers" \
+          --no-multi)
+    
+    if [[ -n "$selected" ]]; then
+      local pid=$(echo "$selected" | awk -F' | ' '{print $1}')
+      local cmd=$(echo "$selected" | awk -F' | ' '{print $2}')
+      
+      echo "🔄 Following logs for PID $pid: $cmd"
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      echo "💡 Press Ctrl+C to stop following"
+      echo ""
+      
+      # Get the working directory from the process
+      local process_line=$(ps -p "$pid" -o pid,cmd --no-headers 2>/dev/null)
+      local work_dir=""
+      
+      # Extract directory from Claude shell command
+      if [[ "$process_line" =~ eval\ \'command\ cd\ ([^\']+) ]]; then
+        work_dir="${BASH_REMATCH[1]}"
+      elif [[ "$process_line" =~ cd\ ([^\ ]+) ]]; then
+        work_dir="${BASH_REMATCH[1]}"
+      fi
+      
+      # Try to find actual process output by looking for child processes
+      local child_pids=$(pgrep -P "$pid" 2>/dev/null)
+      
+      if [[ -n "$child_pids" ]]; then
+        # Use script to capture output from the actual running process
+        echo "📄 Streaming live output from process..."
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        
+        # Monitor process output using strace or lsof
+        if command -v lsof >/dev/null 2>&1; then
+          # Find open files/pipes for the child processes
+          for child_pid in $child_pids; do
+            if ps -p "$child_pid" >/dev/null 2>&1; then
+              echo "Following output from child process $child_pid..."
+              # Use tail on the process's stdout if available
+              local stdout_fd="/proc/$child_pid/fd/1"
+              if [[ -e "$stdout_fd" ]]; then
+                tail -f "$stdout_fd" 2>/dev/null
+              else
+                # Alternative: monitor the working directory for log files
+                if [[ -n "$work_dir" && -d "$work_dir" ]]; then
+                  echo "Monitoring log files in: $work_dir"
+                  # Look for common log files and tail the most recent
+                  local log_files=$(find "$work_dir" -name "*.log" -o -name "*.out" -o -name ".next" -type d -exec find {} -name "*.log" \; 2>/dev/null | head -5)
+                  if [[ -n "$log_files" ]]; then
+                    local latest_log=$(echo "$log_files" | head -1)
+                    echo "Tailing: $latest_log"
+                    tail -f "$latest_log"
+                  else
+                    # Last resort: show live process status
+                    while ps -p "$child_pid" >/dev/null 2>&1; do
+                      ps -p "$child_pid" -o pid,pcpu,pmem,etime,cmd --no-headers
+                      sleep 2
+                    done
+                  fi
+                fi
+              fi
+              break
+            fi
+          done
+        fi
+      else
+        echo "❌ No active child processes found for PID $pid"
+        echo "Process might have finished or logs may be in project directory"
+        if [[ -n "$work_dir" && -d "$work_dir" ]]; then
+          echo "Working directory: $work_dir"
+          echo "Looking for recent log files..."
+          find "$work_dir" -name "*.log" -o -name "*.out" -type f -mtime -1 2>/dev/null | head -5
+        fi
+      fi
+    fi
+  else
+    # Fallback without fzf - show all processes and let user choose
+    echo "🤖 Claude Code Background Processes:"
+    echo "$processes" | while IFS= read -r line; do
+      pid=$(echo "$line" | awk '{print $2}')
+      cmd=$(echo "$line" | sed 's/.*eval '\''\(.*\)'\''.*/\1/')
+      echo "  [$pid] $cmd"
+    done
+    echo ""
+    echo -n "Enter PID to tail (or press Enter to cancel): "
+    read -r input_pid
+    
+    if [[ -n "$input_pid" && "$input_pid" =~ ^[0-9]+$ ]]; then
+      # Check if PID exists in our process list
+      if echo "$processes" | grep -q " $input_pid "; then
+        echo "🔄 Following logs for PID $input_pid"
+        echo "💡 Press Ctrl+C to stop following"
+        echo ""
+        
+        local temp_dir="/var/folders"
+        local claude_temp=$(find "$temp_dir" -name "*claude-*" -type f 2>/dev/null | sort -t- -k3 -nr | head -1)
+        
+        if [[ -n "$claude_temp" && -f "$claude_temp" && -r "$claude_temp" ]]; then
+          echo "📄 Tailing: $claude_temp"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          tail -f "$claude_temp"
+        else
+          echo "❌ No readable log file found"
+        fi
+      else
+        echo "❌ PID $input_pid not found in Claude Code processes"
+      fi
+    else
+      echo "❌ Operation cancelled"
+    fi
+  fi
+}
+
+# ############################## #
+# Terminal Recovery & Cleanup
+# ############################## #
+
+# Terminal recovery after process kill corruption
+# Based on Node.js issue #12101 - SIGKILL corruption of stdio inheritance
+function fix-term() {
+  echo "🔧 Resetting terminal state..."
+  
+  # Multiple terminal reset approaches for reliability
+  stty sane 2>/dev/null || true
+  reset -I 2>/dev/null || true
+  tput reset 2>/dev/null || true
+  
+  # Clear screen and reset cursor
+  printf '\033[2J\033[H' 2>/dev/null || true
+  
+  # Clear the screen content
+  clear 2>/dev/null || true
+  
+  echo "✅ Terminal reset completed"
+  echo "💡 If issues persist, try: 'stty sane && reset'"
+}
+
+alias ft='fix-term'  # Short alias for quick access

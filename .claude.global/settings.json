@@ -237,6 +237,28 @@
   },
   "model": "opusplan",
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/track-session.sh start",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/track-session.sh end",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash.*",
@@ -265,6 +287,16 @@
             "command": "~/.claude/hooks/smart-lint.sh"
           }
         ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command", 
+            "command": "~/.claude/hooks/track-session.sh activity",
+            "timeout": 3000
+          }
+        ]
       }
     ],
     "Notification": [
@@ -285,6 +317,11 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/enhanced-notify-wrapper.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/track-session.sh stop",
+            "timeout": 3000
           }
         ]
       }
