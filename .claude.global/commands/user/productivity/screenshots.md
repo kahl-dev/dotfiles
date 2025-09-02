@@ -1,4 +1,8 @@
-📷 Show and display recent screenshots from ~/tmp/ai/screenshots/
+---
+description: "Display recent screenshots from ~/tmp/ai/screenshots/"
+---
+
+# 📷 Show and display recent screenshots from ~/tmp/ai/screenshots/
 
 Usage: `/utils:screenshots [count]` (default: 1)
 

@@ -1,5 +1,5 @@
 ---
-description: "Comprehensive codebase architecture and quality analysis with actionable insights"
+description: "Strategic architecture analysis and long-term planning for codebases"
 ---
 
 # Codebase Architecture Analysis

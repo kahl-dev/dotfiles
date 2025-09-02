@@ -1,5 +1,5 @@
 ---
-description: 'Perform a comprehensive production readiness review of uncommitted changes'
+description: "Production readiness review for deployments and code changes"
 ---
 
 # Production Readiness Code Review

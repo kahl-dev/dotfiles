@@ -1,4 +1,8 @@
-🎫 Fetch and display complete Jira ticket information
+---
+description: "Fetch complete Jira ticket information with comments and attachments"
+---
+
+# 🎫 Fetch and display complete Jira ticket information
 
 Usage: `/user:jira:fetch-issue TICKET-ID [TICKET-ID ...]`
 
