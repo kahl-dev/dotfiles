@@ -12,7 +12,16 @@ Creates Git commits following the Conventional Commits specification with mandat
 [optional footer]
 ```
 
-**Key Difference**: Scope is **mandatory** and must be a Jira ticket ID in the format `TICKET-ID` (e.g., `LIA-123`, `PROJ-456`).
+**Alternative format** (when user explicitly requests no ticket ID):
+```
+<type>: <description>
+
+[optional body]
+
+[optional footer]
+```
+
+**Key Difference**: Scope is **mandatory** and must be a Jira ticket ID in the format `TICKET-ID` (e.g., `LIA-123`, `PROJ-456`), unless user explicitly requests otherwise.
 
 ## Types
 - **feat**: A new feature (correlates with MINOR in semantic versioning)
@@ -26,6 +35,7 @@ Creates Git commits following the Conventional Commits specification with mandat
 
 ## Jira Ticket ID (Mandatory)
 - **Required for all commits** in LIA projects
+- **Exception**: Can be omitted only when user explicitly instructs to commit without ticket ID
 - Must be a valid Jira ticket ID in format: `ABC-123`
 - Contained within parentheses: `feat(LIA-123): add ability to parse arrays`
 - Automatically extracted from branch names when following naming convention
@@ -48,6 +58,7 @@ When user requests a commit in LIA projects:
 2. **Review Changes**: `git diff` to understand modifications
 3. **Check History**: `git log --oneline -5` for context and existing patterns
 4. **Extract Jira Ticket** (priority order):
+   - **Skip if user explicitly requests commit without ticket ID**
    - Try `toggl-current-issue` script to get ticket from current Toggl time entry
    - If no Toggl entry, try to extract from current branch name (e.g., `feature/LIA-123-description`)
    - If no branch ticket, extract from last commit message
@@ -56,12 +67,12 @@ When user requests a commit in LIA projects:
    - Validate format matches `[A-Z]+-[0-9]+` pattern
 5. **Stage Files**: Add relevant files to staging area
 6. **Analyze Changes**: Determine appropriate type based on actual modifications
-7. **Create Commit**: Follow format `<type>(TICKET-ID): <description>`
+7. **Create Commit**: Follow format `<type>(TICKET-ID): <description>` or `<type>: <description>` (when no ticket ID)
 8. **Verify**: `git status` to confirm success
 
 ## LIA Rules
 - **Type is mandatory**
-- **Jira ticket ID is mandatory** in parentheses after type
+- **Jira ticket ID is mandatory** in parentheses after type (unless user explicitly requests otherwise)
 - **Description is mandatory** (lowercase, no period at end)
 - **Body and footer are optional**
 - **NEVER commit without explicit user request**
@@ -69,8 +80,9 @@ When user requests a commit in LIA projects:
 - **NEVER include AI generation attribution**
 - **Focus on actual file changes, not conversation**
 - **Stage only files directly related to the change**
-- **Always ask for ticket ID if not extractable from branch**
-- **Validate ticket ID format: [A-Z]+-[0-9]+**
+- **Always ask for ticket ID if not extractable from branch** (unless user explicitly requests no ticket)
+- **Validate ticket ID format: [A-Z]+-[0-9]+** (when ticket ID is provided)
+- **Allow commits without ticket ID only when user explicitly instructs to do so**
 
 ## LIA Examples
 ```bash
