@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Claude sessions status line showing individual session names with status icons
+# Claude sessions status line with smart multi-Claude indicator
 
 set -euo pipefail
 
@@ -24,22 +24,74 @@ if [[ "$session_count" -eq 0 ]]; then
   exit 0
 fi
 
+# Check for active sessions (working, asking, starting within 5 minutes)
+# If no active sessions exist, return empty to trigger 1-line mode
+cutoff_5min=$(date -u -d '5 minutes ago' '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || date -u -j -v-5M '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || echo '1970-01-01T00:00:00Z')
+
+active_sessions_count=$(jq -r --arg cutoff "$cutoff_5min" '
+  [.sessions | group_by(.project_dir) | .[] | 
+    select([.[] | select(.last_activity > $cutoff and (.status == "working" or .status == "asking" or .status == "starting"))] | length > 0)
+  ] | length
+' "$STATUS_FILE" 2>/dev/null || echo "0")
+
+# If no active sessions, return empty (triggers 1-line mode)
+if [[ "$active_sessions_count" -eq 0 ]]; then
+  exit 0
+fi
+
 # Get current tmux session and working directory
 current_session=$(tmux display-message -p '#S' 2>/dev/null || echo "")
 current_path=$(tmux display-message -p '#{pane_current_path}' 2>/dev/null || echo "")
 
-# Build sessions list with individual names and status icons
+# Build sessions list with new logic
 sessions_info=""
 session_parts=()
 
-# Get unique sessions (group by project_dir to handle renames)
-unique_sessions=$(jq -r --arg cutoff "$(date -u -d '5 minutes ago' '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || date -u -j -v-5M '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || echo '1970-01-01T00:00:00Z')" '[.sessions | group_by(.project_dir) | .[] | {session: .[0].tmux_session, project_dir: .[0].project_dir, status: [.[] | select(.last_activity > $cutoff) | .status] | if length == 0 then "idle" elif any(. == "asking") then "asking" elif any(. == "working") then "working" elif any(. == "waiting") then "waiting" else "idle" end, latest_activity: ([.[].last_activity] | max)}] | sort_by(.latest_activity) | reverse' "$STATUS_FILE" 2>/dev/null)
+# Use the 5-minute cutoff calculated above
 
-if [[ -n "$unique_sessions" ]]; then
+# Smart project path normalization - treat parent/child directories as same project
+normalize_project_paths() {
+  local json="$1"
+  echo "$json" | jq '
+    # Add normalized_project_dir field based on path similarity
+    .sessions |= map(
+      . + {
+        "normalized_project_dir": (
+          # For paths ending in common subdirs, use parent directory
+          if (.project_dir | test("/(frontend|backend|src|app|web|client|server)$")) then
+            (.project_dir | gsub("/(?:frontend|backend|src|app|web|client|server)$"; ""))
+          else
+            .project_dir
+          end
+        )
+      }
+    )
+  '
+}
+
+# Normalize paths and group by normalized project directory
+status_json=$(cat "$STATUS_FILE" 2>/dev/null || echo '{"sessions":[]}')
+normalized_json=$(normalize_project_paths "$status_json")
+
+sessions_data=$(echo "$normalized_json" | jq -r --arg cutoff "$cutoff_5min" '
+  [.sessions | group_by(.normalized_project_dir) | .[] | 
+    {
+      session: .[0].tmux_session,
+      project_dir: .[0].normalized_project_dir,
+      original_dirs: [.[].project_dir] | unique,
+      most_recent_status: (sort_by(.last_activity) | reverse | .[0].status),
+      latest_activity: ([.[].last_activity] | max),
+      active_claude_count: [.[] | select(.last_activity > $cutoff and (.status == "working" or .status == "asking" or .status == "starting"))] | length
+    }
+  ] | sort_by(.latest_activity) | reverse
+' 2>/dev/null)
+
+if [[ -n "$sessions_data" ]]; then
   while IFS= read -r line; do
     session_name=$(echo "$line" | jq -r '.session')
     session_project=$(echo "$line" | jq -r '.project_dir')
-    session_status=$(echo "$line" | jq -r '.status')
+    session_status=$(echo "$line" | jq -r '.most_recent_status')
+    active_count=$(echo "$line" | jq -r '.active_claude_count')
     
     # Map status to emoji
     case "$session_status" in
@@ -50,6 +102,12 @@ if [[ -n "$unique_sessions" ]]; then
       "idle") icon="💤" ;;
       *) icon="✅" ;;
     esac
+    
+    # Add + indicator if multiple active Claude instances
+    multi_indicator=""
+    if [[ "$active_count" -gt 1 ]]; then
+      multi_indicator="+"
+    fi
     
     # Check if this is the current session - match by name first, then by project directory
     is_current_session=false
@@ -65,11 +123,11 @@ if [[ -n "$unique_sessions" ]]; then
     
     # Highlight current session like active window
     if [[ "$is_current_session" == "true" ]]; then
-      session_parts+=("#[fg=#89b4fa] $display_name:$icon")
+      session_parts+=("#[fg=#89b4fa] $display_name:$icon$multi_indicator")
     else
-      session_parts+=("#[fg=#6c7086] $display_name:$icon")
+      session_parts+=("#[fg=#6c7086] $display_name:$icon$multi_indicator")
     fi
-  done <<< "$(echo "$unique_sessions" | jq -c '.[]')"
+  done <<< "$(echo "$sessions_data" | jq -c '.[]')"
 fi
 
 # Join session parts
@@ -79,8 +137,8 @@ else
   sessions_info="No active sessions"
 fi
 
-# Count active sessions (with working/waiting status) - group by project_dir like we do above
-active_count=$(jq -r '[.sessions | group_by(.project_dir) | .[] | select(any(.[].status; . == "working" or . == "waiting"))] | length' "$STATUS_FILE" 2>/dev/null || echo "0")
+# Count total active sessions (any session with recent activity)
+total_active_count=$(echo "$sessions_data" | jq -r '[.[] | select(.active_claude_count > 0)] | length' 2>/dev/null || echo "0")
 
 # Output the Sessions status line
-echo "#[fg=#89b4fa] Sessions#[fg=#313244]:$sessions_info #[fg=#6c7086]│ #[fg=#cdd6f4]$active_count active"
+echo "#[fg=#89b4fa] Sessions#[fg=#313244]:$sessions_info #[fg=#6c7086]│ #[fg=#cdd6f4]$total_active_count active"

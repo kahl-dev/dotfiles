@@ -207,6 +207,14 @@ main() {
   # Write back to file
   write_status "$cleaned_status"
   
+  # Trigger dynamic auto-switcher to update tmux status lines
+  if [[ -x "$HOME/.dotfiles/tmux/scripts/claude-status-autorule.sh" ]]; then
+    # Prevent process accumulation by checking if already running
+    if ! pgrep -f "claude-status-autorule.sh" >/dev/null 2>&1; then
+      "$HOME/.dotfiles/tmux/scripts/claude-status-autorule.sh" &
+    fi
+  fi
+  
   log "Successfully updated session status: $action for $tmux_session:$tmux_window.$tmux_pane"
 }
 
