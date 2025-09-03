@@ -5,19 +5,24 @@
 
 SESSIONS
   <prefix> C-c    Create new session
-  <prefix> Q      Kill session
-  <prefix> o      Switch session
+  <prefix> o      SessionX (enhanced session switcher)
 
 WINDOWS  
   <prefix> c      Create new window
-  <prefix> X      Kill window
   C-S-Left/Right  Move window left/right
 
 PANES
   <prefix> |      Split horizontal
-  <prefix> -      Split vertical  
-  <prefix> x      Kill pane
+  <prefix> -      Split vertical
+  <prefix> _      Split vertical (full height)
   <prefix> z      Zoom/unzoom
+  <prefix> B      Break pane to new window
+  <prefix> E      Join pane from another window
+
+KILL/DELETE
+  <prefix> x      Kill current pane
+  <prefix> X      Kill current window  
+  <prefix> Q      Kill session (with confirmation)
 
 NAVIGATION
   C-h/j/k/l       Move between panes (vim-aware)
@@ -29,17 +34,18 @@ RESIZE
 
 COPY MODE
   <prefix> Enter  Enter copy mode
-  M-Enter         Enter copy mode
+  C-[             Enter copy mode
   v               Start selection
   C-v             Rectangle select
-  y               Yank/copy
+  y               Yank/copy (via rclip)
 
 TOOLS
-  <prefix> \      Help menu
+  <prefix> ?      This cheatsheet
   <prefix> j      Command palette
-  <prefix> k      This cheatsheet
   <prefix> u      URL finder
   <prefix> r      Reload config
+  <prefix> g      LazyGit
+  <prefix> l      Glow (markdown viewer)
 
 PLUGINS (TPM)
   M-i             Install plugins
@@ -52,4 +58,12 @@ NESTED SESSIONS
 MOUSE
   Click           Select panes/windows
   Drag            Resize panes
-  Right-click     Context menu
+  Right-click     Context menu (tmux-menus)
+  
+ADVANCED
+  <prefix> <      Window menu (swap, rename, etc.)
+  <prefix> >      Pane menu (split, swap, kill, etc.)
+  
+CLIPBOARD (Remote Bridge)
+  All copy operations use rclip for remote/local sync
+  Works automatically across SSH sessions
