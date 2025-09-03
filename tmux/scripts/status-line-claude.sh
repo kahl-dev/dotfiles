@@ -111,9 +111,34 @@ normalize_project_paths() {
   '
 }
 
-# Normalize paths and group by normalized project directory
-# Use the already validated status JSON
-normalized_json=$(normalize_project_paths "$validated_status_json")
+# Clean up stale "asking" states globally (sessions stuck in asking mode)
+cleanup_stale_asking() {
+  local json="$1"
+  local stale_threshold
+  stale_threshold=$(date -u -d '30 seconds ago' '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || date -u -j -v-30S '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || echo '1970-01-01T00:00:00Z')
+  
+  echo "$json" | jq --arg threshold "$stale_threshold" '
+    .sessions = (.sessions | map(
+      if (.status == "asking" and .last_activity < $threshold) then
+        . + {"status": "waiting"}
+      else
+        .
+      end
+    ))
+  '
+}
+
+# Clean up stale asking states before processing
+cleaned_json=$(cleanup_stale_asking "$validated_status_json")
+
+# Update the status file with cleaned data
+if [[ "$cleaned_json" != "$validated_status_json" ]]; then
+  echo "$cleaned_json" > "$STATUS_FILE" 2>/dev/null || true
+fi
+
+# Normalize paths and group by normalized project directory  
+# Use the cleaned status JSON
+normalized_json=$(normalize_project_paths "$cleaned_json")
 
 sessions_data=$(echo "$normalized_json" | jq -r --arg cutoff "$cutoff_5min" '
   [.sessions | group_by(.normalized_project_dir) | .[] | 

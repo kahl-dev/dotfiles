@@ -104,7 +104,37 @@ update_session() {
     start)      new_status="starting" ;;
     activity)   new_status="working" ;;
     permission) new_status="asking" ;;
-    stop)       new_status="waiting" ;;
+    stop)       
+      # Check for stale "asking" status and clean it up
+      local existing_session
+      existing_session=$(find_session "$session" "$window" "$pane" "$status_json")
+      if [[ "$existing_session" != "null" && -n "$existing_session" ]]; then
+        local current_status
+        current_status=$(echo "$status_json" | jq -r --arg session "$session" --arg window "$window" --arg pane "$pane" '
+          .sessions[] | 
+          select(.tmux_session == $session and .tmux_window == ($window | tonumber) and .tmux_pane == ($pane | tonumber)) |
+          .status')
+        
+        if [[ "$current_status" == "asking" ]]; then
+          local last_activity
+          last_activity=$(echo "$status_json" | jq -r --arg session "$session" --arg window "$window" --arg pane "$pane" '
+            .sessions[] | 
+            select(.tmux_session == $session and .tmux_window == ($window | tonumber) and .tmux_pane == ($pane | tonumber)) |
+            .last_activity')
+          
+          # Check if asking status is older than 30 seconds
+          local current_time stale_threshold
+          current_time=$(get_timestamp)
+          stale_threshold=$(date -u -d '30 seconds ago' '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || \
+                           date -u -j -v-30S '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || \
+                           echo "1970-01-01T00:00:00Z")
+          
+          if [[ "$last_activity" < "$stale_threshold" ]]; then
+            log "Cleaning up stale asking status for $session:$window.$pane (last activity: $last_activity)"
+          fi
+        fi
+      fi
+      new_status="waiting" ;;
     end)        new_status="idle" ;;
     *)          new_status="unknown" ;;
   esac
