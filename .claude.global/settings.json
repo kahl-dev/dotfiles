@@ -195,7 +195,9 @@
       "Bash($HOME/.claude/shared/get-screenshots.sh:*)",
       "Read($HOME/tmp/ai/screenshots/*)",
       "Bash(fetch-jira-tickets:*)",
-      "Read($HOME/tmp/ai/*)"
+      "Read($HOME/tmp/ai/*)",
+      "Bash(sleep:*)",
+      "Bash(tmux:*)"
     ],
     "deny": [
       "Bash(git push --force:*)",
