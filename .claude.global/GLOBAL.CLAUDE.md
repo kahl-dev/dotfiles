@@ -55,6 +55,10 @@ These files are symlinked to `~/.claude/` via dotbot configuration for version c
 
 @instructions/llm-git-commits.md
 
+## 📚 Documentation Maintenance
+
+@instructions/documentation-maintenance.md
+
 ## 🛠️ Tool Use
 
 @instructions/tool-use.md
