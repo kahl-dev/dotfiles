@@ -20,6 +20,12 @@
     ~/.claude/CLAUDE.md: ./.claude.global/GLOBAL.CLAUDE.md
 
 - shell:
+    - description: "Remove legacy ~/.claude.global symlink if it exists"
+      command: |
+        if [ -L "$HOME/.claude.global" ]; then
+          echo "Removing legacy ~/.claude.global symlink..."
+          rm -f "$HOME/.claude.global"
+        fi
     - description: "Create AI workspace directories for Claude"
       command: |
         mkdir -p ~/tmp/ai/screenshots \

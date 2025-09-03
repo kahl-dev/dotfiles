@@ -4,7 +4,7 @@
 
 HOOK_NAME="$(basename "$0")"
 START_TIME=$(date +%s.%N)
-PERFORMANCE_LOG="$HOME/.claude.store/user-level/hook_performance.log"
+PERFORMANCE_LOG="$HOME/.claude/logs/hook_performance.log"
 
 INITIAL_MEMORY=$(free -m | awk 'NR==2{printf "%.1f", $3*100/$2}' 2>/dev/null || echo "0")
 INITIAL_CPU=$(grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$3+$4+$5)} END {print usage}' 2>/dev/null || echo "0")

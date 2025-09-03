@@ -34,7 +34,6 @@
       ~/.config/nvim: ./.config/nvim/
       ~/.config/starship.toml: ./.config/starship.toml
       ~/.config/yazi: ./.config/yazi/
-      ~/.claude: ./.claude.global
 
 - shell:
       - [git submodule update --init --recursive, Installing submodules]

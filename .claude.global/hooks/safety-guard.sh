@@ -10,7 +10,7 @@ NC='\033[0m'
 COMMAND_LINE="$*"
 
 if [[ "$CLAUDE_TOOL_NAME" == "Bash" ]]; then
-    echo "$(date): [$$] $COMMAND_LINE" >> ~/.claude.store/user-level/bash_audit.log
+    echo "$(date): [$$] $COMMAND_LINE" >> ~/.claude/logs/bash_audit.log
 fi
 
 DANGEROUS_PATTERNS=(
@@ -91,7 +91,7 @@ for pattern in "${DANGEROUS_PATTERNS[@]}"; do
         echo -e "${RED}   Command: $COMMAND_LINE${NC}" >&2
         echo -e "${YELLOW}   Reason: This command could damage your system${NC}" >&2
         echo -e "${YELLOW}   💡 If this is intentional, run the command manually in a terminal${NC}" >&2
-        echo "$(date): BLOCKED dangerous command: $COMMAND_LINE" >> ~/.claude.store/user-level/blocked_commands.log
+        echo "$(date): BLOCKED dangerous command: $COMMAND_LINE" >> ~/.claude/logs/blocked_commands.log
         exit 2
     fi
 done
@@ -103,14 +103,14 @@ for pattern in "${LONG_RUNNING_PATTERNS[@]}"; do
         echo -e "${YELLOW}   Reason: This command runs indefinitely and would block Claude${NC}" >&2
         echo -e "${YELLOW}   💡 Run this command manually in a separate terminal:${NC}" >&2
         echo -e "${GREEN}      $COMMAND_LINE${NC}" >&2
-        echo "$(date): BLOCKED long-running command: $COMMAND_LINE" >> ~/.claude.store/user-level/blocked_commands.log
+        echo "$(date): BLOCKED long-running command: $COMMAND_LINE" >> ~/.claude/logs/blocked_commands.log
         exit 2
     fi
 done
 
 if [[ "$CLAUDE_TOOL_NAME" == "Bash" ]] && [[ "$COMMAND_LINE" =~ git.*push ]]; then
     echo -e "${YELLOW}⚠️  Git push detected - logging for audit${NC}" >&2
-    echo "$(date): [$$] Git push: $COMMAND_LINE" >> ~/.claude.store/user-level/git_push_log.txt
+    echo "$(date): [$$] Git push: $COMMAND_LINE" >> ~/.claude/logs/git_push_log.txt
 fi
 
 if [[ "$COMMAND_LINE" =~ (npm|yarn|pnpm).*install ]]; then
