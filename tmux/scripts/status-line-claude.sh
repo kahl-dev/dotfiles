@@ -24,15 +24,57 @@ if [[ "$session_count" -eq 0 ]]; then
   exit 0
 fi
 
+# Validate sessions against actual tmux sessions (fallback cleanup)
+# This ensures we don't display entries for non-existent sessions/windows/panes
+validate_sessions() {
+  local status_json="$1"
+  
+  # Get active tmux locations
+  local active_locations
+  active_locations=$(tmux list-panes -a -F "#{session_name}:#{window_index}.#{pane_index}" 2>/dev/null || echo "")
+  
+  if [[ -z "$active_locations" ]]; then
+    # No active tmux sessions, return empty
+    echo '{"sessions": []}'
+    return
+  fi
+  
+  # Create active locations array for jq
+  local active_array
+  active_array=$(echo "$active_locations" | jq -R -s 'split("\n") | map(select(length > 0))')
+  
+  # Filter sessions to only include valid ones
+  echo "$status_json" | jq --argjson active "$active_array" '
+    .sessions = [
+      .sessions[] | 
+      . as $session |
+      ($session.tmux_session + ":" + ($session.tmux_window | tostring) + "." + ($session.tmux_pane | tostring)) as $location |
+      select($active | index($location))
+    ]
+  '
+}
+
+# Validate sessions before processing
+status_json=$(cat "$STATUS_FILE" 2>/dev/null || echo '{"sessions":[]}')
+validated_status_json=$(validate_sessions "$status_json")
+
+# Update session count after validation
+session_count=$(echo "$validated_status_json" | jq -r '.sessions | length' 2>/dev/null || echo "0")
+
+# If no valid sessions after validation, return empty (triggers 1-line mode)
+if [[ "$session_count" -eq 0 ]]; then
+  exit 0
+fi
+
 # Check for active sessions (working, asking, starting within 5 minutes)
 # If no active sessions exist, return empty to trigger 1-line mode
 cutoff_5min=$(date -u -d '5 minutes ago' '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || date -u -j -v-5M '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || echo '1970-01-01T00:00:00Z')
 
-active_sessions_count=$(jq -r --arg cutoff "$cutoff_5min" '
+active_sessions_count=$(echo "$validated_status_json" | jq -r --arg cutoff "$cutoff_5min" '
   [.sessions | group_by(.project_dir) | .[] | 
     select([.[] | select(.last_activity > $cutoff and (.status == "working" or .status == "asking" or .status == "starting"))] | length > 0)
   ] | length
-' "$STATUS_FILE" 2>/dev/null || echo "0")
+' 2>/dev/null || echo "0")
 
 # If no active sessions, return empty (triggers 1-line mode)
 if [[ "$active_sessions_count" -eq 0 ]]; then
@@ -70,8 +112,8 @@ normalize_project_paths() {
 }
 
 # Normalize paths and group by normalized project directory
-status_json=$(cat "$STATUS_FILE" 2>/dev/null || echo '{"sessions":[]}')
-normalized_json=$(normalize_project_paths "$status_json")
+# Use the already validated status JSON
+normalized_json=$(normalize_project_paths "$validated_status_json")
 
 sessions_data=$(echo "$normalized_json" | jq -r --arg cutoff "$cutoff_5min" '
   [.sessions | group_by(.normalized_project_dir) | .[] | 
