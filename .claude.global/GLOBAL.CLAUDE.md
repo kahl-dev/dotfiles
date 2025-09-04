@@ -79,6 +79,23 @@ These files are symlinked to `~/.claude/` via dotbot configuration for version c
 
 @instructions/mcp-integration.md
 
+## 📋 Enhanced Analysis Workflows
+
+When handling complex tasks, automatically apply progressive thinking:
+
+**Code Review & Analysis:**
+- Small changes (< 5 files): Standard review
+- Medium changes (5-20 files): `think` about cross-file interactions
+- Large changes (20+ files): `think hard` about system architecture impact
+- Security-sensitive: Always `think hard` about attack vectors
+- Performance-critical: `think harder` about bottlenecks and scaling
+
+**Commit Analysis:**
+- Before any commit: `think hard` about change implications
+- Multi-file commits: Analyze dependencies and integration points
+- Breaking changes: `think harder` about migration paths and backwards compatibility
+- Production deployments: `ultrathink` about failure scenarios
+
 ## 🎫 Jira Response Pattern
 
 @instructions/jira-responses.md
@@ -163,6 +180,7 @@ uptime
 ```
 
 The system load guard will automatically prevent operations during critical load periods, but monitoring system health proactively prevents issues.
+
 
 ## 🖥️ Server Environments
 
