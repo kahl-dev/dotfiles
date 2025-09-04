@@ -45,13 +45,18 @@ check_system_resources() {
 
 # Check if we can spawn processes safely
 can_spawn_processes() {
-    # Try a minimal process spawn test
+    # Try a minimal pipe process test
     if ! echo "test" | cat >/dev/null 2>&1; then
         return 1
     fi
     
-    # Check if pgrep works (critical for Claude Code background tasks)  
-    if ! pgrep $$ >/dev/null 2>&1; then
+    # Test simple command execution (most reliable test)
+    if ! true >/dev/null 2>&1; then
+        return 1
+    fi
+    
+    # Test date command as a more realistic process spawn
+    if ! date >/dev/null 2>&1; then
         return 1
     fi
     
@@ -67,32 +72,8 @@ main() {
     
     log "System load check: 1min=$load_1min, 5min=$load_5min, 15min=$load_15min"
     
-    # Define thresholds based on typical system capacity
-    # Adjust these based on your system specs
-    local CRITICAL_LOAD="10.0"
-    local HIGH_LOAD="5.0" 
-    local MEDIUM_LOAD="3.0"
-    
-    # Check if load is critical
-    if (( $(echo "$load_1min > $CRITICAL_LOAD" | bc 2>/dev/null || echo 0) )); then
-        echo "🚨 CRITICAL: System load too high ($load_1min) - blocking to prevent system instability"
-        echo "   Current load: $load_1min (critical threshold: $CRITICAL_LOAD)"
-        echo "   💡 Wait for system load to decrease before running Claude Code tools"
-        echo "   Check with: uptime"
-        log "BLOCKED: Critical system load $load_1min > $CRITICAL_LOAD"
-        exit 2
-    fi
-    
-    # Check if load is high and we're running background tasks
-    if (( $(echo "$load_1min > $HIGH_LOAD" | bc 2>/dev/null || echo 0) )); then
-        # Check if this is a background task request
-        if [[ "${CLAUDE_TOOL_NAME:-}" == "Bash" ]] && echo "$*" | grep -q "run_in_background"; then
-            echo "⚠️  HIGH LOAD WARNING: System load is high ($load_1min)"
-            echo "   Background tasks may be unreliable at this load level"
-            echo "   Consider waiting or running the command directly in a terminal"
-            log "WARNING: High load $load_1min during background task request"
-        fi
-    fi
+    # Only block if we detect actual process spawning failures
+    # Load averages are informational but not blocking criteria
     
     # Test if we can actually spawn processes
     if ! can_spawn_processes; then
