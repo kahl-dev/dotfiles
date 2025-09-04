@@ -99,6 +99,71 @@ These files are symlinked to `~/.claude/` via dotbot configuration for version c
 - Present clear options and wait for user choice when approach is ambiguous
 - Request specific requirements when user requests are too broad
 
+## 🚨 System Load & Background Task Safety
+
+**CRITICAL:** Claude Code background tasks can fail with `spawn pgrep EAGAIN` during high system load, causing the entire session to crash.
+
+### Automatic Protections in Place
+
+This system has multi-layer protection against system overload:
+
+1. **System Load Guard Hook** (`~/.claude/hooks/system-load-guard.sh`)
+   - Blocks tool execution when load > 10.0 (critical)  
+   - Warns when load > 5.0 during background tasks
+   - Tests process spawning capability before execution
+   - Logs all load-related decisions
+
+2. **Resource-Conscious Session Tracking**
+   - tmux status updates skip when load > 8.0
+   - Background process spawning is load-aware
+   - Process accumulation prevention
+
+### Claude Code Usage Guidelines
+
+**Before Background Tasks:**
+- Check system load: `uptime`
+- Wait if load > 5.0 before using `run_in_background: true`
+- Use shorter timeouts for potentially problematic tests
+
+**If You See `spawn pgrep EAGAIN`:**
+1. **Immediately check load**: `uptime`
+2. **Kill runaway processes**: `ps aux | head -20` then `kill -9 <PID>`
+3. **Wait for load < 3.0** before retrying background tasks
+4. **Use direct terminal commands** instead of Claude Code during high load periods
+
+**Background Task Best Practices:**
+- Keep background processes short (< 30 seconds)
+- Use `timeout` wrapper: `timeout 60s npm test`
+- Monitor with `uptime` before each background task
+- Close unused Claude Code sessions (check `ps aux | grep claude`)
+
+### Common Culprits
+- **Runaway test suites** (vitest, jest hanging)
+- **Multiple Claude Code sessions** (check with `ps aux | grep claude`)
+- **High graphics load** (WindowServer > 30% CPU)
+- **Development servers left running** (npm run dev processes)
+
+### Emergency Cleanup Commands
+```bash
+# Check system load
+uptime
+
+# Find resource hogs
+ps aux | head -20
+
+# Kill runaway tests
+pkill -f vitest
+pkill -f jest
+
+# Kill excess Claude sessions (keep only current)
+ps aux | grep claude | grep -v $$ | awk '{print $2}' | head -5 | xargs kill
+
+# Check improved load
+uptime
+```
+
+The system load guard will automatically prevent operations during critical load periods, but monitoring system health proactively prevents issues.
+
 ## 🖥️ Server Environments
 
 - When working on a "Linux typo3" remove server, note that it is:

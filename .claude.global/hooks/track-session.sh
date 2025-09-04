@@ -237,11 +237,17 @@ main() {
   # Write back to file
   write_status "$cleaned_status"
   
-  # Trigger dynamic auto-switcher to update tmux status lines
+  # Trigger dynamic auto-switcher to update tmux status lines (with load protection)
   if [[ -x "$HOME/.dotfiles/tmux/scripts/claude-status-autorule.sh" ]]; then
-    # Prevent process accumulation by checking if already running
-    if ! pgrep -f "claude-status-autorule.sh" >/dev/null 2>&1; then
+    # Check system load before spawning background process
+    local current_load
+    current_load=$(uptime 2>/dev/null | sed -E 's/.*load.averages?:[[:space:]]*([0-9]+\.[0-9]+).*/\1/' || echo "0.00")
+    
+    # Only spawn if load is reasonable (< 8.0) and not already running
+    if command -v bc >/dev/null 2>&1 && (( $(echo "$current_load < 8.0" | bc) )) && ! pgrep -f "claude-status-autorule.sh" >/dev/null 2>&1; then
       "$HOME/.dotfiles/tmux/scripts/claude-status-autorule.sh" &
+    else
+      log "SKIP: Skipping claude-status-autorule.sh due to high load ($current_load) or already running"
     fi
   fi
   

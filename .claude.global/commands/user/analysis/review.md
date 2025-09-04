@@ -1,5 +1,6 @@
 ---
 description: "Production readiness review for deployments and code changes"
+aliases: ["prod-review", "pr-review"]
 ---
 
 # Production Readiness Code Review
