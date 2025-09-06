@@ -14,6 +14,5 @@ fi
 # Use less for scrollable viewing
 # -R: raw control characters (for colors)
 # -X: don't clear screen on exit
-# -F: quit if content fits on one screen
 # -S: don't wrap long lines
-less -RXF "$CHEATSHEET_FILE"
+less -RXS "$CHEATSHEET_FILE"

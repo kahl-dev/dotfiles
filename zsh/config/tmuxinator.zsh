@@ -1,4 +1,3 @@
-# shellcheck shell=bash
 # Tmuxinator aliases and functions
 
 # Check for required commands

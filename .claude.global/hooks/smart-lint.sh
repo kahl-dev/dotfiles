@@ -171,7 +171,7 @@ run_with_timeout() {
     fi
     
     local -a env_vars=(
-        "PATH=${fnm_path}/home/linuxbrew/.linuxbrew/bin:/usr/local/bin:/usr/bin:/bin"
+        "PATH=${fnm_path}/opt/homebrew/bin:/home/linuxbrew/.linuxbrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
         "HOME=$HOME"
         "USER=${USER:-unknown}"
         "LANG=${LANG:-C}"
@@ -713,10 +713,19 @@ check_shell_script() {
     
     # Verify it's actually a shell script by checking shebang or extension
     local is_valid_shell_script=false
-    if [[ "$file_path" =~ \.(sh|bash|zsh)$ ]]; then
+    local is_zsh_file=false
+    
+    if [[ "$file_path" =~ \.zsh$ ]]; then
+        is_valid_shell_script=true
+        is_zsh_file=true
+    elif [[ "$file_path" =~ \.(sh|bash)$ ]]; then
         is_valid_shell_script=true
     elif is_shell_script "$absolute_path"; then
         is_valid_shell_script=true
+        # Check if it's a zsh script by shebang
+        if [[ "$first_line" =~ zsh ]]; then
+            is_zsh_file=true
+        fi
     fi
     
     if [[ "$is_valid_shell_script" != "true" ]]; then
@@ -724,34 +733,76 @@ check_shell_script() {
         return 0
     fi
     
-    # Run ShellCheck with timeout and secure execution
+    # Use appropriate checker based on shell type
     local output
     
-    if output=$(run_with_timeout "$COMMAND_TIMEOUT" shellcheck "$absolute_path"); then
-        echo -e "${GREEN}✓ $file_name passed shell checking${NC}"
-        return 0
-    else
-        echo -e "${RED}❌ $file_name has shell script errors:${NC}" >&2
-        
-        # Show first 20 lines of output
-        echo "$output" | head -20 >&2
-        if [[ $(echo "$output" | wc -l) -gt 20 ]]; then
-            echo -e "${YELLOW}... (truncated, showing first 20 lines)${NC}" >&2
+    if [[ "$is_zsh_file" == "true" ]]; then
+        # Use zsh -n for zsh files
+        if ! command -v zsh &> /dev/null; then
+            echo -e "${YELLOW}⚠ zsh not available for checking $file_name${NC}"
+            return 0
         fi
         
-        # Store error for JSON output
-        local session_id="${CLAUDE_SESSION_ID:-unknown}"
-        local error_json
-        error_json=$(jq -n \
-            --arg file "$(sanitize_for_json "$absolute_path")" \
-            --arg errors "$(sanitize_for_json "ShellCheck: $output")" \
-            --arg session "$(sanitize_for_json "$session_id")" \
-            '{file_path: $file, errors: $errors, session_id: $session}')
-        ERROR_ENTRIES+=("$error_json")
+        if output=$(run_with_timeout "$COMMAND_TIMEOUT" zsh -n "$absolute_path"); then
+            echo -e "${GREEN}✓ $file_name passed zsh syntax checking${NC}"
+            return 0
+        else
+            echo -e "${RED}❌ $file_name has zsh syntax errors:${NC}" >&2
+            
+            # Show first 20 lines of output
+            echo "$output" | head -20 >&2
+            if [[ $(echo "$output" | wc -l) -gt 20 ]]; then
+                echo -e "${YELLOW}... (truncated, showing first 20 lines)${NC}" >&2
+            fi
+            
+            # Store error for JSON output
+            local session_id="${CLAUDE_SESSION_ID:-unknown}"
+            local error_json
+            error_json=$(jq -n \
+                --arg file "$(sanitize_for_json "$absolute_path")" \
+                --arg errors "$(sanitize_for_json "zsh syntax: $output")" \
+                --arg session "$(sanitize_for_json "$session_id")" \
+                '{file_path: $file, errors: $errors, session_id: $session}')
+            ERROR_ENTRIES+=("$error_json")
+            
+            BLOCKING_ERRORS+=("$file_name has zsh syntax errors")
+            ERRORS_FOUND=true
+            return 1
+        fi
+    else
+        # Use ShellCheck for bash/sh files
+        if ! command -v shellcheck &> /dev/null; then
+            echo -e "${YELLOW}⚠ ShellCheck not installed${NC}"
+            echo -e "${YELLOW}  Install: brew install shellcheck (macOS) or apt-get install shellcheck (Ubuntu)${NC}"
+            return 0
+        fi
         
-        BLOCKING_ERRORS+=("$file_name has ShellCheck errors")
-        ERRORS_FOUND=true
-        return 1
+        if output=$(run_with_timeout "$COMMAND_TIMEOUT" shellcheck "$absolute_path"); then
+            echo -e "${GREEN}✓ $file_name passed shell checking${NC}"
+            return 0
+        else
+            echo -e "${RED}❌ $file_name has shell script errors:${NC}" >&2
+            
+            # Show first 20 lines of output
+            echo "$output" | head -20 >&2
+            if [[ $(echo "$output" | wc -l) -gt 20 ]]; then
+                echo -e "${YELLOW}... (truncated, showing first 20 lines)${NC}" >&2
+            fi
+            
+            # Store error for JSON output
+            local session_id="${CLAUDE_SESSION_ID:-unknown}"
+            local error_json
+            error_json=$(jq -n \
+                --arg file "$(sanitize_for_json "$absolute_path")" \
+                --arg errors "$(sanitize_for_json "ShellCheck: $output")" \
+                --arg session "$(sanitize_for_json "$session_id")" \
+                '{file_path: $file, errors: $errors, session_id: $session}')
+            ERROR_ENTRIES+=("$error_json")
+            
+            BLOCKING_ERRORS+=("$file_name has ShellCheck errors")
+            ERRORS_FOUND=true
+            return 1
+        fi
     fi
 }
 
