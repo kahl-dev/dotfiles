@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # TMUX Cheatsheet Display Script
-# Shows a floating popup with all tmux key bindings
+# Shows a floating popup with beautifully rendered markdown
 
 CHEATSHEET_FILE="$HOME/.dotfiles/tmux/cheatsheet.md"
 
@@ -11,8 +11,13 @@ if [[ ! -f "$CHEATSHEET_FILE" ]]; then
     exit 1
 fi
 
-# Use less for scrollable viewing
-# -R: raw control characters (for colors)
-# -X: don't clear screen on exit
-# -S: don't wrap long lines
-less -RXS "$CHEATSHEET_FILE"
+# Check if glow is available
+if command -v glow >/dev/null 2>&1; then
+    # Use glow for beautiful markdown rendering
+    # -p: use pager for scrolling
+    glow -p "$CHEATSHEET_FILE"
+else
+    # Fallback to less if glow is not available
+    echo "Warning: glow not found, falling back to less"
+    less -RXS "$CHEATSHEET_FILE"
+fi
