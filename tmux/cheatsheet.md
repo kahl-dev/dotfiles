@@ -41,11 +41,11 @@ COPY MODE
 
 TOOLS
   <prefix> ?      This cheatsheet
-  <prefix> j      Command palette
   <prefix> u      URL finder
   <prefix> r      Reload config
   <prefix> g      LazyGit
-  <prefix> l      Glow (markdown viewer)
+  <prefix> b      Btop (system monitor)
+  <prefix> m      Glow (markdown viewer)
 
 PLUGINS (TPM)
   M-i             Install plugins
