@@ -46,7 +46,13 @@ if command_exists fzf; then
   }
 
 
-  alias fa='alias | fzf-tmux ${FZF_TMUX_OPTS} --header="Find aliases"'
+  _fa() {
+    local selected=$(alias | sed 's/^alias //' | awk -F= '{printf "%-20s %s\n", $1, $2}' | fzf-tmux ${FZF_TMUX_OPTS} --header="🔍 Find Aliases" --preview 'echo "Command: {2..}"' --preview-window=down:1 | awk '{print $1}')
+    if [[ -n "$selected" ]]; then
+      eval "$selected"
+    fi
+  }
+  alias fa='_fa'
   alias s='_s'
   alias fcd='_fcd'
 fi
