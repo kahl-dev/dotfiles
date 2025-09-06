@@ -105,6 +105,8 @@ brew "mkcert"
 brew "yt-dlp"
 # Media player based on MPlayer and mplayer2
 brew "mpv"
+# NCurses Disk Usage
+brew "ncdu"
 # Fast, highly customisable system info script
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -139,6 +141,8 @@ brew "ripgrep"
 brew "rust"
 # Intuitive find & replace CLI
 brew "sd"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
 # SOund eXchange: universal sound sample translator
 brew "sox"
 # Cross-shell prompt for astronauts
@@ -161,6 +165,8 @@ brew "tree"
 brew "unar"
 # Internet file retriever
 brew "wget"
+# Linter for YAML files
+brew "yamllint"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
 # Shell extension to navigate your filesystem faster
