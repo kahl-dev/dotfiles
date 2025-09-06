@@ -111,16 +111,15 @@ make uninstall
 
 ### Package Management
 ```bash
-# Update Homebrew packages (respects .Brewfile)
-brew bundle --file brew/osx/.Brewfile
+# Update all Homebrew packages and cleanup
+brewup
+
+# Export current packages to Brewfile
+brewdump
 
 # Add new packages to Brewfile and install
 echo 'brew "package-name"' >> brew/osx/.Brewfile
-brew bundle --file brew/osx/.Brewfile
-
-# Backup and restore app settings via Mackup
-mackup backup
-mackup restore
+brewup
 ```
 
 ## Development Workflow
@@ -260,6 +259,56 @@ path_exists "$DOTFILES/bin" && export PATH="$DOTFILES/bin:$PATH"
 
 @.claude/instructions/remote-bridge.md
 
+## 📚 Documentation Maintenance
+
+### Automatic Documentation Updates
+
+**When Claude makes changes that affect documented features, it MUST:**
+
+- **Update README.md** if user-facing behavior changes (new features, installation steps, key commands)
+- **Update CLAUDE.md** if technical implementation changes (architecture, file paths, integration details)
+- **Update topic READMEs** in specific directories when their configurations change
+- **Keep all examples and commands current** - test that documented commands actually work
+- **Add screenshots** when visual changes are made (tmux appearance, terminal output)
+- **Maintain consistency** between related documentation files
+
+### Documentation Structure Standards
+
+**README.md (Human-focused):**
+- Feature overview with visual examples and screenshots
+- Clear installation and setup instructions  
+- Key keybindings and commands for daily use
+- Troubleshooting section for common issues
+- Directory structure overview
+- Notable configuration highlights
+
+**CLAUDE.md (AI-focused):**
+- Technical architecture and implementation details
+- Exact file paths and dependencies
+- Integration details, hooks, and system interactions
+- Maintenance procedures and troubleshooting
+- System requirements and compatibility notes
+
+**Topic READMEs (Directory-specific):**
+- Quick reference for that component
+- Configuration highlights and customizations
+- Integration with other system components
+- Maintenance and debugging specific to that area
+
+### Self-Documenting Principle
+
+Every significant change must include documentation updates in the same commit. This ensures:
+- Documentation never becomes stale
+- Future maintenance is possible
+- New users (including future you) can understand the system
+- Claude sessions have complete context
+
+**Examples of changes requiring documentation:**
+- Adding new keybindings → Update README.md and relevant CLAUDE.md sections
+- Modifying tmux status bar → Update tmux/CLAUDE.md and add screenshot to README.md  
+- Creating new scripts → Update bin/README.md or relevant documentation
+- Changing installation process → Update main README.md installation section
+
 ## Troubleshooting
 
 ### Common Issues
@@ -274,10 +323,18 @@ path_exists "$DOTFILES/bin" && export PATH="$DOTFILES/bin:$PATH"
 - Git must be available for submodule management
 - Some configurations require specific versions (e.g., PostgreSQL@15)
 
+## 🎯 Project Management
+
+This project uses **GitHub Issues** for tracking enhancements, bugs, and future improvements. 
+
+**[View all open issues →](https://github.com/kahl-dev/dotfiles/issues)**
+
+To contribute or suggest improvements, please create a GitHub issue with detailed description and implementation ideas.
+
 ## Notes
 
 - The repository uses git submodules for tmux plugins and dotbot
-- Configuration files use XDG Base Directory specification where possible
-- Mackup handles syncing of application settings via iCloud Drive
+- Configuration files use XDG Base Directory specification where possible  
+- Raycast settings are synced via cloud backup (not stored in dotfiles)
 - The system is designed for personal use and includes specific tools/preferences
 - **DO NOT commit Zed settings** - these are personal and machine-specific configurations

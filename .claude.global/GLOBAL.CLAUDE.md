@@ -79,6 +79,10 @@ These files are symlinked to `~/.claude/` via dotbot configuration for version c
 
 @instructions/mcp-integration.md
 
+## 🐙 GitHub Project Management
+
+**Use `gh` CLI over MCP servers for GitHub operations.**
+
 ## 📋 Enhanced Analysis Workflows
 
 When handling complex tasks, automatically apply progressive thinking:

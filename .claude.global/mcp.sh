@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # https://gist.github.com/usrbinkat/a57de05914686084ec89c6cfd864ca7d
 # https://docs.anthropic.com/en/docs/claude-code/mcp
 # https://github.com/punkpeye/awesome-mcp-servers?tab=readme-ov-file
@@ -22,16 +23,16 @@ claude mcp add context7 -s user -- npx -y @upstash/context7-mcp@latest
 #   }
 # }'
 
-claude mcp add-json -s user github '{
-  "command": "npx",
-  "args": [
-    "-y",
-    "@modelcontextprotocol/server-github"
-  ],
-  "env": {
-    "GITHUB_PERSONAL_ACCESS_TOKEN": "'"$GITHUB_PERSONAL_ACCESS_TOKEN"'"
-  }
-}'
+# claude mcp add-json -s user github '{
+#   "command": "npx",
+#   "args": [
+#     "-y",
+#     "@modelcontextprotocol/server-github"
+#   ],
+#   "env": {
+#     "GITHUB_PERSONAL_ACCESS_TOKEN": "'"$GITHUB_PERSONAL_ACCESS_TOKEN"'"
+#   }
+# }'
 
 claude mcp add-json -s user gitlab '{
   "command": "npx",
@@ -88,8 +89,8 @@ claude mcp add-json -s user sentry '{
   "args": [
     "-y",
     "@sentry/mcp-server@latest",
-    "--access-token='$SENTRY_ACCESS_TOKEN'",
-    "--host='$SENTRY_HOST'"
+    "--access-token='"${SENTRY_ACCESS_TOKEN}"'",
+    "--host='"${SENTRY_HOST}"'"
   ]
 }'
 

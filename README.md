@@ -1,6 +1,18 @@
-# Dotfiles
+# 🏠 Personal Dotfiles
 
-## Installation
+> **Comprehensive macOS development environment with Claude Code integration**
+
+A sophisticated, modular dotfiles system built with **dotbot** featuring advanced tmux integration, performance-optimized shell environment, and seamless Remote Bridge clipboard system.
+
+## ✨ Key Features
+
+- **🤖 Claude Code Integration** - Real-time tmux status bar with session tracking and emoji indicators
+- **🌉 Remote Bridge System** - Universal clipboard and URL handling across local/SSH sessions  
+- **⚡ Performance Optimized** - 100x faster tools (ripgrep, fd, sd) for Claude Code shell
+- **🧩 Modular Architecture** - Ingredients and recipes system for flexible installations
+- **📱 Complete Setup** - From terminal to GUI applications with sensible defaults
+
+## 🚀 Quick Installation
 
 Clone the repository and install the dotfiles:
 
@@ -16,53 +28,107 @@ If everything is up and running change the dotfiles remote URL to SSH:
 cd ~/.dotfiles && git remote set-url origin git@github.com:kahl-dev/dotfiles.git
 ```
 
-### [Alfred](https://www.alfredapp.com/)
+## 📁 Directory Structure
 
-[Alfred](https://www.alfredapp.com/) is synced vie iCloud Drive. To make this happen there is a setting in
-iCloud Drive that needs to be disabled. Open System Settings and click on your
-name at the top. Then select iCloud and disable Optimise Mac Storage.
-After that start [Alfred](https://www.alfredapp.com/) and set the sync folder to:
-
-```zsh
-/Users/$(whoami)/.icloud/.backup/alfred
+```
+.dotfiles/
+├── 🏗️  meta/                    # Dotbot configuration system
+│   ├── ingredients/             # Individual configuration modules  
+│   └── recipes/                 # Installation profiles (macos, liadev, pi)
+├── 🐚 zsh/                      # Shell configuration and utilities
+│   └── config/                  # Modular zsh configuration files
+├── 🖥️  tmux/                    # Terminal multiplexer with Claude integration
+│   ├── scripts/                 # Status bar and helper scripts
+│   └── CLAUDE.md               # Claude integration documentation
+├── 🍺 brew/                     # Homebrew package management
+│   ├── osx/                     # macOS packages and casks
+│   └── linux/                   # Linux-specific packages
+├── 🌉 remote-bridge/            # Universal clipboard/URL system
+├── ⚙️  .config/                 # XDG-compliant application configs
+├── 🔧 scripts/                  # Installation and maintenance scripts
+└── 📚 docs/                     # Additional documentation
 ```
 
-### [Mackup](https://github.com/lra/mackup)
+## 🎯 Notable Configurations
 
-[Mackup](https://github.com/lra/mackup) is used to sync application settings. Its been installed as default
-package with the install script of this repo so it should be available.
-Simply run the following command to restore all:
+### Terminal Experience
+- **tmux** - Advanced configuration with 2-line adaptive status bar
+- **zsh** - Performance-optimized with modular configuration  
+- **starship** - Beautiful, fast prompt with git integration
+- **Remote Bridge** - Seamless clipboard across local/SSH sessions
 
-```zsh
-mackup restore
+### Development Tools  
+- **neovim** - Full IDE-like configuration in `.config/nvim/`
+- **git** - Enhanced with custom aliases and commit templates
+- **bat** - Syntax highlighting with Catppuccin theme
+- **fzf** - Fuzzy finder integration throughout the system
+
+### macOS Integration
+- **Homebrew** - Comprehensive package management via Brewfiles
+- **Karabiner-Elements** - Custom keyboard remapping
+- **AeroSpace** - Tiling window manager configuration  
+- **System defaults** - Sensible macOS system settings
+
+## 🔧 Advanced Usage
+
+### Modular Installation
+```bash
+# Install specific components only
+./install-standalone tmux
+./install-standalone neovim_build
+
+# Install by profile
+./install-profile liadev    # Development setup
+./install-profile macos     # Complete macOS setup
 ```
 
-## Todos
+### Maintenance Commands
+```bash
+make help                   # Show all available commands
+make updateShell           # Reload shell configuration
+brewup                     # Update all brew packages and cleanup
+brewdump                   # Export current packages to Brewfile
+```
 
-- [x] Rewrite to use `brew bundle` commands.
-- [x] Look into [Mackup](https://github.com/lra/mackup) for syncing application settings.
-- [x] Disable mission control auto rearrange.
-- [ ] Try out [yazi](https://github.com/sxyazi/yazi) as terminal file manager
-- [ ] Use trash-cli instead of rm on macOS
-- [ ] Move node/fnm/yarn/pnpm installation with dotbot
-- [ ] Transform vscode to look more like my neovim setup (theme, font, etc.)
-- [ ] Make starship prompt more pure [omerxx config](https://github.com/omerxx/dotfiles/blob/master/starship/starship.toml)
-- [ ] Clean zsh and old install script even more
-- [ ] Add better dotbot scripts - Maybe something like ingredients and recipes - Or multiple install/update scripts - Add config for work dev server
-- [ ] Show infos like heredoc/array etc in zsh prompt (starship?)
-- [ ] Hanndle max line warning in obsidian markdown files
-      MD013/line-length Line length [Expected: 80; Actual: 190]
-- [ ] Catpuchino theme for more apps ([catppuccin](https://github.com/catppuccin/catppuccin?tab=readme-ov-file))
-- [ ] look into [bat-extras](https://github.com/eth-p/bat-extras)
-- [ ] Fix neovim checkhealth:
-      ```
-      - Nvim node.js host: /home/kahl/.local/share/fnm/aliases/lts-latest/bin/node
-      - ERROR Failed to run: node /home/kahl/.local/share/fnm/aliases/lts-latest/bin/node --version
-        - ADVICE:
-          - Report this issue with the output of: 
-          - node /home/kahl/.local/share/fnm/aliases/lts-latest/bin/node --version
-      ```
-- [ ] find a way to put encrypted files into dotfiles and kick .dotfiles-local
-- [ ] Add [fabric](https://github.com/danielmiessler/fabric) config to dotfiles
-- [ ] add some apps to show in all desktops on osx programmatically (like music, toggle, etc.). Can be done by right click on app in dock -> options -> all desktops
-- [ ] try out an [neovim extension](https://www.youtube.com/watch?v=ig_HLrssAYE) for making screenshots
+## 🆘 Troubleshooting
+
+**Broken symlinks**  
+Simply rerun your profile installation: `./install-profile macos`
+
+**Shell configuration not loading**  
+Run `make updateShell` or restart your terminal
+
+**Homebrew package conflicts**  
+Check system health with `brew doctor` and resolve any issues
+
+**Tmux status bar not working**  
+See detailed troubleshooting in `tmux/CLAUDE.md`
+
+**System Requirements:**
+- macOS with Homebrew installed
+- Git for submodule management  
+- Node.js for Remote Bridge system
+
+## 💡 What Makes This Special
+
+This dotfiles setup goes beyond basic configuration:
+
+- **Claude Code Integration**: Real-time visual feedback in tmux status bar
+- **Remote Bridge**: Universal clipboard that works everywhere (local, SSH, nested tmux)
+- **Performance First**: Optimized tools (100x faster grep/find) for Claude Code
+- **Modular Design**: Mix and match components with ingredients/recipes system
+- **Battle-Tested**: Daily-driven configuration with extensive documentation
+
+Perfect for developers who work across local and remote environments and want a consistent, powerful terminal experience.
+
+---
+
+**See `CLAUDE.md` for technical implementation details and `tmux/CLAUDE.md` for Claude integration specifics.**
+
+## 🎯 Project Management
+
+This project uses **GitHub Issues** for tracking enhancements, bugs, and future improvements. 
+
+**[View all open issues →](https://github.com/kahl-dev/dotfiles/issues)**
+
+To contribute or suggest improvements, please create a GitHub issue with detailed description and implementation ideas.
