@@ -46,7 +46,7 @@ if command_exists fzf; then
   }
 
 
-  alias fa='alias | fzf-tmux'
+  alias fa='alias | fzf-tmux ${FZF_TMUX_OPTS} --header="Find aliases"'
   alias s='_s'
   alias fcd='_fcd'
 fi
