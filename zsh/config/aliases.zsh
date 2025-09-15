@@ -837,17 +837,6 @@ ff() {
     aerospace list-windows --all | fzf --bind 'enter:execute(bash -c "aerospace focus --window-id {1}")+abort'
 }
 
-# ############################## #
-# Lia
-# ############################## #
-
-alias lia-rebuild-nuxt='original_dir=$(pwd) && cdgr && cd nuxt && make install && make build; cd "$original_dir"'
-alias lia-rebuild-lia-package='original_dir=$(pwd) && cdgr && cd tpl && make install && make build; cd "$original_dir"'
-alias lia-rebuild-all='liaRebuildNuxt && liaRebuildLiaPackage'
-alias lrn='lia-rebuild-nuxt'
-alias lrp='lia-rebuild-lia-package'
-alias lra='lia-rebuild-all'
-
 alias mcc='make clearcache'
 
 # ############################## #

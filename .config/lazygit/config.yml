@@ -14,7 +14,7 @@ customCommands:
   - key: '<c-t>'
     context: 'files'
     description: 'Git lia commit'
-    command: 'git-lia-toggl'
+    command: 'lit-toggl'
     output: terminal
 git:
   paging:

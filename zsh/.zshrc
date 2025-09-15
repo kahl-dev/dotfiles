@@ -83,7 +83,6 @@ zmodload zsh/complist                # Load the complist module for advanced com
 
 # Files needs to be loaded after completion or compinit
 source "$ZDOTDIR/config/ngrok.zsh"
-source "$ZDOTDIR/config/git-lia.zsh"
 source "$ZDOTDIR/config/keybindings.zsh"
 source "$ZDOTDIR/config/aliases.zsh"
 source "$ZDOTDIR/config/tmuxinator.zsh"
@@ -92,6 +91,12 @@ source "$ZDOTDIR/config/ssh-agent.zsh"
 source "$ZDOTDIR/config/remote-bridge.zsh"
 source "$ZDOTDIR/config/prompt.zsh"
 source "$ZDOTDIR/config/check_git_cleanup.zsh"
+
+# LIT Tools - Personal productivity scripts for agency work
+# See ~/repos/li-tools for database management, build tools, and git workflows
+if [[ -d "$HOME/repos/li-tools" ]]; then
+    source "$HOME/repos/li-tools/dotfiles/init.zsh"
+fi
 
 if [ -f "$HOME/.dotfiles-local/zshrc" ]; then
   source "$HOME/.dotfiles-local/zshrc"

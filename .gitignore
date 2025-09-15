@@ -22,7 +22,6 @@ nvim/undodir
 bin/*
 !bin/handle_clipboard.sh
 !bin/dot-cli
-!bin/git-lia-toggl
 !bin/vscode
 !bin/git-cleanup
 
