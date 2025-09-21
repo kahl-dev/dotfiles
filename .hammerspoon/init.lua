@@ -1,32 +1,35 @@
--- Define a hotkey to reload Hammerspoon configuration
-hs.hotkey.bind({ "cmd", "alt" }, "R", function()
-	hs.reload()
-end)
-hs.alert.show("Config loaded")
+-- Hammerspoon Configuration
+-- Manages Elgato devices automatically
 
--- local modal = hs.hotkey.modal.new({}, "F17") -- An unused key to represent the layer
---
--- hs.hotkey.bind({ "ctrl", "alt" }, "space", function()
--- 	modal:enter()
--- 	hs.alert.show("Layer activated")
--- end)
---
--- modal:bind({}, "t", function()
--- 	hs.application.launchOrFocusByBundleID("com.mitchellh.ghostty")
--- 	modal:exit()
--- end)
---
--- modal:bind({}, "b", function()
--- 	hs.application.launchOrFocusByBundleID("company.thebrowser.Browser")
--- 	modal:exit()
--- end)
---
--- modal:bind({}, "m", function()
--- 	hs.application.launchOrFocusByBundleID("com.microsoft.teams2")
--- 	modal:exit()
--- end)
---
--- modal:bind({}, "g", function()
--- 	hs.application.launchOrFocusByBundleID("com.openai.chat")
--- 	modal:exit()
--- end)
+-- Manual reload hotkey (backup option)
+hs.hotkey.bind({ "cmd", "alt" }, "R", function()
+    hs.reload()
+end)
+
+-- Auto-reload on config file changes
+local function reloadConfig(files)
+    local doReload = false
+    for _, file in pairs(files) do
+        if file:sub(-4) == ".lua" or file:sub(-5) == ".json" then
+            doReload = true
+        end
+    end
+    if doReload then
+        hs.reload()
+    end
+end
+
+hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", reloadConfig):start()
+hs.alert.show("Hammerspoon loaded")
+
+-- Load modules
+local config = require("modules.config")
+local audioManager = require("modules.audio-manager")
+local usbManager = require("modules.usb-device-manager")
+
+-- Initialize configuration
+config.init()
+
+-- Initialize modules
+audioManager.init()
+usbManager.init()

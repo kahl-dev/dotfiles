@@ -1,0 +1,30 @@
+{
+  "devices": {
+    "stream_deck": {
+      "vendor_id": 4057,
+      "product_ids": [134, 128, 96, 108, 109, 143, 144],
+      "app_bundle_id": "com.elgato.StreamDeck",
+      "app_name": "Elgato Stream Deck",
+      "launch_hidden": true
+    },
+    "wave_link": {
+      "vendor_id": 4057,
+      "product_ids": [102, 103, 112, 113],
+      "app_bundle_id": "com.elgato.WaveLink",
+      "app_name": "Elgato Wave Link",
+      "launch_hidden": true,
+      "coordinate_audio": true
+    }
+  },
+  "settings": {
+    "launch_delay": 2.0,
+    "hide_delay": 2.0,
+    "notifications": false,
+    "debounce_delay": 2.0
+  },
+  "audio": {
+    "elgatoInputName": "Wave:3",
+    "airpodsPattern": "AirPods",
+    "switchDelay": 0.5
+  }
+}
