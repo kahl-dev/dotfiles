@@ -46,6 +46,17 @@ claude mcp add-json -s user gitlab '{
   }
 }'
 
+# Works only for specific plans
+# claude mcp add-json -s user gitlab '{
+#   "command": "npx",
+#   "args": [
+#     "mcp-remote",
+#     "'"$GITLAB_API_URL"'/mcp",
+#     "--static-oauth-client-metadata",
+#     "{\"scope\": \"mcp\"}"
+#   ]
+# }'
+
 # docs: https://github.com/microsoft/playwright-mcp
 claude mcp add playwright -s user npx @playwright/mcp@latest
 
