@@ -243,71 +243,10 @@
       "Write(~/.aws/*)"
     ],
     "defaultMode": "acceptEdits",
-    "additionalDirectories": [
-      "~/tmp/ai"
-    ]
+    "additionalDirectories": ["~/tmp/ai", "~/repos/lia-ai-docs"]
   },
   "model": "opusplan",
   "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/track-session.sh start",
-            "timeout": 5000
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/track-session.sh end",
-            "timeout": 5000
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Bash.*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/system-load-guard.sh"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/safety-guard.sh"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/suggest-background.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "BashOutput.*",
-        "hooks": [
-          {
-            "type": "command", 
-            "command": "~/.claude/hooks/system-load-guard.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "KillBash.*", 
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/system-load-guard.sh"
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit|MultiEdit",
@@ -321,21 +260,10 @@
             "command": "~/.claude/hooks/smart-lint.sh"
           }
         ]
-      },
-      {
-        "matcher": ".*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/track-session.sh activity",
-            "timeout": 3000
-          }
-        ]
       }
     ],
     "Notification": [
       {
-        "matcher": "",
         "hooks": [
           {
             "type": "command",
@@ -346,16 +274,10 @@
     ],
     "Stop": [
       {
-        "matcher": "",
         "hooks": [
           {
             "type": "command",
             "command": "~/.claude/hooks/enhanced-notify-wrapper.sh"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/track-session.sh stop",
-            "timeout": 3000
           }
         ]
       }
