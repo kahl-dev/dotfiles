@@ -407,36 +407,36 @@ alias gjirac="_gjirac"
 # Add new worktree with automatic config file copying
 _gwta() {
   local branch_name="$1"
-  local path="$2"
-  
+  local worktree_path="$2"
+
   if [ -z "$branch_name" ]; then
     echo "Usage: gwta <branch-name> [path]"
     echo "       gwta <existing-branch> [path]"
     return 1
   fi
-  
+
   # If no path specified, use default worktree directory
-  if [ -z "$path" ]; then
+  if [ -z "$worktree_path" ]; then
     # Default path: ~/public_html/public/<branch-name>
-    path="$HOME/public_html/public/$branch_name"
+    worktree_path="$HOME/public_html/public/$branch_name"
   else
     # If path doesn't start with / or ~ or .., treat it as a folder name in default directory
-    if [[ ! "$path" =~ ^[/~] ]] && [[ ! "$path" =~ ^\.\./ ]]; then
-      path="$HOME/public_html/public/$path"
+    if [[ ! "$worktree_path" =~ ^[/~] ]] && [[ ! "$worktree_path" =~ ^\.\./ ]]; then
+      worktree_path="$HOME/public_html/public/$worktree_path"
     fi
   fi
   
-  # Check if branch exists using absolute path to git
-  if /usr/bin/git show-ref --verify --quiet "refs/heads/$branch_name"; then
+  # Check if branch exists
+  if git show-ref --verify --quiet "refs/heads/$branch_name"; then
     echo "Checking out existing branch '$branch_name' in new worktree..."
-    PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH" /usr/bin/git worktree add "$path" "$branch_name"
+    git worktree add "$worktree_path" "$branch_name"
   else
     echo "Creating new branch '$branch_name' in new worktree..."
-    PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH" /usr/bin/git worktree add -b "$branch_name" "$path"
+    git worktree add -b "$branch_name" "$worktree_path"
   fi
-  
+
   if [ $? -eq 0 ]; then
-    echo "✅ Worktree created at: $path"
+    echo "✅ Worktree created at: $worktree_path"
     
     # Get the main worktree for config file copying
     # Look for config files in the current directory first, then in the main worktree
@@ -452,32 +452,68 @@ _gwta() {
     
     # Copy config files if they exist
     if [ -f "$config_source_dir/config/localconf_local.php" ]; then
-      /bin/mkdir -p "$path/config"
-      /bin/cp "$config_source_dir/config/localconf_local.php" "$path/config/"
+      mkdir -p "$worktree_path/config"
+      cp "$config_source_dir/config/localconf_local.php" "$worktree_path/config/"
       echo "📄 Copied config/localconf_local.php from $config_source_dir"
     else
       echo "⚠️  No config/localconf_local.php found in $config_source_dir"
     fi
-    
+
     if [ -f "$config_source_dir/nuxt/.env.local" ]; then
-      /bin/mkdir -p "$path/nuxt"
-      /bin/cp "$config_source_dir/nuxt/.env.local" "$path/nuxt/"
+      mkdir -p "$worktree_path/nuxt"
+      cp "$config_source_dir/nuxt/.env.local" "$worktree_path/nuxt/"
       echo "📄 Copied nuxt/.env.local from $config_source_dir"
     else
       echo "⚠️  No nuxt/.env.local found in $config_source_dir"
     fi
-    
+
+    # Copy AI files recursively preserving directory structure
+    echo "🤖 Copying AI files from $config_source_dir to $worktree_path..."
+
+    # Change to source directory to use relative paths with --parents
+    local current_dir=$(pwd)
+    cd "$config_source_dir"
+
+    # Use relative paths so --parents works correctly
+    if find . -name "CLAUDE.md" -exec cp --parents {} "$worktree_path/" \; 2>/dev/null; then
+      echo "📄 Copied CLAUDE.md files"
+    fi
+
+    if find . -name "AGENTS.md" -exec cp --parents {} "$worktree_path/" \; 2>/dev/null; then
+      echo "📄 Copied AGENTS.md files"
+    fi
+
+    if find . -name "AGENT.md" -exec cp --parents {} "$worktree_path/" \; 2>/dev/null; then
+      echo "📄 Copied AGENT.md files"
+    fi
+
+    # Copy directories with preserved structure
+    if find . -name ".claude" -type d -exec cp -r --parents {} "$worktree_path/" \; 2>/dev/null; then
+      echo "📁 Copied .claude/ directories"
+    fi
+
+    if find . -name ".agents" -type d -exec cp -r --parents {} "$worktree_path/" \; 2>/dev/null; then
+      echo "📁 Copied .agents/ directories"
+    fi
+
+    if find . -name ".llm" -type d -exec cp -r --parents {} "$worktree_path/" \; 2>/dev/null; then
+      echo "📁 Copied .llm/ directories"
+    fi
+
+    # Return to original directory
+    cd "$current_dir"
+
     # Switch to the new worktree
-    echo "📍 Switching to new worktree at: $path"
+    echo "📍 Switching to new worktree at: $worktree_path"
     {
-      cd "$path"
-      
+      cd "$worktree_path"
+
       # Update zoxide database
       if command -v zoxide >/dev/null 2>&1; then
-        zoxide add "$path" 2>/dev/null
+        zoxide add "$worktree_path" 2>/dev/null
       fi
     } 2>/dev/null
-    
+
     echo "✅ Now in: $(pwd)"
   fi
 }
