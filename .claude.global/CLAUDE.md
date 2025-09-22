@@ -139,6 +139,19 @@ cat ~/.claude/settings.json | jq '.'  # Validate settings file
 - `/user:development:commit` - Personal commit workflow
 - `/claude:memory` - Edit Claude memory
 
+#### 🔄 Production Review Workflow
+
+1. **🚨 Pre-commit gate** – Run `/user:review:hard` (invokes `@review-hard-auditor`).
+   - Scope: current staged/unstaged changes only.
+   - Expectation: returns `Not Ready` until all blockers (injections, unsafe fallbacks, etc.) are fixed.
+   - Ship only after the auditor reports *no blockers*.
+
+2. **🔍 Deep analysis** – Once the gate is green, use the `review-simple-analyzer` agent for follow-up work.
+   - Examples: `analyze src/auth/`, `review commits from last week`, `full codebase health check`, `postmortem commit abc123`.
+   - Purpose: advisory insights on architecture, technical debt, historical regressions, post-deploy audits.
+
+3. **❌ Common mistake** – Do **not** rely on `review-simple-analyzer` for gating uncommitted changes. It is advisory; the auditor is the strict production safety gate.
+
 #### 📚 Documentation & Research
 
 Before creating or modifying commands:

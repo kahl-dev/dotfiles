@@ -13,7 +13,7 @@ This directory contains the comprehensive global configuration system for Claude
 │   ├── claude/            # Claude-specific development tools
 │   │   └── prompt.md      # /claude/prompt - Prompt engineering expert
 │   ├── commit.md          # /commit - Create conventional commits
-│   └── review-prod-ready.md # /review-prod-ready - Production readiness review
+│   └── user/review/       # /user:review:* - Review workflow commands
 ├── instructions/          # Modular instruction files
 │   ├── build-commands.md  # Build and verification guidelines
 │   ├── code-principles.md # Core coding principles
@@ -56,7 +56,8 @@ The configuration uses `@instructions/filename.md` syntax for modular organizati
 Slash commands provide specialized capabilities:
 - **`/analyze`**: Senior architect-level codebase analysis with actionable insights
 - **`/claude/prompt`**: Expert prompt engineering for custom command development
-- **`/review-prod-ready`**: Comprehensive production readiness assessment
+- **`/user:review:hard`**: Strict production readiness gate (blocking)
+- **`/user:review:simple`**: Advisory follow-up analysis (post-gate)
 - **`/commit`**: Conventional commit message generation
 
 ### Development Integration
@@ -75,7 +76,8 @@ Slash commands provide specialized capabilities:
 ### Expert Commands
 - **`/analyze`**: Comprehensive codebase analysis with architectural insights
 - **`/claude/prompt`**: Expert prompt engineering and command development
-- **`/review-prod-ready`**: Production readiness assessment and code review
+- **`/user:review:hard`**: Production readiness gate (must pass before committing)
+- **`/user:review:simple`**: Deep follow-up review for insights/tech debt
 - **`/commit`**: Conventional commit message generation with proper formatting
 
 ## 📝 Maintenance
