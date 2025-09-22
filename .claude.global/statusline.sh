@@ -22,7 +22,7 @@ if command -v jq >/dev/null 2>&1; then
     "model_name=" + ((.model.display_name // "Claude") | @sh) + ";" +
     "model_version=" + ((.model.version // "") | @sh) + ";" +
     "cc_version=" + ((.version // "") | @sh) + ";" +
-    "output_style=" + ((.output_style.name // "") | @sh) + ";" +
+    # "output_style=" + ((.output_style.name // "") | @sh) + ";" +
     "lines_added=" + ((.lines_added // 0) | tostring) + ";" +
     "lines_removed=" + ((.lines_removed // 0) | tostring)
   ' 2>/dev/null)"
@@ -31,7 +31,7 @@ else
   model_name="Claude"
   model_version=""
   cc_version=""
-  output_style=""
+  # output_style=""
   lines_added="0"
   lines_removed="0"
 fi
@@ -68,9 +68,9 @@ fi
 if [ -n "$cc_version" ] && [ "$cc_version" != "null" ]; then
   printf '  📟 %sv%s%s' "$(model_color)" "$cc_version" "$(RST)"
 fi
-if [ -n "$output_style" ] && [ "$output_style" != "null" ]; then
-  printf '  🎨 %s%s%s' "$(model_color)" "$output_style" "$(RST)"
-fi
+# if [ -n "$output_style" ] && [ "$output_style" != "null" ]; then
+#   printf '  🎨 %s%s%s' "$(model_color)" "$output_style" "$(RST)"
+# fi
 if [ "$lines_added" != "0" ] || [ "$lines_removed" != "0" ]; then
   printf '  📊 %s+%s -%s%s' "$(model_color)" "$lines_added" "$lines_removed" "$(RST)"
 fi
