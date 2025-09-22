@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Promote legacy CLAUDE.md files into AGENTS.md + CLAUDE.md symlink layout.
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+log() { printf '%s\n' "$*"; }
+warn() { printf 'WARN: %s\n' "$*" >&2; }
+
+# Step 1: turn standalone CLAUDE.md files into AGENTS.md files.
+while IFS= read -r -d '' path; do
+  [ "${path##*/}" = "CLAUDE.md" ] || continue
+  dir_path="$(dirname -- "$path")"
+  rel_dir=""
+  [ "$dir_path" != "." ] && rel_dir="$dir_path/"
+  claude_path="$REPO_ROOT/$path"
+  agents_path="$REPO_ROOT/$dir_path/AGENTS.md"
+
+  if [ ! -e "$agents_path" ]; then
+    if [ -L "$claude_path" ]; then
+      warn "Skipping symlink ${rel_dir}CLAUDE.md with no AGENTS.md; please resolve manually."
+      continue
+    fi
+    mv -- "$claude_path" "$agents_path"
+    log "Promoted: ${rel_dir}CLAUDE.md -> ${rel_dir}AGENTS.md"
+  fi
+done < <(git ls-files --cached --others --ignored --exclude-standard -z)
+
+# Step 2: ensure every AGENTS.md has a CLAUDE.md symlink.
+while IFS= read -r -d '' path; do
+  [ "${path##*/}" = "AGENTS.md" ] || continue
+  dir_path="$(dirname -- "$path")"
+  rel_dir=""
+  [ "$dir_path" != "." ] && rel_dir="$dir_path/"
+  (
+    cd "$REPO_ROOT/$dir_path"
+    if [ -e "CLAUDE.md" ] && [ ! -L "CLAUDE.md" ]; then
+      if ! cmp -s "CLAUDE.md" "AGENTS.md"; then
+        warn "Conflict: ${rel_dir}CLAUDE.md differs from AGENTS.md; left untouched."
+        exit 0
+      fi
+    fi
+    ln -sfn "AGENTS.md" "CLAUDE.md"
+    log "Linked: ${rel_dir}CLAUDE.md -> AGENTS.md"
+  )
+done < <(git ls-files --cached --others --ignored --exclude-standard -z)
+
+# Step 3: drop only dangling CLAUDE.md symlinks with no AGENTS.md beside them.
+while IFS= read -r -d '' path; do
+  [ "${path##*/}" = "CLAUDE.md" ] || continue
+  dir_path="$(dirname -- "$path")"
+  rel_dir=""
+  [ "$dir_path" != "." ] && rel_dir="$dir_path/"
+  claude_path="$REPO_ROOT/$path"
+  agents_path="$REPO_ROOT/$dir_path/AGENTS.md"
+
+  if [ ! -e "$agents_path" ] && [ -L "$claude_path" ]; then
+    rm -f -- "$claude_path"
+    log "Removed dangling symlink: ${rel_dir}CLAUDE.md"
+  elif [ ! -e "$agents_path" ]; then
+    warn "Unpaired ${rel_dir}CLAUDE.md has no AGENTS.md; leaving it in place."
+  fi
+done < <(git ls-files --cached --others --ignored --exclude-standard -z)

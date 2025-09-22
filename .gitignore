@@ -24,6 +24,7 @@ bin/*
 !bin/dot-cli
 !bin/vscode
 !bin/git-cleanup
+!bin/sync-agents-claude
 
 !.config/bat/themes/*
 
