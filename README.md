@@ -6,7 +6,7 @@ A sophisticated, modular dotfiles system built with **dotbot** featuring advance
 
 ## ✨ Key Features
 
-- **🤖 Claude Code Integration** - Real-time tmux status bar with session tracking and emoji indicators
+- **🤖 Claude Code Integration** - Optimized shell environment and automation tailored for Claude Code sessions
 - **🌉 Remote Bridge System** - Universal clipboard and URL handling across local/SSH sessions  
 - **⚡ Performance Optimized** - 100x faster tools (ripgrep, fd, sd) for Claude Code shell
 - **🧩 Modular Architecture** - Ingredients and recipes system for flexible installations
