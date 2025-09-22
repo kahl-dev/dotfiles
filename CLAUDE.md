@@ -18,18 +18,6 @@ Global Claude Code instructions and configuration are stored in `.claude.global/
 
 These provide consistent Claude behavior across all projects and machines.
 
-### Tmux Claude Integration
-
-This repository includes a sophisticated **tmux status bar integration** with Claude Code that provides real-time visual feedback about your Claude workflow:
-
-- **Adaptive status bar**: Automatically switches between 1-line and 2-line modes based on Claude session activity
-- **Real-time session tracking**: Shows current status with emoji indicators (🚀🧠🤔⏳💤)
-- **Multi-project support**: Tracks multiple Claude sessions across different projects simultaneously
-- **Hook integration**: Leverages Claude Code's hook system for instant status updates
-- **System monitoring**: Includes optimized CPU/memory monitoring with caching
-
-**See `tmux/CLAUDE.md` for complete documentation** including troubleshooting, manual controls, and maintenance procedures.
-
 ## Claude Code Performance Optimization
 
 This repository includes special optimizations for Claude Code's shell environment:
@@ -64,7 +52,7 @@ All Claude-specific optimizations are in `zsh/config/claude-code.zsh`
 - **Configuration directories** organized by tool:
   - `zsh/` - Shell configuration and utilities
   - `.config/` - XDG-compliant application configurations
-  - `tmux/` - Terminal multiplexer with **Claude Code integration** (see `tmux/CLAUDE.md`)
+  - `tmux/` - Terminal multiplexer configuration
   - `brew/` - Homebrew package management (separate for macOS/Linux)
 
 ### Installation System
@@ -237,11 +225,7 @@ path_exists "$DOTFILES/bin" && export PATH="$DOTFILES/bin:$PATH"
 ## Key Tools & Their Configs
 
 ### Terminal & Shell
-- **tmux**: Advanced configuration with **Claude Code integration** - see `tmux/CLAUDE.md` for details on:
-  - Adaptive status bar (1-line ↔ 2-line switching based on Claude session activity)
-  - Real-time Claude session tracking with status indicators (🚀🧠🤔⏳💤)
-  - System monitoring integration (CPU, memory, project context)
-  - Hook-based session state management via `~/.claude.global/hooks/`
+- **tmux**: Advanced configuration in `tmux/` with responsive status bar, remote-friendly defaults, and curated plugin setup
 - **zsh**: Modular config in `zsh/config/` with automatic sourcing
 - **starship**: Prompt config in `.config/starship.toml`
 
@@ -305,7 +289,7 @@ Every significant change must include documentation updates in the same commit. 
 
 **Examples of changes requiring documentation:**
 - Adding new keybindings → Update README.md and relevant CLAUDE.md sections
-- Modifying tmux status bar → Update tmux/CLAUDE.md and add screenshot to README.md  
+- Modifying tmux status bar → Update docs/tmux.md and add screenshot to README.md  
 - Creating new scripts → Update bin/README.md or relevant documentation
 - Changing installation process → Update main README.md installation section
 
@@ -316,7 +300,6 @@ Every significant change must include documentation updates in the same commit. 
 - **Package conflicts**: Check Homebrew with `brew doctor`
 - **Neovim issues**: Reset with `make nvimResetPackages`
 - **Shell not updating**: Run `make updateShell` or restart terminal
-- **Tmux status bar issues**: See `tmux/CLAUDE.md` for Claude integration troubleshooting
 
 ### System Dependencies
 - Requires macOS with Homebrew installed

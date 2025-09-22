@@ -37,9 +37,8 @@ cd ~/.dotfiles && git remote set-url origin git@github.com:kahl-dev/dotfiles.git
 │   └── recipes/                 # Installation profiles (macos, liadev, pi)
 ├── 🐚 zsh/                      # Shell configuration and utilities
 │   └── config/                  # Modular zsh configuration files
-├── 🖥️  tmux/                    # Terminal multiplexer with Claude integration
+├── 🖥️  tmux/                    # Terminal multiplexer configuration
 │   ├── scripts/                 # Status bar and helper scripts
-│   └── CLAUDE.md               # Claude integration documentation
 ├── 🍺 brew/                     # Homebrew package management
 │   ├── osx/                     # macOS packages and casks
 │   └── linux/                   # Linux-specific packages
@@ -52,7 +51,7 @@ cd ~/.dotfiles && git remote set-url origin git@github.com:kahl-dev/dotfiles.git
 ## 🎯 Notable Configurations
 
 ### Terminal Experience
-- **tmux** - Advanced configuration with 2-line adaptive status bar
+- **tmux** - Advanced configuration with responsive status bar
 - **zsh** - Performance-optimized with modular configuration  
 - **starship** - Beautiful, fast prompt with git integration
 - **Remote Bridge** - Seamless clipboard across local/SSH sessions
@@ -101,9 +100,6 @@ Run `make updateShell` or restart your terminal
 **Homebrew package conflicts**  
 Check system health with `brew doctor` and resolve any issues
 
-**Tmux status bar not working**  
-See detailed troubleshooting in `tmux/CLAUDE.md`
-
 **System Requirements:**
 - macOS with Homebrew installed
 - Git for submodule management  
@@ -113,9 +109,9 @@ See detailed troubleshooting in `tmux/CLAUDE.md`
 
 This dotfiles setup goes beyond basic configuration:
 
-- **Claude Code Integration**: Real-time visual feedback in tmux status bar
+- **Rich tmux environment**: Responsive status bar, plugin workflow, and polished UX
 - **Remote Bridge**: Universal clipboard that works everywhere (local, SSH, nested tmux)
-- **Performance First**: Optimized tools (100x faster grep/find) for Claude Code
+- **Performance First**: Optimized tools (100x faster grep/find) tuned for everyday workflows
 - **Modular Design**: Mix and match components with ingredients/recipes system
 - **Battle-Tested**: Daily-driven configuration with extensive documentation
 
@@ -123,7 +119,7 @@ Perfect for developers who work across local and remote environments and want a 
 
 ---
 
-**See `CLAUDE.md` for technical implementation details and `tmux/CLAUDE.md` for Claude integration specifics.**
+**See `CLAUDE.md` for technical implementation details.**
 
 ## 🎯 Project Management
 

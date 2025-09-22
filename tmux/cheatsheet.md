@@ -102,9 +102,7 @@
 |------------|-------------|
 | `<prefix> <` | Window menu (swap, rename, etc.) |
 | `<prefix> >` | Pane menu (split, swap, kill, etc.) |
-| `<prefix> S` | Toggle Claude status line visibility |
 | `<prefix> R` | Reload status configuration |
-| `<prefix> I` | Show status info (debugging) |
 
 ## 📋 Clipboard (Remote Bridge)
 

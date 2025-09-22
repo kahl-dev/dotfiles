@@ -1,11 +1,10 @@
 # Tmux Configuration Documentation
 
-This document covers the complete tmux setup in this dotfiles repository, including the sophisticated Claude Code integration system.
+This document covers the complete tmux setup in this dotfiles repository.
 
 ## Overview
 
 This tmux configuration provides:
-- **Custom status bar with Claude Code integration** - Real-time session tracking and adaptive display
 - **Advanced clipboard integration** - Universal clipboard via `rclip` with remote support
 - **Smart pane navigation** - Vim-aware navigation and plugin ecosystem
 - **Session management** - Auto-save/restore with tmux-resurrect and tmux-continuum
@@ -16,81 +15,21 @@ This tmux configuration provides:
 ```
 tmux/
 ├── tmux.conf              # Main configuration file
-├── custom-status.conf     # Claude integration + status bar
+├── custom-status.conf     # Single-line status bar configuration
 ├── tmux.remote.conf      # SSH/remote session optimizations
 ├── .tmux.reset.conf      # Clean slate configuration reset
-├── CLAUDE.md             # Claude Code integration documentation
 ├── scripts/              # Status bar scripts and utilities
 │   ├── status-line-main.sh      # System monitoring (CPU, memory)
-│   ├── status-line-claude.sh    # Claude session tracking
 │   ├── cpu-simple.sh            # Cached CPU monitoring
 │   ├── mem-simple.sh            # Cached memory monitoring
 │   ├── host-icon.sh             # System icon detection
 │   ├── hostname-display.sh      # Smart hostname formatting
-│   └── tmux-command-palette.sh  # Command palette popup
+│   ├── lit-info-urls.sh         # Project URL helper
+│   ├── tmux-cheatsheet.sh       # Cheatsheet popup
+│   └── tmux-cheatsheet-search.sh# Cheatsheet search UI
 ├── plugins/              # TPM plugin directory
 ├── resurrect/           # Session save data
 └── tmux-commands/       # Custom command scripts
-```
-
-## Claude Code Integration
-
-### Real-Time Status Bar
-
-The crown jewel of this configuration is the **adaptive status bar** that integrates directly with Claude Code sessions:
-
-```
-Line 1: [Host Icon] [Session] [Windows]              [CPU] [Memory] [Hostname]
-Line 2: Sessions: dotfiles:🧠 website:⏳ api:🤔 │ 3 active
-```
-
-**Key Features:**
-- **Automatic mode switching**: 1-line ↔ 2-line based on Claude session activity
-- **Real-time status tracking**: 🚀 starting, 🧠 working, 🤔 asking, ⏳ waiting, 💤 idle
-- **Multi-project support**: Track Claude sessions across different projects
-- **Smart grouping**: Sessions grouped by project directory, not tmux session name
-- **Current session highlighting**: Active session shown in blue, others dimmed
-
-### Hook Integration Architecture
-
-```mermaid
-graph LR
-    A[Claude Code] --> B[Hook System]
-    B --> C[track-session.sh]
-    C --> D[status.json]
-    D --> E[status-line-claude.sh]
-    E --> F[Tmux Display]
-    
-    B --> G[notification-handler.sh]
-    G --> C
-```
-
-**Hook Events:**
-- `SessionStart` → Creates session entry, switches to 2-line mode
-- `PostToolUse` → Updates status to "working" 🧠
-- `Notification` → Updates to "asking" 🤔 (permission requests)
-- `Stop` → Updates to "waiting" ⏳
-- `SessionEnd` → Updates to "idle" 💤, eventually 1-line mode
-
-### Status File Format
-
-Central state stored in `~/.claude/sessions/status.json`:
-
-```json
-{
-  "sessions": [
-    {
-      "tmux_session": "dotfiles",
-      "tmux_window": 1,
-      "tmux_pane": 0,
-      "project_dir": "/Users/user/.dotfiles",
-      "status": "working",
-      "last_activity": "2024-09-02T21:30:00Z",
-      "claude_session_id": "session-123",
-      "created_at": "2024-09-02T21:25:00Z"
-    }
-  ]
-}
 ```
 
 ## Key Bindings Reference
@@ -138,13 +77,6 @@ Central state stored in `~/.claude/sessions/status.json`:
 | `v` | `begin-selection` | Start selection (in copy mode) |
 | `y` | `copy-pipe-and-cancel 'rclip'` | Copy selection to clipboard |
 | `Y` | `copy-line` | Copy entire line |
-
-#### Status Bar Controls (Claude Integration)
-| Key | Action | Description |
-|-----|--------|-------------|
-| `S` | Toggle Claude line | Hide/show Claude sessions line |
-| `R` | Reload config | Reload status configuration |
-| `I` | Status info | Show debug information |
 
 #### Plugin & Tool Shortcuts
 | Key | Action | Description |
@@ -345,7 +277,6 @@ set-hook -g client-session-changed 'refresh-client -S'  # Switch
 
 ### Prerequisites
 - **tmux 3.0+** (3.3+ recommended for advanced formatting)
-- **jq** (required for Claude integration JSON processing)
 - **rclip** (universal clipboard tool)
 - **bash 4.0+** (advanced regex, associative arrays)
 
@@ -367,30 +298,9 @@ git clone https://github.com/tmux-plugins/tpm ~/.dotfiles/tmux/plugins/tpm
 tmux
 ```
 
-Plugins will auto-install on first start, and Claude integration will activate when Claude Code is used.
+Plugins will auto-install on first start.
 
 ## Troubleshooting
-
-### Status Bar Issues
-
-**Claude line not showing:**
-```bash
-# Check session tracking
-cat ~/.claude/sessions/status.json | jq '.'
-
-# Test scripts individually
-~/.dotfiles/tmux/scripts/status-line-claude.sh
-~/.dotfiles/tmux/scripts/status-line-main.sh
-```
-
-**Performance problems:**
-```bash
-# Check cache files
-ls -la ~/.cache/tmux-*
-
-# Test script performance  
-time ~/.dotfiles/tmux/scripts/cpu-simple.sh
-```
 
 ### Plugin Issues
 
@@ -449,11 +359,6 @@ tmux -V
 - **Status bar changes**: Automatically picked up every 5 seconds
 - **Plugin changes**: Requires tmux restart
 
-### Log Monitoring
-- **Session tracking**: `~/.claude/sessions/tracker.log`
-- **Hook debugging**: `/tmp/claude-hook-debug.log`
-- **Plugin logs**: Individual plugin directories
-
 ---
 
-This tmux configuration represents a sophisticated terminal multiplexer setup with deep Claude Code integration, providing real-time workflow awareness and seamless multi-environment operation. The adaptive status bar and intelligent session tracking make it particularly powerful for development workflows involving Claude Code.
+This tmux configuration provides a refined terminal multiplexer setup focused on productivity, responsive status displays, and seamless multi-environment operation.
