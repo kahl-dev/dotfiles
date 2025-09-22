@@ -763,17 +763,17 @@ alias lcu='lia-copyurl'
 # Podman (Docker replacement)
 # ############################## #
 
-if command_exists podman; then
-  alias docker='podman'
-
-  # Override docker-compose if podman-compose is available
-  command_exists podman-compose && alias docker-compose='podman-compose'
-
-  # Podman-specific aliases
-  alias podman-clean='podman system prune -a'
-  alias podman-clean-all='podman system prune -a --volumes'
-  alias podman-reset='podman system reset'
-fi
+# if command_exists podman; then
+#   alias docker='podman'
+#
+#   # Override docker-compose if podman-compose is available
+#   command_exists podman-compose && alias docker-compose='podman-compose'
+#
+#   # Podman-specific aliases
+#   alias podman-clean='podman system prune -a'
+#   alias podman-clean-all='podman system prune -a --volumes'
+#   alias podman-reset='podman system reset'
+# fi
 
 # ############################## #
 # Atuin Environment Variables
