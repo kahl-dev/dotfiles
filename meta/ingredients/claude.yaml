@@ -35,4 +35,17 @@
                  ~/tmp/ai/downloads \
                  ~/tmp/ai/analysis \
                  ~/tmp/ai/cache
+    - description: "Link host-specific Claude settings if needed"
+      command: |
+        HOSTNAME=$(hostname -s)
+        case "$HOSTNAME" in
+          "typo3")
+            ln -sf "$HOME/.dotfiles/.claude.global/settings/liadev.json" "$HOME/.claude/settings.local.json"
+            echo "Linked liadev-specific Claude settings for typo3"
+            ;;
+          *)
+            # Remove any existing local settings symlink for other hosts
+            rm -f "$HOME/.claude/settings.local.json"
+            ;;
+        esac
 

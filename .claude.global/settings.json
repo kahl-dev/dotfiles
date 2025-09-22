@@ -239,7 +239,7 @@
       "Write(~/.aws/*)"
     ],
     "defaultMode": "acceptEdits",
-    "additionalDirectories": ["~/tmp/ai", "~/repos/lia-ai-docs"]
+    "additionalDirectories": ["~/tmp/ai"]
   },
   "model": "opusplan",
   "hooks": {
