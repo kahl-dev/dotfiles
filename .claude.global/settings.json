@@ -277,6 +277,16 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/user_prompt_submit.sh"
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
