@@ -26,5 +26,30 @@
     "elgatoInputName": "Wave:3",
     "airpodsPattern": "AirPods",
     "switchDelay": 0.5
+  },
+  "displays": {
+    "desk_setup": {
+      "display_uuid": "F7C9EE9C-B4E6-4D31-9218-BE5DB1C1BF99",
+      "display_name": "External Display",
+      "eve_plug": {
+        "enabled": true,
+        "home_assistant_url": "http://homeassistant.local:8123",
+        "entity_id": "switch.arbeitszimmer_1og_schreibtisch_2",
+        "token": "PLACEHOLDER_TOKEN"
+      },
+      "power_on_triggers": ["display_connected", "unlock_with_display"],
+      "power_off_triggers": ["display_disconnected", "lock_with_display"],
+      "delays": {
+        "power_on": 0.0,
+        "power_off": 0.0,
+        "lock_threshold": 2.0
+      }
+    }
+  },
+  "macbook_display_uuid": "37D8832A-2D66-02CA-B9F7-8F30A301B230",
+  "display_settings": {
+    "debug_notifications": false,
+    "retry_attempts": 3,
+    "retry_delay": 2.0
   }
 }

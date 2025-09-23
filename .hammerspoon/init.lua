@@ -26,6 +26,7 @@ hs.alert.show("Hammerspoon loaded")
 local config = require("modules.config")
 local audioManager = require("modules.audio-manager")
 local usbManager = require("modules.usb-device-manager")
+local displayManager = require("modules.display-manager")
 
 -- Initialize configuration
 config.init()
@@ -33,3 +34,4 @@ config.init()
 -- Initialize modules
 audioManager.init()
 usbManager.init()
+displayManager.init()

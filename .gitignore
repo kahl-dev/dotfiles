@@ -49,3 +49,6 @@ alfred_scripts/script.log
 .config/zed/settings.local.json
 
 logs
+
+# Hammerspoon private configuration
+.hammerspoon/config/private.json
