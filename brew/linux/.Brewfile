@@ -52,6 +52,8 @@ brew "icu4c@76"
 brew "jpeg-xl"
 # Network authentication protocol
 brew "krb5"
+# Simple terminal UI for git commands
+brew "lazygit"
 # Asynchronous event library
 brew "libevent"
 # Version of the SSL/TLS protocol forked from OpenSSL
@@ -98,5 +100,3 @@ brew "yazi"
 brew "zoxide"
 # Git in your tmux status bar.
 brew "arl/arl/gitmux"
-# A simple terminal UI for git commands, written in Go
-brew "jesseduffield/lazygit/lazygit"
