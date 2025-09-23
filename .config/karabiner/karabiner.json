@@ -3,31 +3,62 @@
         {
             "complex_modifications": {
                 "parameters": {
-                    "basic.to_if_alone_timeout_milliseconds": 275,
-                    "basic.to_if_held_down_threshold_milliseconds": 140
+                    "basic.to_if_alone_timeout_milliseconds": 200,
+                    "basic.to_if_held_down_threshold_milliseconds": 180
                 },
                 "rules": [
                     {
-                        "description": "Home row mods - ctrl, opt, shift, command",
+                        "description": "Homerow: disable (Caps+Space)",
                         "manipulators": [
                             {
+                                "type": "basic",
                                 "from": {
                                     "simultaneous": [
-                                        { "key_code": "a" },
-                                        { "key_code": "s" },
-                                        { "key_code": "d" },
-                                        { "key_code": "f" }
+                                        { "key_code": "caps_lock" },
+                                        { "key_code": "spacebar" }
                                     ]
                                 },
-                                "to_if_held_down": [
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "homerow_mods_disabled", "value": 1 },
                                     {
-                                        "key_code": "left_shift",
-                                        "lazy": true,
-                                        "modifiers": ["left_command", "left_option", "left_control"]
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^com\\.microsoft\\.rdc.*",
+                                            "^com\\.citrix\\..*"
+                                        ]
                                     }
                                 ],
-                                "type": "basic"
-                            },
+                                "to": [
+                                    { "set_variable": { "name": "homerow_mods_disabled", "value": 1 } }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Homerow: enable (Caps+Space)",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "simultaneous": [
+                                        { "key_code": "caps_lock" },
+                                        { "key_code": "spacebar" }
+                                    ]
+                                },
+                                "conditions": [
+                                    { "type": "variable_if", "name": "homerow_mods_disabled", "value": 1 }
+                                ],
+                                "to": [
+                                    { "set_variable": { "name": "homerow_mods_disabled", "value": 0 } }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Home row mods - ctrl, opt, shift, command",
+                        "manipulators": [
                             {
                                 "from": {
                                     "simultaneous": [
@@ -49,43 +80,13 @@
                                 "from": {
                                     "simultaneous": [
                                         { "key_code": "a" },
-                                        { "key_code": "d" },
-                                        { "key_code": "f" }
-                                    ]
-                                },
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_shift",
-                                        "lazy": true,
-                                        "modifiers": ["left_command", "left_control"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "s" },
-                                        { "key_code": "d" },
-                                        { "key_code": "f" }
-                                    ]
-                                },
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_option",
-                                        "lazy": true,
-                                        "modifiers": ["left_command", "left_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "a" },
                                         { "key_code": "s" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "a" },
@@ -98,25 +99,16 @@
                                         "modifiers": ["left_option"]
                                     }
                                 ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "s" },
-                                        { "key_code": "a" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "s" },
-                                    { "key_code": "a" }
-                                ],
-                                "to_if_held_down": [
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "homerow_mods_disabled", "value": 1 },
                                     {
-                                        "key_code": "left_control",
-                                        "lazy": true,
-                                        "modifiers": ["left_option"]
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^com\\.microsoft\\.rdc.*",
+                                            "^com\\.citrix\\..*"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -127,7 +119,11 @@
                                         { "key_code": "a" },
                                         { "key_code": "d" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "a" },
@@ -140,25 +136,16 @@
                                         "modifiers": ["left_shift"]
                                     }
                                 ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "d" },
-                                        { "key_code": "a" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "d" },
-                                    { "key_code": "a" }
-                                ],
-                                "to_if_held_down": [
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "homerow_mods_disabled", "value": 1 },
                                     {
-                                        "key_code": "left_control",
-                                        "lazy": true,
-                                        "modifiers": ["left_shift"]
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^com\\.microsoft\\.rdc.*",
+                                            "^com\\.citrix\\..*"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -169,7 +156,11 @@
                                         { "key_code": "a" },
                                         { "key_code": "f" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "a" },
@@ -182,25 +173,16 @@
                                         "modifiers": ["left_command"]
                                     }
                                 ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "f" },
-                                        { "key_code": "a" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "f" },
-                                    { "key_code": "a" }
-                                ],
-                                "to_if_held_down": [
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "homerow_mods_disabled", "value": 1 },
                                     {
-                                        "key_code": "left_control",
-                                        "lazy": true,
-                                        "modifiers": ["left_command"]
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^com\\.microsoft\\.rdc.*",
+                                            "^com\\.citrix\\..*"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -211,7 +193,11 @@
                                         { "key_code": "s" },
                                         { "key_code": "d" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "s" },
@@ -224,25 +210,16 @@
                                         "modifiers": ["left_shift"]
                                     }
                                 ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "d" },
-                                        { "key_code": "s" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "d" },
-                                    { "key_code": "s" }
-                                ],
-                                "to_if_held_down": [
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "homerow_mods_disabled", "value": 1 },
                                     {
-                                        "key_code": "left_option",
-                                        "lazy": true,
-                                        "modifiers": ["left_shift"]
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^com\\.microsoft\\.rdc.*",
+                                            "^com\\.citrix\\..*"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -253,7 +230,11 @@
                                         { "key_code": "s" },
                                         { "key_code": "f" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "s" },
@@ -271,56 +252,18 @@
                             {
                                 "from": {
                                     "simultaneous": [
-                                        { "key_code": "f" },
-                                        { "key_code": "s" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "f" },
-                                    { "key_code": "s" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_option",
-                                        "lazy": true,
-                                        "modifiers": ["left_command"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
                                         { "key_code": "d" },
                                         { "key_code": "f" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "d" },
                                     { "key_code": "f" }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "left_command",
-                                        "lazy": true,
-                                        "modifiers": ["left_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "f" },
-                                        { "key_code": "d" }
-                                    ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
-                                },
-                                "to_if_alone": [
-                                    { "key_code": "f" },
-                                    { "key_code": "d" }
                                 ],
                                 "to_if_held_down": [
                                     {
@@ -349,6 +292,22 @@
                                         "key_code": "left_control"
                                     }
                                 ],
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 200,
+                                    "basic.to_if_held_down_threshold_milliseconds": 180
+                                },
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "homerow_mods_disabled", "value": 1 },
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^com\\.microsoft\\.rdc.*",
+                                            "^com\\.citrix\\..*"
+                                        ]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -369,6 +328,22 @@
                                         "key_code": "left_option"
                                     }
                                 ],
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 200,
+                                    "basic.to_if_held_down_threshold_milliseconds": 180
+                                },
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "homerow_mods_disabled", "value": 1 },
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^com\\.microsoft\\.rdc.*",
+                                            "^com\\.citrix\\..*"
+                                        ]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -387,6 +362,22 @@
                                     {
                                         "halt": true,
                                         "key_code": "left_shift"
+                                    }
+                                ],
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 200,
+                                    "basic.to_if_held_down_threshold_milliseconds": 180
+                                },
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "homerow_mods_disabled", "value": 1 },
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^com\\.microsoft\\.rdc.*",
+                                            "^com\\.citrix\\..*"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -414,73 +405,20 @@
                                         "key_code": "left_command"
                                     }
                                 ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "j" },
-                                        { "key_code": "k" },
-                                        { "key_code": "l" },
-                                        { "key_code": "semicolon" }
-                                    ]
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 200,
+                                    "basic.to_if_held_down_threshold_milliseconds": 180
                                 },
-                                "to_if_held_down": [
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "homerow_mods_disabled", "value": 1 },
                                     {
-                                        "key_code": "right_shift",
-                                        "lazy": true,
-                                        "modifiers": ["right_command", "right_option", "right_control"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "semicolon" },
-                                        { "key_code": "l" },
-                                        { "key_code": "k" }
-                                    ]
-                                },
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_shift",
-                                        "lazy": true,
-                                        "modifiers": ["right_option", "right_control"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "semicolon" },
-                                        { "key_code": "k" },
-                                        { "key_code": "j" }
-                                    ]
-                                },
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_shift",
-                                        "lazy": true,
-                                        "modifiers": ["right_command", "right_option"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "simultaneous": [
-                                        { "key_code": "l" },
-                                        { "key_code": "k" },
-                                        { "key_code": "j" }
-                                    ]
-                                },
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "right_control",
-                                        "lazy": true,
-                                        "modifiers": ["right_command", "right_option"]
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^com\\.microsoft\\.rdc.*",
+                                            "^com\\.citrix\\..*"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -491,7 +429,11 @@
                                         { "key_code": "semicolon" },
                                         { "key_code": "l" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "semicolon" },
@@ -512,7 +454,11 @@
                                         { "key_code": "l" },
                                         { "key_code": "semicolon" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "l" },
@@ -533,7 +479,11 @@
                                         { "key_code": "semicolon" },
                                         { "key_code": "k" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "semicolon" },
@@ -554,7 +504,11 @@
                                         { "key_code": "k" },
                                         { "key_code": "semicolon" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "k" },
@@ -575,7 +529,11 @@
                                         { "key_code": "semicolon" },
                                         { "key_code": "j" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "semicolon" },
@@ -596,7 +554,11 @@
                                         { "key_code": "j" },
                                         { "key_code": "semicolon" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "j" },
@@ -617,7 +579,11 @@
                                         { "key_code": "l" },
                                         { "key_code": "k" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "l" },
@@ -638,7 +604,11 @@
                                         { "key_code": "k" },
                                         { "key_code": "l" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "k" },
@@ -659,7 +629,11 @@
                                         { "key_code": "l" },
                                         { "key_code": "j" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "l" },
@@ -680,7 +654,11 @@
                                         { "key_code": "j" },
                                         { "key_code": "l" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "j" },
@@ -701,7 +679,11 @@
                                         { "key_code": "k" },
                                         { "key_code": "j" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "k" },
@@ -722,7 +704,11 @@
                                         { "key_code": "j" },
                                         { "key_code": "k" }
                                     ],
-                                    "simultaneous_options": { "key_down_order": "strict" }
+                                    "simultaneous_options": {
+                                        "key_down_order": "strict",
+                                        "key_up_when": "any",
+                                        "detect_key_down_uninterruptedly": true
+                                    }
                                 },
                                 "to_if_alone": [
                                     { "key_code": "j" },
@@ -755,6 +741,22 @@
                                         "key_code": "right_control"
                                     }
                                 ],
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 200,
+                                    "basic.to_if_held_down_threshold_milliseconds": 180
+                                },
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "homerow_mods_disabled", "value": 1 },
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^com\\.microsoft\\.rdc.*",
+                                            "^com\\.citrix\\..*"
+                                        ]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -773,6 +775,22 @@
                                     {
                                         "halt": true,
                                         "key_code": "right_option"
+                                    }
+                                ],
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 200,
+                                    "basic.to_if_held_down_threshold_milliseconds": 180
+                                },
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "homerow_mods_disabled", "value": 1 },
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^com\\.microsoft\\.rdc.*",
+                                            "^com\\.citrix\\..*"
+                                        ]
                                     }
                                 ],
                                 "type": "basic"
@@ -795,6 +813,22 @@
                                         "key_code": "right_shift"
                                     }
                                 ],
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 200,
+                                    "basic.to_if_held_down_threshold_milliseconds": 180
+                                },
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "homerow_mods_disabled", "value": 1 },
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^com\\.microsoft\\.rdc.*",
+                                            "^com\\.citrix\\..*"
+                                        ]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -815,16 +849,32 @@
                                         "key_code": "right_command"
                                     }
                                 ],
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 200,
+                                    "basic.to_if_held_down_threshold_milliseconds": 180
+                                },
+                                "conditions": [
+                                    { "type": "variable_unless", "name": "homerow_mods_disabled", "value": 1 },
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.googlecode\\.iterm2$",
+                                            "^com\\.microsoft\\.rdc.*",
+                                            "^com\\.citrix\\..*"
+                                        ]
+                                    }
+                                ],
                                 "type": "basic"
                             }
                         ]
                     },
                     {
-                        "description": "R_U = Meh - 220 ms",
+                        "description": "R_U = Meh - 280 ms",
                         "manipulators": [
                             {
                                 "from": { "key_code": "r" },
-                                "parameters": { "basic.to_if_held_down_threshold_milliseconds": 220 },
+                                "parameters": { "basic.to_if_held_down_threshold_milliseconds": 280 },
                                 "to_delayed_action": {
                                     "to_if_canceled": [{ "key_code": "r" }],
                                     "to_if_invoked": [{ "key_code": "vk_none" }]
@@ -846,7 +896,7 @@
                             },
                             {
                                 "from": { "key_code": "u" },
-                                "parameters": { "basic.to_if_held_down_threshold_milliseconds": 220 },
+                                "parameters": { "basic.to_if_held_down_threshold_milliseconds": 280 },
                                 "to_delayed_action": {
                                     "to_if_canceled": [{ "key_code": "u" }],
                                     "to_if_invoked": [{ "key_code": "vk_none" }]
