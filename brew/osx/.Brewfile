@@ -11,6 +11,7 @@ tap "koekeishiya/formulae"
 tap "nikitabobko/tap"
 tap "olets/tap"
 tap "supabase/tap"
+tap "waydabber/betterdisplay"
 # Processes triangulated solid meshes
 brew "admesh"
 # Bourne-Again SHell, a UNIX command interpreter
@@ -29,10 +30,12 @@ brew "bruno-cli"
 brew "btop"
 # Console Matrix
 brew "cmatrix"
-# Network authentication protocol
-brew "krb5"
+# Container runtimes on MacOS (and Linux) with minimal setup
+brew "colima"
 # Libraries to talk to Microsoft SQL Server and Sybase databases
 brew "freetds"
+# Network authentication protocol
+brew "krb5"
 # C library for reading, creating, and modifying zip archives
 brew "libzip"
 # General-purpose scripting language
@@ -41,6 +44,10 @@ brew "php", restart_service: :changed
 brew "composer"
 # CLI tool for Amazon ECS and AWS Fargate
 brew "copilot"
+# Pack, ship and run any application as a lightweight container
+brew "docker"
+# Use new container attach on already container go on debug
+brew "docker-debug"
 # Modern, maintained replacement for ls
 brew "eza"
 # Simple, fast and user-friendly alternative to find
@@ -83,8 +90,6 @@ brew "htop"
 brew "httpie"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
-# Cross-platform software keyboard remapper for Linux, macOS and Windows
-brew "kanata"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Pager program similar to more
@@ -123,12 +128,8 @@ brew "pipx"
 brew "pngpaste"
 # Fast, disk space efficient package manager
 brew "pnpm"
-# Tool for managing OCI containers and pods
-brew "podman"
 # Object-relational database system
 brew "postgresql@15", restart_service: :changed, link: true
-# OpenBSD and Darwin versions of pgrep, pkill, and pfind
-brew "proctools"
 # Nicer 'git pull'
 brew "pygitup"
 # Interpreted, interactive, object-oriented programming language
@@ -183,6 +184,8 @@ brew "felixkratz/formulae/borders"
 brew "jesseduffield/lazydocker/lazydocker"
 # Supabase CLI
 brew "supabase/tap/supabase"
+# BetterDisplay CLI proxy
+brew "waydabber/betterdisplay/betterdisplaycli"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
@@ -211,6 +214,8 @@ cask "bruno"
 cask "cursor"
 # Voice and text chat software
 cask "discord"
+# App to build and share containerised applications and microservices
+cask "docker-desktop"
 # Assign keys, and then decorate and label them
 cask "elgato-stream-deck"
 # Software custom-built for content creation
@@ -248,8 +253,6 @@ cask "mission-control-plus"
 cask "ngrok"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
-# Browse, manage, inspect containers and images
-cask "podman-desktop"
 # Control your tools with a few keystrokes
 cask "raycast"
 # Email client
@@ -266,6 +269,8 @@ cask "visual-studio-code"
 cask "whatsapp"
 # Multiplayer code editor
 cask "zed"
+# Gecko based web browser
+cask "zen"
 mas "1Password for Safari", id: 1569813296
 mas "Affinity Photo", id: 824183456
 mas "Amphetamine", id: 937984704
@@ -288,6 +293,7 @@ mas "Things", id: 904280696
 mas "TNEF's Enough", id: 986621173
 mas "Toggl Track", id: 1291898086
 mas "WISO Steuer 2023", id: 1635154215
+mas "WISO Steuer 2025", id: 6695752781
 mas "Xcode", id: 497799835
 vscode "alefragnani.project-manager"
 vscode "andrsdc.base16-themes"
@@ -322,6 +328,7 @@ vscode "ms-vscode.vscode-typescript-next"
 vscode "ms-vsliveshare.vsliveshare"
 vscode "naumovs.color-highlight"
 vscode "octref.vetur"
+vscode "openai.chatgpt"
 vscode "openai.openai-chatgpt-adhoc"
 vscode "redhat.java"
 vscode "simonsiefke.svg-preview"
