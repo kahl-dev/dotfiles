@@ -52,3 +52,6 @@ logs
 
 # Hammerspoon private configuration
 .hammerspoon/config/private.json
+
+# Karabiner temporary backup files (not automatic_backups)
+.config/karabiner/karabiner.json.backup*
