@@ -91,35 +91,32 @@ function M.process_url(url)
   handle_action(url)
 end
 
--- Open JIRA ticket from a selected commit using Telescope
+-- Open JIRA ticket from a selected commit using fzf-lua
 function M.open_jira_from_commit()
-  local ok, builtins = pcall(require, "telescope.builtin")
+  local ok, fzf = pcall(require, "fzf-lua")
   if not ok then
-    vim.api.nvim_echo({ { "Telescope not available. Install telescope.nvim plugin.", "ErrorMsg" } }, false, {})
+    vim.api.nvim_echo({ { "fzf-lua not available. Install fzf-lua plugin.", "ErrorMsg" } }, false, {})
     return
   end
-  
-  local actions = require("telescope.actions")
-  local action_state = require("telescope.actions.state")
-  
-  builtins.git_commits({
-    attach_mappings = function(prompt_bufnr)
-      actions.select_default:replace(function()
-        local selection = action_state.get_selected_entry()
-        actions.close(prompt_bufnr)
-        if selection then
-          local commit_msg = get_git_info("git log -1 --format=%B " .. selection.value)
-          local ticket_id = extract_ticket_id(commit_msg)
-          if ticket_id then
-            local jira_url = string.format("%s/browse/%s", jira_workspace, ticket_id)
-            handle_action(jira_url)
-          else
-            print("No JIRA ticket found in the commit message.")
+
+  fzf.git_commits({
+    actions = {
+      ["default"] = function(selected, opts)
+        if selected and selected[1] then
+          local commit_hash = selected[1]:match("^([%w]+)")
+          if commit_hash then
+            local commit_msg = get_git_info("git log -1 --format=%B " .. commit_hash)
+            local ticket_id = extract_ticket_id(commit_msg)
+            if ticket_id then
+              local jira_url = string.format("%s/browse/%s", jira_workspace, ticket_id)
+              handle_action(jira_url)
+            else
+              print("No JIRA ticket found in the commit message.")
+            end
           end
         end
-      end)
-      return true
-    end,
+      end,
+    },
   })
 end
 

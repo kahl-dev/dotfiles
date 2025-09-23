@@ -9,7 +9,7 @@ return {
       -- Available options
       -- https://github.com/Zeioth/garbage-day.nvim?tab=readme-ov-file#available-options
       -- aggressive_mode = false,
-      excluded_lsp_clients = { "copilot" },
+      -- excluded_lsp_clients = {},
       grace_period = 60 * 30, -- Seconds
       -- wakeup_delay = 0,
 
