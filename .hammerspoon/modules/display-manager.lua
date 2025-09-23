@@ -9,7 +9,9 @@ M.state = {
     macbookLocked = false,
     pendingActions = {},
     currentDesktopUUID = nil,
-    debugMode = false
+    debugMode = false,
+    callActive = false,
+    microphoneInUse = false
 }
 
 -- Configuration (loaded from config module)
@@ -128,6 +130,56 @@ function M.controlEvePlug(displayConfig, turnOn)
         eveConfig.token,
         eveConfig.home_assistant_url
     )
+end
+
+-- Control call light
+function M.controlCallLight(turnOn, privateConfig)
+    if not privateConfig or not privateConfig.call_light then
+        return false
+    end
+
+    local lightConfig = privateConfig.call_light
+    local action = turnOn and "turn_on" or "turn_off"
+    local actionText = turnOn and "ON" or "OFF"
+
+    M.log(string.format("Turning %s call light", actionText))
+
+    local apiUrl = privateConfig.homeassistant.url .. "/api/services/light/" .. action
+    local headers = {
+        ["Authorization"] = "Bearer " .. privateConfig.homeassistant.token,
+        ["Content-Type"] = "application/json"
+    }
+
+    local body = {
+        entity_id = lightConfig.entity_id
+    }
+
+    -- Temporarily disabled RGB color to test if it's causing the issue
+    -- Add RGB color when turning on (only if the light supports it)
+    -- if turnOn and lightConfig.rgb_color then
+    --     -- Try different color formats that different lights might support
+    --     body.rgb_color = lightConfig.rgb_color
+    --     -- Some lights use this format instead:
+    --     -- body.color = {r = lightConfig.rgb_color[1], g = lightConfig.rgb_color[2], b = lightConfig.rgb_color[3]}
+    -- end
+
+    local jsonBody = hs.json.encode(body)
+
+    -- Debug logging
+    M.log(string.format("API URL: %s", apiUrl))
+    M.log(string.format("Request body: %s", jsonBody))
+
+    hs.http.asyncPost(apiUrl, jsonBody, headers, function(status, responseBody, responseHeaders)
+        if status == 200 then
+            M.log(string.format("Successfully %s call light", actionText))
+            M.log(string.format("Response: %s", responseBody or "No response body"))
+        else
+            M.log(string.format("Call light API call failed: %d - %s", status, responseBody or "Unknown error"), "error")
+            M.log(string.format("Response headers: %s", hs.inspect(responseHeaders or {})))
+        end
+    end)
+
+    return true
 end
 
 -- Cancel pending action
@@ -288,6 +340,159 @@ function M.caffeineCallback(event)
     end
 end
 
+-- Check if microphone is actively being used for communication
+function M.checkMicrophoneUsage()
+    local defaultInput = hs.audiodevice.defaultInputDevice()
+    if not defaultInput then return false end
+
+    -- Check if mic is not muted
+    local isMuted = defaultInput:inputMuted()
+    if isMuted then return false end
+
+    -- Check for actual input level (indicates active communication)
+    local inputLevel = defaultInput:inputLevel()
+    -- Only consider it "in use" if there's sustained input (not just TTS output feedback)
+    return inputLevel and inputLevel > 0.1
+end
+
+-- Check if camera is in use using Hammerspoon's native camera API
+function M.checkCameraUsage()
+    -- Use Hammerspoon's built-in camera module (much more reliable)
+    local cameras = hs.camera.allCameras()
+    for _, camera in pairs(cameras) do
+        if camera:isInUse() then
+            return true
+        end
+    end
+    return false
+end
+
+-- Setup camera watcher for real-time detection
+function M.setupCameraWatcher()
+    local function configureCameraPropertyWatchers()
+        local allCameras = hs.camera.allCameras()
+        M.log(string.format("Setting up camera watchers for %d cameras", #allCameras))
+
+        for _, camera in pairs(allCameras) do
+            if camera:isPropertyWatcherRunning() then
+                camera:stopPropertyWatcher()
+            end
+            camera:setPropertyWatcherCallback(function(camera, property, scope, element)
+                M.log(string.format("Camera property changed: %s, in use: %s", camera:name(), camera:isInUse()))
+                -- Trigger immediate call status check
+                M.monitorCallStatus()
+            end)
+            camera:startPropertyWatcher()
+        end
+    end
+
+    -- Set up the camera watcher
+    hs.camera.setWatcherCallback(configureCameraPropertyWatchers)
+    hs.camera.startWatcher()
+    configureCameraPropertyWatchers() -- Initial setup
+end
+
+-- Detect call applications
+function M.detectCallApplications()
+    local callApps = {
+        "Microsoft Teams",
+        "Zoom",
+        "zoom.us",
+        "Skype",
+        "Discord",
+        "Slack",
+        "Google Chrome", -- For web-based calls
+        "Safari",        -- For web-based calls
+        "FaceTime"
+    }
+
+    for _, appName in ipairs(callApps) do
+        local app = hs.application.get(appName)
+        if app and app:isRunning() then
+            local windows = app:visibleWindows()
+            if #windows > 0 then
+                M.log(string.format("Detected call app: %s (visible windows: %d)", appName, #windows))
+                -- For browsers, we can't easily detect if they're in a call
+                -- But we can detect if they have camera/mic access
+                if appName == "Google Chrome" or appName == "Safari" then
+                    -- Return true if mic is in use (indicating possible call)
+                    return M.checkMicrophoneUsage()
+                else
+                    -- For dedicated call apps, assume they're in a call if running
+                    return true
+                end
+            end
+        end
+    end
+
+    return false
+end
+
+-- Handle call state change
+function M.handleCallStateChange(callActive, privateConfig)
+    if M.state.callActive == callActive then
+        return -- No change
+    end
+
+    local prevState = M.state.callActive
+    M.state.callActive = callActive
+    local action = callActive and "started" or "ended"
+    M.log(string.format("Call state changed: %s -> %s (%s)",
+        prevState and "ACTIVE" or "INACTIVE",
+        callActive and "ACTIVE" or "INACTIVE",
+        action))
+
+    -- Control call light
+    M.controlCallLight(callActive, privateConfig)
+end
+
+-- Monitor call status
+function M.monitorCallStatus()
+    local configModule = package.loaded["modules.config"]
+    local privateConfig = configModule and configModule.loadPrivateConfig and configModule.loadPrivateConfig()
+
+    if not privateConfig or not privateConfig.call_light then
+        return -- Call monitoring disabled
+    end
+
+    -- Simple camera-only detection (no app detection needed for Raycast camera usage)
+    local cameraInUse = M.checkCameraUsage()
+
+    -- Debug logging
+    M.log(string.format("Call monitoring: Camera=%s", cameraInUse and "YES" or "NO"))
+
+    -- Only camera detection matters
+    local callDetected = cameraInUse
+
+    M.log(string.format("Final call detection: %s", callDetected and "ACTIVE" or "INACTIVE"))
+
+    M.handleCallStateChange(callDetected, privateConfig)
+end
+
+-- Check for sustained microphone usage (more reliable than single check)
+function M.checkSustainedMicrophoneUsage()
+    -- Store mic usage history to detect sustained usage
+    if not M.state.micUsageHistory then
+        M.state.micUsageHistory = {}
+    end
+
+    local currentUsage = M.checkMicrophoneUsage()
+    table.insert(M.state.micUsageHistory, currentUsage)
+
+    -- Keep only last 3 checks (15 seconds worth)
+    if #M.state.micUsageHistory > 3 then
+        table.remove(M.state.micUsageHistory, 1)
+    end
+
+    -- Require at least 2 out of 3 recent checks to show mic usage
+    local usageCount = 0
+    for _, usage in ipairs(M.state.micUsageHistory) do
+        if usage then usageCount = usageCount + 1 end
+    end
+
+    return usageCount >= 2
+end
+
 -- Get current status for debugging
 function M.getStatus()
     local displays = M.getCurrentDisplays()
@@ -382,6 +587,14 @@ function M.init()
     M.caffeineWatcher = hs.caffeinate.watcher.new(M.caffeineCallback)
     M.caffeineWatcher:start()
 
+    -- Set up camera watcher for real-time detection
+    M.setupCameraWatcher()
+
+    -- Self-healing timer disabled - relying on camera property watchers only
+    -- Set up call monitoring timer (check every 5 seconds as backup)
+    -- M.callMonitorTimer = hs.timer.doEvery(5, M.monitorCallStatus)
+    -- M.callMonitorTimer:start()
+
     -- Debug hotkey
     hs.hotkey.bind({ "cmd", "alt" }, "D", function()
         local status = M.getStatus()
@@ -393,7 +606,80 @@ function M.init()
         M.log("HOMEASSISTANT_URL: " .. (os.getenv("HOMEASSISTANT_URL") or "NOT SET"))
         M.log("HOMEASSISTANT_TOKEN: " .. (os.getenv("HOMEASSISTANT_TOKEN") and "SET" or "NOT SET"))
 
+        -- Show call status
+        M.log("Call Status: " .. (M.state.callActive and "ACTIVE" or "INACTIVE"))
+
+        -- Test camera detection using native Hammerspoon API
+        M.log("=== Camera Detection Debug (Native API) ===")
+
+        local cameras = hs.camera.allCameras()
+        M.log("Total cameras found: " .. #cameras)
+
+        for i, camera in ipairs(cameras) do
+            local inUse = camera:isInUse()
+            M.log(string.format("Camera %d: %s - In use: %s", i, camera:name(), inUse and "YES" or "NO"))
+        end
+
+        -- Overall status
+        M.log("Camera in use: " .. (M.checkCameraUsage() and "YES" or "NO"))
+
         M.toggleDebugMode()
+    end)
+
+    -- Manual call toggle hotkey
+    hs.hotkey.bind({ "cmd", "alt", "shift" }, "C", function()
+        local configModule = package.loaded["modules.config"]
+        local privateConfig = configModule and configModule.loadPrivateConfig and configModule.loadPrivateConfig()
+
+        if privateConfig and privateConfig.call_light then
+            M.state.callActive = not M.state.callActive
+            local action = M.state.callActive and "started" or "ended"
+            M.log(string.format("Manually %s call", action))
+            M.controlCallLight(M.state.callActive, privateConfig)
+
+            hs.alert.show("Call " .. (M.state.callActive and "Started" or "Ended"), 2)
+        else
+            hs.alert.show("Call light not configured", 2)
+        end
+    end)
+
+    -- Test API call hotkey
+    hs.hotkey.bind({ "cmd", "alt", "shift" }, "T", function()
+        M.log("Test hotkey pressed!")
+        hs.alert.show("Test hotkey activated", 1)
+
+        local configModule = package.loaded["modules.config"]
+        local privateConfig = configModule and configModule.loadPrivateConfig and configModule.loadPrivateConfig()
+
+        M.log("Private config loaded: " .. (privateConfig and "YES" or "NO"))
+
+        if privateConfig and privateConfig.call_light then
+            M.log("Call light config found")
+            -- Test with basic turn_on call (no RGB)
+            local apiUrl = privateConfig.homeassistant.url .. "/api/services/light/turn_on"
+            local headers = {
+                ["Authorization"] = "Bearer " .. privateConfig.homeassistant.token,
+                ["Content-Type"] = "application/json"
+            }
+            local body = hs.json.encode({entity_id = privateConfig.call_light.entity_id})
+
+            M.log("Testing basic light control...")
+            M.log("API URL: " .. apiUrl)
+            M.log("Entity: " .. privateConfig.call_light.entity_id)
+            M.log("Request body: " .. body)
+
+            hs.http.asyncPost(apiUrl, body, headers, function(status, responseBody, responseHeaders)
+                M.log(string.format("Test result: %d - %s", status, responseBody or "No response"))
+                if status ~= 200 then
+                    M.log("Headers: " .. hs.inspect(responseHeaders))
+                end
+            end)
+
+            hs.alert.show("Testing light API call", 2)
+        else
+            M.log("Call light not configured or private config missing")
+            hs.alert.show("Call light not configured", 2)
+        end
     end)
 
     M.log("Display Manager initialized")
@@ -410,6 +696,20 @@ function M.stop()
         M.caffeineWatcher:stop()
         M.caffeineWatcher = nil
     end
+
+    if M.callMonitorTimer then
+        M.callMonitorTimer:stop()
+        M.callMonitorTimer = nil
+    end
+
+    -- Stop camera watchers
+    local cameras = hs.camera.allCameras()
+    for _, camera in pairs(cameras) do
+        if camera:isPropertyWatcherRunning() then
+            camera:stopPropertyWatcher()
+        end
+    end
+    hs.camera.stopWatcher()
 
     -- Cancel all pending actions
     for actionKey, timer in pairs(M.state.pendingActions) do
