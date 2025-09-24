@@ -196,9 +196,9 @@
       "mcp__sentry__get_doc",
       "mcp__sentry__search_issues",
       "Supabase-remote - search_docs(*)",
-      "Bash($HOME/.claude/shared/get-screenshots.sh:*)",
+      "Bash(ai-fetch-screenshots:*)",
+      "Bash(ai-fetch-jira:*)",
       "Read($HOME/tmp/ai/screenshots/*)",
-      "Bash(fetch-jira-tickets:*)",
       "Read($HOME/tmp/ai/*)",
       "Bash(sleep:*)",
       "Bash(tmux:*)"
@@ -239,7 +239,9 @@
       "Write(~/.aws/*)"
     ],
     "defaultMode": "acceptEdits",
-    "additionalDirectories": ["~/tmp/ai"]
+    "additionalDirectories": [
+      "~/tmp/ai"
+    ]
   },
   "model": "opusplan",
   "hooks": {

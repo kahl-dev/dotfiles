@@ -25,7 +25,7 @@ Analyze the request to determine the desired mode:
 ## Workflow for Both Modes
 
 1. **Parse the request**: Determine how many screenshots the user wants (default to 1 if not specified)
-2. **Use the fast script**: Call `bash $HOME/.claude/shared/get-screenshots.sh <count>` to get screenshot paths efficiently
+2. **Use the fast script**: Call `ai-fetch-screenshots <count>` to get screenshot paths efficiently
 3. **Choose mode based on request**:
 
 ### Path-Only Mode

@@ -1,1 +1,0 @@
-/home/kahl/.dotfiles/bin/fetch-jira-tickets

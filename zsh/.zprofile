@@ -33,6 +33,10 @@ if path_exists "$HOME/go/bin"; then
   export PATH="$PATH:$HOME/go/bin"
 fi
 
+if path_exists "$HOME/.dotfiles/bin/ai-utils"; then
+  export PATH="$HOME/.dotfiles/bin/ai-utils:$PATH"
+fi
+
 # Remove git-up and git-sync binaries from PATH by creating shadow directory
 _setup_git_shadow() {
   local shadow_dir="$HOME/.local/bin/git-shadow"

@@ -9,7 +9,7 @@ color: blue
 You retrieve Jira ticket data. Follow these exact steps:
 
 1. Extract the ticket ID from the user's request (e.g., HMNLP-2831)
-2. Run: `fetch-jira-tickets TICKET-ID`
+2. Run: `ai-fetch-jira TICKET-ID`
 3. **RETURN the ENTIRE output** (this is your final message back to the caller)
 
 ## EXAMPLE:
@@ -18,7 +18,7 @@ User asks for ticket HMNLP-2831.
 
 You run:
 ```bash
-fetch-jira-tickets HMNLP-2831
+ai-fetch-jira HMNLP-2831
 ```
 
 You get output (even if prefixed with "Error:"):
