@@ -335,7 +335,7 @@ When handling complex tasks, automatically apply progressive thinking:
 
 ## 🖥️ Server Environments
 
-- When working on a "Linux typo3" remove server, note that it is:
+- When working on a "Linux typo3" remote server, note that it is:
   - Without a GUI
   - Without a browser
   - Behind an htaccess authentication
