@@ -1,0 +1,112 @@
+#!/bin/bash
+
+# Centralized iPad Control Script
+# Usage: ipad-control [options] [command]
+#
+# This script provides a unified interface for iPad connectivity
+# Can be called from Stream Deck, command line, or other automation
+
+set -euo pipefail
+
+# Debug mode
+VERBOSE=false
+if [[ "${1:-}" == "-v" ]] || [[ "${1:-}" == "--verbose" ]]; then
+    VERBOSE=true
+    shift
+fi
+
+# Debug logging function
+debug() {
+    if [[ "$VERBOSE" == "true" ]]; then
+        echo "[DEBUG] $*" >&2
+    fi
+}
+
+SCRIPT_DIR="$HOME/.dotfiles/scripts"
+
+# Function to check if iPad is connected as Sidecar
+check_sidecar_active() {
+    # Use system_profiler to check for connected displays
+    if system_profiler SPDisplaysDataType 2>/dev/null | grep -q "iPad"; then
+        return 0  # Sidecar active
+    else
+        return 1  # Sidecar not active
+    fi
+}
+
+# Function to show current status
+show_status() {
+    if check_sidecar_active; then
+        echo "🖥️ Sidecar Connected"
+    else
+        echo "📱 iPad Ready"
+    fi
+}
+
+# Main command handling
+debug "Script directory: $SCRIPT_DIR"
+debug "Command: ${1:-help}"
+
+case "${1:-help}" in
+    sidecar)
+        echo "🖥️ Connecting iPad as extended display..."
+        script_path="$SCRIPT_DIR/ipad-sidecar-extended.applescript"
+        debug "Checking for script: $script_path"
+        if [[ -f "$script_path" ]]; then
+            debug "Executing AppleScript..."
+            start_time=$(date +%s)
+            osascript "$script_path"
+            exit_code=$?
+            end_time=$(date +%s)
+            debug "AppleScript completed in $((end_time - start_time))s with exit code: $exit_code"
+            exit $exit_code
+        else
+            echo "❌ AppleScript not found: $script_path"
+            exit 1
+        fi
+        ;;
+
+    universal)
+        echo "⌨️ Connecting iPad for Universal Control..."
+        script_path="$SCRIPT_DIR/ipad-universal-control.applescript"
+        debug "Checking for script: $script_path"
+        if [[ -f "$script_path" ]]; then
+            debug "Executing AppleScript..."
+            start_time=$(date +%s)
+            osascript "$script_path"
+            exit_code=$?
+            end_time=$(date +%s)
+            debug "AppleScript completed in $((end_time - start_time))s with exit code: $exit_code"
+            exit $exit_code
+        else
+            echo "❌ AppleScript not found: $script_path"
+            exit 1
+        fi
+        ;;
+
+    status)
+        debug "Checking iPad status..."
+        show_status
+        ;;
+
+    help|--help|-h)
+        echo "iPad Control Script"
+        echo ""
+        echo "Usage: $0 [options] [command]"
+        echo ""
+        echo "Options:"
+        echo "  -v, --verbose  Enable debug output"
+        echo ""
+        echo "Commands:"
+        echo "  sidecar    Connect iPad as extended display (Sidecar)"
+        echo "  universal  Connect iPad for Universal Control (keyboard/mouse)"
+        echo "  status     Show current iPad connection status"
+        echo "  help       Show this help message"
+        ;;
+
+    *)
+        echo "❌ Unknown command: $1"
+        echo "Use 'ipad-control help' for usage information"
+        exit 1
+        ;;
+esac

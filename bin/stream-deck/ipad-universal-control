@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Stream Deck: Connect iPad for Universal Control
+# Uses centralized ipad-control script
+
+# Call the centralized script
+exec "$HOME/.dotfiles/bin/ipad-control" universal

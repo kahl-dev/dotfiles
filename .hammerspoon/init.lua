@@ -1,10 +1,10 @@
 -- Hammerspoon Configuration
 -- Manages Elgato devices automatically
 
--- Manual reload hotkey (backup option)
-hs.hotkey.bind({ "cmd", "alt" }, "R", function()
-    hs.reload()
-end)
+-- Manual reload hotkey moved to hotkey layer
+-- hs.hotkey.bind({ "cmd", "alt" }, "R", function()
+--     hs.reload()
+-- end)
 
 -- Auto-reload on config file changes
 local function reloadConfig(files)
@@ -27,6 +27,8 @@ local config = require("modules.config")
 local audioManager = require("modules.audio-manager")
 local usbManager = require("modules.usb-device-manager")
 local displayManager = require("modules.display-manager")
+local ipadManager = require("modules.ipad-manager")
+local hotkeyLayer = require("modules.hotkey-layer")
 
 -- Initialize configuration
 config.init()
@@ -35,3 +37,5 @@ config.init()
 audioManager.init()
 usbManager.init()
 displayManager.init()
+-- ipadManager.init() -- Disabled to avoid duplicate hotkeys
+hotkeyLayer.init() -- Unified hotkey system
