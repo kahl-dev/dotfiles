@@ -9,6 +9,12 @@ cd "$REPO_ROOT"
 log() { printf '%s\n' "$*"; }
 warn() { printf 'WARN: %s\n' "$*" >&2; }
 
+# Collect tracked, untracked, and ignored paths (still respecting .gitignore).
+list_candidate_paths() {
+  git ls-files --cached --others --exclude-standard -z
+  git ls-files --others --ignored --exclude-standard -z
+}
+
 # Step 1: turn standalone CLAUDE.md files into AGENTS.md files.
 while IFS= read -r -d '' path; do
   [ "${path##*/}" = "CLAUDE.md" ] || continue
@@ -26,7 +32,7 @@ while IFS= read -r -d '' path; do
     mv -- "$claude_path" "$agents_path"
     log "Promoted: ${rel_dir}CLAUDE.md -> ${rel_dir}AGENTS.md"
   fi
-done < <(git ls-files --cached --others --ignored --exclude-standard -z)
+done < <(list_candidate_paths)
 
 # Step 2: ensure every AGENTS.md has a CLAUDE.md symlink.
 while IFS= read -r -d '' path; do
@@ -45,7 +51,7 @@ while IFS= read -r -d '' path; do
     ln -sfn "AGENTS.md" "CLAUDE.md"
     log "Linked: ${rel_dir}CLAUDE.md -> AGENTS.md"
   )
-done < <(git ls-files --cached --others --ignored --exclude-standard -z)
+done < <(list_candidate_paths)
 
 # Step 3: drop only dangling CLAUDE.md symlinks with no AGENTS.md beside them.
 while IFS= read -r -d '' path; do
@@ -62,4 +68,4 @@ while IFS= read -r -d '' path; do
   elif [ ! -e "$agents_path" ]; then
     warn "Unpaired ${rel_dir}CLAUDE.md has no AGENTS.md; leaving it in place."
   fi
-done < <(git ls-files --cached --others --ignored --exclude-standard -z)
+done < <(list_candidate_paths)
