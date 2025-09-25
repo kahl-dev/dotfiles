@@ -8,6 +8,24 @@ _cx() {
   cd "$@" && ls
 }
 
+# Source dotfiles completion script for install-profile and install-standalone
+if [[ -f "$DOTFILES/completion/dotfiles-completion.bash" ]]; then
+  if [[ -n "${BASH_VERSION:-}" ]]; then
+    source "$DOTFILES/completion/dotfiles-completion.bash"
+  elif [[ -n "${ZSH_VERSION:-}" ]]; then
+    if ! whence complete >/dev/null 2>&1; then
+      (( $+functions[compinit] )) || autoload -Uz compinit
+      compinit >/dev/null 2>&1 || true
+      (( $+functions[bashcompinit] )) || autoload -Uz bashcompinit
+      bashcompinit >/dev/null 2>&1 || true
+    fi
+
+    if whence complete >/dev/null 2>&1; then
+      source "$DOTFILES/completion/dotfiles-completion.bash"
+    fi
+  fi
+fi
+
 alias ..='cd ..'
 alias ...='cd ../..'
 

@@ -63,6 +63,17 @@ The repository uses a two-tiered installation approach:
 
 Both scripts use dotbot to process the appropriate YAML configurations, combining base settings with specific ingredients.
 
+### Tab Completion System
+
+The repository includes bash-compatible completion for the installation scripts:
+- **Location**: `completion/dotfiles-completion.bash`
+- **Integration**: Loaded automatically from `zsh/config/aliases.zsh` after completion init
+- **Functionality**:
+  - `install-profile` completes with available recipes from `meta/recipes/`
+  - `install-standalone` completes with available ingredients from `meta/ingredients/` (without .yaml extension)
+
+The completion script dynamically discovers available options by scanning the filesystem, ensuring it stays current as new recipes and ingredients are added.
+
 ## Common Commands
 
 ### Installation & Setup

@@ -7,9 +7,9 @@ A sophisticated, modular dotfiles system built with **dotbot** featuring advance
 ## ✨ Key Features
 
 - **🤖 Claude Code Integration** - Optimized shell environment and automation tailored for Claude Code sessions
-- **🌉 Remote Bridge System** - Universal clipboard and URL handling across local/SSH sessions  
+- **🌉 Remote Bridge System** - Universal clipboard and URL handling across local/SSH sessions
 - **⚡ Performance Optimized** - 100x faster tools (ripgrep, fd, sd) for Claude Code shell
-- **🧩 Modular Architecture** - Ingredients and recipes system for flexible installations
+- **🧩 Modular Architecture** - Ingredients and recipes system with tab completion
 - **📱 Complete Setup** - From terminal to GUI applications with sensible defaults
 
 ## 🚀 Quick Installation
@@ -80,6 +80,14 @@ cd ~/.dotfiles && git remote set-url origin git@github.com:kahl-dev/dotfiles.git
 ./install-profile liadev    # Development setup
 ./install-profile macos     # Complete macOS setup
 ```
+
+#### 📝 Tab Completion
+The dotfiles system includes intelligent tab completion for both installation scripts:
+
+- `./install-profile <TAB>` - Shows available recipes: `liadev`, `macos`, `pi`
+- `./install-standalone <TAB>` - Shows available ingredients: `tmux`, `neovim_build`, `claude`, etc.
+
+Completion is automatically available after sourcing your zsh configuration and can be enabled for Bash by sourcing `completion/dotfiles-completion.bash`.
 
 ### Maintenance Commands
 ```bash
