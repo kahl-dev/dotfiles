@@ -325,10 +325,43 @@ This project uses **GitHub Issues** for tracking enhancements, bugs, and future 
 
 To contribute or suggest improvements, please create a GitHub issue with detailed description and implementation ideas.
 
+## 🎨 Theme Consistency Guidelines
+
+### Catppuccin Theme Implementation
+All applications use **Catppuccin Mocha** flavor for consistent dark theme experience:
+
+**✅ Fully Themed Applications:**
+- **tmux**: Catppuccin Mocha via plugin (`tmux/tmux.conf`)
+- **bat**: Catppuccin Mocha syntax highlighting (`~/.config/bat/config`)
+- **btop**: Catppuccin Mocha theme (`~/.config/btop/btop.conf`)
+- **Neovim**: Catppuccin with transparent background (`~/.config/nvim/lua/plugins/catppuccin.lua`)
+- **Ghostty**: Catppuccin Mocha terminal theme (`~/.config/ghostty/config`)
+- **WezTerm**: Catppuccin Mocha color scheme (`~/.config/wezterm/wezterm.lua`)
+- **Starship**: Catppuccin Macchiato palette (`~/.config/starship.toml`)
+- **fzf**: Catppuccin Mocha colors (`zsh/config/fzf.zsh`)
+- **lazygit**: Catppuccin Mocha theme (`~/.config/lazygit/config.yml`)
+- **Zed**: Catppuccin Mocha with extension auto-install (`~/.config/zed/settings.json`)
+
+**Color Palette (Mocha):**
+- Background: `#1e1e2e`
+- Surface: `#313244`
+- Text: `#cdd6f4`
+- Blue: `#89b4fa`
+- Pink: `#f38ba8`
+- Lavender: `#cba6f7`
+- Yellow: `#f9e2af`
+- Rosewater: `#f5e0dc`
+
+**Theme Maintenance:**
+- All terminal applications should use transparent backgrounds where possible
+- Maintain consistency with Catppuccin's official color values
+- Reference official Catppuccin repositories for updates
+- Test theme changes across all configured applications
+
 ## Notes
 
 - The repository uses git submodules for tmux plugins and dotbot
-- Configuration files use XDG Base Directory specification where possible  
+- Configuration files use XDG Base Directory specification where possible
 - Raycast settings are synced via cloud backup (not stored in dotfiles)
 - The system is designed for personal use and includes specific tools/preferences
 - **DO NOT commit Zed settings** - these are personal and machine-specific configurations
