@@ -256,6 +256,23 @@ function M.toggleManagedApps()
     end
 end
 
+-- Check for orphaned apps (running without USB device connected)
+function M.checkForOrphanedApps()
+    for deviceKey, deviceConfig in pairs(M.config.devices) do
+        local app = hs.application.get(deviceConfig.app_bundle_id)
+
+        if app and app:isRunning() then
+            -- App is running, check if device is connected
+            if not M.isDeviceConnected(deviceConfig) then
+                -- App is running but device not connected - force quit it
+                app:kill()
+                M.state.manuallyQuit[deviceConfig.app_bundle_id] = true
+                M.state.managedApps[deviceConfig.app_bundle_id] = nil
+            end
+        end
+    end
+end
+
 -- Initialize module
 function M.init()
     -- Load configuration
@@ -263,6 +280,9 @@ function M.init()
     if configModule then
         M.config = configModule.usb or M.config
     end
+
+    -- Check for orphaned apps first (before device check)
+    M.checkForOrphanedApps()
 
     -- Initial device check
     M.checkAllDevices()
