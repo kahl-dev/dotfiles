@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Simple script to fetch the current running issue ID from Toggl
+# Uses the same environment variable as git-lia-toggl for consistency
+
+get_current_issue_id() {
+	# Get the Toggl API token from the environment variable
+	local TOGGL_API_TOKEN="${T}"
+
+	if [[ -z "${TOGGL_API_TOKEN}" ]]; then
+		echo "Error: Toggl API token is not set in the T environment variable." >&2
+		return 1
+	fi
+
+	# Execute the curl command to get current time entry
+	local RESPONSE=$(curl -s "https://api.track.toggl.com/api/v9/me/time_entries/current" \
+		-H "Content-Type: application/json" \
+		-u "${TOGGL_API_TOKEN}:api_token")
+
+	# Check if there's a running entry
+	if [[ "${RESPONSE}" == "null" ]]; then
+		echo "No running time entry found." >&2
+		return 1
+	fi
+
+	# Extract the ticket ID from the description
+	local TICKET_ID=$(echo "${RESPONSE}" | grep -oE "[A-Z]+-[0-9]+")
+
+	if [[ -z "$TICKET_ID" ]]; then
+		echo "No JIRA ticket ID found in current time entry." >&2
+		return 1
+	fi
+
+	echo "${TICKET_ID}"
+}
+
+# Main execution
+get_current_issue_id

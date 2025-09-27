@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# wl-copy wrapper that uses rclip for remote compatibility
+
+# If rclip exists, use it
+if command -v rclip >/dev/null 2>&1; then
+    exec rclip
+fi
+
+# Fall back to real wl-copy if available
+if command -v /usr/bin/wl-copy >/dev/null 2>&1; then
+    exec /usr/bin/wl-copy "$@"
+elif command -v /usr/local/bin/wl-copy >/dev/null 2>&1; then
+    exec /usr/local/bin/wl-copy "$@"
+else
+    echo "wl-copy: command not found (and rclip fallback failed)" >&2
+    exit 1
+fi

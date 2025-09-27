@@ -19,12 +19,11 @@ tmux/plugins
 
 nvim/undodir
 
-bin/*
-!bin/handle_clipboard.sh
-!bin/dot-cli
-!bin/vscode
-!bin/git-cleanup
-!bin/sync-agents-claude
+# Allow bin/ by default - track our custom scripts
+!bin/
+
+# Exclude generated/installed content only
+bin/fnm/
 
 !.config/bat/themes/*
 

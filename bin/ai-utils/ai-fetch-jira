@@ -1,0 +1,599 @@
+#!/bin/bash
+# fetch-jira-tickets.sh - Fetch multiple Jira tickets with markdown output
+# Usage: ./fetch-jira-tickets.sh [OPTIONS] TICKET-1 TICKET-2 TICKET-3
+
+set -euo pipefail
+
+# Function to show help
+show_help() {
+    cat << EOF
+fetch-jira-tickets.sh - Fetch Jira tickets with complete data and attachments
+
+USAGE:
+    $0 [OPTIONS] TICKET-ID [TICKET-ID ...]
+    
+OPTIONS:
+    --help, -h      Show this help message
+    --json          Output in JSON format instead of markdown
+    --verbose, -v   Show progress messages (default: silent)
+    --force, -f     Force re-download of attachments even if they exist
+    
+DESCRIPTION:
+    Fetches complete Jira ticket data including:
+    - Title, description, status, priority, and time tracking
+    - ALL comments (with pagination for 100+ comments)
+    - Downloads all attachments to ~/tmp/ai/jira/<ticket-id>/
+    - Downloads inline images embedded in comments
+    - Supports PDFs, Word docs, Excel files, and all other attachment types
+    
+ENVIRONMENT VARIABLES:
+    JIRA_USER_EMAIL    Your Jira/Atlassian email (required)
+    JIRA_API_KEY       Your Jira API token (required, or use JIRA_CLAUDE_KEY)
+    JIRA_WORKSPACE     Your Jira workspace name or full URL (required)
+    
+EXAMPLES:
+    # Fetch single ticket (silent, markdown output)
+    $0 PROJ-123
+    
+    # Fetch multiple tickets with progress messages
+    $0 --verbose PROJ-123 PROJ-456 PROJ-789
+    
+    # Get JSON output instead of markdown
+    $0 --json PROJ-123
+    
+    # Combine options
+    $0 --verbose --json PROJ-123
+
+OUTPUT:
+    - Markdown format by default (optimized for Claude/LLMs)
+    - Attachments saved to ~/tmp/ai/jira/<ticket-id>/
+    - Inline images prefixed with 'comment_' in filename
+    
+EOF
+    exit 0
+}
+
+# Parse arguments
+OUTPUT_FORMAT="markdown"
+VERBOSE=false
+FORCE_DOWNLOAD=false
+
+# Process options
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --help|-h)
+            show_help
+            ;;
+        --json)
+            OUTPUT_FORMAT="json"
+            shift
+            ;;
+        --verbose|-v)
+            VERBOSE=true
+            shift
+            ;;
+        --force|-f)
+            FORCE_DOWNLOAD=true
+            shift
+            ;;
+        -*)
+            echo "Error: Unknown option: $1" >&2
+            echo "Use --help for usage information" >&2
+            exit 1
+            ;;
+        *)
+            # Not an option, must be ticket IDs
+            break
+            ;;
+    esac
+done
+
+# Check if we have ticket IDs
+if [ $# -eq 0 ]; then
+    echo "Error: No ticket IDs provided" >&2
+    echo "Use --help for usage information" >&2
+    exit 1
+fi
+
+# Function for verbose output
+log_verbose() {
+    if [[ "$VERBOSE" == "true" ]]; then
+        echo "$@" >&2
+    fi
+}
+
+# Environment validation
+if [[ -z "${JIRA_USER_EMAIL:-}" ]]; then
+    echo "Error: JIRA_USER_EMAIL environment variable is required" >&2
+    exit 1
+fi
+
+# Try JIRA_CLAUDE_KEY first, fall back to JIRA_API_KEY
+if [[ -n "${JIRA_CLAUDE_KEY:-}" ]]; then
+    JIRA_API_KEY="$JIRA_CLAUDE_KEY"
+elif [[ -z "${JIRA_API_KEY:-}" ]]; then
+    echo "Error: Need either JIRA_CLAUDE_KEY or JIRA_API_KEY environment variable" >&2
+    exit 1
+fi
+
+if [[ -z "${JIRA_WORKSPACE:-}" ]]; then
+    echo "Error: JIRA_WORKSPACE environment variable is required" >&2
+    exit 1
+fi
+
+# Configuration
+# Handle both formats: "workspace" or "https://workspace.atlassian.net"
+if [[ "$JIRA_WORKSPACE" == https://* ]]; then
+    BASE_URL="${JIRA_WORKSPACE}/rest/api/3"
+else
+    BASE_URL="https://${JIRA_WORKSPACE}.atlassian.net/rest/api/3"
+fi
+OUTPUT_DIR="$HOME/tmp/ai/jira"
+AUTH="$JIRA_USER_EMAIL:$JIRA_API_KEY"
+
+# Create output directory
+mkdir -p "$OUTPUT_DIR"
+
+# Function to convert seconds to human readable time
+format_time() {
+    local seconds=$1
+    if [[ -z "$seconds" || "$seconds" == "null" ]]; then
+        echo "Not set"
+        return
+    fi
+    local hours=$((seconds / 3600))
+    local minutes=$(((seconds % 3600) / 60))
+    if [ $hours -gt 0 ]; then
+        if [ $minutes -gt 0 ]; then
+            echo "${hours}h ${minutes}m"
+        else
+            echo "${hours}h"
+        fi
+    else
+        echo "${minutes}m"
+    fi
+}
+
+# Function to sanitize filename
+sanitize_filename() {
+    local name="$1"
+    echo "${name//[^a-zA-Z0-9._-]/_}"
+}
+
+# Function to fetch ticket data
+fetch_ticket() {
+    local ticket_id=$1
+    local ticket_dir="$OUTPUT_DIR/$ticket_id"
+    
+    mkdir -p "$ticket_dir"
+    
+    log_verbose "Fetching ticket $ticket_id..."
+    
+    # Fetch main ticket data
+    local ticket_data
+    ticket_data=$(curl -s --max-time 30 -u "$AUTH" \
+        -H "Accept: application/json" \
+        "$BASE_URL/issue/$ticket_id" 2>/dev/null) || {
+        echo "Error: Failed to fetch ticket $ticket_id" >&2
+        return 1
+    }
+    
+    # Save raw data for reference
+    echo "$ticket_data" > "$ticket_dir/data.json"
+    
+    # Fetch ALL comments with pagination
+    local comments_data all_comments=()
+    local start_at=0
+    local max_results=100
+    local total_comments=0
+    
+    log_verbose "  Fetching comments..."
+    
+    # First, get initial batch and total count
+    comments_data=$(curl -s --max-time 30 -u "$AUTH" \
+        -H "Accept: application/json" \
+        "$BASE_URL/issue/$ticket_id/comment?startAt=0&maxResults=$max_results" 2>/dev/null) || {
+        echo "Warning: Failed to fetch comments for $ticket_id" >&2
+    }
+    
+    if [[ -n "$comments_data" ]]; then
+        total_comments=$(echo "$comments_data" | jq -r '.total // 0')
+        log_verbose "  Found $total_comments comments"
+        
+        # Collect all comments with pagination
+        while [[ $start_at -lt $total_comments ]]; do
+            if [[ $start_at -gt 0 ]]; then
+                log_verbose "  Fetching comments $start_at-$((start_at + max_results))..."
+                comments_data=$(curl -s --max-time 30 -u "$AUTH" \
+                    -H "Accept: application/json" \
+                    "$BASE_URL/issue/$ticket_id/comment?startAt=$start_at&maxResults=$max_results" 2>/dev/null)
+            fi
+            
+            # Extract comments from this batch
+            local batch_comments
+            batch_comments=$(echo "$comments_data" | jq -r '.comments[]? | @json')
+            if [[ -n "$batch_comments" ]]; then
+                while IFS= read -r comment; do
+                    all_comments+=("$comment")
+                done <<< "$batch_comments"
+            fi
+            
+            start_at=$((start_at + max_results))
+        done
+        
+        # Rebuild comments_data with all comments
+        comments_data=$(printf '%s\n' "${all_comments[@]}" | jq -s '{ fields: { comment: { comments: . } } }')
+        
+        # Temporarily disable inline image processing to prevent hanging
+        log_verbose "  Skipping inline image processing (temporarily disabled)"
+        
+        # Also fetch comment attachments/inline images
+        # log_verbose "  Checking for inline images in comments..."
+        
+        # Get rendered comments to find inline images  
+        # Temporarily disabled due to hanging issue
+        local rendered_comments=""
+        # rendered_comments=$(curl -s --max-time 30 -u "$AUTH" \
+        #     -H "Accept: application/json" \
+        #     "$BASE_URL/issue/$ticket_id/comment?expand=renderedBody" 2>/dev/null)
+        
+        if [[ -n "$rendered_comments" ]]; then
+            # Extract image attachment IDs from rendered HTML
+            local inline_images
+            inline_images=$(echo "$rendered_comments" | jq -r '.comments[].renderedBody // ""' | \
+                grep -oE 'src="/rest/api/3/attachment/content/[0-9]+"' | \
+                grep -oE '[0-9]+' | sort -u)
+            
+            if [[ -n "$inline_images" ]]; then
+                log_verbose "  Found inline images in comments"
+                
+                # Fetch and download each inline image
+                # Add safety counter to prevent infinite loops
+                local image_count=0
+                local max_images=50
+                
+                while IFS= read -r attachment_id; do
+                    if [[ -z "$attachment_id" || $image_count -ge $max_images ]]; then
+                        if [[ $image_count -ge $max_images ]]; then
+                            log_verbose "  Reached maximum inline image limit ($max_images)"
+                        fi
+                        continue
+                    fi
+                    
+                    # Validate attachment_id is numeric
+                    if ! [[ "$attachment_id" =~ ^[0-9]+$ ]]; then
+                        log_verbose "  Skipping invalid attachment ID: $attachment_id"
+                        continue
+                    fi
+                    
+                    ((image_count++))
+                    
+                    log_verbose "  Fetching inline image metadata (ID: $attachment_id)..."
+                    
+                    # Get attachment metadata
+                    local attachment_meta
+                    attachment_meta=$(curl -s --max-time 30 -u "$AUTH" \
+                        -H "Accept: application/json" \
+                        "$BASE_URL/attachment/$attachment_id" 2>/dev/null)
+                    
+                    if [[ -n "$attachment_meta" ]]; then
+                        local filename size
+                        filename=$(echo "$attachment_meta" | jq -r '.filename // "unknown"')
+                        size=$(echo "$attachment_meta" | jq -r '.size // 0')
+                        
+                        if [[ "$filename" != "unknown" ]]; then
+                            local safe_filename local_path
+                            safe_filename="comment_$(sanitize_filename "$filename")"
+                            local_path="$ticket_dir/$safe_filename"
+                            
+                            # Check if file already exists with correct size
+                            if [[ "$FORCE_DOWNLOAD" == "false" && -f "$local_path" ]]; then
+                                local existing_size
+                                existing_size=$(stat -f%z "$local_path" 2>/dev/null || stat -c%s "$local_path" 2>/dev/null || echo "0")
+                                if [[ $existing_size -eq $size ]]; then
+                                    log_verbose "  Skipping inline image: $filename (already exists with correct size: $size bytes)"
+                                    continue
+                                else
+                                    log_verbose "  Re-downloading inline image: $filename (size mismatch: expected $size, found $existing_size)"
+                                fi
+                            else
+                                log_verbose "  Downloading inline image: $filename ($size bytes)"
+                            fi
+                            
+                            # Download the inline image
+                            local http_code
+                            http_code=$(curl -w "%{http_code}" -s -L --max-time 30 -u "$AUTH" \
+                                -o "$local_path" \
+                                "$BASE_URL/attachment/content/$attachment_id" 2>/dev/null)
+                            
+                            if [[ -f "$local_path" && "$http_code" == "200" ]]; then
+                                local actual_size
+                                actual_size=$(stat -f%z "$local_path" 2>/dev/null || stat -c%s "$local_path" 2>/dev/null || echo "0")
+                                log_verbose "  Success: Downloaded inline image $filename ($actual_size bytes)"
+                            else
+                                log_verbose "  Warning: Failed to download inline image $filename (HTTP $http_code)"
+                                rm -f "$local_path"
+                            fi
+                        fi
+                    fi
+                done <<< "$inline_images"
+            fi
+        fi
+    fi
+    
+    # Download attachments
+    local attachments
+    attachments=$(echo "$ticket_data" | jq -r '.fields.attachment[]? | @json')
+    if [[ -n "$attachments" ]]; then
+        log_verbose "Downloading attachments for $ticket_id..."
+        while IFS= read -r attachment_json; do
+            if [[ -z "$attachment_json" ]]; then
+                continue
+            fi
+            local filename content_url size
+            filename=$(echo "$attachment_json" | jq -r '.filename')
+            content_url=$(echo "$attachment_json" | jq -r '.content')
+            size=$(echo "$attachment_json" | jq -r '.size')
+            
+            if [[ -n "$filename" && -n "$content_url" && "$content_url" != "null" ]]; then
+                local safe_filename local_path
+                safe_filename=$(sanitize_filename "$filename")
+                local_path="$ticket_dir/$safe_filename"
+                
+                # Check if file already exists with correct size
+                if [[ "$FORCE_DOWNLOAD" == "false" && -f "$local_path" ]]; then
+                    local existing_size
+                    existing_size=$(stat -f%z "$local_path" 2>/dev/null || stat -c%s "$local_path" 2>/dev/null || echo "0")
+                    if [[ $existing_size -eq $size ]]; then
+                        log_verbose "  Skipping: $filename (already exists with correct size: $size bytes)"
+                        continue
+                    else
+                        log_verbose "  Re-downloading: $filename (size mismatch: expected $size, found $existing_size)"
+                    fi
+                else
+                    log_verbose "  Downloading: $filename ($size bytes)"
+                fi
+                
+                # Download with authentication
+                local http_code
+                http_code=$(curl -w "%{http_code}" -s -L --max-time 60 -u "$AUTH" \
+                    -o "$local_path" \
+                    "$content_url" 2>/dev/null) || {
+                    echo "  Warning: Failed to download $filename" >&2
+                    continue
+                }
+                
+                # Verify download
+                if [[ -f "$local_path" ]]; then
+                    local actual_size
+                    actual_size=$(stat -f%z "$local_path" 2>/dev/null || stat -c%s "$local_path" 2>/dev/null || echo "0")
+                    
+                    if [[ "$http_code" != "200" ]]; then
+                        echo "  Warning: HTTP $http_code for $filename" >&2
+                        rm -f "$local_path"  # Remove failed download
+                    elif [[ $actual_size -lt 1000 ]]; then
+                        echo "  Warning: Downloaded file might be an error page (size: $actual_size bytes)" >&2
+                        # Check if it's an error HTML
+                        if file "$local_path" | grep -q "HTML\|ASCII"; then
+                            echo "  Error content: $(head -1 "$local_path")" >&2
+                            rm -f "$local_path"  # Remove error file
+                        fi
+                    else
+                        log_verbose "  Success: Downloaded $filename ($actual_size bytes)"
+                        
+                        # For images, verify it's a valid image file
+                        if [[ "$filename" =~ \.(png|jpg|jpeg|gif|webp)$ ]]; then
+                            if ! file "$local_path" | grep -qE "image|PNG|JPEG|GIF|WebP"; then
+                                log_verbose "  Warning: File doesn't appear to be a valid image"
+                            fi
+                        fi
+                    fi
+                else
+                    echo "  Error: File not created: $local_path" >&2
+                fi
+            fi
+        done <<< "$attachments"
+    fi
+    
+    # Format output based on selected format
+    if [[ "$OUTPUT_FORMAT" == "json" ]]; then
+        # Combine ticket data with comments and local paths
+        echo "$ticket_data" | jq --argjson comments "$comments_data" --arg dir "$ticket_dir" '. + {
+            all_comments: $comments.fields.comment.comments,
+            local_attachment_dir: $dir
+        }'
+    else
+        # Format as markdown
+        format_markdown "$ticket_id" "$ticket_data" "$comments_data" "$ticket_dir"
+    fi
+}
+
+# Function to format output as markdown
+format_markdown() {
+    local ticket_id=$1
+    local ticket_data=$2
+    local comments_data=$3
+    local ticket_dir=$4
+    
+    # Extract fields using jq
+    local summary status priority assignee reporter issue_type created updated description
+    summary=$(echo "$ticket_data" | jq -r '.fields.summary // "No summary"')
+    status=$(echo "$ticket_data" | jq -r '.fields.status.name // "Unknown"')
+    priority=$(echo "$ticket_data" | jq -r '.fields.priority.name // "None"')
+    assignee=$(echo "$ticket_data" | jq -r '.fields.assignee.displayName // "Unassigned"')
+    reporter=$(echo "$ticket_data" | jq -r '.fields.reporter.displayName // "Unknown"')
+    issue_type=$(echo "$ticket_data" | jq -r '.fields.issuetype.name // "Unknown"')
+    created=$(echo "$ticket_data" | jq -r '.fields.created // ""' | cut -d'T' -f1)
+    updated=$(echo "$ticket_data" | jq -r '.fields.updated // ""' | cut -d'T' -f1)
+    # Parse description - handle both plain text and Atlassian Document Format
+    description=$(echo "$ticket_data" | jq -r '.fields.description | 
+        if type == "object" then
+            # Handle Atlassian Document Format
+            .content[]? | 
+            if .type == "paragraph" then
+                (.content[]? | 
+                    if .type == "text" then .text
+                    elif .type == "hardBreak" then "\n"
+                    else ""
+                    end
+                ) // ""
+            elif .type == "bulletList" then
+                (.content[]?.content[]?.content[]? | 
+                    if .type == "text" then "* " + .text
+                    else ""
+                    end
+                ) // ""
+            elif .type == "heading" then
+                (.content[]? | if .type == "text" then "## " + .text else "" end) // ""
+            else ""
+            end
+        elif type == "string" then
+            # Plain text
+            .
+        else
+            "No description"
+        end' | sed '/^$/d' | tr -d '\n' | sed 's/\*/\n*/g' | sed 's/^//' )
+    
+    # Time tracking
+    local time_original time_spent time_remaining
+    time_original=$(echo "$ticket_data" | jq -r '.fields.timeoriginalestimate // null')
+    time_spent=$(echo "$ticket_data" | jq -r '.fields.timespent // null')
+    time_remaining=$(echo "$ticket_data" | jq -r '.fields.timeestimate // null')
+    
+    echo "## 📋 TICKET: $ticket_id"
+    echo "**Title**: $summary"
+    echo "**Status**: $status | **Priority**: $priority | **Assignee**: $assignee"
+    echo "**Type**: $issue_type | **Created**: $created | **Updated**: $updated"
+    echo "**Reporter**: $reporter"
+    echo ""
+    
+    echo "### ⏱️ Time Tracking"
+    echo "- **Estimated**: $(format_time "$time_original")"
+    echo "- **Spent**: $(format_time "$time_spent")"
+    echo "- **Remaining**: $(format_time "$time_remaining")"
+    echo ""
+    
+    echo "### 📝 Description"
+    echo "$description"
+    echo ""
+    
+    # Attachments
+    local attachment_count
+    attachment_count=$(echo "$ticket_data" | jq '.fields.attachment | length')
+    if [[ $attachment_count -gt 0 ]]; then
+        echo "### 📎 Attachments ($attachment_count)"
+        local i=1
+        echo "$ticket_data" | jq -r '.fields.attachment[] | @json' | while IFS= read -r attachment_json; do
+            local filename size author created_date safe_filename
+            filename=$(echo "$attachment_json" | jq -r '.filename')
+            size=$(echo "$attachment_json" | jq -r '.size')
+            author=$(echo "$attachment_json" | jq -r '.author.displayName')
+            created_date=$(echo "$attachment_json" | jq -r '.created' | cut -d'T' -f1)
+            safe_filename=$(sanitize_filename "$filename")
+            
+            # Format size
+            local human_size
+            if [[ $size -gt 1048576 ]]; then
+                human_size="$((size / 1048576)) MB"
+            elif [[ $size -gt 1024 ]]; then
+                human_size="$((size / 1024)) KB"
+            else
+                human_size="$size bytes"
+            fi
+            
+            echo "$i. **$filename** ($human_size)"
+            echo "   - Uploaded by: $author on $created_date"
+            if [[ -f "$ticket_dir/$safe_filename" ]]; then
+                echo "   - Local path: \`$ticket_dir/$safe_filename\`"
+            fi
+            ((i++))
+        done
+        echo ""
+    fi
+    
+    # Linked issues
+    local linked_count
+    linked_count=$(echo "$ticket_data" | jq '.fields.issuelinks | length')
+    if [[ $linked_count -gt 0 ]]; then
+        echo "### 🔗 Linked Issues ($linked_count)"
+        echo "$ticket_data" | jq -r '.fields.issuelinks[] | 
+            if .outwardIssue then
+                "- **\(.type.outward)**: \(.outwardIssue.key) - \"\(.outwardIssue.fields.summary)\""
+            elif .inwardIssue then
+                "- **\(.type.inward)**: \(.inwardIssue.key) - \"\(.inwardIssue.fields.summary)\""
+            else
+                ""
+            end' | grep -v '^$'
+        echo ""
+    fi
+    
+    # Comments
+    local all_comments comment_count
+    all_comments=$(echo "$comments_data" | jq '.fields.comment.comments')
+    comment_count=$(echo "$all_comments" | jq 'length')
+    
+    if [[ $comment_count -gt 0 ]]; then
+        echo "### 💬 Comments ($comment_count)"
+        echo ""
+        
+        echo "$all_comments" | jq -r '.[] | @json' | {
+            local idx=1
+            while IFS= read -r comment_json; do
+                local author created body
+                author=$(echo "$comment_json" | jq -r '.author.displayName // "Unknown"')
+                created=$(echo "$comment_json" | jq -r '.created // ""')
+                body=$(echo "$comment_json" | jq -r '.body | 
+                    if type == "object" then
+                        # Handle Atlassian Document Format
+                        .content[]? | 
+                        if .type == "paragraph" then
+                            (.content[]? | 
+                                if .type == "text" then .text
+                                elif .type == "hardBreak" then "\n"
+                                elif .type == "mention" then .attrs.text
+                                elif .type == "emoji" then .attrs.text
+                                elif .type == "inlineCard" then "[Link]"
+                                else ""
+                                end
+                            ) // ""
+                        elif .type == "bulletList" then
+                            "• " + (.content[]?.content[]?.content[]? | 
+                                if .type == "text" then .text
+                                else ""
+                                end
+                            ) // ""
+                        elif .type == "rule" then "---"
+                        elif .type == "mediaSingle" then
+                            "[IMAGE: " + (.content[]?.attrs.alt // "inline-image") + "]"
+                        else ""
+                        end
+                    else
+                        # Plain text
+                        .
+                    end' | sed '/^$/d')
+                
+                echo "#### Comment #$idx - $author ($created)"
+                echo "$body"
+                echo ""
+                ((idx++))
+            done
+        }
+    fi
+    
+    echo "---"
+    echo ""
+}
+
+# Main execution
+echo "# JIRA TICKETS ANALYSIS"
+echo ""
+echo "_Generated: $(date '+%Y-%m-%d %H:%M:%S')_"
+echo ""
+
+# Process all tickets
+for TICKET_ID in "$@"; do
+    fetch_ticket "$TICKET_ID"
+done
+
+echo ""
+echo "_End of report_"

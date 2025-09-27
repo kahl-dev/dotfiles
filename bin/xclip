@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# xclip wrapper that uses rclip for remote compatibility
+
+# If rclip exists, use it for basic clipboard operations
+if command -v rclip >/dev/null 2>&1; then
+    # Handle common xclip usage patterns
+    if [[ "$*" == *"-selection clipboard"* ]] || [[ "$*" == *"-sel clip"* ]] || [[ $# -eq 0 ]]; then
+        exec rclip
+    fi
+fi
+
+# Fall back to real xclip if available
+if command -v /usr/bin/xclip >/dev/null 2>&1; then
+    exec /usr/bin/xclip "$@"
+elif command -v /usr/local/bin/xclip >/dev/null 2>&1; then
+    exec /usr/local/bin/xclip "$@"
+else
+    echo "xclip: command not found (and rclip fallback failed)" >&2
+    exit 1
+fi
