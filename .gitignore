@@ -24,6 +24,7 @@ nvim/undodir
 
 # Exclude generated/installed content only
 bin/fnm/
+bin/git-lia/
 
 !.config/bat/themes/*
 

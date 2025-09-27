@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Smart toggle between Sidecar and Universal Control modes via Hammerspoon
+# This script communicates with the running Hammerspoon instance
+
+osascript -e '
+tell application "Hammerspoon"
+    execute lua code "require(\"modules.ipad-manager\").smartToggle()"
+end tell
+'

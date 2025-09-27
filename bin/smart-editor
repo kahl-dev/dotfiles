@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Check if we're in Zed terminal by looking for Zed-specific environment variables
+if [[ "$TERM_PROGRAM" == "zed" ]] || [[ -n "$ZED_TERM" ]] || pgrep -f "zed" > /dev/null 2>&1; then
+    # We're in Zed, use zed editor
+    zed "$@"
+else
+    # Not in Zed, use nvim
+    nvim "$@"
+fi

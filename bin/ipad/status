@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Show iPad status via Hammerspoon
+# This script communicates with the running Hammerspoon instance
+
+osascript -e '
+tell application "Hammerspoon"
+    execute lua code "require(\"modules.ipad-manager\").showStatus()"
+end tell
+'

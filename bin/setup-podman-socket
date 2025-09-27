@@ -1,0 +1,12 @@
+#!/bin/bash
+# Setup Podman socket for Docker compatibility
+echo "Setting up Podman socket for Docker compatibility..."
+PODMAN_SOCKET=$(find /var/folders -name "podman-machine-default-api.sock" 2>/dev/null | head -1)
+if [[ -z "$PODMAN_SOCKET" ]]; then
+    echo "Error: Podman API socket not found. Make sure Podman machine is running."
+    exit 1
+fi
+mkdir -p ~/.docker/run
+rm -f ~/.docker/run/docker.sock
+ln -sf "$PODMAN_SOCKET" ~/.docker/run/docker.sock
+echo "✅ Podman socket linked successfully!"
