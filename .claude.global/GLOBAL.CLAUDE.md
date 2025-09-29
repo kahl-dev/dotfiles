@@ -246,6 +246,12 @@ Hook errors are blocking issues that must be fixed before continuing.
 - Debug: `mcp__playwright__browser_console_messages`
 - MUST use Playwright MCP server when making visual changes to front-end to check your work
 
+**Jira MCP Configuration:**
+
+- Always use the cloudId from `$JIRA_CLOUD_ID` environment variable
+- Never attempt to guess or try multiple cloud IDs
+- This prevents API token waste and authentication errors
+
 ## ⚡ Efficiency Patterns
 
 **Mandatory Parallel Operations:**
