@@ -112,6 +112,199 @@ claude config get hooks     # Check configuration syntax
 cat ~/.claude/settings.json | jq '.'  # Validate settings file
 ```
 
+#### 🎯 Smart Lint Hook - Implementation Guide
+
+**Location:** `~/.dotfiles/.claude.global/hooks/smart-lint.sh`
+
+**Purpose:** Automatic linting and type checking for JavaScript, TypeScript, Vue, Shell scripts, and Makefiles on every file edit.
+
+**Hook Configuration (`~/.claude/settings.json`):**
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/smart-lint.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**📥 Input Protocol (3-Tier System):**
+
+The hook uses a three-tier fallback system for file collection:
+
+1. **Tier 1: Hook stdin JSON (PostToolUse)** - AUTHORITATIVE
+   - Source: Claude Code's PostToolUse hook protocol
+   - Input: JSON via stdin with structure:
+     ```json
+     {
+       "tool_name": "Edit|Write|MultiEdit",
+       "tool_input": {
+         "file_path": "/absolute/path/to/file.ts",
+         "old_string": "...",
+         "new_string": "..."
+       }
+     }
+     ```
+   - Behavior: Per-file processing, immediate feedback
+   - Reliability: 100% accurate
+   - Use case: Normal Edit/Write operations in PostToolUse hook
+
+2. **Tier 2: CLAUDE_MODIFIED_FILES environment variable** - BATCH MODE
+   - Source: Environment variable with newline-separated file paths
+   - Behavior: Multi-file batch processing, ESLint/TypeScript optimization active
+   - Reliability: 100% accurate if variable is set correctly
+   - Use case: SessionEnd hooks, manual invocation, CI/CD
+   - Example:
+     ```bash
+     export CLAUDE_MODIFIED_FILES="/path/to/file1.ts
+     /path/to/file2.ts
+     /path/to/file3.ts"
+     ~/.claude/hooks/smart-lint.sh
+     ```
+
+3. **Tier 3: Time-based file search** - DEBUGGING FALLBACK
+   - Source: `find . -mmin -1` for recently modified files
+   - Behavior: Searches for files changed in last 1 minute
+   - Reliability: ~50% (timing issues, directory context problems)
+   - Use case: Testing/debugging only, not production
+   - Warning: Inherently unreliable, use only as last resort
+
+**🔧 Processing Modes:**
+
+| File Source | ESLint | TypeScript | Speed | Use Case |
+|-------------|---------|------------|-------|----------|
+| `hook_stdin` | 1 run/file | 1 run/file | Immediate (2-5s) | PostToolUse per-file |
+| `env_variable` | Batched | Batched | Fast (5-10s) | SessionEnd, manual |
+| `time_based` | Batched | Batched | Varies | Debugging only |
+
+**📋 Linter Features:**
+
+1. **ESLint:**
+   - Auto-discovery of `.eslintrc.*` configs
+   - Project-specific Node.js version detection (via `.nvmrc`, `.node-version`, `package.json`)
+   - Uses `npx --prefix` for project-specific ESLint version
+   - Batch optimization: groups files by shared config
+   - Auto-fix with `--fix` flag
+   - Caching for config discovery and tool availability
+
+2. **TypeScript/vue-tsc:**
+   - Auto-discovery of `tsconfig.json`
+   - Project-specific TypeScript version
+   - Nuxt project special handling with `nuxi typecheck`
+   - NEW: Batch optimization for multiple files sharing same tsconfig
+   - Skips `.nuxt` build directories
+
+3. **ShellCheck:**
+   - Validates bash/sh scripts
+   - Zsh syntax checking with `zsh -n`
+   - Shebang detection
+   - File extension detection (`.sh`, `.bash`, `.zsh`)
+
+4. **Makefile:**
+   - Syntax validation with `make --dry-run`
+   - Secure temporary directory usage
+   - File size limits to prevent DoS
+
+**🔍 Session Info Display:**
+
+The hook displays processing mode and file counts:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Smart Lint Session Info
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  File Source: hook_stdin
+  Total Files: 1
+  JS/TS/Vue:   1
+  Shell:       0
+  Makefile:    0
+  Mode: Per-file (immediate feedback)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**⚙️ Advanced Usage: SessionEnd Batch Processing:**
+
+For end-of-session bulk linting with full batch optimization:
+
+```json
+{
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/session-end-lint.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Create `session-end-lint.sh`:
+
+```bash
+#!/usr/bin/env bash
+# Collect all modified files from session
+export CLAUDE_MODIFIED_FILES="$(cat ~/.claude/user-data/file-types.json | jq -r '.file_types[].recent_files[]' | sort -u)"
+~/.claude/hooks/smart-lint.sh
+```
+
+**🔒 Security Features:**
+
+- Input sanitization for file paths
+- Prevention of shell injection
+- File size limits (10 MB default)
+- Timeout protection (30s per command)
+- Sandboxed command execution with restricted environment
+- Directory traversal prevention
+- Secure temporary directory handling
+
+**🚫 Exit Codes:**
+
+- `0`: All files passed linting/type checking
+- `2`: Blocking errors found (lint/type errors that need manual fixes)
+
+**🐛 Troubleshooting:**
+
+1. **Hook not triggering:**
+   - Check matcher in settings.json: `"Write|Edit|MultiEdit"`
+   - Verify hook script is executable: `chmod +x ~/.claude/hooks/smart-lint.sh`
+   - Test with `claude --debug`
+
+2. **Files not being linted:**
+   - Check tier source in "Smart Lint Session Info" output
+   - If `time_based`, stdin reading failed - check jq installation
+   - Verify file is not in excluded directories (`.nuxt`, `node_modules`, etc.)
+
+3. **ESLint version issues:**
+   - Hook uses project-specific ESLint via `npx --prefix`
+   - Check Node.js version matches project requirements
+   - Verify `.nvmrc` or `package.json` engines.node is correct
+
+4. **Performance issues:**
+   - Batch mode (Tier 2) is 5-10x faster than per-file
+   - Consider SessionEnd hook for bulk operations
+   - Check cache warming on first run
+
+**📚 References:**
+
+- Official hook docs: https://docs.claude.com/en/docs/claude-code/hooks.md
+- Hook implementation: `~/.dotfiles/.claude.global/hooks/smart-lint.sh`
+- Settings example: `~/.dotfiles/.claude.global/settings.json`
+
 ### Slash Commands & Custom Prompts
 
 #### 📋 Command Organization Structure

@@ -20,6 +20,54 @@ declare -A TOOL_AVAILABILITY_CACHE
 declare -A ABSOLUTE_PATH_CACHE
 declare -A NUXT_CONFIG_CACHE
 
+# ============================================================================
+# HOOK INPUT PROTOCOL (Claude Code Official)
+# ============================================================================
+# This script follows Claude Code's PostToolUse hook protocol:
+# - Input: JSON via stdin with structure:
+#   {
+#     "tool_name": "Edit|Write|MultiEdit",
+#     "tool_input": {
+#       "file_path": "/absolute/path/to/file.ts",
+#       "old_string": "...",
+#       "new_string": "..."
+#     }
+#   }
+# - Output: Exit code 0 (success) or 2 (blocking errors)
+# - Reference: https://docs.claude.com/en/docs/claude-code/hooks.md
+# ============================================================================
+
+# Hook input variables
+HOOK_INPUT=""
+HOOK_FILE_PATH=""
+HOOK_TOOL_NAME=""
+
+# Read JSON from stdin (primary data source for PostToolUse hooks)
+read_hook_stdin() {
+    # Check if stdin is available (not a terminal)
+    if [[ ! -t 0 ]]; then
+        # Read entire stdin
+        HOOK_INPUT="$(cat 2>/dev/null || true)"
+
+        # Extract data using jq if available
+        if command -v jq >/dev/null 2>&1 && [[ -n "$HOOK_INPUT" ]]; then
+            # Validate JSON first
+            if echo "$HOOK_INPUT" | jq empty 2>/dev/null; then
+                HOOK_TOOL_NAME="$(echo "$HOOK_INPUT" | jq -r '.tool_name // empty' 2>/dev/null)"
+                HOOK_FILE_PATH="$(echo "$HOOK_INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)"
+
+                # Validate extracted path
+                if [[ "$HOOK_FILE_PATH" == "null" || -z "$HOOK_FILE_PATH" ]]; then
+                    HOOK_FILE_PATH=""
+                fi
+            fi
+        fi
+    fi
+}
+
+# Call stdin reader at initialization
+read_hook_stdin
+
 # File to store linting errors from all tools
 LINT_ERRORS_FILE="$HOME/.claude/smart_lint_errors.json"
 
@@ -1126,17 +1174,65 @@ if command -v eslint &> /dev/null || command -v tsc &> /dev/null || command -v v
     TOOLS_AVAILABLE=true
 fi
 
-# Get list of modified files from environment or git
-MODIFIED_FILES=()
+# ============================================================================
+# FILE COLLECTION STRATEGY
+# ============================================================================
+# Three-tier fallback system optimized for different hook events:
+#
+# Tier 1: Hook stdin JSON (PostToolUse) - IMMEDIATE FEEDBACK
+#   - Per-file processing
+#   - 100% accurate
+#   - Runs on every Edit/Write operation
+#   - Provides instant linting feedback
+#
+# Tier 2: CLAUDE_MODIFIED_FILES (SessionEnd, manual) - BATCH OPTIMIZATION
+#   - Multi-file batch processing
+#   - Preserves ESLint batch optimization
+#   - For end-of-session bulk linting or manual invocation
+#
+# Tier 3: Time-based search - DEBUGGING FALLBACK
+#   - Last resort for testing
+#   - Inherently unreliable due to timing/directory issues
+# ============================================================================
 
-# Check if we have CLAUDE_MODIFIED_FILES environment variable
-if [[ -n "${CLAUDE_MODIFIED_FILES:-}" ]]; then
+MODIFIED_FILES=()
+FILE_SOURCE="unknown"
+
+# Tier 1: Hook stdin (authoritative for PostToolUse hooks)
+if [[ -n "$HOOK_FILE_PATH" ]]; then
+    echo -e "${GREEN}📥 Received file from Claude Code hook stdin${NC}"
+    echo -e "${BLUE}   Tool: $HOOK_TOOL_NAME | File: $(basename "$HOOK_FILE_PATH")${NC}"
+    MODIFIED_FILES+=("$HOOK_FILE_PATH")
+    FILE_SOURCE="hook_stdin"
+fi
+
+# Tier 2: Environment variable (for batch processing)
+if [[ ${#MODIFIED_FILES[@]} -eq 0 && -n "${CLAUDE_MODIFIED_FILES:-}" ]]; then
+    echo -e "${YELLOW}📋 Using CLAUDE_MODIFIED_FILES environment variable${NC}"
     IFS=$'\n' read -r -d '' -a MODIFIED_FILES <<< "$CLAUDE_MODIFIED_FILES" || true
-else
-    # Fallback: check current directory for recently modified files
+    FILE_SOURCE="env_variable"
+
+    if [[ ${#MODIFIED_FILES[@]} -gt 0 ]]; then
+        echo -e "${BLUE}   Files to process: ${#MODIFIED_FILES[@]}${NC}"
+        echo -e "${GREEN}   ✓ Batch mode enabled - ESLint optimization active${NC}"
+    fi
+fi
+
+# Tier 3: Time-based fallback (debugging/testing only)
+if [[ ${#MODIFIED_FILES[@]} -eq 0 ]]; then
+    echo -e "${YELLOW}⚠️  No hook input or environment variable detected${NC}"
+    echo -e "${YELLOW}   Falling back to time-based file search (last 1 minute)${NC}"
+    echo -e "${YELLOW}   NOTE: This is unreliable and should not be used in production${NC}"
+
     while IFS= read -r -d '' file; do
         MODIFIED_FILES+=("$file")
     done < <(find . -type f \( -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" -o -name "*.vue" -o -name "*.mjs" -o -name "*.cjs" -o -name "*.sh" -o -name "*.bash" -o -name "*.zsh" -o -name "Makefile" -o -name "makefile" -o -name "*.mk" \) -mmin -1 -print0 2>/dev/null || true)
+
+    FILE_SOURCE="time_based"
+
+    if [[ ${#MODIFIED_FILES[@]} -gt 0 ]]; then
+        echo -e "${BLUE}   Found ${#MODIFIED_FILES[@]} recently modified files${NC}"
+    fi
 fi
 
 # Filter files by type (excluding .nuxt directory)
@@ -1216,7 +1312,26 @@ if [[ "$TOOLS_AVAILABLE" == "false" ]]; then
 fi
 
 total_files=$((${#JS_TS_VUE_FILES[@]} + ${#SHELL_FILES[@]} + ${#MAKEFILE_FILES[@]}))
-echo -e "${BLUE}Found $total_files file(s) to check: ${#JS_TS_VUE_FILES[@]} JS/TS/Vue, ${#SHELL_FILES[@]} Shell, ${#MAKEFILE_FILES[@]} Makefile${NC}"
+
+# Display session info with processing mode
+echo ""
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${BLUE}  Smart Lint Session Info${NC}"
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${BLUE}  File Source: ${NC}$FILE_SOURCE"
+echo -e "${BLUE}  Total Files: ${NC}$total_files"
+echo -e "${BLUE}  JS/TS/Vue:   ${NC}${#JS_TS_VUE_FILES[@]}"
+echo -e "${BLUE}  Shell:       ${NC}${#SHELL_FILES[@]}"
+echo -e "${BLUE}  Makefile:    ${NC}${#MAKEFILE_FILES[@]}"
+
+if [[ "$FILE_SOURCE" == "hook_stdin" ]]; then
+    echo -e "${GREEN}  Mode: Per-file (immediate feedback)${NC}"
+elif [[ "$FILE_SOURCE" == "env_variable" ]]; then
+    echo -e "${GREEN}  Mode: Batch (performance optimized)${NC}"
+else
+    echo -e "${YELLOW}  Mode: Fallback (debugging)${NC}"
+fi
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
 # Phase 1: Makefile Check
@@ -1244,7 +1359,125 @@ if [[ ${#JS_TS_VUE_FILES[@]} -gt 0 ]]; then
     echo ""
 fi
 
-# Phase 4: TypeScript Type Checking (only for TS and Vue files)
+# ============================================================================
+# TYPESCRIPT BATCH OPTIMIZATION
+# ============================================================================
+
+# Function to batch TypeScript checking by shared tsconfig
+check_typescript_batch() {
+    local -a files=("$@")
+    local -A files_by_tsconfig
+
+    # Group files by their tsconfig directory
+    for file in "${files[@]}"; do
+        local absolute_path
+        absolute_path="$(get_absolute_path "$file")"
+
+        if config_dir=$(find_tsconfig "$absolute_path"); then
+            # Add file to group for this tsconfig
+            if [[ -n "${files_by_tsconfig[$config_dir]:-}" ]]; then
+                files_by_tsconfig[$config_dir]+=" $absolute_path"
+            else
+                files_by_tsconfig[$config_dir]="$absolute_path"
+            fi
+        else
+            # No tsconfig, check individually
+            check_typescript "$file" || true
+        fi
+    done
+
+    # Process each tsconfig group in batch
+    for config_dir in "${!files_by_tsconfig[@]}"; do
+        local config_files="${files_by_tsconfig[$config_dir]}"
+        local -a file_array
+        read -ra file_array <<< "$config_files"
+
+        # Only batch if we have multiple files
+        if [[ ${#file_array[@]} -gt 1 ]]; then
+            process_typescript_batch "$config_dir" "${file_array[@]}"
+        else
+            # Single file, use existing per-file logic
+            check_typescript "${file_array[0]}" || true
+        fi
+    done
+}
+
+# Process TypeScript batch for files sharing same tsconfig
+process_typescript_batch() {
+    local config_dir="$1"
+    shift
+    local -a file_array=("$@")
+
+    echo -e "${BLUE}→ Batch type checking ${#file_array[@]} files with $config_dir/tsconfig.json${NC}"
+
+    # Determine if we need vue-tsc (if any file is .vue)
+    local needs_vue_tsc=false
+    for file in "${file_array[@]}"; do
+        if [[ "$file" =~ \.vue$ ]]; then
+            needs_vue_tsc=true
+            break
+        fi
+    done
+
+    # Get appropriate TypeScript compiler
+    local tsc_cmd
+    if [[ "$needs_vue_tsc" == "true" ]]; then
+        if ! tsc_cmd=$(check_typescript_available "$config_dir" "true" "${file_array[0]}"); then
+            echo -e "${YELLOW}⚠ vue-tsc not available, falling back to per-file checking${NC}"
+            for file in "${file_array[@]}"; do
+                check_typescript "$file" || true
+            done
+            return
+        fi
+    else
+        if ! tsc_cmd=$(check_typescript_available "$config_dir" "false" "${file_array[0]}"); then
+            echo -e "${YELLOW}⚠ tsc not available, falling back to per-file checking${NC}"
+            for file in "${file_array[@]}"; do
+                check_typescript "$file" || true
+            done
+            return
+        fi
+    fi
+
+    # Convert to relative paths from config directory
+    local -a relative_paths
+    for absolute_path in "${file_array[@]}"; do
+        local relative_path
+        if [[ "$absolute_path" = "$config_dir"/* ]]; then
+            relative_path="${absolute_path#"$config_dir"/}"
+        else
+            relative_path="$absolute_path"
+        fi
+        relative_paths+=("$relative_path")
+    done
+
+    # Run TypeScript on all files at once
+    local output
+    command cd "$config_dir" 2>/dev/null || true
+    if output=$(run_with_timeout "$COMMAND_TIMEOUT" "$tsc_cmd" --noEmit "${relative_paths[@]}" 2>&1); then
+        echo -e "${GREEN}✓ All ${#file_array[@]} files passed type checking${NC}"
+    else
+        echo -e "${RED}❌ Type errors found in batch:${NC}" >&2
+        echo "$output" | head -40 >&2
+
+        # Store errors
+        local session_id="${CLAUDE_SESSION_ID:-unknown}"
+        for absolute_path in "${file_array[@]}"; do
+            local error_json
+            error_json=$(jq -n \
+                --arg file "$absolute_path" \
+                --arg errors "$output" \
+                --arg session "$session_id" \
+                '{file_path: $file, errors: $errors, session_id: $session}')
+            ERROR_ENTRIES+=("$error_json")
+        done
+
+        BLOCKING_ERRORS+=("${#file_array[@]} files have TypeScript type errors")
+        ERRORS_FOUND=true
+    fi
+}
+
+# Phase 4: TypeScript Type Checking (batch optimized)
 if [[ ${#JS_TS_VUE_FILES[@]} -gt 0 ]]; then
     echo -e "${YELLOW}=== TypeScript Phase ===${NC}"
     TS_VUE_FILES=()
@@ -1255,9 +1488,17 @@ if [[ ${#JS_TS_VUE_FILES[@]} -gt 0 ]]; then
     done
 
     if [[ ${#TS_VUE_FILES[@]} -gt 0 ]]; then
-        for file in "${TS_VUE_FILES[@]}"; do
-            check_typescript "$file" || true
-        done
+        # Use batch processing if multiple files (optimization)
+        if [[ "$FILE_SOURCE" == "hook_stdin" || ${#TS_VUE_FILES[@]} -eq 1 ]]; then
+            # Single file or per-file mode: use existing logic
+            for file in "${TS_VUE_FILES[@]}"; do
+                check_typescript "$file" || true
+            done
+        else
+            # Batch mode: use optimized batch processing
+            echo -e "${GREEN}✓ Batch TypeScript mode enabled${NC}"
+            check_typescript_batch "${TS_VUE_FILES[@]}"
+        fi
     else
         echo -e "${GREEN}No TypeScript or Vue files to type check${NC}"
     fi

@@ -243,7 +243,6 @@
       "~/tmp/ai"
     ]
   },
-  "model": "opusplan",
   "hooks": {
     "PostToolUse": [
       {
@@ -296,6 +295,8 @@
     "command": "~/.claude/statusline.sh",
     "padding": 0
   },
+  "outputStyle": "Explanatory",
+  "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754119245892
   }
