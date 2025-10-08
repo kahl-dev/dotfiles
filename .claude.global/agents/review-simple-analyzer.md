@@ -1,42 +1,8 @@
 ---
 name: review-simple-analyzer
 description: Review Simple Analyzer for architectural, historical, and system-wide investigations. Uses intelligent mode detection to review modules, commit ranges, and whole projects. Advisory only—pairs with review-hard-auditor (the blocking gate) to surface follow-up work, technical debt, and post-deploy insights.
-
-Examples:
-- <example>
-  Context: Post-commit health check after a feature rollout
-  user: "We just merged the new OAuth2 integration. Can you audit the commit history for regressions?"
-  assistant: "I'll use the review-simple-analyzer agent to review the relevant commits, assess cross-file impacts, and highlight follow-up work."
-  <commentary>
-  Demonstrates commit-mode usage for non-blocking, post-merge analysis.
-  </commentary>
-  </example>
-- <example>
-  Context: Module deep dive to plan refactors
-  user: "Analyze the src/auth/ directory for security risks and tech debt."
-  assistant: "I'll use the review-simple-analyzer agent to inspect the auth module, trace dependencies, and propose improvements."
-  <commentary>
-  Shows path-mode analysis for architectural insights.
-  </commentary>
-  </example>
-- <example>
-  Context: Architecture & ownership review
-  user: "Give me a full health check of the backend services."
-  assistant: "I'll use the review-simple-analyzer agent to run a project-wide assessment and surface systemic risks."
-  <commentary>
-  Highlights full-project mode for big-picture analysis.
-  </commentary>
-  </example>
-- <example>
-  Context: Incident postmortem
-  user: "We had an outage tied to commit abc123. Help me understand what went wrong."
-  assistant: "I'll use the review-simple-analyzer agent to examine that commit, map dependencies, and summarize contributing factors."
-  <commentary>
-  Demonstrates targeted commit analysis in support of post-incident reviews.
-  </commentary>
-  </example>
 tools: Task, Bash, Read, Glob, Grep, LS, NotebookRead, BashOutput, KillBash, WebFetch, WebSearch, mcp__github__search_repositories, mcp__github__get_file_contents, mcp__github__list_commits, mcp__github__list_issues, mcp__github__search_code, mcp__github__search_issues, mcp__github__search_users, mcp__github__get_issue, mcp__github__get_pull_request, mcp__github__list_pull_requests, mcp__github__get_pull_request_files, mcp__github__get_pull_request_status, mcp__github__get_pull_request_comments, mcp__github__get_pull_request_reviews, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__gitlab__search_repositories, mcp__gitlab__get_file_contents, mcp__figma__get_figma_data, mcp__playwright__browser_snapshot, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_console_messages, mcp__playwright__browser_network_requests, mcp__playwright__browser_navigate, mcp__cloudinary-asset-mgmt__list-images, mcp__cloudinary-asset-mgmt__list-videos, mcp__cloudinary-asset-mgmt__list-files, mcp__cloudinary-asset-mgmt__get-asset-details, mcp__cloudinary-asset-mgmt__list-tags, mcp__cloudinary-asset-mgmt__get-usage-details, mcp__cloudinary-asset-mgmt__search-assets, mcp__jira__getJiraIssue, mcp__jira__searchJiraIssuesUsingJql, mcp__jira__getJiraIssueRemoteIssueLinks, mcp__jira__getVisibleJiraProjects, mcp__jira__getJiraProjectIssueTypesMetadata, mcp__sentry__search_events, mcp__sentry__search_issues, mcp__sentry__get_issue_details, mcp__sentry__find_organizations, mcp__sentry__find_projects, mcp__sentry__find_releases
-model: opus
+model: sonnet
 color: purple
 ---
 

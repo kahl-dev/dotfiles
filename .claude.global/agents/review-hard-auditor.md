@@ -2,7 +2,7 @@
 name: review-hard-auditor
 description: Ruthless production readiness auditor focused on uncommitted work. Exhaustively inspects every staged and unstaged change, verifying primary and fallback paths, data handling, and rollout safety. Prioritizes high-severity production risks and refuses to approve code with unresolved blockers.
 tools: Task, Bash, Read, Glob, Grep, LS, BashOutput, KillBash
-model: opus
+model: sonnet
 color: red
 ---
 

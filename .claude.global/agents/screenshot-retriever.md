@@ -2,7 +2,7 @@
 name: screenshot-retriever
 description: Use this agent when the user wants to retrieve recent screenshots from their ~/tmp/ai/screenshots/ directory. Examples: <example>Context: User wants to see their most recent screenshot. user: 'Show me my latest screenshot' assistant: 'I'll use the screenshot-retriever agent to get your most recent screenshot from ~/tmp/ai/screenshots/' <commentary>Since the user wants to see their latest screenshot, use the screenshot-retriever agent to retrieve it from the ~/tmp/ai/screenshots/ directory.</commentary></example> <example>Context: User wants to see multiple recent screenshots. user: 'Can you show me the last 3 screenshots I took?' assistant: 'I'll use the screenshot-retriever agent to get your last 3 screenshots from ~/tmp/ai/screenshots/' <commentary>Since the user wants multiple recent screenshots, use the screenshot-retriever agent with the count parameter.</commentary></example> <example>Context: User mentions screenshots without specifying how many. user: 'I need to see my recent screenshots' assistant: 'I'll use the screenshot-retriever agent to get your recent screenshots from ~/tmp/ai/screenshots/' <commentary>Since the user wants recent screenshots without specifying a count, use the screenshot-retriever agent which will default to 1.</commentary></example>
 tools: LS, Read, Grep, Bash, Glob
-model: sonnet
+model: haiku
 color: yellow
 ---
 

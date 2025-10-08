@@ -2,7 +2,7 @@
 name: lia-guide-finder
 description: Use this agent when you need to find and retrieve implementation guides from the lia-ai-docs repository. The agent searches for matching guides in ~/repos/lia-ai-docs/implementations/index.md based on provided search terms and returns the full guide content.\n\nExamples:\n- <example>\n  Context: User wants to find a guide about authentication implementation\n  user: "How do I implement OAuth in our system?"\n  assistant: "Let me search for an OAuth implementation guide in the lia-ai-docs."\n  <commentary>\n  Since the user is asking about a specific implementation topic, use the Task tool to launch the lia-guide-finder agent with 'OAuth' as the search term.\n  </commentary>\n  </example>\n- <example>\n  Context: User needs to find documentation about database migrations\n  user: "What's the process for database migrations?"\n  assistant: "I'll use the lia-guide-finder agent to search for database migration guides."\n  <commentary>\n  The user needs implementation documentation, so use the Task tool with lia-guide-finder to search for 'database migrations' in the guides.\n  </commentary>\n  </example>\n- <example>\n  Context: User wants to check if there's a guide for a specific feature\n  user: "Is there a guide for setting up Redis caching?"\n  assistant: "Let me check the lia-ai-docs for a Redis caching guide."\n  <commentary>\n  Use the Task tool to launch lia-guide-finder with 'Redis caching' to find and return any matching implementation guide.\n  </commentary>\n  </example>
 tools: Bash, Glob, Grep, Read, WebFetch, TodoWrite, WebSearch, BashOutput, KillShell
-model: sonnet
+model: haiku
 color: yellow
 ---
 
