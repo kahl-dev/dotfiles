@@ -244,21 +244,6 @@
     ]
   },
   "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/file-type-tracker.sh"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/smart-lint.sh"
-          }
-        ]
-      }
-    ],
     "Notification": [
       {
         "hooks": [
@@ -294,6 +279,11 @@
     "type": "command",
     "command": "~/.claude/statusline.sh",
     "padding": 0
+  },
+  "enabledPlugins": {
+    "feature-dev@claude-code-plugins": true,
+    "commit-commands@claude-code-plugins": true,
+    "security-guidance@claude-code-plugins": true
   },
   "outputStyle": "Explanatory",
   "alwaysThinkingEnabled": true,
