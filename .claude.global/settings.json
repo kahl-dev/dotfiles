@@ -240,7 +240,7 @@
     ],
     "defaultMode": "acceptEdits",
     "additionalDirectories": [
-      "~/tmp/ai"
+      "~/tmp/ai", "~/repos/lia-ai-docs"
     ]
   },
   "hooks": {
