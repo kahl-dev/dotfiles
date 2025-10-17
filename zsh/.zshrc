@@ -73,6 +73,14 @@ if command_exists brew; then
   fi
 fi
 
+# Docker CLI completions
+if command_exists docker; then
+  DOCKER_COMPLETIONS_PATH="$HOME/.docker/completions"
+  if [[ -d "$DOCKER_COMPLETIONS_PATH" ]]; then
+    fpath=($DOCKER_COMPLETIONS_PATH $fpath)
+  fi
+fi
+
 # Additional settings
 zinit cdreplay -q                    # Load zinit cdreplay quietly
 compdef mosh=ssh                     # Use ssh completion for mosh
