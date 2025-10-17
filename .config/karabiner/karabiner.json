@@ -593,7 +593,7 @@
                                     {
                                         "key_code": "right_option",
                                         "lazy": true,
-                                        "modifiers": ["right_command"]
+                                        "modifiers": ["right_shift"]
                                     }
                                 ],
                                 "type": "basic"
@@ -618,7 +618,7 @@
                                     {
                                         "key_code": "right_option",
                                         "lazy": true,
-                                        "modifiers": ["right_command"]
+                                        "modifiers": ["right_shift"]
                                     }
                                 ],
                                 "type": "basic"
