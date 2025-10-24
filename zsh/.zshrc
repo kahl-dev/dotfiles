@@ -5,7 +5,7 @@
 # -----------------------------------------------------------------------------
 
 # Exit early if not an interactive shell (prevents loading plugins in non-interactive contexts)
-[[ $- == *i* ]] || return
+# [[ $- == *i* ]] || return
 
 # https://www.youtube.com/watch?v=ud7YxC33Z3w
 # https://github.com/dreamsofautonomy/zensh/blob/main/.zshrc
