@@ -8,15 +8,21 @@ This is a comprehensive macOS dotfiles repository that uses **dotbot** for confi
 
 ### Claude Code Configuration
 
-Global Claude Code instructions and configuration are stored in `.claude.global/` and symlinked to `~/.claude/` for version control:
+Global Claude Code instructions and configuration are managed in a **private repository** (`~/repos/claude-config`) and automatically installed via the `claude` dotbot ingredient:
 
-- **`.claude.global/GLOBAL.CLAUDE.md`** - Main global instructions file with imports
-- **`.claude.global/instructions/`** - Modular instruction files  
-- **`.claude.global/commands/`** - Custom slash commands
-- **`.claude.global/hooks/`** - Hook scripts for tool execution events
-- **`.claude.global/settings.json`** - Global Claude Code settings
+- **Repository**: `github.com:kahl-dev/claude-config` (private)
+- **Location**: `~/repos/claude-config/`
+- **Runtime**: Symlinked to `~/.claude/` during installation
+- **Installation**: Automatic via `./install-standalone claude` or `./install-profile <profile>`
 
-These provide consistent Claude behavior across all projects and machines.
+The configuration includes:
+- Global instructions (`GLOBAL.CLAUDE.md`)
+- Custom skills (LIA framework, Jira, productivity tools)
+- Slash commands (experts, productivity, analysis)
+- Automation hooks (smart-lint, notifications)
+- MCP server configurations
+
+This separation keeps agency-specific intellectual property private while allowing the public dotfiles to remain shareable.
 
 ## Architecture & Structure
 
