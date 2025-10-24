@@ -9,23 +9,30 @@
 
 - clean: []
 
-- link:
-    ~/.claude/agents: ./.claude.global/agents
-    ~/.claude/commands: ./.claude.global/commands
-    ~/.claude/hooks: ./.claude.global/hooks
-    ~/.claude/instructions: ./.claude.global/instructions
-    ~/.claude/shared: ./.claude.global/shared
-    ~/.claude/settings.json: ./.claude.global/settings.json
-    ~/.claude/statusline.sh: ./.claude.global/statusline.sh
-    ~/.claude/CLAUDE.md: ./.claude.global/GLOBAL.CLAUDE.md
-
 - shell:
-    - description: "Remove legacy ~/.claude.global symlink if it exists"
+    - description: "Clone or update Claude private configuration repository"
       command: |
-        if [ -L "$HOME/.claude.global" ]; then
-          echo "Removing legacy ~/.claude.global symlink..."
-          rm -f "$HOME/.claude.global"
+        REPO_DIR="$HOME/repos/claude-config"
+        REPO_URL="git@github.com:kahl-dev/claude-config.git"
+
+        if [ ! -d "$REPO_DIR" ]; then
+          echo "📦 Cloning Claude configuration repository..."
+          if ! git clone "$REPO_URL" "$REPO_DIR"; then
+            echo "❌ ERROR: Failed to clone Claude config repository"
+            echo "   Ensure you have access to: $REPO_URL"
+            echo "   and your SSH key is configured for GitHub"
+            exit 1
+          fi
+          echo "✓ Claude configuration cloned successfully"
+        else
+          echo "🔄 Updating Claude configuration repository..."
+          if ! git -C "$REPO_DIR" pull; then
+            echo "⚠️  Warning: Failed to pull updates, using local version"
+          else
+            echo "✓ Claude configuration updated successfully"
+          fi
         fi
+
     - description: "Create AI workspace directories for Claude"
       command: |
         mkdir -p ~/tmp/ai/screenshots \
@@ -35,17 +42,14 @@
                  ~/tmp/ai/downloads \
                  ~/tmp/ai/analysis \
                  ~/tmp/ai/cache
-    - description: "Link host-specific Claude settings if needed"
-      command: |
-        HOSTNAME=$(hostname -s)
-        case "$HOSTNAME" in
-          "typo3")
-            ln -sf "$HOME/.dotfiles/.claude.global/settings/liadev.json" "$HOME/.claude/settings.local.json"
-            echo "Linked liadev-specific Claude settings for typo3"
-            ;;
-          *)
-            # Remove any existing local settings symlink for other hosts
-            rm -f "$HOME/.claude/settings.local.json"
-            ;;
-        esac
+
+- link:
+    ~/.claude/commands: ~/repos/claude-config/commands
+    ~/.claude/hooks: ~/repos/claude-config/hooks
+    ~/.claude/instructions: ~/repos/claude-config/instructions
+    ~/.claude/shared: ~/repos/claude-config/shared
+    ~/.claude/skills: ~/repos/claude-config/skills
+    ~/.claude/settings.json: ~/repos/claude-config/settings.json
+    ~/.claude/statusline.sh: ~/repos/claude-config/statusline.sh
+    ~/.claude/CLAUDE.md: ~/repos/claude-config/GLOBAL.CLAUDE.md
 
