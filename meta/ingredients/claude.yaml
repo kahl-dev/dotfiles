@@ -44,9 +44,11 @@
                  ~/tmp/ai/cache
 
 - link:
+    ~/.claude/agents: ~/repos/claude-config/agents
     ~/.claude/commands: ~/repos/claude-config/commands
     ~/.claude/hooks: ~/repos/claude-config/hooks
     ~/.claude/instructions: ~/repos/claude-config/instructions
+    ~/.claude/output-styles: ~/repos/claude-config/output-styles
     ~/.claude/shared: ~/repos/claude-config/shared
     ~/.claude/skills: ~/repos/claude-config/skills
     ~/.claude/settings.json: ~/repos/claude-config/settings.json
