@@ -7,5 +7,6 @@
       "~/repos/claude-code-plugins-private",
       "~/repos/claude-config"
     ]
-  }
+  },
+  "outputStyle": "Direct Pro"
 }

@@ -900,7 +900,7 @@ alias mcc='make clearcache'
 # Claude aliases
 alias cc='claude -c'
 alias ccu='npx ccusage'
-alias cyolo='claude --dangerously-skip-permissions'
+alias cyolo='claude --dangerously-skip-permissions'  # Sandbox auto-enabled via settings.json
 
 # ############################## #
 # Dotfiles
