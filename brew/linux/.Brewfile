@@ -34,6 +34,8 @@ brew "fd"
 brew "fnm"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# Interact with Google Gemini AI models from the command-line
+brew "gemini-cli"
 # GNOME XML library
 brew "libxml2"
 # GitHub command-line tool
@@ -92,11 +94,17 @@ brew "starship"
 brew "tmux"
 # Manage complex tmux sessions easily
 brew "tmuxinator"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
+# Feature-rich command-line audio/video downloader
+brew "yt-dlp"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # Git in your tmux status bar.
 brew "arl/arl/gitmux"
+# OpenAI's coding agent that runs in your terminal
+cask "codex"
