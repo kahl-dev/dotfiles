@@ -17,9 +17,9 @@ customCommands:
     command: 'lit-toggl'
     output: terminal
 git:
-  paging:
-    colorArg: always
-    pager: delta --dark --paging=never
+  pagers:
+    - colorArg: always
+      pager: delta --dark --paging=never
 gui:
   # Catppuccin Mocha theme
   theme:
