@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.kahl-dev.remote-bridge</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/kahl-dev/.local/share/fnm/node-versions/v22.16.0/installation/bin/node</string>
+        <string>/Users/kahl-dev/.dotfiles/remote-bridge/src/server.js</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/Users/kahl-dev/.local/share/remote-bridge/service.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/kahl-dev/.local/share/remote-bridge/service.error.log</string>
+    <key>WorkingDirectory</key>
+    <string>/Users/kahl-dev/.dotfiles/remote-bridge</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>OBSIDIAN_VAULT_PATH</key>
+        <string>/Users/kahl-dev/Library/Mobile Documents/iCloud~md~obsidian/Documents/kahl_dev/</string>
+    </dict>
+</dict>
+</plist>

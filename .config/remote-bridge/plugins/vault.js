@@ -2,6 +2,14 @@ const fs = require('fs').promises;
 const path = require('path');
 const os = require('os');
 
+// Helper to parse decoded JSON data
+function getRequestData(req) {
+  if (typeof req.decodedData === 'string') {
+    return JSON.parse(req.decodedData);
+  }
+  return req.decodedData;
+}
+
 module.exports = {
   name: 'vault',
   version: '1.0.0',
@@ -11,7 +19,7 @@ module.exports = {
       path: '/vault/read',
       method: 'POST',
       handler: async (req, res) => {
-        const { path: notePath } = req.decodedData;
+        const { path: notePath } = getRequestData(req);
         const vaultPath = getVaultPath();
         const fullPath = path.join(vaultPath, notePath);
 
@@ -35,7 +43,7 @@ module.exports = {
       path: '/vault/read-batch',
       method: 'POST',
       handler: async (req, res) => {
-        const { paths } = req.decodedData;
+        const { paths } = getRequestData(req);
         const vaultPath = getVaultPath();
         const results = [];
 
@@ -68,7 +76,7 @@ module.exports = {
       path: '/vault/write',
       method: 'POST',
       handler: async (req, res) => {
-        const { path: notePath, content } = req.decodedData;
+        const { path: notePath, content } = getRequestData(req);
         const vaultPath = getVaultPath();
         const fullPath = path.join(vaultPath, notePath);
 
@@ -86,7 +94,7 @@ module.exports = {
       path: '/vault/append',
       method: 'POST',
       handler: async (req, res) => {
-        const { path: notePath, content } = req.decodedData;
+        const { path: notePath, content } = getRequestData(req);
         const vaultPath = getVaultPath();
         const fullPath = path.join(vaultPath, notePath);
 
@@ -105,11 +113,11 @@ module.exports = {
       path: '/vault/list',
       method: 'POST',
       handler: async (req, res) => {
-        const { path: dirPath = '' } = req.decodedData;
+        const { path: dirPath = '' } = getRequestData(req);
         const vaultPath = getVaultPath();
         const fullPath = path.join(vaultPath, dirPath);
 
-        try {
+        try{
           const entries = await fs.readdir(fullPath, { withFileTypes: true });
           const files = entries
             .filter(entry => !entry.name.startsWith('.'))
@@ -129,7 +137,7 @@ module.exports = {
       path: '/vault/delete',
       method: 'POST',
       handler: async (req, res) => {
-        const { path: notePath } = req.decodedData;
+        const { path: notePath } = getRequestData(req);
         const vaultPath = getVaultPath();
         const fullPath = path.join(vaultPath, notePath);
 
@@ -146,7 +154,7 @@ module.exports = {
       path: '/vault/search',
       method: 'POST',
       handler: async (req, res) => {
-        const { query, context_length = 3 } = req.decodedData;
+        const { query, context_length = 3 } = getRequestData(req);
         const vaultPath = getVaultPath();
 
         try {
@@ -162,7 +170,7 @@ module.exports = {
       path: '/vault/recent-changes',
       method: 'POST',
       handler: async (req, res) => {
-        const { days = 90, limit = 10 } = req.decodedData;
+        const { days = 90, limit = 10 } = getRequestData(req);
         const vaultPath = getVaultPath();
 
         try {
@@ -178,7 +186,7 @@ module.exports = {
       path: '/vault/get-periodic-note',
       method: 'POST',
       handler: async (req, res) => {
-        const { period } = req.decodedData;
+        const { period } = getRequestData(req);
         const vaultPath = getVaultPath();
 
         try {
@@ -194,7 +202,7 @@ module.exports = {
       path: '/vault/get-recent-periodic-notes',
       method: 'POST',
       handler: async (req, res) => {
-        const { period, limit = 7, include_content = false } = req.decodedData;
+        const { period, limit = 7, include_content = false } = getRequestData(req);
         const vaultPath = getVaultPath();
 
         try {
@@ -210,7 +218,7 @@ module.exports = {
       path: '/vault/patch',
       method: 'POST',
       handler: async (req, res) => {
-        const { path: notePath, target_type, target, operation, content } = req.decodedData;
+        const { path: notePath, target_type, target, operation, content } = getRequestData(req);
         const vaultPath = getVaultPath();
         const fullPath = path.join(vaultPath, notePath);
 
@@ -227,7 +235,7 @@ module.exports = {
       path: '/vault/complex-search',
       method: 'POST',
       handler: async (req, res) => {
-        const { query } = req.decodedData;
+        const { query } = getRequestData(req);
         const vaultPath = getVaultPath();
 
         try {
@@ -246,7 +254,12 @@ function getVaultPath() {
   if (!vaultPath) {
     throw new Error('OBSIDIAN_VAULT_PATH not set');
   }
-  return vaultPath.replace('~', os.homedir());
+  // Only replace ~ at the START of the path (home directory marker)
+  // Don't replace ~ in the middle (like iCloud~md~obsidian)
+  if (vaultPath.startsWith('~')) {
+    return vaultPath.replace(/^~/, os.homedir());
+  }
+  return vaultPath;
 }
 
 async function searchVault(vaultPath, query, contextLength) {
