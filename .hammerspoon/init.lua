@@ -39,3 +39,7 @@ usbManager.init()
 displayManager.init()
 -- ipadManager.init() -- Disabled to avoid duplicate hotkeys
 hotkeyLayer.init() -- Unified hotkey system
+
+-- TEMPORARY: Comprehensive watcher tests
+-- Uncomment the line below to test all watchers, then press Ctrl+Cmd+Shift+Alt+T to stop
+-- require("test-all-watchers")

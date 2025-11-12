@@ -333,11 +333,31 @@ end
 
 -- Caffeinate watcher callback
 function M.caffeineCallback(event)
+    -- Debug: Log all caffeinate events
+    local eventName = "UNKNOWN"
     if event == hs.caffeinate.watcher.screensDidLock then
+        eventName = "screensDidLock"
         M.handleMacBookLock()
     elseif event == hs.caffeinate.watcher.screensDidUnlock then
+        eventName = "screensDidUnlock"
         M.handleMacBookUnlock()
+    elseif event == hs.caffeinate.watcher.systemDidWake then
+        eventName = "systemDidWake"
+        M.log("System woke from sleep - treating as unlock")
+        M.handleMacBookUnlock()
+    elseif event == hs.caffeinate.watcher.systemWillSleep then
+        eventName = "systemWillSleep"
+        M.log("System going to sleep - treating as lock")
+        M.handleMacBookLock()
+    elseif event == hs.caffeinate.watcher.screensDidSleep then
+        eventName = "screensDidSleep"
+    elseif event == hs.caffeinate.watcher.screensDidWake then
+        eventName = "screensDidWake"
     end
+
+    M.log(string.format("Caffeinate event received: %s (code: %d)", eventName, event))
+    -- Debug alert (comment out if annoying)
+    -- hs.alert.show(string.format("Display Manager: %s", eventName), 2)
 end
 
 -- Check if microphone is actively being used for communication
