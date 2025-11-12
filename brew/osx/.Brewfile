@@ -22,7 +22,7 @@ brew "bash-completion"
 brew "bat"
 # Get/set bluetooth power and discoverable state
 brew "blueutil"
-# Platform built on V8 to build network applications
+# Open-source, cross-platform JavaScript runtime environment
 brew "node"
 # CLI of the open-source IDE For exploring and testing APIs
 brew "bruno-cli"
@@ -114,6 +114,8 @@ brew "mpv"
 brew "ncdu"
 # Fast, highly customisable system info script
 brew "neofetch"
+# Incremental parsing library
+brew "tree-sitter"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Libraries for security-enabled client and server applications
@@ -154,6 +156,8 @@ brew "stylua"
 brew "switchaudio-osx"
 # Send macOS User Notifications from the command-line
 brew "terminal-notifier"
+# Enables extra languages support for Tesseract
+brew "tesseract-lang"
 # Programmatically correct mistyped console commands
 brew "thefuck"
 # Terminal multiplexer
@@ -210,6 +214,8 @@ cask "betterdisplay"
 cask "blender"
 # Open source IDE for exploring and testing APIs
 cask "bruno"
+# Anthropic's official Claude AI desktop app
+cask "claude"
 # Write, edit, and chat about your code with AI
 cask "cursor"
 # Voice and text chat software
@@ -289,7 +295,6 @@ mas "PerformanceTest", id: 1560051043
 mas "Raycast Companion", id: 6738274497
 mas "Reeder", id: 1529448980
 mas "Tampermonkey Classic", id: 1482490089
-mas "Things", id: 904280696
 mas "TNEF's Enough", id: 986621173
 mas "Toggl Track", id: 1291898086
 mas "WISO Steuer 2023", id: 1635154215
@@ -297,6 +302,7 @@ mas "WISO Steuer 2025", id: 6695752781
 mas "Xcode", id: 497799835
 vscode "alefragnani.project-manager"
 vscode "andrsdc.base16-themes"
+vscode "anthropic.claude-code"
 vscode "bengreenier.vscode-node-readme"
 vscode "blinkshellinc.blink-fs"
 vscode "bradlc.vscode-tailwindcss"
@@ -342,3 +348,4 @@ vscode "vscjava.vscode-java-pack"
 vscode "vscjava.vscode-java-test"
 vscode "vscjava.vscode-maven"
 vscode "vue.volar"
+go "github.com/jesseduffield/lazygit"
