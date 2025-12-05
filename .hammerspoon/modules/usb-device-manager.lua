@@ -17,7 +17,6 @@ M.config = {
     devices = {},
     settings = {
         launch_delay = 2.0,
-        hide_delay = 2.0,
         notifications = false,
         debounce_delay = 2.0
     }
@@ -40,28 +39,10 @@ function M.isDeviceConnected(deviceConfig)
     return false
 end
 
--- Hide an app reliably
+-- Hide an app
 function M.hideApp(app)
     if not app then return end
-
-    -- Try standard hide
     app:hide()
-
-    -- Minimize windows as backup
-    local windows = app:allWindows()
-    for _, window in ipairs(windows) do
-        window:minimize()
-    end
-
-    -- Special handling for stubborn apps
-    local bundleId = app:bundleID()
-    if bundleId == "com.elgato.WaveLink" then
-        hs.osascript.applescript([[
-            tell application "System Events"
-                set visible of process "WaveLink" to false
-            end tell
-        ]])
-    end
 end
 
 -- Launch an application
@@ -80,39 +61,15 @@ function M.launchApp(bundleId, appName, deviceConfig)
         return false
     end
 
-    -- Launch the app
-    local success = hs.application.launchOrFocusByBundleID(bundleId)
-
-    if success then
-        M.state.managedApps[bundleId] = true
-
-        -- Hide if configured
-        if deviceConfig.launch_hidden then
-            local hideDelay = bundleId == "com.elgato.WaveLink" and 3.0 or M.config.settings.hide_delay
-
-            hs.timer.doAfter(hideDelay, function()
-                local launchedApp = hs.application.get(bundleId)
-                if launchedApp and not M.state.userShowedApp[bundleId] then
-                    M.hideApp(launchedApp)
-
-                    -- One more attempt for Wave Link
-                    if bundleId == "com.elgato.WaveLink" then
-                        hs.timer.doAfter(2.0, function()
-                            local waveApp = hs.application.get(bundleId)
-                            if waveApp and not M.state.userShowedApp[bundleId] then
-                                M.hideApp(waveApp)
-                            end
-                        end)
-                    end
-                end
-            end)
+    -- Launch the app in background using --runinbk flag (Elgato apps support this)
+    hs.task.new("/usr/bin/open", function(exitCode)
+        if exitCode == 0 then
+            M.state.managedApps[bundleId] = true
+            M.setupAppWatcher(bundleId, appName)
         end
+    end, {"-b", bundleId, "--args", "--runinbk"}):start()
 
-        -- Monitor for manual quits
-        M.setupAppWatcher(bundleId, appName)
-    end
-
-    return success
+    return true
 end
 
 -- Quit an application
