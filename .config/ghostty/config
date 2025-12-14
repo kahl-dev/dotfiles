@@ -42,7 +42,7 @@ shell-integration-features = true
 # Bell functionality is planned for future releases
 
 # macos
-macos-option-as-alt = left
+macos-option-as-alt = right
 macos-titlebar-style = hidden
 
 keybind = global:super+alt+shift+ctrl+o=toggle_quick_terminal
