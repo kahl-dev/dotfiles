@@ -22,6 +22,9 @@ clipboard-write = allow
 mouse-scroll-multiplier = 2
 mouse-hide-while-typing = true
 
+# memory
+scrollback-limit = 5000
+
 # window
 initial-window = true
 resize-overlay = never
@@ -42,10 +45,14 @@ shell-integration-features = true
 # Bell functionality is planned for future releases
 
 # macos
-macos-option-as-alt = right
+macos-option-as-alt = false
 macos-titlebar-style = hidden
 
 keybind = global:super+alt+shift+ctrl+o=toggle_quick_terminal
+
+# Remap Ctrl+T to send Alt+T (ESC+t) for Claude Code thinking toggle
+# Allows Option key to remain free for umlauts (ä, ö, ü)
+keybind = ctrl+t=esc:t
 
 # Disable window/split/tab management to because tmux is used
 
