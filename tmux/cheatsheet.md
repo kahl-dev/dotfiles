@@ -68,9 +68,20 @@
 | `<prefix> /` | Search keybindings (interactive fzf) |
 | `<prefix> u` | URL finder (tmux-fzf-url) |
 | `<prefix> r` | Reload tmux config |
-| `<prefix> g` | LazyGit |
-| `<prefix> b` | Btop (system monitor) |
-| `<prefix> m` | Glow (markdown viewer) |
+
+## 🚀 Apps (prefix + a, then...)
+
+Press `<prefix> a` to enter apps mode, then:
+
+| Key | Window | Popup | App |
+|-----|--------|-------|-----|
+| `g` / `G` | new window | overlay | LazyGit |
+| `y` / `Y` | new window | overlay | Yazi (file manager) |
+| `b` / `B` | new window | overlay | Btop (system monitor) |
+| `m` / `M` | new window | overlay | Glow (markdown viewer) |
+| `Escape` | - | - | Cancel |
+
+**Example:** `<prefix> a G` opens LazyGit as popup overlay
 
 ## 🔌 Plugins (TPM)
 
