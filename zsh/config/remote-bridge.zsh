@@ -11,7 +11,8 @@ fi
 
 # Helper function to check if Remote Bridge is available
 remote-bridge-check() {
-    curl -sf "http://localhost:${REMOTE_BRIDGE_PORT}/health" >/dev/null 2>&1
+    # Fast timeout to not block shell startup
+    curl -sf --connect-timeout 0.5 --max-time 1 "http://localhost:${REMOTE_BRIDGE_PORT}/health" >/dev/null 2>&1
 }
 
 # Status function for Remote Bridge

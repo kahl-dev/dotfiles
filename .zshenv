@@ -81,3 +81,5 @@ export NODE_DEFAULT_PACKAGES="yarn prettier diff-so-fancy serve browser-sync neo
 file_exists "$HOME/.dotfiles-local/.zshenv" && source "$HOME/.dotfiles-local/.zshenv"
 
 export TERM=xterm-256color
+
+export TMPDIR="$HOME/tmp"
