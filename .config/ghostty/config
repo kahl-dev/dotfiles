@@ -33,7 +33,7 @@ window-save-state = always
 window-step-resize = false
 background-blur-radius = 15
 window-padding-balance = true
-confirm-close-surface = false
+confirm-close-surface = always
 
 # behavior
 auto-update = check
