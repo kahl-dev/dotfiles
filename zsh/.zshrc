@@ -126,3 +126,6 @@ fi
 
 # LIA Cleanup Tool integration
 [[ $- == *i* ]] && eval "$(lia-cleanup shell-hook 2>/dev/null)"
+
+# bun completions
+[ -s "/Users/kahl-dev/.bun/_bun" ] && source "/Users/kahl-dev/.bun/_bun"
