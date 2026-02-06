@@ -1,9 +1,25 @@
-# npm aliases and options
+# -----------------------------------------------------------------------------
+# Node.js version management and npm aliases
+#
+# fnm is the FALLBACK version manager — only initialized when mise is absent.
+# mise is preferred and handles .nvmrc auto-switching via its chpwd hook.
+#
+# fnm is still needed because LIA/TYPO3 projects use handleNode.sh
+# (in lia-package/.tools/) which runs inside Makefile subshells.
+# These non-interactive subshells don't trigger mise's chpwd hook,
+# so handleNode.sh falls back to fnm/nvm for version switching.
+#
+# --use-on-cd: auto-switch Node version when entering a directory with .nvmrc
+# --version-file-strategy=recursive: search parent directories for .nvmrc
+#
+# On Raspberry Pi, .zshrc adds /home/pi/.local/share/fnm to PATH before
+# this file is sourced, so command_exists fnm succeeds here.
+# -----------------------------------------------------------------------------
 
-# Fast and simple Node.js version manager, built in Rust
-# https://github.com/Schniz/fnm
-
-if command_exists fnm; then
+# Skip fnm initialization if mise is handling runtime versions
+if ! command_exists mise && command_exists fnm; then
+  # Fast and simple Node.js version manager, built in Rust
+  # https://github.com/Schniz/fnm
   eval "$(fnm env --use-on-cd --version-file-strategy=recursive)"
 
   _fnm_install_latest() {

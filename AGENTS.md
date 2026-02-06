@@ -126,8 +126,30 @@ The zsh setup uses modular configuration files in `zsh/config/`:
 - `aliases.zsh` - Command aliases and shortcuts
 - `fzf.zsh` - Fuzzy finder integration
 - `keybindings.zsh` - Custom key mappings
+- `mise.zsh` - mise runtime version manager activation
+- `node.zsh` - Node.js version management (fnm fallback) and npm aliases
 - `plugins.zsh` - Plugin management via zinit
 - `prompt.zsh` - Starship prompt configuration
+
+#### Node.js Runtime Management
+
+**mise** is the preferred polyglot runtime version manager, replacing fnm for interactive shell use. fnm is kept as a fallback for non-interactive contexts (e.g., Makefile subshells in LIA/TYPO3 projects).
+
+**Architecture:**
+- `mise.zsh` - Activates mise shell hooks (`chpwd`) for auto-switching on `cd`
+- `node.zsh` - Initializes fnm with `--use-on-cd` only when mise is NOT available
+- mise reads `.nvmrc`, `.node-version`, `.tool-versions`, and `.mise.toml` files natively (`legacy_version_file = true` in `~/.config/mise/config.toml`)
+
+**Why both mise and fnm:**
+LIA/TYPO3 projects use a shared `handleNode.sh` script (in `lia-package/.tools/`) that runs inside Makefile subshells. These non-interactive subshells don't trigger mise's `chpwd` hook, so `handleNode.sh` falls back to fnm/nvm for version switching. mise handles the interactive shell; fnm handles scripted version switches in team tooling.
+
+**Load order in `.zshrc` (order matters):**
+1. Pi fnm PATH setup (adds `/home/pi/.local/share/fnm` to PATH if present, skipped when mise exists)
+2. `mise.zsh` - activates mise
+3. `node.zsh` - initializes fnm only if mise is absent
+
+**Raspberry Pi specifics:**
+fnm is installed at a non-standard path (`/home/pi/.local/share/fnm`) on Pi. The PATH addition happens before `node.zsh` so that `command_exists fnm` succeeds and fnm initializes with `--use-on-cd` (not a bare `fnm env` which lacks auto-switching).
 
 #### ZSH Helper Functions
 
@@ -225,6 +247,8 @@ path_exists "$DOTFILES/bin" && export PATH="$DOTFILES/bin:$PATH"
 - **starship**: Prompt config in `.config/starship.toml`
 
 ### Development Tools
+- **mise**: Polyglot runtime manager in `zsh/config/mise.zsh`, config in `~/.config/mise/config.toml`
+- **fnm**: Node.js version manager fallback in `zsh/config/node.zsh` (used when mise is absent)
 - **neovim**: Full configuration in `.config/nvim/`
 - **git**: Configuration in `git/` directory
 - **bat**: Syntax highlighting themes in `.config/bat/`

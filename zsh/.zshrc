@@ -13,6 +13,17 @@
 source $ZDOTDIR/utils.zsh
 source "$ZDOTDIR/config/zinit.zsh"
 source "$ZDOTDIR/config/history.zsh"
+
+# Raspberry Pi: add fnm to PATH before node.zsh evaluates command_exists
+# (fnm is installed at a non-standard path on Pi)
+if ! command_exists mise; then
+  FNM_PATH="/home/pi/.local/share/fnm"
+  if [ -d "$FNM_PATH" ]; then
+    export PATH="$FNM_PATH:$PATH"
+  fi
+fi
+
+source "$ZDOTDIR/config/mise.zsh"
 source "$ZDOTDIR/config/node.zsh"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -108,20 +119,6 @@ if [ -f "$HOME/.dotfiles-local/zshrc" ]; then
   source "$HOME/.dotfiles-local/zshrc"
 elif [ -f "$HOME/.zshrc-local" ]; then
   source "$HOME/.zshrc-local"
-fi
-
-# fnm
-FNM_PATH="/home/pi/.local/share/fnm"
-if [ -d "$FNM_PATH" ]; then
-  export PATH="/home/pi/.local/share/fnm:$PATH"
-  eval "`fnm env`"
-fi
-
-
-
-
-
-if command_exists lia-cleanup; then
 fi
 
 # LIA Cleanup Tool integration
