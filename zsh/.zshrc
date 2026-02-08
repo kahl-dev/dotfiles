@@ -108,6 +108,7 @@ source "$ZDOTDIR/config/remote-bridge.zsh"
 source "$ZDOTDIR/config/claude-config.zsh"
 source "$ZDOTDIR/config/prompt.zsh"
 source "$ZDOTDIR/config/check_git_cleanup.zsh"
+source "$ZDOTDIR/config/dot.zsh"
 
 # LIT Tools - Personal productivity scripts for agency work
 # See ~/repos/li-tools for database management, build tools, and git workflows

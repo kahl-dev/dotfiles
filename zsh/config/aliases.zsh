@@ -906,7 +906,7 @@ alias cyolo='claude --dangerously-skip-permissions'  # Sandbox auto-enabled via 
 # Dotfiles
 # ############################## #
 
-alias dot='cd ${DOTFILES} && v'
+alias dotedit='cd ${DOTFILES} && v'
 alias zshrc='vim ${ZDOTDIR}/.zshrc'
 
 
