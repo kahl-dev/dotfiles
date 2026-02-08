@@ -60,49 +60,61 @@ The completion script dynamically discovers available options by scanning the fi
 
 ## Common Commands
 
-### Installation & Setup
+### dot CLI (unified dotfiles command)
+
+The `dot` command consolidates all dotfiles operations into a single interface with fzf-powered interactive menu and tab completion.
+
 ```bash
-# Install complete macOS profile
-./install-profile macos
+# Interactive menu (fzf)
+dot
 
-# Install standalone components
-./install-standalone neovim_build
-./install-standalone tmux
+# Installation
+dot install profile macos       # Install a dotbot profile
+dot install standalone tmux     # Install a standalone ingredient
 
-# Full installation via Makefile
-make install
+# Homebrew
+dot brew update                 # Update, upgrade & cleanup
+dot brew dump                   # Export to Brewfile
 
-# Install Homebrew packages
-make installBrewOsxPackages
-brew bundle --file brew/osx/.Brewfile
+# Shell
+dot shell reload                # Reload ZSH configuration
+dot shell reset                 # Reset zinit plugins and reload
+dot shell clean                 # Remove stray ZSH files from HOME
+
+# Neovim
+dot nvim reset                  # Reset lazy.nvim packages
+
+# Remote Bridge
+dot rb start|stop|restart|status|logs
+
+# Maintenance
+dot update                      # Interactive update wizard (LazyVim, Homebrew, App Store, macOS)
+dot update --yes                # Skip confirmations
+dot edit                        # Open dotfiles in $EDITOR
+dot color-test                  # Terminal color test
+dot help                        # Show all commands
 ```
 
-### Maintenance
+Backward-compatible aliases still work: `brewup`, `brewdump`, `zsh-reload`, `dotedit`.
+
+### Future `dot` CLI Enhancements
+
+Deferred from v1 (reviewed by multi-agent debate):
+
+| Command | Purpose | Complexity |
+|---------|---------|------------|
+| `dot doctor` | Diagnose broken symlinks, missing deps, stale caches | Medium |
+| `dot uninstall` | Unified uninstall replacing scripts/uninstall.sh | Low |
+| `dot status` | Dotfiles health — last update, dirty git state, outdated packages | Medium |
+| `dot sync` | Pull latest dotfiles + re-run install-profile | Low |
+
+### Bootstrap (Makefile)
+
+For fresh clones before ZSH is configured:
 ```bash
-# Show all available make targets
-make help
-
-# Update shell configuration
-make updateShell
-
-# Reset Neovim packages (when troubleshooting)
-make nvimResetPackages
-
-# Uninstall all symlinks and configurations
-make uninstall
-```
-
-### Package Management
-```bash
-# Update all Homebrew packages and cleanup
-brewup
-
-# Export current packages to Brewfile
-brewdump
-
-# Add new packages to Brewfile and install
-echo 'brew "package-name"' >> brew/osx/.Brewfile
-brewup
+make install                    # Run ./install-profile macos
+make uninstall                  # Remove all symlinks
+make help                       # Show available targets
 ```
 
 ## Development Workflow
@@ -123,9 +135,6 @@ brewup
 ### Shell Configuration
 
 The zsh setup uses modular configuration files in `zsh/config/`:
-- `_brew.zsh` - Homebrew setup (loaded early, prefixed with `_`)
-- `_github.zsh` - GitHub CLI integration (loaded early)
-- `_post-dot-cli.zsh` - Post-dotbot CLI setup (loaded early)
 - `aliases.zsh` - Command aliases and shortcuts
 - `atuin.zsh` - Atuin shell history integration (auto-installs if missing)
 - `check_git_cleanup.zsh` - Git branch cleanup reminders
@@ -143,6 +152,7 @@ The zsh setup uses modular configuration files in `zsh/config/`:
 - `ssh-agent.zsh` - SSH agent management
 - `tmuxinator.zsh` - Tmuxinator session management
 - `zinit.zsh` - Zinit plugin manager initialization
+- `dot.zsh` - Unified `dot` CLI with fzf menu, update wizard, and tab completion
 
 #### Node.js Runtime Management
 
@@ -259,11 +269,10 @@ Every significant change must include documentation updates in the same commit. 
 ## Troubleshooting
 
 ### Common Issues
-- **`make install` partially broken**: References undefined targets (`createSymlinks`, `installStarship`, `startServices`). Use `./install-profile macos` instead.
 - **Broken symlinks**: Run `make uninstall` then reinstall
 - **Package conflicts**: Check Homebrew with `brew doctor`
-- **Neovim issues**: Reset with `make nvimResetPackages`
-- **Shell not updating**: Run `make updateShell` or restart terminal
+- **Neovim issues**: Reset with `dot nvim reset`
+- **Shell not updating**: Run `dot shell reload` or restart terminal
 
 ### System Dependencies
 - Requires macOS with Homebrew installed
