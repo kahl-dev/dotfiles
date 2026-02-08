@@ -33,6 +33,58 @@
           fi
         fi
 
+    - description: "Clean up legacy Claude Code CLI installations (npm/brew)"
+      command: |
+        FOUND_LEGACY=false
+
+        # 🧹 Remove Claude Code from all fnm node versions
+        FNM_DIR="$HOME/.local/share/fnm/node-versions"
+        if [ -d "$FNM_DIR" ]; then
+          for node_bin in "$FNM_DIR"/*/installation/bin/claude; do
+            if [ -f "$node_bin" ]; then
+              NODE_DIR="$(dirname "$node_bin")"
+              NPM="$NODE_DIR/npm"
+              if [ -x "$NPM" ]; then
+                echo "🧹 Removing Claude Code from fnm: $NODE_DIR"
+                "$NPM" uninstall -g @anthropic-ai/claude-code 2>/dev/null
+                FOUND_LEGACY=true
+              fi
+            fi
+          done
+        fi
+
+        # 🧹 Remove Claude Code from Homebrew
+        if command -v brew >/dev/null 2>&1; then
+          if brew list claude-code >/dev/null 2>&1; then
+            echo "🧹 Removing Claude Code from Homebrew..."
+            brew uninstall claude-code
+            FOUND_LEGACY=true
+          fi
+        fi
+
+        if [ "$FOUND_LEGACY" = true ]; then
+          echo "✓ Legacy Claude Code installations removed"
+        else
+          echo "✓ No legacy Claude Code installations found"
+        fi
+
+    - description: "Install Claude Code CLI via native installer"
+      command: |
+        if [ -x "$HOME/.local/bin/claude" ]; then
+          echo "✓ Claude Code CLI already installed at ~/.local/bin/claude"
+          "$HOME/.local/bin/claude" --version 2>/dev/null || true
+        else
+          echo "📦 Installing Claude Code CLI..."
+          curl -fsSL https://claude.ai/install.sh | sh
+          if [ -x "$HOME/.local/bin/claude" ]; then
+            echo "✓ Claude Code CLI installed successfully"
+            "$HOME/.local/bin/claude" --version 2>/dev/null || true
+          else
+            echo "❌ ERROR: Claude Code CLI installation failed"
+            exit 1
+          fi
+        fi
+
     - description: "Create AI workspace directories for Claude"
       command: |
         mkdir -p ~/tmp/ai/screenshots \
@@ -47,7 +99,6 @@
     ~/.claude/agents: ~/repos/claude-config/agents
     ~/.claude/commands: ~/repos/claude-config/commands
     ~/.claude/hooks: ~/repos/claude-config/hooks
-    ~/.claude/instructions: ~/repos/claude-config/instructions
     ~/.claude/output-styles: ~/repos/claude-config/output-styles
     ~/.claude/shared: ~/repos/claude-config/shared
     ~/.claude/skills: ~/repos/claude-config/skills
