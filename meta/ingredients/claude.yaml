@@ -95,13 +95,45 @@
                  ~/tmp/ai/analysis \
                  ~/tmp/ai/cache
 
+    - description: "Sync claude-config skills as individual symlinks"
+      command: |
+        SKILLS_SOURCE="$HOME/repos/claude-config/skills"
+        SKILLS_TARGET="$HOME/.claude/skills"
+
+        # 🔗 Remove directory symlink if it exists (migration from old setup)
+        if [ -L "$SKILLS_TARGET" ]; then
+          echo "🔄 Migrating skills from directory symlink to individual symlinks..."
+          rm "$SKILLS_TARGET"
+        fi
+
+        mkdir -p "$SKILLS_TARGET"
+
+        # 🔗 Link each claude-config skill individually
+        linked=0
+        for skill in "$SKILLS_SOURCE"/*/; do
+          [ -d "$skill" ] || continue
+          name=$(basename "${skill%/}")
+          # Skip if already correctly linked
+          current=$(readlink "$SKILLS_TARGET/$name" 2>/dev/null)
+          [ "$current" = "$skill" ] && continue
+          # Skip if managed by another source (e.g. skills.sh)
+          if [ -L "$SKILLS_TARGET/$name" ] && [ -e "$SKILLS_TARGET/$name" ]; then
+            case "$current" in
+              *claude-config/skills*) ;; # Ours, safe to overwrite
+              *) echo "⚠️  Skipping $name (managed externally)"; continue ;;
+            esac
+          fi
+          ln -sfn "$skill" "$SKILLS_TARGET/$name"
+          linked=$((linked + 1))
+        done
+        echo "✓ Linked $linked claude-config skill(s) to ~/.claude/skills/"
+
 - link:
     ~/.claude/agents: ~/repos/claude-config/agents
     ~/.claude/commands: ~/repos/claude-config/commands
     ~/.claude/hooks: ~/repos/claude-config/hooks
     ~/.claude/output-styles: ~/repos/claude-config/output-styles
     ~/.claude/shared: ~/repos/claude-config/shared
-    ~/.claude/skills: ~/repos/claude-config/skills
     ~/.claude/settings.json: ~/repos/claude-config/settings.json
     ~/.claude/statusline.sh: ~/repos/claude-config/statusline.sh
     ~/.claude/CLAUDE.md: ~/repos/claude-config/GLOBAL.CLAUDE.md
