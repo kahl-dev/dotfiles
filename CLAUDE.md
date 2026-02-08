@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a comprehensive macOS dotfiles repository that uses **dotbot** for configuration management and **Makefile** for installation orchestration. The repository follows a modular architecture with "ingredients" (individual configuration modules) and "recipes" (combined installation profiles).
+This is a comprehensive macOS dotfiles repository that uses **dotbot** for configuration management and a unified `dot` CLI for day-to-day operations. A bootstrap-only Makefile exists for fresh clones (before ZSH is configured). The repository follows a modular architecture with "ingredients" (individual configuration modules) and "recipes" (combined installation profiles).
 
 ### Claude Code Configuration
 
@@ -49,14 +49,18 @@ Both scripts use dotbot to process the appropriate YAML configurations, combinin
 
 ### Tab Completion System
 
-The repository includes bash-compatible completion for the installation scripts:
-- **Location**: `completion/dotfiles-completion.bash`
-- **Integration**: Loaded automatically from `zsh/config/aliases.zsh` after completion init
-- **Functionality**:
-  - `install-profile` completes with available recipes from `meta/recipes/`
-  - `install-standalone` completes with available ingredients from `meta/ingredients/` (without .yaml extension)
+Two completion systems coexist:
 
-The completion script dynamically discovers available options by scanning the filesystem, ensuring it stays current as new recipes and ingredients are added.
+1. **`dot` CLI** (native ZSH): `compdef _dot dot` in `zsh/config/dot.zsh`
+   - `dot install profile <TAB>` — completes from `meta/recipes/`
+   - `dot install standalone <TAB>` — completes from `meta/ingredients/*.yaml` (sans extension)
+   - `dot update <TAB>` — completes `--yes` / `-y`
+   - Top-level commands complete with descriptions
+
+2. **Direct scripts** (bash compat): `completion/dotfiles-completion.bash`
+   - Loaded from `zsh/config/aliases.zsh` after completion init
+   - `./install-profile <TAB>` and `./install-standalone <TAB>`
+   - Dynamically discovers options by scanning the filesystem
 
 ## Common Commands
 
@@ -216,55 +220,16 @@ fnm is installed at a non-standard path (`/home/pi/.local/share/fnm`) on Pi. The
 
 @.claude/instructions/remote-bridge.md
 
-## 📚 Documentation Maintenance
+## Documentation Maintenance
 
-### Automatic Documentation Updates
+This repo has three documentation layers (see global CLAUDE.md for general policy):
 
-**When Claude makes changes that affect documented features, it MUST:**
+- **`README.md`** (root) — Human-facing: features, installation, screenshots
+- **`CLAUDE.md`** (root) — AI-facing: architecture, file paths, commands
+- **Topic READMEs** (`tmux/`, `remote-bridge/`, `meta/`, `.hammerspoon/`) — Component-specific
+- **`docs/`** — Long-form guides (`tmux.md`, `universal-clipboard.md`)
 
-- **Update README.md** if user-facing behavior changes (new features, installation steps, key commands)
-- **Update CLAUDE.md** if technical implementation changes (architecture, file paths, integration details)
-- **Update topic READMEs** in specific directories when their configurations change
-- **Keep all examples and commands current** - test that documented commands actually work
-- **Add screenshots** when visual changes are made (tmux appearance, terminal output)
-- **Maintain consistency** between related documentation files
-
-### Documentation Structure Standards
-
-**README.md (Human-focused):**
-- Feature overview with visual examples and screenshots
-- Clear installation and setup instructions  
-- Key keybindings and commands for daily use
-- Troubleshooting section for common issues
-- Directory structure overview
-- Notable configuration highlights
-
-**CLAUDE.md (AI-focused):**
-- Technical architecture and implementation details
-- Exact file paths and dependencies
-- Integration details, hooks, and system interactions
-- Maintenance procedures and troubleshooting
-- System requirements and compatibility notes
-
-**Topic READMEs (Directory-specific):**
-- Quick reference for that component
-- Configuration highlights and customizations
-- Integration with other system components
-- Maintenance and debugging specific to that area
-
-### Self-Documenting Principle
-
-Every significant change must include documentation updates in the same commit. This ensures:
-- Documentation never becomes stale
-- Future maintenance is possible
-- New users (including future you) can understand the system
-- Claude sessions have complete context
-
-**Examples of changes requiring documentation:**
-- Adding new keybindings → Update README.md and relevant CLAUDE.md sections
-- Modifying tmux status bar → Update docs/tmux.md and add screenshot to README.md  
-- Creating new scripts → Update bin/README.md or relevant documentation
-- Changing installation process → Update main README.md installation section
+Update all affected layers in the same commit when changing documented functionality.
 
 ## Troubleshooting
 
