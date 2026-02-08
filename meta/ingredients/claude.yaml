@@ -75,7 +75,7 @@
           "$HOME/.local/bin/claude" --version 2>/dev/null || true
         else
           echo "📦 Installing Claude Code CLI..."
-          curl -fsSL https://claude.ai/install.sh | sh
+          curl -fsSL https://claude.ai/install.sh | bash
           if [ -x "$HOME/.local/bin/claude" ]; then
             echo "✓ Claude Code CLI installed successfully"
             "$HOME/.local/bin/claude" --version 2>/dev/null || true
