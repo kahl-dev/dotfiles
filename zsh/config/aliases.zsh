@@ -170,8 +170,10 @@ fi
 
 # Brew
 if command_exists brew; then
+  # Deprecated: use 'dot brew update'
   alias brewup='brew update; brew upgrade $(brew list --formula); brew cleanup'
   alias brewupCask='brew update; brew upgrade $(brew list | grep --invert-match $HOMEBREW_UPGRADE_EXCLUDE_PACKAGES); brew cleanup'
+  # Deprecated: use 'dot brew dump'
   alias brewdump='brew bundle dump --force --describe --file=$HOMEBREW_BUNDLE_FILE_GLOBAL'
 fi
 
@@ -906,6 +908,7 @@ alias cyolo='claude --dangerously-skip-permissions'  # Sandbox auto-enabled via 
 # Dotfiles
 # ############################## #
 
+# Deprecated: use 'dot edit'
 alias dotedit='cd ${DOTFILES} && v'
 alias zshrc='vim ${ZDOTDIR}/.zshrc'
 
@@ -945,35 +948,12 @@ _zsh-reload-all() {
   echo "Reload complete."
 }
 
-_zsh-reset() {
-  rm -rf $ZINIT_ROOT/plugins
-  rm -rf $ZINIT_ROOT/snippets
-  rm -rf $ZINIT_ROOT/completions
-  source $ZDOTDIR/.zshrc
-}
-
-_dot-clean-home() {
-  # Find all zsh files, directories, and symlinks in the home directory
-  zsh_items=$(find "$HOME" -maxdepth 1 \( -name ".zsh*" -o -name "*.zsh" \) -not -name ".zshenv")
-
-  # Check if there are any items to delete
-  if [ -z "$zsh_items" ]; then
-    echo "No zsh-related files, directories, or symlinks found to remove."
-    return
-  fi
-
-  # Loop through the items and remove them
-  echo "Removing the following zsh-related items:"
-  echo "$zsh_items"
-  echo "$zsh_items" | while read -r item; do
-    rm -rf "$item"
-  done
-
-  echo "Cleanup complete."
-}
-
+# Deprecated: use 'dot shell reload'
 alias zsh-reload='source $ZDOTDIR/.zshrc'
 alias zsh-reload-all='_zsh-reload-all'
-alias zsh-reset='_zsh-reset'
-alias dot-clean-home='_dot-clean-home'
-alias dot-run-color-test='sh $DOTFILES/scripts/run_color_test.zsh'
+# Deprecated: use 'dot shell reset'
+alias zsh-reset='dot shell reset'
+# Deprecated: use 'dot shell clean'
+alias dot-clean-home='dot shell clean'
+# Deprecated: use 'dot color-test'
+alias dot-run-color-test='dot color-test'

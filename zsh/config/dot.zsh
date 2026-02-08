@@ -76,6 +76,14 @@ dot() {
               return 1
             fi
           fi
+          if [[ "$name" == */* || "$name" == *..* ]]; then
+            echo "dot install profile: invalid name '$name'" >&2
+            return 1
+          fi
+          if [[ ! -f "$DOTFILES/meta/recipes/$name" ]]; then
+            echo "dot install profile: '$name' not found in $DOTFILES/meta/recipes/" >&2
+            return 1
+          fi
           echo "Installing profile: $name"
           "$DOTFILES/install-profile" "$name"
           ;;
@@ -90,6 +98,14 @@ dot() {
               echo "Available: $(ls "$DOTFILES/meta/ingredients/"*.yaml 2>/dev/null | xargs -I{} basename {} .yaml | tr '\n' ' ')" >&2
               return 1
             fi
+          fi
+          if [[ "$name" == */* || "$name" == *..* ]]; then
+            echo "dot install standalone: invalid name '$name'" >&2
+            return 1
+          fi
+          if [[ ! -f "$DOTFILES/meta/ingredients/${name}.yaml" ]]; then
+            echo "dot install standalone: '$name' not found in $DOTFILES/meta/ingredients/" >&2
+            return 1
           fi
           echo "Installing ingredient: $name"
           "$DOTFILES/install-standalone" "$name"
@@ -427,7 +443,14 @@ _dot_update_wizard() {
 # ── Clean Home ────────────────────────────────────────────────────────────────
 _dot_clean_home() {
   local zsh_items
-  zsh_items=$(find "$HOME" -maxdepth 1 \( -name ".zsh*" -o -name "*.zsh" \) -not -name ".zshenv" 2>/dev/null)
+  zsh_items=$(find "$HOME" -maxdepth 1 \( -name ".zsh*" -o -name "*.zsh" \) \
+    -not -name ".zshenv" \
+    -not -name ".zsh_history" \
+    -not -name ".zsh_sessions" \
+    -not -name ".zprofile" \
+    -not -name ".zlogin" \
+    -not -name ".zlogout" \
+    2>/dev/null)
 
   if [[ -z "$zsh_items" ]]; then
     echo "No stray ZSH files found in HOME."
