@@ -157,6 +157,7 @@ The zsh setup uses modular configuration files in `zsh/config/`:
 - `tmuxinator.zsh` - Tmuxinator session management
 - `zinit.zsh` - Zinit plugin manager initialization
 - `dot.zsh` - Unified `dot` CLI with fzf menu, update wizard, and tab completion
+- `worktree.zsh` - Git worktree helpers (`gwta`, `gwts`, `gwtl`, `gwtr`, `gwtp`, `gwtmain`, `gwth`)
 
 #### Node.js Runtime Management
 
@@ -195,6 +196,28 @@ fnm is installed at a non-standard path (`/home/pi/.local/share/fnm`) on Pi. The
 | `prompt_user <q> <yes> <no>` | Interactive prompt |
 
 **Convention:** Use `command_exists` over `which`, `path_exists` over `[ -d ]`.
+
+#### Git Worktree Helpers (`zsh/config/worktree.zsh`)
+
+Project-agnostic worktree management with zero configuration. Auto-detects paths from `git rev-parse --git-common-dir` and discovers gitignored config files to copy.
+
+| Command | Purpose |
+|---------|---------|
+| `gwta <branch> [path]` | Add worktree (auto-detects and prompts to copy local config files) |
+| `gwts [pattern]` | Switch worktrees (fzf interactive or literal pattern match) |
+| `gwtl` | List worktrees with current marker, branch, and short SHA |
+| `gwtr [path]` | Remove worktree with safety checks (uncommitted changes, unpushed commits) |
+| `gwtp` | Prune stale worktree entries |
+| `gwtmain` | Jump to main worktree |
+| `gwth` | Show help |
+
+**Key design decisions:**
+- Worktree path defaults to `<parent-of-main-worktree>/<branch>` — no hardcoded paths
+- Config detection uses `git ls-files -z --others --ignored` with size filter (<100KB)
+- Matches: `*.local*`, `*.env*`, `config*.php`, `*config*.yaml`, `*.conf`, `*.ini`, `*.secrets*`
+- Skips: `vendor/`, `node_modules/`, `var/`, `.cache/`, `public/fileadmin/`
+- Uses `zstat` (via `zmodload zsh/stat`) for portable file size checks
+- Tab completion: `gwta` completes branches (via `git-checkout`), `gwts`/`gwtr` complete worktree paths
 
 ## Key Tools & Their Configs
 
