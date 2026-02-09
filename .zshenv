@@ -83,3 +83,4 @@ file_exists "$HOME/.dotfiles-local/.zshenv" && source "$HOME/.dotfiles-local/.zs
 export TERM=xterm-256color
 
 export TMPDIR="$HOME/tmp"
+export CLAUDE_CODE_TMPDIR="$HOME/tmp/ai/claude"
