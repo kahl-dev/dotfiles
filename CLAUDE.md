@@ -157,7 +157,7 @@ The zsh setup uses modular configuration files in `zsh/config/`:
 - `tmuxinator.zsh` - Tmuxinator session management
 - `zinit.zsh` - Zinit plugin manager initialization
 - `dot.zsh` - Unified `dot` CLI with fzf menu, update wizard, and tab completion
-- `worktree.zsh` - Git worktree helpers (`gwta`, `gwts`, `gwtl`, `gwtr`, `gwtp`, `gwtmain`, `gwth`)
+- `worktree.zsh` - Git worktree helpers with git-native signatures (`gwta`, `gwts`, `gwtl`, `gwtr`, `gwtp`, `gwtmain`, `gwth`)
 
 #### Node.js Runtime Management
 
@@ -203,21 +203,30 @@ Project-agnostic worktree management with zero configuration. Auto-detects paths
 
 | Command | Purpose |
 |---------|---------|
-| `gwta <branch> [path]` | Add worktree (auto-detects and prompts to copy local config files) |
-| `gwts [pattern]` | Switch worktrees (fzf interactive or literal pattern match) |
+| `gwta [-b <branch>] <name-or-path> [commit-ish]` | Add worktree with git-native branch semantics |
+| `gwts [pattern]` | Switch worktrees (fzf interactive or pattern match on path/branch) |
 | `gwtl` | List worktrees with current marker, branch, and short SHA |
 | `gwtr [path]` | Remove worktree with safety checks (uncommitted changes, unpushed commits) |
 | `gwtp` | Prune stale worktree entries |
 | `gwtmain` | Jump to main worktree |
 | `gwth` | Show help |
 
+**`gwta` branch logic (mirrors `git worktree add`):**
+- `gwta <name>` — try checkout first (local + remote DWIM), fall back to create from HEAD
+- `gwta <path>` — git derives branch from basename (`/`, `./`, `../` prefixed = path)
+- `gwta <name> <ref>` — checkout existing ref (branch, tag, commit) into specified folder
+- `gwta -b <branch> <name-or-path>` — create new branch from HEAD with custom folder name
+- `gwta -b <branch> <name-or-path> <ref>` — create new branch from ref with custom folder name
+
+**Path detection:** bare names → `<parent-of-main-worktree>/<name>`, `./`/`../`/`/` prefixed → resolved as path (git derives branch from basename)
+
 **Key design decisions:**
-- Worktree path defaults to `<parent-of-main-worktree>/<branch>` — no hardcoded paths
-- Config detection uses `git ls-files -z --others --ignored` with size filter (<100KB)
+- Config detection uses `git ls-files -z --others --ignored` with size filter (<100KB), matching against **basename only**
 - Matches: `*.local*`, `*.env*`, `config*.php`, `*config*.yaml`, `*.conf`, `*.ini`, `*.secrets*`
-- Skips: `vendor/`, `node_modules/`, `var/`, `.cache/`, `public/fileadmin/`
+- Skips: `*node_modules/*`, `*vendor/*`, `var/`, `.cache/`, `public/fileadmin/` (nested dirs too)
 - Uses `zstat` (via `zmodload zsh/stat`) for portable file size checks
-- Tab completion: `gwta` completes branches (via `git-checkout`), `gwts`/`gwtr` complete worktree paths
+- Tab completion: `gwta` completes `-b` flag + branches/refs, `gwts`/`gwtr` complete worktree paths
+- `gwts` pattern matching searches both worktree path and branch name
 
 ## Key Tools & Their Configs
 

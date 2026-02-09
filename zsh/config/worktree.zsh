@@ -46,7 +46,7 @@ _gwt_detect_local_configs() {
     | while IFS= read -r -d '' file; do
         # 1. Skip known junk directories
         case "$file" in
-          vendor/*|node_modules/*|var/*|.cache/*|.git/*) continue ;;
+          *node_modules/*|*vendor/*|var/*|.cache/*|.git/*) continue ;;
           public/fileadmin/*|public/uploads/*|public/typo3temp/*|public/_assets/*) continue ;;
         esac
 
@@ -55,10 +55,11 @@ _gwt_detect_local_configs() {
 
         # 3. Size filter: < 100KB
         size=$(zstat -L +size "$source_dir/$file" 2>/dev/null) || continue
-        (( size > 102400 )) && continue
+        (( ${size:-0} > 102400 )) && continue
 
-        # 4. Match config-like patterns
-        case "$file" in
+        # 4. Match config-like patterns (match against basename only)
+        local basename="${file:t}"
+        case "$basename" in
           # "local" in name — strongest signal
           *.local*|*local_*|*local.*) echo "$file" ;;
           # Environment files
@@ -74,27 +75,80 @@ _gwt_detect_local_configs() {
 # ── Core Commands ────────────────────────────────────────────────────────────
 
 # Add new worktree with automatic config file detection
+# Usage: gwta [-b <branch>] <name-or-path> [<commit-ish>]
 _gwta() {
   _gwt_require_git_repo || return 1
 
-  local branch_name="$1"
-  if [[ -z "$branch_name" ]]; then
-    _gwt_error "Usage: gwta <branch> [path]"
+  # Parse -b flag
+  local flag_branch=""
+  local -a opt_b
+  zparseopts -D -E -- b:=opt_b || {
+    _gwt_error "Usage: gwta [-b <branch>] <name-or-path> [<commit-ish>]"
+    return 1
+  }
+  [[ ${#opt_b} -gt 0 ]] && flag_branch="${opt_b[2]}"
+
+  local name_or_path="$1"
+  local commit_ish="$2"
+
+  if [[ -z "$name_or_path" ]]; then
+    _gwt_error "Usage: gwta [-b <branch>] <name-or-path> [<commit-ish>]"
+    return 1
+  fi
+
+  if [[ -n "$3" ]]; then
+    _gwt_error "Too many arguments. Did you mean: gwta -b $name_or_path $commit_ish $3"
     return 1
   fi
 
   local base main_path worktree_path
   base="$(_gwt_default_base)" || return 1
   main_path="$(_gwt_main_path)" || return 1
-  worktree_path="${2:-$base/$branch_name}"
 
-  # Create worktree (git handles existing vs new branch)
-  if git show-ref --verify --quiet "refs/heads/$branch_name"; then
-    print -P "%F{blue}📂 Checking out existing branch '$branch_name'...%f"
-    git worktree add "$worktree_path" "$branch_name" || return 1
+  # Path resolution: detect absolute/relative paths vs bare names
+  case "$name_or_path" in
+    /*|../*|./*) worktree_path="${name_or_path:A}" ;;
+    *)           worktree_path="$base/$name_or_path" ;;
+  esac
+
+  # Branch logic — two clean cases matching git exactly
+  if [[ -n "$flag_branch" ]]; then
+    # Case 1: -b provided → create new branch
+    local branch_name="$flag_branch"
+    local start_point="${commit_ish:-HEAD}"
+    print -P "%F{blue}📂 Creating branch '$branch_name' from '$start_point' at '$worktree_path'...%f"
+    if [[ "$start_point" == "HEAD" ]]; then
+      git worktree add -b "$branch_name" "$worktree_path" || return 1
+    else
+      git worktree add -b "$branch_name" "$worktree_path" "$start_point" || return 1
+    fi
+  elif [[ -n "$commit_ish" ]]; then
+    # Case 2: no -b, two args → second arg is existing ref to checkout
+    print -P "%F{blue}📂 Checking out '$commit_ish' at '$worktree_path'...%f"
+    git worktree add "$worktree_path" "$commit_ish" || return 1
   else
-    print -P "%F{blue}📂 Creating new branch '$branch_name'...%f"
-    git worktree add -b "$branch_name" "$worktree_path" || return 1
+    # Case 3: single arg — split on path vs bare name
+    case "$name_or_path" in
+      /*|../*|./*)
+        # Path-prefixed: let git derive branch from basename
+        print -P "%F{blue}📂 Creating worktree at '$worktree_path'...%f"
+        git worktree add "$worktree_path" || return 1
+        ;;
+      *)
+        # Bare name: try checkout first (handles local + remote DWIM),
+        # fall back to -b only when ref truly doesn't exist
+        local _gwt_stderr
+        if _gwt_stderr=$(git worktree add "$worktree_path" "$name_or_path" 2>&1); then
+          print -P "%F{blue}📂 Checked out '$name_or_path' at '$worktree_path'%f"
+        elif echo "$_gwt_stderr" | command grep -q "invalid reference"; then
+          print -P "%F{blue}📂 Creating new branch '$name_or_path' from HEAD at '$worktree_path'...%f"
+          git worktree add -b "$name_or_path" "$worktree_path" || return 1
+        else
+          echo "$_gwt_stderr" >&2
+          return 1
+        fi
+        ;;
+    esac
   fi
 
   print -P "%F{green}✔ Worktree created at: $worktree_path%f"
@@ -158,33 +212,48 @@ _gwts() {
     local selected
     selected=$(git worktree list --porcelain | \
       awk '
-        /^worktree / { wt = substr($0, 10) }
-        /^HEAD / { head = $2 }
-        /^branch / { branch = substr($0, 8); gsub(/^refs\/heads\//, "", branch);
-                     printf "%-50s %-30s %s\n", wt, branch, head }
-        /^$/ { if (wt && !branch) printf "%-50s %-30s %s\n", wt, "(detached)", head; wt=""; branch=""; head="" }
+        /^worktree / { wt = substr($0, 10); branch = ""; head = "" }
+        /^HEAD /     { head = $2 }
+        /^branch /   { branch = substr($0, 8); gsub(/^refs\/heads\//, "", branch) }
+        /^$/ {
+          if (wt) printf "%s\t%s\t%s\n", wt, (branch ? branch : "(detached)"), head
+          wt = ""; branch = ""; head = ""
+        }
+        END {
+          if (wt) printf "%s\t%s\t%s\n", wt, (branch ? branch : "(detached)"), head
+        }
       ' | \
       fzf --prompt="Select worktree: " \
           --height=60% \
           --reverse \
+          --delimiter='\t' \
           --preview 'echo "📁 Path: {1}"; echo "🌿 Branch: {2}"; echo "📝 Last commit:"; git -C {1} log -1 --oneline 2>/dev/null; echo; echo "📊 Status:"; git -C {1} status -s 2>/dev/null' \
           --preview-window=right:50%)
 
     if [[ -n "$selected" ]]; then
       local path
-      path=$(echo "$selected" | awk '{print $1}')
+      path=$(echo "$selected" | cut -d$'\t' -f1)
       builtin cd "$path" || return 1
       command_exists zoxide && zoxide add "$(pwd)"
     fi
     return
   fi
 
-  # Pattern matching — use literal string matching (not regex)
+  # Pattern matching — search both worktree path and branch name
   local path
   path=$(git worktree list --porcelain | awk -v pattern="$1" '
-    /^worktree / {
-      wt = substr($0, 10)
-      if (index(wt, pattern) > 0) { print wt; exit }
+    /^worktree / { wt = substr($0, 10); branch = "" }
+    /^branch /   { branch = substr($0, 8); gsub(/^refs\/heads\//, "", branch) }
+    /^$/ {
+      if (wt && (index(wt, pattern) > 0 || index(branch, pattern) > 0)) {
+        print wt; exit
+      }
+      wt = ""; branch = ""
+    }
+    END {
+      if (wt && (index(wt, pattern) > 0 || index(branch, pattern) > 0)) {
+        print wt
+      }
     }')
 
   if [[ -n "$path" ]]; then
@@ -254,7 +323,7 @@ _gwtr() {
       awk -v main="$main_path" '
         /^worktree / {
           if (wt && wt != main) {
-            printf "%-50s %s\n", wt, branch
+            printf "%s\t%s\n", wt, branch
           }
           wt = substr($0, 10)
           branch = "(detached)"
@@ -262,16 +331,17 @@ _gwtr() {
         /^branch / { branch = substr($0, 8); gsub(/^refs\/heads\//, "", branch) }
         END {
           if (wt && wt != main) {
-            printf "%-50s %s\n", wt, branch
+            printf "%s\t%s\n", wt, branch
           }
         }' | \
       fzf --prompt="Select worktree to remove: " \
           --height=60% \
           --reverse \
+          --delimiter='\t' \
           --preview 'echo "⚠️  Will remove worktree: {1}"; echo "🌿 Branch: {2}"; echo; echo "📊 Status:"; git -C {1} status -s 2>/dev/null; echo; echo "📤 Unpushed commits:"; git -C {1} log --oneline @{u}..HEAD 2>/dev/null || echo "No upstream branch"')
 
     if [[ -n "$selected" ]]; then
-      worktree_path=$(echo "$selected" | awk '{print $1}')
+      worktree_path=$(echo "$selected" | cut -d$'\t' -f1)
     else
       return
     fi
@@ -328,10 +398,10 @@ _gwtr() {
     builtin cd "$main_path" || return 1
   fi
 
-  echo "✅ Removing worktree: $worktree_path"
+  print -P "%F{blue}🗑️ Removing worktree: $worktree_path%f"
   echo "   Branch '${branch_name:-(detached)}' will be preserved"
   git worktree remove "$worktree_path" || return 1
-  echo "✅ Worktree removed successfully"
+  print -P "%F{green}✔ Worktree removed successfully%f"
 }
 
 # Prune stale worktree entries
@@ -354,13 +424,25 @@ _gwth() {
   echo "================================"
   echo ""
   echo "📚 Commands:"
-  echo "  gwta <branch> [path]  - Add new worktree (auto-detects config files to copy)"
-  echo "  gwts [pattern]        - Switch between worktrees (interactive fzf or by pattern)"
-  echo "  gwtl                  - List all worktrees with branch info"
-  echo "  gwtr [path]           - Remove worktree with safety checks"
-  echo "  gwtp                  - Prune stale worktree entries"
-  echo "  gwtmain               - Jump to main worktree"
-  echo "  gwth                  - Show this help message"
+  echo "  gwta [-b <branch>] <name-or-path> [commit-ish]  - Add new worktree"
+  echo "  gwts [pattern]                           - Switch worktrees (fzf or pattern on path/branch)"
+  echo "  gwtl                                     - List all worktrees"
+  echo "  gwtr [path]                              - Remove worktree (safety checks)"
+  echo "  gwtp                                     - Prune stale entries"
+  echo "  gwtmain                                  - Jump to main worktree"
+  echo "  gwth                                     - Show this help"
+  echo ""
+  echo "📂 Path detection:"
+  echo "  Bare names (hmn-sentry)  → placed in parent of main worktree"
+  echo "  ./ or ../ prefix         → resolved relative to current directory"
+  echo "  / prefix                 → used as absolute path"
+  echo ""
+  echo "🌿 Branch logic:"
+  echo "  gwta <name>                    → checkout if exists (local/remote DWIM), else create from HEAD"
+  echo "  gwta <path>                    → git derives branch from basename (path = /, ./, ../)"
+  echo "  gwta <name> <ref>              → checkout existing ref into folder"
+  echo "  gwta -b <branch> <name>        → create new branch from HEAD"
+  echo "  gwta -b <branch> <name> <ref>  → create new branch from ref"
   echo ""
   echo "✨ Features:"
   echo "  - Zero configuration — auto-detects paths from git-common-dir"
@@ -368,17 +450,20 @@ _gwth() {
   echo "  - Prompts before copying config files to new worktrees"
   echo "  - Interactive fzf selection with preview (branch, status, last commit)"
   echo "  - Safety checks: uncommitted changes, unpushed commits, main worktree protection"
+  echo "  - gwts matches both worktree path and branch name"
   echo "  - Automatically updates zoxide for quick navigation"
   echo ""
   echo "💡 Examples:"
-  echo "  gwta feature/new-ui              # Create worktree next to main worktree"
-  echo "  gwta hotfix-123 ~/custom/path    # Create at custom absolute path"
-  echo "  gwts                             # Interactive worktree switcher"
-  echo "  gwts feature                     # Switch to first worktree matching 'feature'"
-  echo "  gwtl                             # Show all worktrees"
-  echo "  gwtr                             # Interactive worktree removal"
-  echo "  gwtp                             # Prune stale entries"
-  echo "  gwtmain                          # Jump to main worktree"
+  echo "  gwta hmn-sentry                              # Checkout or create 'hmn-sentry'"
+  echo "  gwta hmn-sentry master                       # Checkout existing 'master' into folder hmn-sentry"
+  echo "  gwta -b feature/LIADEV-4532 hmn-sentry       # New branch, custom folder"
+  echo "  gwta -b feature/LIADEV-4532 hmn master       # New branch from master, custom folder"
+  echo "  gwta master                                  # Checkout existing master, auto-path"
+  echo "  gwta /tmp/quick-test                         # Absolute path, new branch 'quick-test' from HEAD"
+  echo "  gwta ./local-test                            # Relative path, new branch 'local-test' from HEAD"
+  echo "  gwts sentry                                  # Match by path or branch name"
+  echo "  gwts                                         # Interactive fzf switcher"
+  echo "  gwtr                                         # Interactive removal"
 }
 
 # ── Aliases ──────────────────────────────────────────────────────────────────
@@ -393,13 +478,41 @@ alias gwtmain='_gwtmain'
 
 # ── Completions ──────────────────────────────────────────────────────────────
 
-# Branch completion for gwta (reuses git-checkout's branch completer)
-compdef _git gwta=git-checkout
+# Branch/ref completion for gwta — uses $CURRENT for alias compatibility
+_gwta_complete() {
+  local -a local_branches all_refs
+  local_branches=(${(f)"$(git branch --format='%(refname:short)' 2>/dev/null)"})
+  all_refs=(
+    $local_branches
+    ${(f)"$(git branch -r --format='%(refname:short)' 2>/dev/null)"}
+    ${(f)"$(git tag -l 2>/dev/null)"}
+  )
 
-# Worktree path completion for gwts/gwtr
-_gwt_complete_worktrees() {
-  local -a worktrees
-  worktrees=( ${(f)"$(git worktree list --porcelain 2>/dev/null | awk '/^worktree /{print substr($0, 10)}')"} )
-  _describe 'worktree' worktrees
+  # Detect if previous word is -b (completing branch name for -b)
+  if [[ "${words[$CURRENT-1]}" == "-b" ]]; then
+    compadd -a local_branches
+    return
+  fi
+
+  # All positions: offer refs (branches + remotes + tags)
+  compadd -a all_refs
 }
-compdef _gwt_complete_worktrees gwts gwtr
+compdef _gwta_complete gwta _gwta
+
+# Worktree path + branch completion for gwts (pattern matches both)
+_gwts_complete() {
+  local -a worktrees branches
+  worktrees=(${(f)"$(git worktree list --porcelain 2>/dev/null | awk '/^worktree /{print substr($0, 10)}')"})
+  branches=(${(f)"$(git worktree list --porcelain 2>/dev/null | awk '/^branch /{b = substr($0, 8); gsub(/^refs\/heads\//, "", b); print b}')"})
+  compadd -a worktrees
+  compadd -a branches
+}
+compdef _gwts_complete gwts _gwts
+
+# Worktree path completion for gwtr
+_gwtr_complete() {
+  local -a worktrees
+  worktrees=(${(f)"$(git worktree list --porcelain 2>/dev/null | awk '/^worktree /{print substr($0, 10)}')"})
+  compadd -a worktrees
+}
+compdef _gwtr_complete gwtr _gwtr
