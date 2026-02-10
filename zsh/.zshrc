@@ -94,6 +94,14 @@ fi
 
 # Additional settings
 zinit cdreplay -q                    # Load zinit cdreplay quietly
+
+# Wrap zinit scheduler: silence "command not found" for sleep/true
+# zinit uses `command sleep` and `command true` (bypasses builtins, requires PATH)
+# which errors when PATH is transiently incomplete during chpwd hooks
+if (( $+functions[@zinit-scheduler] )); then
+  functions[-zinit-scheduler-orig]="$functions[@zinit-scheduler]"
+  @zinit-scheduler() { -zinit-scheduler-orig "$@" 2>/dev/null; }
+fi
 compdef mosh=ssh                     # Use ssh completion for mosh
 zmodload zsh/complist                # Load the complist module for advanced completion list features
 

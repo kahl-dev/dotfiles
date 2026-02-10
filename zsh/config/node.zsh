@@ -9,8 +9,9 @@
 # These non-interactive subshells don't trigger mise's chpwd hook,
 # so handleNode.sh falls back to fnm/nvm for version switching.
 #
-# --use-on-cd: auto-switch Node version when entering a directory with .nvmrc
 # --version-file-strategy=recursive: search parent directories for .nvmrc
+# NOTE: --use-on-cd intentionally omitted — we define a guarded chpwd hook
+# instead, to avoid "command not found: fnm" when PATH is transiently broken
 #
 # On Raspberry Pi, .zshrc adds /home/pi/.local/share/fnm to PATH before
 # this file is sourced, so command_exists fnm succeeds here.
@@ -20,7 +21,14 @@
 if ! command_exists mise && command_exists fnm; then
   # Fast and simple Node.js version manager, built in Rust
   # https://github.com/Schniz/fnm
-  eval "$(fnm env --use-on-cd --version-file-strategy=recursive)"
+  # Init WITHOUT --use-on-cd; we define our own guarded chpwd hook below
+  # to avoid "command not found: fnm" when PATH is transiently broken
+  eval "$(fnm env --version-file-strategy=recursive)"
+
+  # Safe chpwd hook — silently skips when fnm is unreachable
+  _fnm_autoload_hook() { (( $+commands[fnm] )) && fnm use --silent-if-unchanged; }
+  autoload -Uz add-zsh-hook
+  add-zsh-hook chpwd _fnm_autoload_hook
 
   _fnm_install_latest() {
     fnm install --lts

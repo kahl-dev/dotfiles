@@ -22,7 +22,11 @@ zinit light hlissner/zsh-autopair
 # zoxide
 # easily jump to directories
 # https://github.com/ajeetdsouza/zoxide
-command_exists zoxide && eval "$(zoxide init --cmd cd zsh)"
+if command_exists zoxide; then
+  eval "$(zoxide init --cmd cd zsh)"
+  # Guard: silently skip when zoxide is unreachable (PATH issues)
+  __zoxide_hook() { (( $+commands[zoxide] )) && \command zoxide add -- "$(__zoxide_pwd)"; }
+fi
 
 # zinit ice as"command" from"gh-r" bpick"atuin-*.tar.gz" mv"atuin*/atuin -> atuin" \
 #   atclone"./atuin init zsh > init.zsh; ./atuin gen-completions --shell zsh > _atuin" \

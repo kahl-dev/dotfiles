@@ -140,7 +140,7 @@ _gwta() {
         local _gwt_stderr
         if _gwt_stderr=$(git worktree add "$worktree_path" "$name_or_path" 2>&1); then
           print -P "%F{blue}📂 Checked out '$name_or_path' at '$worktree_path'%f"
-        elif echo "$_gwt_stderr" | command grep -q "invalid reference"; then
+        elif [[ "$_gwt_stderr" == *"invalid reference"* ]]; then
           print -P "%F{blue}📂 Creating new branch '$name_or_path' from HEAD at '$worktree_path'...%f"
           git worktree add -b "$name_or_path" "$worktree_path" || return 1
         else
@@ -232,7 +232,7 @@ _gwts() {
 
     if [[ -n "$selected" ]]; then
       local path
-      path=$(echo "$selected" | cut -d$'\t' -f1)
+      path="${selected%%$'\t'*}"
       builtin cd "$path" || return 1
       command_exists zoxide && zoxide add "$(pwd)"
     fi
@@ -341,7 +341,7 @@ _gwtr() {
           --preview 'echo "⚠️  Will remove worktree: {1}"; echo "🌿 Branch: {2}"; echo; echo "📊 Status:"; git -C {1} status -s 2>/dev/null; echo; echo "📤 Unpushed commits:"; git -C {1} log --oneline @{u}..HEAD 2>/dev/null || echo "No upstream branch"')
 
     if [[ -n "$selected" ]]; then
-      worktree_path=$(echo "$selected" | cut -d$'\t' -f1)
+      worktree_path="${selected%%$'\t'*}"
     else
       return
     fi

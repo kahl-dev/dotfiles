@@ -9,9 +9,12 @@ if command_exists nvim; then
   alias vimdiff='nvim -d'
 fi
 
-# check if file /home/kahl/.local/state/nvim/log is greater that 1GB and if so echo a warning
-if [ -f /home/kahl/.local/state/nvim/log ]; then
-  if [ $(stat -c %s /home/kahl/.local/state/nvim/log) -gt 1073741824 ]; then # 1GB
-    echo "nvim log file is greater than 1GB"
+# ⚠️ Warn if nvim log file exceeds 1GB
+if [[ -f /home/kahl/.local/state/nvim/log ]]; then
+  zmodload zsh/stat 2>/dev/null
+  nvim_log_size=0
+  nvim_log_size=$(zstat -L +size /home/kahl/.local/state/nvim/log 2>/dev/null) || true
+  if (( nvim_log_size > 1073741824 )); then
+    echo "⚠️  nvim log file is greater than 1GB"
   fi
 fi
