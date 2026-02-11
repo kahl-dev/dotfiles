@@ -48,7 +48,7 @@ zle_highlight=('paste:none')
 unsetopt BEEP
 
 # Add completion functions provided by Homebrew
-file_exists /opt/homebrew/share/zsh/site-functions/_brew ] && fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+file_exists /opt/homebrew/share/zsh/site-functions/_brew && fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 fpath=($DOTFILES/zsh/config/_dotbot_completion $fpath)
 
 # Initialize and configure completions
@@ -132,4 +132,7 @@ elif [ -f "$HOME/.zshrc-local" ]; then
 fi
 
 # bun completions
-[ -s "/Users/kahl-dev/.bun/_bun" ] && source "/Users/kahl-dev/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# Deduplicate PATH in nested shells (tmux panes, SSH sessions)
+typeset -U PATH path
