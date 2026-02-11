@@ -123,10 +123,14 @@ _dot_doctor_path_invalid() {
   local -a invalid=()
   local -a path_entries=("${(@s/:/)PATH}")
   local dir
+  # Mise dynamically manages tool paths — skip its install dirs (may lag behind updates)
+  local mise_installs="${XDG_DATA_HOME:-$HOME/.local/share}/mise/installs"
 
   for dir in "${path_entries[@]}"; do
     [[ -z "$dir" ]] && continue
-    [[ -d "$dir" ]] || invalid+=("$dir")
+    [[ -d "$dir" ]] && continue
+    [[ "$dir" == "$mise_installs"/* ]] && continue
+    invalid+=("$dir")
   done
 
   if (( ${#invalid} == 0 )); then
@@ -139,6 +143,17 @@ _dot_doctor_path_invalid() {
   for dir in "${invalid[@]}"; do
     echo "     - ${dir/#$HOME/~}"
   done
+
+  if _dot_doctor_should_fix "Remove ${#invalid} non-existent dir(s) from PATH?"; then
+    local -a clean_path=()
+    for dir in "${path_entries[@]}"; do
+      [[ -z "$dir" ]] && continue
+      [[ -d "$dir" ]] && clean_path+=("$dir")
+    done
+    path=("${clean_path[@]}")
+    export PATH="${(j.:.)path}"
+    echo "     PATH cleaned for current session"
+  fi
 }
 
 # ── 10. Shell startup time ───────────────────────────────────────────────────
