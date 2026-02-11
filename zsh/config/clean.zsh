@@ -52,6 +52,11 @@ _dot_clean_all_categories() {
   echo caches
   echo claude
   echo home
+  echo yarn
+  echo playwright
+  echo composer
+  echo pip
+  echo tmp
 }
 
 # ── Helper: size display ─────────────────────────────────────────────────────
@@ -364,5 +369,78 @@ _dot_clean_home() {
       rm -rf "$item"
     done
     echo "     Cleaned"
+  fi
+}
+
+_dot_clean_yarn() {
+  # macOS: ~/Library/Caches/Yarn, Linux: ~/.cache/yarn
+  local cache_dir="$HOME/Library/Caches/Yarn"
+  [[ -d "$cache_dir" ]] || cache_dir="$HOME/.cache/yarn"
+  [[ -d "$cache_dir" ]] || { echo "  ✓ yarn: no cache"; return; }
+  local size=$(_dot_clean_dir_size "$cache_dir")
+  local display=$(_dot_clean_format_size "$size")
+  if _dot_clean_should_run "yarn" "$display"; then
+    rm -rf "$cache_dir"
+    echo "     Cleaned"
+  fi
+}
+
+_dot_clean_playwright() {
+  local cache_dir="$HOME/.cache/ms-playwright"
+  [[ -d "$cache_dir" ]] || { echo "  ✓ playwright: no cache"; return; }
+  local size=$(_dot_clean_dir_size "$cache_dir")
+  local display=$(_dot_clean_format_size "$size")
+  if _dot_clean_should_run "playwright" "$display"; then
+    rm -rf "$cache_dir"
+    echo "     Cleaned"
+  fi
+}
+
+_dot_clean_composer() {
+  local cache_dir="$HOME/.cache/composer"
+  [[ -d "$cache_dir" ]] || cache_dir="$HOME/.composer/cache"
+  [[ -d "$cache_dir" ]] || { echo "  ✓ composer: no cache"; return; }
+  local size=$(_dot_clean_dir_size "$cache_dir")
+  local display=$(_dot_clean_format_size "$size")
+  if _dot_clean_should_run "composer" "$display"; then
+    rm -rf "$cache_dir"
+    echo "     Cleaned"
+  fi
+}
+
+_dot_clean_pip() {
+  # macOS: ~/Library/Caches/pip, Linux: ~/.cache/pip
+  local cache_dir="$HOME/Library/Caches/pip"
+  [[ -d "$cache_dir" ]] || cache_dir="$HOME/.cache/pip"
+  [[ -d "$cache_dir" ]] || { echo "  ✓ pip: no cache"; return; }
+  local size=$(_dot_clean_dir_size "$cache_dir")
+  local display=$(_dot_clean_format_size "$size")
+  if _dot_clean_should_run "pip" "$display"; then
+    rm -rf "$cache_dir"
+    echo "     Cleaned"
+  fi
+}
+
+_dot_clean_tmp() {
+  local tmp_dir="$HOME/tmp"
+  [[ -d "$tmp_dir" ]] || { echo "  ✓ tmp: no ~/tmp"; return; }
+  local total_size=0
+  local -a old_dirs=()
+  for dir in "$tmp_dir"/claude-*-cwd(N/); do
+    if [[ $(find "$dir" -maxdepth 0 -mtime +7 2>/dev/null) ]]; then
+      old_dirs+=("$dir")
+      (( total_size += $(_dot_clean_dir_size "$dir") ))
+    fi
+  done
+  if (( ${#old_dirs} == 0 )); then
+    echo "  ✓ tmp: no stale session dirs"
+    return
+  fi
+  local display=$(_dot_clean_format_size "$total_size")
+  if _dot_clean_should_run "tmp (${#old_dirs} claude sessions >7d)" "$display"; then
+    for dir in "${old_dirs[@]}"; do
+      rm -rf "$dir"
+    done
+    echo "     Cleaned ${#old_dirs} dirs"
   fi
 }
