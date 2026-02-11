@@ -47,6 +47,8 @@ _dot_doctor() {
     _dot_doctor_launchagent_health \
     _dot_doctor_orphaned_configs \
     _dot_doctor_claude_old_versions \
+    _dot_doctor_ssh_agent \
+    _dot_doctor_dotfiles_symlinks \
     _dot_doctor_shell_startup_time; do
 
     check_issues=0
@@ -73,7 +75,7 @@ _dot_doctor() {
 
 # ── Helper: portable file permissions (macOS vs Linux stat) ──────────────────
 _dot_stat_perms() {
-  if [[ "$(uname)" == "Darwin" ]]; then
+  if is_macos; then
     stat -f %Lp "$1" 2>/dev/null
   else
     stat -c %a "$1" 2>/dev/null
@@ -284,6 +286,7 @@ _dot_doctor_brew_cache() {
 
 # ── 15. LaunchAgent health ───────────────────────────────────────────────────
 _dot_doctor_launchagent_health() {
+  is_macos || return 0
   local agents_dir="$HOME/Library/LaunchAgents"
   [[ -d "$agents_dir" ]] || return 0
 
@@ -334,7 +337,7 @@ _dot_doctor_orphaned_configs() {
         fish)     command_exists fish     || found+=("$name") ;;
         shell_gpt) command_exists sgpt    || found+=("$name") ;;
         fabric)   command_exists fabric   || found+=("$name") ;;
-        iterm2)   [[ -d "/Applications/iTerm.app" ]] || found+=("$name") ;;
+        iterm2)   is_macos && { [[ -d "/Applications/iTerm.app" ]] || found+=("$name"); } ;;
       esac
     fi
   done
@@ -652,10 +655,11 @@ _dot_doctor_mise_duplicates() {
     if mise which "$tool" &>/dev/null; then
       local mise_path brew_path
       mise_path=$(mise which "$tool" 2>/dev/null)
-      brew_path=$(brew --prefix 2>/dev/null)/bin/$tool
-
-      if [[ -x "$brew_path" && "$mise_path" != "$brew_path" ]]; then
-        duplicates+=("$tool (mise: $mise_path, brew: $brew_path)")
+      if command_exists brew; then
+        brew_path=$(brew --prefix 2>/dev/null)/bin/$tool
+        if [[ -x "$brew_path" && "$mise_path" != "$brew_path" ]]; then
+          duplicates+=("$tool (mise: $mise_path, brew: $brew_path)")
+        fi
       fi
     fi
   done
@@ -700,4 +704,50 @@ _dot_doctor_dotbot_pycache() {
       echo "     removed ${dir/#$DOTFILES/\$DOTFILES}"
     done
   fi
+}
+
+# ── SSH agent health ─────────────────────────────────────────────────────
+_dot_doctor_ssh_agent() {
+  ssh-add -l &>/dev/null
+  local exit_code=$?
+  if (( exit_code == 0 )); then
+    local key_count
+    key_count=$(ssh-add -l 2>/dev/null | wc -l | tr -d ' ')
+    echo "  ✓ SSH agent: ${key_count} key(s) loaded"
+  elif (( exit_code == 2 )); then
+    check_issues=1
+    echo "  ⚠️  SSH agent: not running"
+  else
+    check_issues=1
+    echo "  ⚠️  SSH agent: no identities loaded"
+  fi
+}
+
+# ── Dotfiles symlink health ──────────────────────────────────────────────
+_dot_doctor_dotfiles_symlinks() {
+  local -a broken=()
+  local link
+  for link in \
+    "$HOME/.zshenv" \
+    "$HOME/.gitconfig" \
+    "$HOME/.gitignore_global" \
+    "$HOME/.config/starship.toml" \
+    "$HOME/.config/mise/config.toml" \
+    "$HOME/.config/nvim" \
+    "$HOME/.config/bat" \
+    "$HOME/.config/lazygit" \
+    "$HOME/.tmux.conf"; do
+    if [[ -L "$link" && ! -e "$link" ]]; then
+      broken+=("${link/#$HOME/~}")
+    fi
+  done
+  if (( ${#broken} == 0 )); then
+    echo "  ✓ Dotfiles symlinks: all valid"
+    return
+  fi
+  check_issues=${#broken}
+  echo "  ⚠️  Dotfiles symlinks: ${#broken} broken"
+  for link in "${broken[@]}"; do
+    echo "     - $link"
+  done
 }

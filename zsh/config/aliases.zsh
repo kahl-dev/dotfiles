@@ -4,7 +4,7 @@
 _clipboard_copy() {
   if command_exists rclip; then
     rclip
-  elif [[ "$(uname)" == "Darwin" ]]; then
+  elif is_macos; then
     pbcopy
   elif command_exists xclip; then
     xclip -selection clipboard
@@ -570,10 +570,12 @@ fi
 # AeroSpace
 # ############################## #
 
-alias as='aerospace'
-ff() {
-    aerospace list-windows --all | fzf --bind 'enter:execute(bash -c "aerospace focus --window-id {1}")+abort'
-}
+if is_macos; then
+  alias as='aerospace'
+  ff() {
+      aerospace list-windows --all | fzf --bind 'enter:execute(bash -c "aerospace focus --window-id {1}")+abort'
+  }
+fi
 
 alias mcc='make clearcache'
 

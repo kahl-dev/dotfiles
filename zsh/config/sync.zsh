@@ -34,12 +34,14 @@ _dot_sync() {
     return 1
   fi
 
-  # Detect and run install-profile (OS-aware)
+  # Detect profile (personal repo: non-Pi Linux = liadev workstation)
   local profile
-  if [[ "$(uname)" == "Darwin" ]]; then
+  if is_macos; then
     profile="macos"
+  elif is_raspberry_pi; then
+    profile="pi"
   else
-    profile="linux"
+    profile="liadev"
   fi
   if [[ -f "$DOTFILES/meta/recipes/$profile" ]]; then
     echo "Re-running install profile: $profile"
