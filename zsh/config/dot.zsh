@@ -1,15 +1,9 @@
 #!/usr/bin/env zsh
-# dot — unified dotfiles CLI
+# dot — unified dotfiles CLI v2.0.0
 # Usage: dot [command] [subcommand] [args...]
 # No args → fzf interactive menu
-#
-# Future enhancements (deferred from v1, reviewed by multi-agent debate):
-#   - dot uninstall  — unified uninstall (currently delegated to scripts/uninstall.sh)
-#   - dot status     — show dotfiles health (last update, dirty state, outdated packages)
-#   - dot sync       — pull latest dotfiles + run install-profile
-#   - Split into multiple files if this grows beyond ~500 lines
-#   - Registry/dispatcher drift detection (automated consistency check)
-#   - Testing framework for critical commands (zunit or bats)
+
+DOT_VERSION="2.0.0"
 
 # Clear any conflicting alias
 unalias dot 2>/dev/null
@@ -18,6 +12,13 @@ unalias dot 2>/dev/null
 if [[ -z "$DOTFILES" ]]; then
   echo "dot: \$DOTFILES is not set" >&2
   return 1
+fi
+
+# ── NO_COLOR Support ─────────────────────────────────────────────────────────
+if [[ -n "${NO_COLOR:-}" ]]; then
+  _dot_bold="" _dot_cyan="" _dot_reset=""
+else
+  _dot_bold=$'\033[1m' _dot_cyan=$'\033[36m' _dot_reset=$'\033[0m'
 fi
 
 # ── Command Registry ──────────────────────────────────────────────────────────
@@ -43,9 +44,42 @@ DOT_COMMANDS=(
   "mise/outdated"     "Show outdated mise tools"
   "edit"              "Open dotfiles in editor"
   "color-test"        "Run terminal color test"
+  "clean"             "Unified cache and temp cleanup"
+  "status"            "Show dotfiles health dashboard"
+  "sync"              "Pull latest dotfiles and apply"
   "doctor"            "Diagnose and fix common dotfiles issues"
   "help"              "Show all commands"
 )
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+_dot_ask() {
+  local question="$1"
+  echo -n "$question [y/N] "
+  read -q
+  local result=$?
+  echo ""
+  return $result
+}
+
+_dot_subcmd_error() {
+  local category="$1" subcommand="$2"
+  shift 2
+  if [[ -z "$subcommand" ]]; then
+    echo "dot $category: missing subcommand" >&2
+  else
+    echo "dot $category: unknown subcommand '$subcommand'" >&2
+  fi
+  echo "Usage: dot $category [$*]" >&2
+  return 1
+}
+
+_dot_validate_name() {
+  local context="$1" name="$2"
+  if [[ "$name" == */* || "$name" == *..* ]]; then
+    echo "dot $context: invalid name '$name'" >&2
+    return 1
+  fi
+}
 
 # ── Main Function ─────────────────────────────────────────────────────────────
 dot() {
@@ -62,6 +96,10 @@ dot() {
   shift
 
   case "$command" in
+    --version|-v)
+      echo "dot $DOT_VERSION"
+      ;;
+
     install)
       local subcommand="${1:-}"
       [[ -n "$subcommand" ]] && shift
@@ -78,10 +116,7 @@ dot() {
               return 1
             fi
           fi
-          if [[ "$name" == */* || "$name" == *..* ]]; then
-            echo "dot install profile: invalid name '$name'" >&2
-            return 1
-          fi
+          _dot_validate_name "install profile" "$name" || return 1
           if [[ ! -f "$DOTFILES/meta/recipes/$name" ]]; then
             echo "dot install profile: '$name' not found in $DOTFILES/meta/recipes/" >&2
             return 1
@@ -101,10 +136,7 @@ dot() {
               return 1
             fi
           fi
-          if [[ "$name" == */* || "$name" == *..* ]]; then
-            echo "dot install standalone: invalid name '$name'" >&2
-            return 1
-          fi
+          _dot_validate_name "install standalone" "$name" || return 1
           if [[ ! -f "$DOTFILES/meta/ingredients/${name}.yaml" ]]; then
             echo "dot install standalone: '$name' not found in $DOTFILES/meta/ingredients/" >&2
             return 1
@@ -112,15 +144,8 @@ dot() {
           echo "Installing ingredient: $name"
           "$DOTFILES/install-standalone" "$name"
           ;;
-        "")
-          echo "dot install: missing subcommand" >&2
-          echo "Usage: dot install [profile|standalone] <name>" >&2
-          return 1
-          ;;
         *)
-          echo "dot install: unknown subcommand '$subcommand'" >&2
-          echo "Usage: dot install [profile|standalone] <name>" >&2
-          return 1
+          _dot_subcmd_error "install" "$subcommand" "profile|standalone"
           ;;
       esac
       ;;
@@ -128,20 +153,16 @@ dot() {
     brew)
       local subcommand="${1:-}"
       [[ -n "$subcommand" ]] && shift
+      if ! command_exists brew; then
+        echo "dot brew: brew is not installed" >&2
+        return 1
+      fi
       case "$subcommand" in
         update)
-          if ! command_exists brew; then
-            echo "dot brew: brew is not installed" >&2
-            return 1
-          fi
           echo "Updating Homebrew..."
           brew update && brew upgrade && brew cleanup -s
           ;;
         dump)
-          if ! command_exists brew; then
-            echo "dot brew: brew is not installed" >&2
-            return 1
-          fi
           if [[ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ]]; then
             echo "dot brew dump: \$HOMEBREW_BUNDLE_FILE_GLOBAL is not set" >&2
             return 1
@@ -149,15 +170,8 @@ dot() {
           echo "Exporting to $HOMEBREW_BUNDLE_FILE_GLOBAL"
           brew bundle dump --force --describe --file="$HOMEBREW_BUNDLE_FILE_GLOBAL"
           ;;
-        "")
-          echo "dot brew: missing subcommand" >&2
-          echo "Usage: dot brew [update|dump]" >&2
-          return 1
-          ;;
         *)
-          echo "dot brew: unknown subcommand '$subcommand'" >&2
-          echo "Usage: dot brew [update|dump]" >&2
-          return 1
+          _dot_subcmd_error "brew" "$subcommand" "update|dump"
           ;;
       esac
       ;;
@@ -183,17 +197,10 @@ dot() {
           source "${ZDOTDIR:-$HOME}/.zshrc"
           ;;
         clean)
-          _dot_clean_home
-          ;;
-        "")
-          echo "dot shell: missing subcommand" >&2
-          echo "Usage: dot shell [reload|reset|clean]" >&2
-          return 1
+          _dot_clean home
           ;;
         *)
-          echo "dot shell: unknown subcommand '$subcommand'" >&2
-          echo "Usage: dot shell [reload|reset|clean]" >&2
-          return 1
+          _dot_subcmd_error "shell" "$subcommand" "reload|reset|clean"
           ;;
       esac
       ;;
@@ -213,15 +220,8 @@ dot() {
           rm -rf ~/.cache/nvim
           echo "Neovim package cache cleared."
           ;;
-        "")
-          echo "dot nvim: missing subcommand" >&2
-          echo "Usage: dot nvim reset" >&2
-          return 1
-          ;;
         *)
-          echo "dot nvim: unknown subcommand '$subcommand'" >&2
-          echo "Usage: dot nvim reset" >&2
-          return 1
+          _dot_subcmd_error "nvim" "$subcommand" "reset"
           ;;
       esac
       ;;
@@ -245,15 +245,8 @@ dot() {
         outdated)
           mise outdated
           ;;
-        "")
-          echo "dot mise: missing subcommand" >&2
-          echo "Usage: dot mise [install|upgrade|outdated]" >&2
-          return 1
-          ;;
         *)
-          echo "dot mise: unknown subcommand '$subcommand'" >&2
-          echo "Usage: dot mise [install|upgrade|outdated]" >&2
-          return 1
+          _dot_subcmd_error "mise" "$subcommand" "install|upgrade|outdated"
           ;;
       esac
       ;;
@@ -271,17 +264,22 @@ dot() {
         start|stop|restart|status|logs)
           "$rb_bin" "$subcommand" "$@"
           ;;
-        "")
-          echo "dot rb: missing subcommand" >&2
-          echo "Usage: dot rb [start|stop|restart|status|logs]" >&2
-          return 1
-          ;;
         *)
-          echo "dot rb: unknown subcommand '$subcommand'" >&2
-          echo "Usage: dot rb [start|stop|restart|status|logs]" >&2
-          return 1
+          _dot_subcmd_error "rb" "$subcommand" "start|stop|restart|status|logs"
           ;;
       esac
+      ;;
+
+    clean)
+      _dot_clean "$@"
+      ;;
+
+    status)
+      _dot_status "$@"
+      ;;
+
+    sync)
+      _dot_sync "$@"
       ;;
 
     update)
@@ -357,9 +355,9 @@ _dot_pick_ingredient() {
 # ── Help ──────────────────────────────────────────────────────────────────────
 _dot_help() {
   echo ""
-  echo "\033[1mdot\033[0m — unified dotfiles CLI"
+  echo "${_dot_bold}dot${_dot_reset} — unified dotfiles CLI v${DOT_VERSION}"
   echo ""
-  echo "\033[1mUsage:\033[0m dot [command] [subcommand] [args...]"
+  echo "${_dot_bold}Usage:${_dot_reset} dot [command] [subcommand] [args...]"
   echo "       dot                    (interactive fzf menu)"
   echo ""
 
@@ -381,9 +379,9 @@ _dot_help() {
     if [[ "$category" != "$current_category" ]]; then
       [[ -n "$current_category" ]] && echo ""
       current_category="$category"
-      echo "  \033[1m$category\033[0m"
+      echo "  ${_dot_bold}$category${_dot_reset}"
     fi
-    printf "    \033[36m%-24s\033[0m %s\n" "$action" "$description"
+    printf "    ${_dot_cyan}%-24s${_dot_reset} %s\n" "$action" "$description"
   done
 
   # Second pass: top-level commands
@@ -391,145 +389,11 @@ _dot_help() {
     echo ""
     for key in "${toplevel_keys[@]}"; do
       description="${DOT_COMMANDS[$key]}"
-      printf "  \033[36m%-26s\033[0m %s\n" "$key" "$description"
+      printf "  ${_dot_cyan}%-26s${_dot_reset} %s\n" "$key" "$description"
     done
   fi
 
   echo ""
-}
-
-# ── Update Wizard ─────────────────────────────────────────────────────────────
-_dot_update_wizard() {
-  local all_yes=false
-  [[ "${1:-}" == "--yes" || "${1:-}" == "-y" ]] && all_yes=true
-
-  echo "Starting update process..."
-  echo ""
-
-  local lazyvim_updated=false
-
-  # 1. LazyVim
-  if command_exists nvim; then
-    if $all_yes || _dot_ask "Update LazyVim?"; then
-      echo "Updating LazyVim..."
-      if nvim --headless '+Lazy! update' +qa; then
-        lazyvim_updated=true
-        echo "LazyVim updated."
-      else
-        echo "LazyVim update failed (exit $?)." >&2
-      fi
-    else
-      echo "LazyVim skipped."
-    fi
-  fi
-
-  # 2. Homebrew
-  if command_exists brew; then
-    if $all_yes || _dot_ask "Update Homebrew packages?"; then
-      echo "Updating Homebrew..."
-      if ! brew update; then
-        echo "brew update failed." >&2
-      fi
-      echo "Upgrading packages..."
-      if ! brew upgrade; then
-        echo "brew upgrade failed." >&2
-      fi
-      echo "Cleaning up..."
-      brew cleanup -s
-      echo "Homebrew done."
-    else
-      echo "Homebrew skipped."
-    fi
-  fi
-
-  # 3. App Store (macOS only)
-  if is_macos && command_exists mas; then
-    if $all_yes || _dot_ask "Update App Store apps?"; then
-      echo "Updating App Store..."
-      if mas upgrade; then
-        echo "App Store updated."
-      else
-        echo "App Store update failed (exit $?)." >&2
-      fi
-    else
-      echo "App Store skipped."
-    fi
-  fi
-
-  # 4. System update (macOS only)
-  if is_macos; then
-    if $all_yes || _dot_ask "Update macOS system?"; then
-      echo "Updating macOS..."
-      if softwareupdate -i -a; then
-        echo "System updated."
-      else
-        echo "System update failed (exit $?)." >&2
-      fi
-    else
-      echo "System update skipped."
-    fi
-  fi
-
-  # mise tools
-  if command_exists mise; then
-    if $all_yes || _dot_ask "Upgrade mise tools?"; then
-      echo "Upgrading mise tools..."
-      if ! mise upgrade; then
-        echo "mise upgrade failed." >&2
-      else
-        echo "mise tools upgraded."
-      fi
-    else
-      echo "mise skipped."
-    fi
-  fi
-
-  echo ""
-  if ! $lazyvim_updated; then
-    echo "Consider updating Mason LSPs manually (:Mason in nvim)."
-  fi
-  echo "Update complete."
-}
-
-# ── Clean Home ────────────────────────────────────────────────────────────────
-_dot_clean_home() {
-  local zsh_items
-  zsh_items=$(find "$HOME" -maxdepth 1 \( -name ".zsh*" -o -name "*.zsh" \) \
-    -not -name ".zshenv" \
-    -not -name ".zsh_history" \
-    -not -name ".zsh_sessions" \
-    -not -name ".zprofile" \
-    -not -name ".zlogin" \
-    -not -name ".zlogout" \
-    2>/dev/null)
-
-  if [[ -z "$zsh_items" ]]; then
-    echo "No stray ZSH files found in HOME."
-    return
-  fi
-
-  echo "Found ZSH files in HOME:"
-  echo "$zsh_items"
-  echo ""
-
-  if _dot_ask "Remove these files?"; then
-    echo "$zsh_items" | while read -r item; do
-      rm -rf "$item"
-    done
-    echo "Cleanup complete."
-  else
-    echo "Cleanup skipped."
-  fi
-}
-
-# ── Helpers ───────────────────────────────────────────────────────────────────
-_dot_ask() {
-  local question="$1"
-  echo -n "$question [y/N] "
-  read -q
-  local result=$?
-  echo ""
-  return $result
 }
 
 # ── Completion ────────────────────────────────────────────────────────────────
@@ -546,6 +410,9 @@ _dot() {
     'update:Interactive update wizard'
     'edit:Open dotfiles in editor'
     'color-test:Terminal color test'
+    'clean:Unified cache and temp cleanup'
+    'status:Show dotfiles health dashboard'
+    'sync:Pull latest dotfiles and apply'
     'doctor:Diagnose and fix common issues'
     'help:Show all commands'
   )
@@ -618,6 +485,36 @@ _dot() {
     rb)
       (( CURRENT == 3 )) && _describe 'subcommand' rb_subcmds
       ;;
+    clean)
+      if (( CURRENT == 3 )); then
+        local -a clean_opts
+        clean_opts=(
+          'brew:Clean Homebrew cache'
+          'uv:Clean uv cache'
+          'docker:Clean Docker system'
+          'nvim:Clean Neovim swap/shada/logs'
+          'node:Prune pnpm store'
+          'logs:Clean old logs'
+          'caches:Clean misc caches'
+          'claude:Clean old CLI versions'
+          'home:Clean stray ZSH files'
+          'all:Clean everything'
+          '--dry-run:Show reclaimable space only'
+          '--yes:Skip prompts'
+        )
+        _describe 'category' clean_opts
+      fi
+      ;;
+    sync)
+      if (( CURRENT == 3 )); then
+        local -a sync_opts
+        sync_opts=(
+          '--update:Also run update wizard'
+          '--dry-run:Show diff without applying'
+        )
+        _describe 'option' sync_opts
+      fi
+      ;;
     doctor)
       if (( CURRENT == 3 )); then
         local -a doctor_opts
@@ -649,6 +546,12 @@ _dot() {
   esac
 }
 
+# ── Source Extensions ────────────────────────────────────────────────────────
+# Order matters: all extensions need _dot_ask defined above
+source "$ZDOTDIR/config/update.zsh"
 source "$ZDOTDIR/config/doctor.zsh"
+source "$ZDOTDIR/config/clean.zsh"
+source "$ZDOTDIR/config/status.zsh"
+source "$ZDOTDIR/config/sync.zsh"
 
 compdef _dot dot

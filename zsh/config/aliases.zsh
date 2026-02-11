@@ -139,11 +139,10 @@ command_exists lazygit && alias lg='lazygit'
 # Neofetch
 command_exists neofetch && alias info='neofetch'
 
-# Neovim
+# Neovim (vimdiff defined in neovim.zsh)
 if command_exists nvim; then
   alias v='nvim'
   alias vim='nvim'
-  alias vimdiff='nvim -d'
 fi
 
 # Cursor
@@ -168,14 +167,7 @@ if command_exists btop; then
   alias htop='btop'
 fi
 
-# Brew
-if command_exists brew; then
-  # Deprecated: use 'dot brew update'
-  alias brewup='brew update; brew upgrade $(brew list --formula); brew cleanup'
-  alias brewupCask='brew update; brew upgrade $(brew list | grep --invert-match $HOMEBREW_UPGRADE_EXCLUDE_PACKAGES); brew cleanup'
-  # Deprecated: use 'dot brew dump'
-  alias brewdump='brew bundle dump --force --describe --file=$HOMEBREW_BUNDLE_FILE_GLOBAL'
-fi
+# Brew — managed by 'dot brew' commands
 
 # Eza
 if command_exists eza; then
@@ -310,7 +302,8 @@ _gjirab() {
   local ticket_id=$(echo "$branch_name" | grep -oE '[A-Z]+-[0-9]+' | head -n 1)
   if [[ -n "$ticket_id" ]]; then
     local jira_url="${JIRA_WORKSPACE}/browse/${ticket_id}"
-    handle_clipboard.sh "$jira_url"
+    echo "$jira_url" | pbcopy
+    echo "Copied: $jira_url"
   else
     echo "No JIRA ticket found in the branch name."
   fi
@@ -322,7 +315,8 @@ _gjirac() {
     local ticket_id=$(git log -1 --format=%B "$commit_hash" | grep -oE '([A-Z]+-[0-9]+)' | head -n 1)
     if [[ -n "$ticket_id" ]]; then
       local jira_url="${JIRA_WORKSPACE}/browse/${ticket_id}"
-      handle_clipboard.sh "$jira_url"
+      echo "$jira_url" | pbcopy
+      echo "Copied: $jira_url"
     else
       echo "No JIRA ticket found in the commit message."
     fi
@@ -367,8 +361,8 @@ function _gdnolock() {
 }
 alias gdnolock="_gdnolock"
 
-alias ggsup='git branch --set-upstream-to=origin/$(_git_current_branch)'
-alias gpsup='git push --set-upstream origin $(_git_current_branch)'
+alias ggsup='git branch --set-upstream-to=origin/$(git branch --show-current)'
+alias gpsup='git push --set-upstream origin $(git branch --show-current)'
 
 alias ghh='git help'
 
@@ -464,22 +458,6 @@ alias lia-copyurl="{
   fi
 }"
 alias lcu='lia-copyurl'
-
-# ############################## #
-# Podman (Docker replacement)
-# ############################## #
-
-# if command_exists podman; then
-#   alias docker='podman'
-#
-#   # Override docker-compose if podman-compose is available
-#   command_exists podman-compose && alias docker-compose='podman-compose'
-#
-#   # Podman-specific aliases
-#   alias podman-clean='podman system prune -a'
-#   alias podman-clean-all='podman system prune -a --volumes'
-#   alias podman-reset='podman system reset'
-# fi
 
 # ############################## #
 # Atuin Environment Variables
@@ -594,52 +572,4 @@ alias cyolo='claude --dangerously-skip-permissions'  # Sandbox auto-enabled via 
 # Dotfiles
 # ############################## #
 
-# Deprecated: use 'dot edit'
-alias dotedit='cd ${DOTFILES} && v'
 alias zshrc='vim ${ZDOTDIR}/.zshrc'
-
-
-# Update zinit and all plugins
-_zsh-update() {
-  echo "Updating zinit..."
-  if ! zinit self-update; then
-    echo "zinit self-update failed!" >&2
-    return 1
-  fi
-
-  echo "Updating all plugins..."
-  if ! zinit update --all; then
-    echo "zinit update failed!" >&2
-    return 1
-  fi
-  echo "Update complete."
-}
-
-# Reload all Zsh configurations
-_zsh-reload-all() {
-  local ZSH_ENV="${ZDOTDIR:-$HOME/.zshenv}"
-  echo "Sourcing $ZSH_ENV..."
-  source "$ZSH_ENV"
-
-  for file in .zprofile .zshrc .zlogin .zlogout; do
-    local config_file="${ZDOTDIR:-$HOME}/$file"
-    if [[ -f "$config_file" ]]; then
-      echo "Sourcing $config_file..."
-      source "$config_file"
-    else
-      echo "Warning: $config_file not found!" >&2
-    fi
-  done
-
-  echo "Reload complete."
-}
-
-# Deprecated: use 'dot shell reload'
-alias zsh-reload='source $ZDOTDIR/.zshrc'
-alias zsh-reload-all='_zsh-reload-all'
-# Deprecated: use 'dot shell reset'
-alias zsh-reset='dot shell reset'
-# Deprecated: use 'dot shell clean'
-alias dot-clean-home='dot shell clean'
-# Deprecated: use 'dot color-test'
-alias dot-run-color-test='dot color-test'

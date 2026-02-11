@@ -12,10 +12,10 @@ if command_exists nvim; then
 fi
 
 # ⚠️ Warn if nvim log file exceeds 1GB
-if [[ -f /home/kahl/.local/state/nvim/log ]]; then
+if [[ -f "$HOME/.local/state/nvim/log" ]]; then
   zmodload zsh/stat 2>/dev/null
   nvim_log_size=0
-  nvim_log_size=$(zstat -L +size /home/kahl/.local/state/nvim/log 2>/dev/null) || true
+  nvim_log_size=$(zstat -L +size "$HOME/.local/state/nvim/log" 2>/dev/null) || true
   if (( nvim_log_size > 1073741824 )); then
     echo "⚠️  nvim log file is greater than 1GB"
   fi
