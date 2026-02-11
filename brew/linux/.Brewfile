@@ -70,12 +70,8 @@ brew "neovim"
 brew "onefetch"
 # Cryptography and SSL/TLS Toolkit
 brew "openssl@1.1"
-# Fast, disk space efficient package manager
-brew "pnpm"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.10"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.11"
+# pnpm: managed by mise
+# python: managed by mise
 # Install various Ruby versions and implementations
 brew "ruby-build"
 # Ruby version manager
@@ -86,8 +82,7 @@ brew "ripgrep"
 brew "ruby"
 # Database of common MIME types
 brew "shared-mime-info"
-# Static analysis and lint tool, for (ba)sh scripts
-brew "shellcheck"
+# shellcheck: managed by mise
 # Cross-shell prompt for astronauts
 brew "starship"
 # Terminal multiplexer
@@ -96,8 +91,7 @@ brew "tmux"
 brew "tmuxinator"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
-# Extremely fast Python package installer and resolver, written in Rust
-brew "uv"
+# uv: managed by mise
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
 # Feature-rich command-line audio/video downloader

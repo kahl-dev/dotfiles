@@ -34,7 +34,6 @@ if ! command_exists mise && command_exists fnm; then
     fnm install --lts
     fnm use lts-latest
     fnm default lts-latest
-    npmid
 
     export NODE_PATH=$FNM_DIR/aliases/lts-latest
     [[ -f "$NODE_PATH/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh" ]] && . "$NODE_PATH/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh"

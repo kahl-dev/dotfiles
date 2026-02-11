@@ -1,0 +1,32 @@
+[settings]
+legacy_version_file = true
+
+[tools]
+# 📦 Package managers
+"npm:yarn" = "latest"
+"npm:pnpm" = "latest"
+"npm:@antfu/ni" = "latest"
+
+# 🛠️ Dev tools
+"npm:prettier" = "latest"
+"npm:diff-so-fancy" = "latest"
+"npm:serve" = "latest"
+"npm:browser-sync" = "latest"
+"npm:neovim" = "latest"
+
+# 🧠 Claude Code LSP servers
+"npm:typescript-language-server" = "latest"
+"npm:typescript" = "latest"
+"npm:intelephense" = "latest"
+"npm:pyright" = "latest"
+
+# 🏗️ Runtimes & compilers
+go = "latest"
+deno = "latest"
+bun = "latest"
+
+# 🔍 Linters & formatters
+shellcheck = "latest"
+stylua = "latest"
+shfmt = "latest"
+"pipx:yamllint" = "latest"

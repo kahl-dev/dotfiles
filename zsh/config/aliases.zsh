@@ -195,11 +195,6 @@ fi
 # Node/NPM/Yarn
 # ############################## #
 
-# install default packages from $DOTFILES/config/default-packages
-_npm_install_global_default() {
-  echo "$NODE_DEFAULT_PACKAGES" | xargs npm install -g
-}
-
 # npm aliases (complement ni ecosystem)
 alias nls='npm ls --depth=0 2>/dev/null'        # List local packages
 alias nlsg='npm ls -g --depth=0 2>/dev/null'    # List global packages
@@ -207,8 +202,6 @@ alias nout='npm outdated'                       # Check outdated local packages
 alias noutg='npm outdated -g --depth=0'         # Check outdated global packages
 alias nup-local='npx npm-check -u'              # Interactive local updates
 alias nup-global='npx npm-check -g -u'          # Interactive global updates
-alias npmid=_npm_install_global_default
-
 # alias ya="yarn add"
 # alias y="yarn"
 # alias yb="yarn build"

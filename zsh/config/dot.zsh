@@ -4,8 +4,6 @@
 # No args → fzf interactive menu
 #
 # Future enhancements (deferred from v1, reviewed by multi-agent debate):
-#   - dot doctor     — diagnose common issues (broken symlinks, missing deps,
-#                      stale zinit cache, $DOTFILES integrity, brew doctor)
 #   - dot uninstall  — unified uninstall (currently delegated to scripts/uninstall.sh)
 #   - dot status     — show dotfiles health (last update, dirty state, outdated packages)
 #   - dot sync       — pull latest dotfiles + run install-profile
@@ -40,8 +38,12 @@ DOT_COMMANDS=(
   "rb/restart"        "Restart Remote Bridge"
   "rb/status"         "Remote Bridge status"
   "rb/logs"           "Remote Bridge logs"
+  "mise/install"      "Install mise global tools"
+  "mise/upgrade"      "Upgrade all mise tools to latest"
+  "mise/outdated"     "Show outdated mise tools"
   "edit"              "Open dotfiles in editor"
   "color-test"        "Run terminal color test"
+  "doctor"            "Diagnose and fix common dotfiles issues"
   "help"              "Show all commands"
 )
 
@@ -224,6 +226,38 @@ dot() {
       esac
       ;;
 
+    mise)
+      local subcommand="${1:-}"
+      [[ -n "$subcommand" ]] && shift
+      if ! command_exists mise; then
+        echo "dot mise: mise is not installed" >&2
+        return 1
+      fi
+      case "$subcommand" in
+        install)
+          echo "Installing mise global tools..."
+          mise install
+          ;;
+        upgrade)
+          echo "Upgrading mise tools..."
+          mise upgrade
+          ;;
+        outdated)
+          mise outdated
+          ;;
+        "")
+          echo "dot mise: missing subcommand" >&2
+          echo "Usage: dot mise [install|upgrade|outdated]" >&2
+          return 1
+          ;;
+        *)
+          echo "dot mise: unknown subcommand '$subcommand'" >&2
+          echo "Usage: dot mise [install|upgrade|outdated]" >&2
+          return 1
+          ;;
+      esac
+      ;;
+
     rb)
       local subcommand="${1:-}"
       [[ -n "$subcommand" ]] && shift
@@ -260,6 +294,10 @@ dot() {
 
     color-test)
       zsh "$DOTFILES/scripts/run_color_test.zsh"
+      ;;
+
+    doctor)
+      _dot_doctor "$@"
       ;;
 
     help)
@@ -432,8 +470,21 @@ _dot_update_wizard() {
     fi
   fi
 
+  # mise tools
+  if command_exists mise; then
+    if $all_yes || _dot_ask "Upgrade mise tools?"; then
+      echo "Upgrading mise tools..."
+      if ! mise upgrade; then
+        echo "mise upgrade failed." >&2
+      else
+        echo "mise tools upgraded."
+      fi
+    else
+      echo "mise skipped."
+    fi
+  fi
+
   echo ""
-  echo "Remember to update node/npm packages manually."
   if ! $lazyvim_updated; then
     echo "Consider updating Mason LSPs manually (:Mason in nvim)."
   fi
@@ -483,17 +534,19 @@ _dot_ask() {
 
 # ── Completion ────────────────────────────────────────────────────────────────
 _dot() {
-  local -a commands install_subcmds brew_subcmds shell_subcmds nvim_subcmds rb_subcmds
+  local -a commands install_subcmds brew_subcmds shell_subcmds nvim_subcmds mise_subcmds rb_subcmds
 
   commands=(
     'install:Install dotbot profiles or ingredients'
     'brew:Homebrew management'
     'shell:Shell configuration'
     'nvim:Neovim management'
+    'mise:Mise global tools'
     'rb:Remote Bridge'
     'update:Interactive update wizard'
     'edit:Open dotfiles in editor'
     'color-test:Terminal color test'
+    'doctor:Diagnose and fix common issues'
     'help:Show all commands'
   )
 
@@ -515,6 +568,12 @@ _dot() {
 
   nvim_subcmds=(
     'reset:Reset lazy.nvim packages'
+  )
+
+  mise_subcmds=(
+    'install:Install global tools'
+    'upgrade:Upgrade all tools'
+    'outdated:Show outdated tools'
   )
 
   rb_subcmds=(
@@ -553,8 +612,26 @@ _dot() {
     nvim)
       (( CURRENT == 3 )) && _describe 'subcommand' nvim_subcmds
       ;;
+    mise)
+      (( CURRENT == 3 )) && _describe 'subcommand' mise_subcmds
+      ;;
     rb)
       (( CURRENT == 3 )) && _describe 'subcommand' rb_subcmds
+      ;;
+    doctor)
+      if (( CURRENT == 3 )); then
+        local -a doctor_opts
+        doctor_opts=(
+          '--fix:Scan and offer to fix each issue'
+        )
+        _describe 'option' doctor_opts
+      elif (( CURRENT == 4 )) && [[ "$words[3]" == "--fix" ]]; then
+        local -a doctor_fix_opts
+        doctor_fix_opts=(
+          '--yes:Fix everything without prompting'
+        )
+        _describe 'option' doctor_fix_opts
+      fi
       ;;
     update)
       if (( CURRENT == 3 )); then
@@ -571,5 +648,7 @@ _dot() {
       ;;
   esac
 }
+
+source "$ZDOTDIR/config/doctor.zsh"
 
 compdef _dot dot

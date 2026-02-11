@@ -82,8 +82,7 @@ brew "git-extras"
 brew "glow"
 # GNU Pretty Good Privacy (PGP) package
 brew "gnupg"
-# Open source programming language to build simple/reliable/efficient software
-brew "go"
+# go: managed by mise
 # Improved top (interactive process viewer)
 brew "htop"
 # User-friendly cURL replacement (command-line HTTP client)
@@ -124,18 +123,15 @@ brew "nss"
 brew "pandoc"
 # Shell command parallelization utility
 brew "parallel"
-# Execute binaries from Python packages in isolated environments
-brew "pipx"
+# pipx: managed by mise
 # Paste PNG into files
 brew "pngpaste"
-# Fast, disk space efficient package manager
-brew "pnpm"
+# pnpm: managed by mise
 # Object-relational database system
 brew "postgresql@15", restart_service: :changed, link: true
 # Nicer 'git pull'
 brew "pygitup"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.11"
+# python: managed by mise
 # Reattach process (e.g., tmux) to background
 brew "reattach-to-user-namespace"
 # Search tool like grep and The Silver Searcher
@@ -144,14 +140,12 @@ brew "ripgrep"
 brew "rust"
 # Intuitive find & replace CLI
 brew "sd"
-# Static analysis and lint tool, for (ba)sh scripts
-brew "shellcheck"
+# shellcheck: managed by mise
 # SOund eXchange: universal sound sample translator
 brew "sox"
 # Cross-shell prompt for astronauts
 brew "starship"
-# Opinionated Lua code formatter
-brew "stylua"
+# stylua: managed by mise
 # Change macOS audio source from the command-line
 brew "switchaudio-osx"
 # Send macOS User Notifications from the command-line
@@ -170,8 +164,7 @@ brew "tree"
 brew "unar"
 # Internet file retriever
 brew "wget"
-# Linter for YAML files
-brew "yamllint"
+# yamllint: managed by mise
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
 # Shell extension to navigate your filesystem faster

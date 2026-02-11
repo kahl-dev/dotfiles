@@ -1,0 +1,82 @@
+- defaults:
+    link:
+      relink: true
+      create: true
+      force: true
+    shell:
+      quiet: true
+      stdout: true
+      stderr: true
+
+- link:
+    ~/.config/mise/config.toml: .config/mise/config.toml
+
+- shell:
+    - description: "Install mise global tools"
+      command: |
+        if command -v mise >/dev/null 2>&1; then
+          echo "🔐 Trusting mise config..."
+          mise trust ~/.config/mise/config.toml 2>/dev/null
+          mise trust ~/.dotfiles/.config/mise/config.toml 2>/dev/null
+          echo "📦 Installing mise global tools..."
+          mise install
+          echo "✓ mise global tools installed"
+        else
+          echo "⚠️  mise not found, skipping global tools install"
+        fi
+
+    - description: "Check for duplicate installations"
+      command: |
+        if ! command -v mise >/dev/null 2>&1; then
+          exit 0
+        fi
+
+        echo "🔍 Checking for duplicate installations..."
+        echo ""
+
+        found_duplicates=false
+
+        # ── Brew duplicates ──────────────────────────────────────────────────
+        if command -v brew >/dev/null 2>&1; then
+          brew_mise_overlap="go pnpm python@3.10 python@3.11 pipx shellcheck uv yamllint"
+          for pkg in $brew_mise_overlap; do
+            if brew list "$pkg" >/dev/null 2>&1; then
+              echo "  ⚠️  brew: $pkg → now managed by mise"
+              echo "     Run: brew uninstall $pkg"
+              found_duplicates=true
+            fi
+          done
+        fi
+
+        # ── fnm global npm packages ──────────────────────────────────────────
+        if command -v fnm >/dev/null 2>&1; then
+          mise_npm_tools="yarn pnpm prettier diff-so-fancy serve browser-sync neovim typescript typescript-language-server intelephense pyright @antfu/ni"
+          for version in $(fnm list 2>/dev/null | grep -o 'v[0-9]*\.[0-9]*\.[0-9]*'); do
+            for pkg in $mise_npm_tools; do
+              if fnm exec --using "$version" -- npm ls -g "$pkg" --depth=0 >/dev/null 2>&1; then
+                echo "  ⚠️  fnm ($version): $pkg → now managed by mise"
+                echo "     Run: fnm exec --using $version -- npm uninstall -g $pkg"
+                found_duplicates=true
+              fi
+            done
+          done
+        fi
+
+        # ── System/other installations ────────────────────────────────────────
+        mise_binaries="go deno bun shellcheck stylua shfmt yamllint"
+        for bin in $mise_binaries; do
+          bin_path=$(command -v "$bin" 2>/dev/null) || continue
+          case "$bin_path" in
+            */mise/shims/*|*/mise/installs/*) continue ;;  # mise-managed, OK
+          esac
+          echo "  ⚠️  system: $bin at $bin_path → now managed by mise"
+          found_duplicates=true
+        done
+
+        echo ""
+        if $found_duplicates; then
+          echo "📋 Remove the duplicates above so mise is the single source of truth."
+          echo "   After removing, run: hash -r  (to refresh shell path cache)"
+        else
+          echo "✓ No duplicates found — mise is the single source of truth."
+        fi
