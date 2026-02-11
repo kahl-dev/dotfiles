@@ -9,20 +9,6 @@ export DOTFILES="$HOME/.dotfiles"
 
 source $DOTFILES/zsh/utils.zsh
 
-typeset -U path
-path=(
-  "$ZINIT_ROOT/polaris/bin"
-  "$DOTFILES/bin"
-  ${(s.:.)PATH}  # This expands the current PATH into an array in Zsh
-)
-
-# Re-export the PATH from the path array
-export PATH="${(j.:.)path}"
-
-! command_exists git-lia && file_exists "$DOTFILES/bin/git-lia/git-lia" && path+=("$DOTFILES/bin/git-lia/git-lia")
-
-path_exists "$DOTFILES/bin/nvim/bin/" && path+=("$DOTFILES/bin/nvim/bin")
-
 # Set ZDOTDIR to point to the .dotfiles zsh directory
 export ZDOTDIR="$DOTFILES/zsh"
 
@@ -31,14 +17,31 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
 
+# Set the directory to store zinit and plugins
+export ZINIT_ROOT="${XDG_DATA_HOME}/zinit"
+export ZINIT_HOME="${ZINIT_ROOT}/zinit.git"
+
 # Universal environment variables
 export HISTSIZE=10000
 export HISTFILE="$ZDOTDIR/.zsh_history"
 export SAVEHIST=$HISTSIZE
 
-# Set the directory to store zinit and plugins
-export ZINIT_ROOT="${XDG_DATA_HOME}/zinit"
-export ZINIT_HOME="${ZINIT_ROOT}/zinit.git"
+# ── PATH (ZINIT_ROOT must be set before this block) ──────────────────────────
+typeset -U path
+path=(
+  "$DOTFILES/bin"
+  ${(s.:.)PATH}  # This expands the current PATH into an array in Zsh
+)
+
+# Prepend zinit polaris/bin if it exists (not present on all systems)
+[[ -d "$ZINIT_ROOT/polaris/bin" ]] && path=("$ZINIT_ROOT/polaris/bin" "${path[@]}")
+
+# Re-export the PATH from the path array
+export PATH="${(j.:.)path}"
+
+! command_exists git-lia && file_exists "$DOTFILES/bin/git-lia/git-lia" && path+=("$DOTFILES/bin/git-lia/git-lia")
+
+path_exists "$DOTFILES/bin/nvim/bin/" && path+=("$DOTFILES/bin/nvim/bin")
 
 # Optional: Source .zprofile in non-login shells
 # if [[ ( "$SHLVL" -eq 1 && ! -o LOGIN ) && -s ${ZDOTDIR:-~}/.zprofile ]]; then

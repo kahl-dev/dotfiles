@@ -75,10 +75,11 @@ _dot_doctor() {
 
 # ── Helper: portable file permissions (macOS vs Linux stat) ──────────────────
 _dot_stat_perms() {
+  # Use 'command' to bypass zsh/stat builtin which has different syntax
   if is_macos; then
-    stat -f %Lp "$1" 2>/dev/null
+    command stat -f %Lp "$1" 2>/dev/null
   else
-    stat -c %a "$1" 2>/dev/null
+    command stat -c %a "$1" 2>/dev/null
   fi
 }
 
@@ -145,7 +146,7 @@ _dot_doctor_shell_startup_time() {
   local elapsed
   elapsed=$(perl -MTime::HiRes=time -e '
     my $start = time();
-    system("zsh", "-i", "-c", "exit");
+    system("zsh -i -c exit >/dev/null 2>&1");
     printf "%.0f\n", (time() - $start) * 1000;
   ' 2>/dev/null)
 
@@ -392,7 +393,9 @@ _dot_doctor_ssh_permissions() {
   # Check directory permissions
   local dir_perms
   dir_perms=$(_dot_stat_perms "$ssh_dir")
-  if [[ "$dir_perms" != "700" ]]; then
+  if [[ -z "$dir_perms" ]]; then
+    bad_perms+=("~/.ssh/ permissions unreadable (should be 700)")
+  elif [[ "$dir_perms" != "700" ]]; then
     bad_perms+=("~/.ssh/ is $dir_perms (should be 700)")
   fi
 
