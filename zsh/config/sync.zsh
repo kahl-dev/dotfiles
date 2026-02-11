@@ -34,8 +34,13 @@ _dot_sync() {
     return 1
   fi
 
-  # Detect and run install-profile
-  local profile="macos"
+  # Detect and run install-profile (OS-aware)
+  local profile
+  if [[ "$(uname)" == "Darwin" ]]; then
+    profile="macos"
+  else
+    profile="linux"
+  fi
   if [[ -f "$DOTFILES/meta/recipes/$profile" ]]; then
     echo "Re-running install profile: $profile"
     "$DOTFILES/install-profile" "$profile"

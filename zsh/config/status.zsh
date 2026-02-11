@@ -44,18 +44,20 @@ _dot_status() {
     printf "  🔌 zinit        %s plugins loaded\n" "$plugin_count"
   fi
 
-  # Disk space
-  local free_gb
-  free_gb=$(df -g "$HOME" 2>/dev/null | awk 'NR==2 {print $4}')
+  # Disk space (df -k is POSIX portable, convert to GB)
+  local free_kb free_gb
+  free_kb=$(df -k "$HOME" 2>/dev/null | awk 'NR==2 {print $4}')
+  [[ -n "$free_kb" ]] && free_gb=$(( free_kb / 1048576 ))
   if [[ -n "$free_gb" ]]; then
     printf "  📊 Disk         %sGB free\n" "$free_gb"
   fi
 
-  # Reclaimable estimate (fast check of known cache dirs)
+  # Reclaimable estimate (fast check of known cache dirs, macOS + Linux paths)
   local reclaimable=0
   for dir in \
     "$HOME/Library/Caches/Homebrew" \
     "$HOME/Library/Caches/uv" \
+    "$HOME/.cache/Homebrew" \
     "$HOME/.cache/uv" \
     "$HOME/.cache/puppeteer" \
     "$HOME/.cache/pre-commit"; do

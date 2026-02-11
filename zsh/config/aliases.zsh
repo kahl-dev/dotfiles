@@ -1,5 +1,23 @@
 #!/usr/bin/env zsh
 
+# Portable clipboard: macOS pbcopy, Linux xclip/xsel/wl-copy, Remote Bridge rclip
+_clipboard_copy() {
+  if command_exists rclip; then
+    rclip
+  elif [[ "$(uname)" == "Darwin" ]]; then
+    pbcopy
+  elif command_exists xclip; then
+    xclip -selection clipboard
+  elif command_exists xsel; then
+    xsel --clipboard --input
+  elif command_exists wl-copy; then
+    wl-copy
+  else
+    echo "(clipboard not available)" >&2
+    return 1
+  fi
+}
+
 _mkcd() {
   mkdir -p "$@" && cd "$_"
 }
@@ -302,7 +320,7 @@ _gjirab() {
   local ticket_id=$(echo "$branch_name" | grep -oE '[A-Z]+-[0-9]+' | head -n 1)
   if [[ -n "$ticket_id" ]]; then
     local jira_url="${JIRA_WORKSPACE}/browse/${ticket_id}"
-    echo "$jira_url" | pbcopy
+    echo "$jira_url" | _clipboard_copy
     echo "Copied: $jira_url"
   else
     echo "No JIRA ticket found in the branch name."
@@ -315,7 +333,7 @@ _gjirac() {
     local ticket_id=$(git log -1 --format=%B "$commit_hash" | grep -oE '([A-Z]+-[0-9]+)' | head -n 1)
     if [[ -n "$ticket_id" ]]; then
       local jira_url="${JIRA_WORKSPACE}/browse/${ticket_id}"
-      echo "$jira_url" | pbcopy
+      echo "$jira_url" | _clipboard_copy
       echo "Copied: $jira_url"
     else
       echo "No JIRA ticket found in the commit message."

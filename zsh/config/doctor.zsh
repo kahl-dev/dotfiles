@@ -71,6 +71,15 @@ _dot_doctor() {
   echo ""
 }
 
+# ── Helper: portable file permissions (macOS vs Linux stat) ──────────────────
+_dot_stat_perms() {
+  if [[ "$(uname)" == "Darwin" ]]; then
+    stat -f %Lp "$1" 2>/dev/null
+  else
+    stat -c %a "$1" 2>/dev/null
+  fi
+}
+
 # ── Helper: prompt or auto-fix ───────────────────────────────────────────────
 _dot_doctor_should_fix() {
   $fix || return 1
@@ -175,8 +184,10 @@ _dot_doctor_dotfiles_dirty() {
 
 # ── 12. Disk space ──────────────────────────────────────────────────────────
 _dot_doctor_disk_space() {
-  local free_gb
-  free_gb=$(df -g "$HOME" 2>/dev/null | awk 'NR==2 {print $4}')
+  # Use df -k (POSIX portable) and convert to GB
+  local free_kb free_gb
+  free_kb=$(df -k "$HOME" 2>/dev/null | awk 'NR==2 {print $4}')
+  [[ -n "$free_kb" ]] && free_gb=$(( free_kb / 1048576 ))
 
   if [[ -z "$free_gb" ]]; then
     echo "  ✓ Disk space: unable to check"
@@ -242,7 +253,9 @@ _dot_doctor_tmux_plugin_mismatch() {
 
 # ── 14. Brew cache size ─────────────────────────────────────────────────────
 _dot_doctor_brew_cache() {
+  # macOS: ~/Library/Caches/Homebrew, Linux: ~/.cache/Homebrew
   local cache_dir="$HOME/Library/Caches/Homebrew"
+  [[ -d "$cache_dir" ]] || cache_dir="$HOME/.cache/Homebrew"
   [[ -d "$cache_dir" ]] || return 0
 
   local size_bytes
@@ -375,7 +388,7 @@ _dot_doctor_ssh_permissions() {
 
   # Check directory permissions
   local dir_perms
-  dir_perms=$(stat -f %Lp "$ssh_dir" 2>/dev/null)
+  dir_perms=$(_dot_stat_perms "$ssh_dir")
   if [[ "$dir_perms" != "700" ]]; then
     bad_perms+=("~/.ssh/ is $dir_perms (should be 700)")
   fi
@@ -387,7 +400,7 @@ _dot_doctor_ssh_permissions() {
     # Skip public keys
     [[ "$key" == *.pub ]] && continue
     local key_perms
-    key_perms=$(stat -f %Lp "$key" 2>/dev/null)
+    key_perms=$(_dot_stat_perms "$key")
     if [[ "$key_perms" != "600" ]]; then
       bad_perms+=("${key/#$HOME/~} is $key_perms (should be 600)")
     fi

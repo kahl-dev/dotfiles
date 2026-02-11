@@ -92,9 +92,15 @@ _dot_clean_should_run() {
 # ── Categories ───────────────────────────────────────────────────────────────
 
 _dot_clean_brew() {
+  if ! command_exists brew; then
+    echo "  ✓ brew: not installed"
+    return
+  fi
+  # macOS: ~/Library/Caches/Homebrew, Linux: ~/.cache/Homebrew
   local cache_dir="$HOME/Library/Caches/Homebrew"
-  if [[ ! -d "$cache_dir" ]] || ! command_exists brew; then
-    echo "  ✓ brew: not applicable"
+  [[ -d "$cache_dir" ]] || cache_dir="$HOME/.cache/Homebrew"
+  if [[ ! -d "$cache_dir" ]]; then
+    echo "  ✓ brew: no cache"
     return
   fi
   local size=$(_dot_clean_dir_size "$cache_dir")
