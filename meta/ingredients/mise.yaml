@@ -12,6 +12,22 @@
     ~/.config/mise/config.toml: .config/mise/config.toml
 
 - shell:
+    - description: "Install mise if not present"
+      command: |
+        if command -v mise >/dev/null 2>&1; then
+          echo "✓ mise already installed"
+        else
+          echo "📦 Installing mise..."
+          curl -fsSL https://mise.run | sh
+          if [ -x "$HOME/.local/bin/mise" ]; then
+            export PATH="$HOME/.local/bin:$PATH"
+            echo "✓ mise installed"
+          else
+            echo "✗ mise installation failed" >&2
+            exit 1
+          fi
+        fi
+
     - description: "Install mise global tools"
       command: |
         if command -v mise >/dev/null 2>&1; then

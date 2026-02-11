@@ -2,6 +2,7 @@ base
 pi
 bat
 tmux
+mise
 fnm_build
 fzf_build
 lazygit_build
