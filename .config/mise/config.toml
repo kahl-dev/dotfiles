@@ -23,6 +23,7 @@ legacy_version_file = true
 # 🏗️ Runtimes & compilers
 go = "latest"
 bun = "latest"
+rust = "latest"
 
 # 🔍 Linters & formatters
 shellcheck = "latest"

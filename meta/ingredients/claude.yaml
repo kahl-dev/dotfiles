@@ -40,6 +40,7 @@
         # 🧹 Remove Claude Code from all fnm node versions
         FNM_DIR="$HOME/.local/share/fnm/node-versions"
         if [ -d "$FNM_DIR" ]; then
+          setopt NULL_GLOB 2>/dev/null || true
           for node_bin in "$FNM_DIR"/*/installation/bin/claude; do
             [ -e "$node_bin" ] || continue
             if [ -f "$node_bin" ]; then
@@ -86,18 +87,48 @@
           fi
         fi
 
-    - description: "Install or update RTK (Rust Token Killer) for Claude Code token optimization"
+    - description: "Clean up legacy RTK installations (brew/sudo/manual)"
       command: |
-        LATEST=$(curl -fsSL https://api.github.com/repos/rtk-ai/rtk/releases/latest | grep -o '"tag_name":"[^"]*"' | head -1 | cut -d'"' -f4)
-        CURRENT=$(rtk --version 2>/dev/null | grep -o '[0-9]*\.[0-9]*\.[0-9]*' || echo "none")
-        LATEST_VER=$(echo "$LATEST" | grep -o '[0-9]*\.[0-9]*\.[0-9]*')
+        CLEANED=false
+        if command -v brew >/dev/null 2>&1 && brew list rtk-ai/tap/rtk >/dev/null 2>&1; then
+          echo "🧹 Removing RTK from Homebrew..."
+          brew uninstall rtk-ai/tap/rtk
+          CLEANED=true
+        fi
+        if [ -f "/usr/local/bin/rtk" ]; then
+          echo "🧹 Removing legacy RTK from /usr/local/bin (requires sudo)..."
+          sudo rm -f /usr/local/bin/rtk
+          CLEANED=true
+        fi
+        if [ -f "$HOME/.local/bin/rtk" ]; then
+          echo "🧹 Removing legacy RTK from ~/.local/bin..."
+          rm -f "$HOME/.local/bin/rtk"
+          CLEANED=true
+        fi
+        if [ "$CLEANED" = true ]; then
+          echo "✓ Legacy RTK installations removed"
+        else
+          echo "✓ No legacy RTK installations found"
+        fi
 
-        if [ "$CURRENT" = "$LATEST_VER" ]; then
+    - description: "Install or update RTK (Rust Token Killer) via cargo"
+      command: |
+        eval "$(mise env -s bash rust)" 2>/dev/null
+
+        if ! command -v cargo >/dev/null 2>&1; then
+          echo "⚠️  Rust/cargo not available (add rust to mise config), skipping RTK"
+          exit 0
+        fi
+
+        LATEST=$(curl -fsSL https://api.github.com/repos/rtk-ai/rtk/releases/latest | grep -o '"tag_name": *"[^"]*"' | head -1 | sed 's/.*"tag_name": *"//;s/"//;s/^v//')
+        CURRENT=$(rtk --version 2>/dev/null | grep -o '[0-9]*\.[0-9]*\.[0-9]*' || echo "none")
+
+        if [ "$CURRENT" = "$LATEST" ]; then
           echo "✓ RTK already up to date ($CURRENT)"
         else
-          echo "📦 Installing RTK $LATEST_VER (current: $CURRENT)..."
-          curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
-          echo "✓ RTK installed ($LATEST_VER)"
+          echo "📦 Building RTK $LATEST from source (current: $CURRENT)..."
+          cargo install --git https://github.com/rtk-ai/rtk --quiet
+          echo "✓ RTK installed ($(rtk --version 2>/dev/null))"
         fi
 
     - description: "Create AI workspace directories for Claude"
