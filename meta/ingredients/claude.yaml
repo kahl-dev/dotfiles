@@ -41,6 +41,7 @@
         FNM_DIR="$HOME/.local/share/fnm/node-versions"
         if [ -d "$FNM_DIR" ]; then
           for node_bin in "$FNM_DIR"/*/installation/bin/claude; do
+            [ -e "$node_bin" ] || continue
             if [ -f "$node_bin" ]; then
               NODE_DIR="$(dirname "$node_bin")"
               NPM="$NODE_DIR/npm"
@@ -83,6 +84,20 @@
             echo "❌ ERROR: Claude Code CLI installation failed"
             exit 1
           fi
+        fi
+
+    - description: "Install or update RTK (Rust Token Killer) for Claude Code token optimization"
+      command: |
+        LATEST=$(curl -fsSL https://api.github.com/repos/rtk-ai/rtk/releases/latest | grep -o '"tag_name":"[^"]*"' | head -1 | cut -d'"' -f4)
+        CURRENT=$(rtk --version 2>/dev/null | grep -o '[0-9]*\.[0-9]*\.[0-9]*' || echo "none")
+        LATEST_VER=$(echo "$LATEST" | grep -o '[0-9]*\.[0-9]*\.[0-9]*')
+
+        if [ "$CURRENT" = "$LATEST_VER" ]; then
+          echo "✓ RTK already up to date ($CURRENT)"
+        else
+          echo "📦 Installing RTK $LATEST_VER (current: $CURRENT)..."
+          curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
+          echo "✓ RTK installed ($LATEST_VER)"
         fi
 
     - description: "Create AI workspace directories for Claude"
