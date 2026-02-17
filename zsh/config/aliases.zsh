@@ -428,7 +428,7 @@ alias gjirab="_gjirab"
 alias gjirac="_gjirac"
 
 # Claude Code headless commit via lia-git-tools:commit skill
-alias ccommit='claude --dangerously-skip-permissions -p "/commit"'
+alias ccommit='claude -p "/lia-git-tools:commit"'
 
 # ############################## #
 # macOS Specific Aliases
