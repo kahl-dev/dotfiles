@@ -31,3 +31,6 @@ stylua = "latest"
 shfmt = "latest"
 "pipx:yamllint" = "latest"
 "npm:playwright" = "latest"
+
+# 🌐 Browser automation
+"npm:@playwright/cli" = "latest"
