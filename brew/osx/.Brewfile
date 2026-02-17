@@ -14,6 +14,10 @@ tap "supabase/tap"
 tap "waydabber/betterdisplay"
 # Processes triangulated solid meshes
 brew "admesh"
+# Open-source, cross-platform JavaScript runtime environment
+brew "node"
+# Browser automation CLI for AI agents
+brew "agent-browser"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
 # Programmable completion for Bash 3.2
@@ -22,8 +26,6 @@ brew "bash-completion"
 brew "bat"
 # Get/set bluetooth power and discoverable state
 brew "blueutil"
-# Open-source, cross-platform JavaScript runtime environment
-brew "node"
 # CLI of the open-source IDE For exploring and testing APIs
 brew "bruno-cli"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
@@ -39,7 +41,7 @@ brew "krb5"
 # C library for reading, creating, and modifying zip archives
 brew "libzip"
 # General-purpose scripting language
-brew "php", restart_service: :changed
+brew "php"
 # Dependency Manager for PHP
 brew "composer"
 # CLI tool for Amazon ECS and AWS Fargate
@@ -52,22 +54,14 @@ brew "docker-debug"
 brew "eza"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
-# OpenType text shaping engine
-brew "harfbuzz"
-# Subtitle renderer for the ASS/SSA subtitle format
-brew "libass"
-# Light HTTP/1.1 server library
-brew "libmicrohttpd"
-# Framework for layout and rendering of i18n text
-brew "pango"
-# OCR (Optical Character Recognition) engine
-brew "tesseract"
-# Play, record, convert, and stream audio and video
+# Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
 # Fast and simple Node.js version manager
 brew "fnm"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# Interact with Google Gemini AI models from the command-line
+brew "gemini-cli"
 # GitHub command-line tool
 brew "gh"
 # Distributed revision control system
@@ -80,9 +74,10 @@ brew "git-delta"
 brew "git-extras"
 # Render markdown on the CLI
 brew "glow"
-# GNU Pretty Good Privacy (PGP) package
+# GNU Privacy Guard (OpenPGP)
 brew "gnupg"
-# go: managed by mise
+# OpenType text shaping engine
+brew "harfbuzz"
 # Improved top (interactive process viewer)
 brew "htop"
 # User-friendly cURL replacement (command-line HTTP client)
@@ -93,16 +88,26 @@ brew "jq"
 brew "lazygit"
 # Pager program similar to more
 brew "less"
+# Subtitle renderer for the ASS/SSA subtitle format
+brew "libass"
+# Light HTTP/1.1 server library
+brew "libmicrohttpd"
 # LSP for LanguageTool with support for Latex, Markdown and Others
 brew "ltex-ls"
+# Language Server for the Lua language
+brew "lua-language-server"
 # Package manager for the Lua programming language
 brew "luarocks"
+# Python cleanup script for macOS
+brew "mac-cleanup-py"
 # Keep your Mac's application settings in sync
 brew "mackup"
 # Mac App Store command-line interface
 brew "mas"
 # Unified display of technical and tag data for audio/video
 brew "media-info"
+# Polyglot runtime manager (asdf rust clone)
+brew "mise"
 # Simple tool to make locally trusted development certificates
 brew "mkcert"
 # Feature-rich command-line audio/video downloader
@@ -113,43 +118,56 @@ brew "mpv"
 brew "ncdu"
 # Fast, highly customisable system info script
 brew "neofetch"
-# Incremental parsing library
-brew "tree-sitter"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Libraries for security-enabled client and server applications
 brew "nss"
+# Create, run, and share large language models (LLMs)
+brew "ollama"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# AI coding agent, built for the terminal
+brew "opencode"
 # Swiss-army knife of markup format conversion
 brew "pandoc"
+# Framework for layout and rendering of i18n text
+brew "pango"
 # Shell command parallelization utility
 brew "parallel"
-# pipx: managed by mise
+# Execute binaries from Python packages in isolated environments
+brew "pipx"
 # Paste PNG into files
 brew "pngpaste"
-# pnpm: managed by mise
+# Fast, disk space efficient package manager
+brew "pnpm"
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler"
 # Object-relational database system
 brew "postgresql@15", restart_service: :changed, link: true
 # Nicer 'git pull'
 brew "pygitup"
-# python: managed by mise
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.11"
 # Reattach process (e.g., tmux) to background
 brew "reattach-to-user-namespace"
-# Search tool like grep and The Silver Searcher
-brew "ripgrep"
 # Safe, concurrent, practical language
 brew "rust"
 # Intuitive find & replace CLI
 brew "sd"
-# shellcheck: managed by mise
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
 # SOund eXchange: universal sound sample translator
 brew "sox"
 # Cross-shell prompt for astronauts
 brew "starship"
-# stylua: managed by mise
+# Opinionated Lua code formatter
+brew "stylua"
 # Change macOS audio source from the command-line
 brew "switchaudio-osx"
 # Send macOS User Notifications from the command-line
 brew "terminal-notifier"
+# OCR (Optical Character Recognition) engine
+brew "tesseract"
 # Enables extra languages support for Tesseract
 brew "tesseract-lang"
 # Programmatically correct mistyped console commands
@@ -160,11 +178,16 @@ brew "tmux"
 brew "tmuxinator"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Incremental parsing library
+brew "tree-sitter"
 # Command-line unarchiving tools supporting multiple formats
 brew "unar"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
 # Internet file retriever
 brew "wget"
-# yamllint: managed by mise
+# Linter for YAML files
+brew "yamllint"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
 # Shell extension to navigate your filesystem faster
@@ -188,7 +211,7 @@ cask "1password"
 # Command-line interface for 1Password
 cask "1password-cli"
 # AeroSpace is an i3-like tiling window manager for macOS
-cask "aerospace"
+cask "nikitabobko/tap/aerospace"
 # Menu bar tool to limit maximum charging percentage
 cask "aldente"
 # Application launcher and productivity software
@@ -209,16 +232,12 @@ cask "blender"
 cask "bruno"
 # Anthropic's official Claude AI desktop app
 cask "claude"
-# Write, edit, and chat about your code with AI
-cask "cursor"
+# OpenAI's coding agent that runs in your terminal
+cask "codex"
 # Voice and text chat software
 cask "discord"
-# App to build and share containerised applications and microservices
-cask "docker-desktop"
 # Assign keys, and then decorate and label them
 cask "elgato-stream-deck"
-# Software custom-built for content creation
-cask "elgato-wave-link"
 # Utility for customizing which browser to start
 cask "finicky"
 # Web browser
@@ -234,6 +253,8 @@ cask "google-chrome"
 cask "google-drive"
 # Desktop automation application
 cask "hammerspoon"
+# AI-powered speech-to-text transcription
+cask "hyperwhisper"
 # System monitoring app
 cask "istat-menus"
 # Keyboard customiser
@@ -252,6 +273,8 @@ cask "mission-control-plus"
 cask "ngrok"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
+# Replacement for Docker Desktop
+cask "orbstack"
 # Control your tools with a few keystrokes
 cask "raycast"
 # Email client
@@ -276,7 +299,6 @@ mas "Amphetamine", id: 937984704
 mas "AusweisApp", id: 948660805
 mas "ControllerForHomeKit", id: 1198176727
 mas "Home Assistant", id: 1099568401
-mas "iMovie", id: 408981434
 mas "Keka", id: 470158793
 mas "Keynote", id: 409183694
 mas "LanguageTool", id: 1534275760
@@ -287,6 +309,7 @@ mas "Pages", id: 409201541
 mas "PerformanceTest", id: 1560051043
 mas "Raycast Companion", id: 6738274497
 mas "Reeder", id: 1529448980
+mas "Spokenly", id: 6740315592
 mas "Tampermonkey Classic", id: 1482490089
 mas "TNEF's Enough", id: 986621173
 mas "Toggl Track", id: 1291898086
@@ -341,4 +364,6 @@ vscode "vscjava.vscode-java-pack"
 vscode "vscjava.vscode-java-test"
 vscode "vscjava.vscode-maven"
 vscode "vue.volar"
-go "github.com/jesseduffield/lazygit"
+go "cmd/go"
+go "cmd/gofmt"
+cargo "kanata"
