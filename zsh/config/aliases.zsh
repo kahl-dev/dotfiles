@@ -427,8 +427,8 @@ unset git_version
 alias gjirab="_gjirab"
 alias gjirac="_gjirac"
 
-# Claude Code commit helper
-alias gcommit='claude -p "/commit"'
+# Claude Code headless commit via lia-git-tools:commit skill
+alias ccommit='claude --dangerously-skip-permissions -p "/commit"'
 
 # ############################## #
 # macOS Specific Aliases
@@ -585,8 +585,9 @@ alias mcc='make clearcache'
 
 # Claude aliases
 alias cc='claude -c'
+alias ccy='claude -c --dangerously-skip-permissions'
+alias cy='claude --dangerously-skip-permissions'
 alias ccu='npx ccusage'
-alias cyolo='claude --dangerously-skip-permissions'  # Sandbox auto-enabled via settings.json
 
 # ############################## #
 # Dotfiles
