@@ -497,6 +497,7 @@ _dot() {
           'logs:Clean old logs'
           'caches:Clean misc caches'
           'claude:Clean old CLI versions'
+          'claude-plugins:Remove all Claude plugins, cache, and enabledPlugins'
           'home:Clean stray ZSH files'
           'all:Clean everything'
           '--dry-run:Show reclaimable space only'

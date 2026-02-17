@@ -51,6 +51,7 @@ _dot_clean_all_categories() {
   echo logs
   echo caches
   echo claude
+  echo claude-plugins
   echo home
   echo yarn
   echo playwright
@@ -334,6 +335,81 @@ _dot_clean_claude() {
       find "$debug_logs" -type f -mtime +30 -delete 2>/dev/null
       echo "     cleaned debug logs >30d"
     fi
+  fi
+}
+
+_dot_clean_claude-plugins() {
+  local total_size=0
+  local plugins_dir="$HOME/.claude/plugins"
+  local settings_file="$HOME/repos/claude-config/settings.json"
+
+  # 📦 Plugin cache
+  local cache_dir="$plugins_dir/cache"
+  if [[ -d "$cache_dir" ]]; then
+    (( total_size += $(_dot_clean_dir_size "$cache_dir") ))
+  fi
+
+  # 📋 Plugin registry
+  local registry="$plugins_dir/installed_plugins.json"
+  if [[ -f "$registry" ]]; then
+    local registry_plugins
+    registry_plugins=$(jq -r '.plugins | keys | length' "$registry" 2>/dev/null)
+    (( registry_plugins > 0 )) || registry_plugins=0
+  fi
+
+  # 🔧 enabledPlugins in settings.json
+  local settings_plugins=0
+  if [[ -f "$settings_file" ]]; then
+    settings_plugins=$(jq -r '.enabledPlugins | keys | length' "$settings_file" 2>/dev/null)
+    (( settings_plugins > 0 )) || settings_plugins=0
+  fi
+
+  if (( total_size == 0 )) && (( registry_plugins == 0 )) && (( settings_plugins == 0 )); then
+    echo "  ✓ claude-plugins: clean"
+    return
+  fi
+
+  local display=$(_dot_clean_format_size "$total_size")
+  echo ""
+  echo "  🧹 claude-plugins ($display)"
+  echo "     cache: ${display}"
+  echo "     registry: ${registry_plugins:-0} plugin(s)"
+  echo "     settings.json: ${settings_plugins:-0} enabledPlugin(s)"
+
+  if $dry_run; then
+    echo "     [dry-run] Would clean"
+    return
+  fi
+
+  if $auto_yes || _dot_ask "     Remove all plugins, cache, and enabledPlugins from settings.json?"; then
+    # 🗑️ Clear plugin cache
+    if [[ -d "$cache_dir" ]]; then
+      rm -rf "$cache_dir"
+      echo "     removed plugin cache"
+    fi
+
+    # 🗑️ Reset plugin registry
+    if [[ -f "$registry" ]]; then
+      echo '{"version":2,"plugins":{}}' > "$registry"
+      echo "     reset installed_plugins.json"
+    fi
+
+    # 🗑️ Reset install counts
+    local counts="$plugins_dir/install-counts-cache.json"
+    if [[ -f "$counts" ]]; then
+      echo '{}' > "$counts"
+      echo "     reset install-counts-cache.json"
+    fi
+
+    # 🗑️ Remove enabledPlugins from settings.json
+    if (( settings_plugins > 0 )) && [[ -f "$settings_file" ]]; then
+      local tmp_settings
+      tmp_settings=$(jq 'del(.enabledPlugins)' "$settings_file")
+      echo "$tmp_settings" > "$settings_file"
+      echo "     removed enabledPlugins from settings.json"
+    fi
+
+    echo "     ⚠️  Restart Claude Code for changes to take effect"
   fi
 }
 
