@@ -4,26 +4,9 @@
 
 set -euo pipefail
 
-# Cache file for performance - use stable path
-readonly CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}"
-readonly CACHE_FILE="$CACHE_DIR/tmux-host-icon"
-readonly CACHE_DURATION=3600  # 1 hour - host doesn't change often
-
-# Ensure cache directory exists
-mkdir -p "$CACHE_DIR"
-
-# Check cache (cross-platform stat)
-if [[ -f "$CACHE_FILE" ]]; then
-  if [[ "$(uname)" == "Darwin" ]]; then
-    file_mtime=$(stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0)
-  else
-    file_mtime=$(stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0)
-  fi
-  if [[ $(($(date +%s) - file_mtime)) -lt $CACHE_DURATION ]]; then
-    cat "$CACHE_FILE"
-    exit 0
-  fi
-fi
+source "$(dirname "$0")/cache-lib.sh"
+CACHE_FILE="$CACHE_DIR/tmux-host-icon"
+check_cache "$CACHE_FILE" 3600 && exit 0
 
 # Detect OS and return Nerd Font icon
 get_host_icon() {
@@ -63,9 +46,5 @@ get_host_icon() {
   esac
 }
 
-# Get the icon
 icon=$(get_host_icon)
-
-# Cache the result
-echo "$icon" > "$CACHE_FILE"
-echo "$icon"
+write_cache "$CACHE_FILE" "$icon"

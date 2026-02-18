@@ -4,26 +4,9 @@
 
 set -euo pipefail
 
-# Cache file for performance
-readonly CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}"
-readonly CACHE_FILE="$CACHE_DIR/tmux-disk"
-readonly CACHE_DURATION=30
-
-# Ensure cache directory exists
-mkdir -p "$CACHE_DIR"
-
-# Check cache freshness (cross-platform stat)
-if [[ -f "$CACHE_FILE" ]]; then
-  if [[ "$(uname)" == "Darwin" ]]; then
-    file_mtime=$(stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0)
-  else
-    file_mtime=$(stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0)
-  fi
-  if [[ $(($(date +%s) - file_mtime)) -lt $CACHE_DURATION ]]; then
-    cat "$CACHE_FILE"
-    exit 0
-  fi
-fi
+source "$(dirname "$0")/cache-lib.sh"
+CACHE_FILE="$CACHE_DIR/tmux-disk"
+check_cache "$CACHE_FILE" 30 && exit 0
 
 # Get main partition usage (works on macOS + Linux)
 # macOS APFS: / is a read-only snapshot, actual data is on /System/Volumes/Data
@@ -39,8 +22,4 @@ if ! [[ "$disk_pct" =~ ^[0-9]+$ ]]; then
   disk_pct=0
 fi
 
-result="${disk_pct}"
-
-# Cache the result
-echo "$result" > "$CACHE_FILE"
-echo "$result"
+write_cache "$CACHE_FILE" "$disk_pct"

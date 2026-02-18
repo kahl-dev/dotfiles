@@ -1,29 +1,12 @@
 #!/usr/bin/env bash
 # Lightweight uptime monitor for custom tmux status bar
-# Returns compact uptime: "3d" or "5h" or "12m"
+# Returns compact uptime: "3d5h" or "5h12m" or "12m"
 
 set -euo pipefail
 
-# Cache file for performance
-readonly CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}"
-readonly CACHE_FILE="$CACHE_DIR/tmux-uptime"
-readonly CACHE_DURATION=60
-
-# Ensure cache directory exists
-mkdir -p "$CACHE_DIR"
-
-# Check cache freshness (cross-platform stat)
-if [[ -f "$CACHE_FILE" ]]; then
-  if [[ "$(uname)" == "Darwin" ]]; then
-    file_mtime=$(stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0)
-  else
-    file_mtime=$(stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0)
-  fi
-  if [[ $(($(date +%s) - file_mtime)) -lt $CACHE_DURATION ]]; then
-    cat "$CACHE_FILE"
-    exit 0
-  fi
-fi
+source "$(dirname "$0")/cache-lib.sh"
+CACHE_FILE="$CACHE_DIR/tmux-uptime"
+check_cache "$CACHE_FILE" 60 && exit 0
 
 # Get uptime in seconds (cross-platform)
 if [[ "$(uname)" == "Darwin" ]]; then
@@ -51,6 +34,4 @@ else
   result="${minutes}m"
 fi
 
-# Cache the result
-echo "$result" > "$CACHE_FILE"
-echo "$result"
+write_cache "$CACHE_FILE" "$result"

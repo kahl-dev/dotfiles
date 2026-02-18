@@ -14,27 +14,9 @@ if command -v tmux >/dev/null 2>&1; then
 fi
 [[ "$show_usage" != "on" ]] && exit 0
 
-# Cache configuration
-readonly CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}"
-readonly CACHE_FILE="$CACHE_DIR/tmux-claude-usage"
-readonly CACHE_DURATION=60
-
-# Ensure cache directory exists
-mkdir -p "$CACHE_DIR"
-
-# Check cache freshness (cross-platform stat)
-if [[ -f "$CACHE_FILE" ]]; then
-  if [[ "$(uname)" == "Darwin" ]]; then
-    file_mtime=$(stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0)
-  else
-    file_mtime=$(stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0)
-  fi
-  cache_age=$(( $(date +%s) - file_mtime ))
-  if [[ $cache_age -lt $CACHE_DURATION ]]; then
-    cat "$CACHE_FILE"
-    exit 0
-  fi
-fi
+source "$(dirname "$0")/cache-lib.sh"
+CACHE_FILE="$CACHE_DIR/tmux-claude-usage"
+check_cache "$CACHE_FILE" 60 && exit 0
 
 # Require jq
 command -v jq >/dev/null 2>&1 || exit 0
@@ -91,27 +73,29 @@ seconds_left=$((reset_epoch - now_epoch))
 
 # Window has reset or is resetting — cache empty to avoid repeated API calls
 if [[ $seconds_left -le 0 ]]; then
-  echo "" > "$CACHE_FILE"
+  write_cache "$CACHE_FILE" "" > /dev/null
   exit 0
 fi
 
 # Days left (ceiling: partial day counts as 1)
 days_left=$(( (seconds_left + 86399) / 86400 ))
 
-# Count workdays (Mon-Fri) in remaining days
+# Count workdays (Mon-Fri) with pure arithmetic (zero additional forks)
+# Get current day of week once (1=Mon ... 7=Sun)
+if [[ "$(uname)" == "Darwin" ]]; then
+  start_dow=$(date -j -f "%s" "$now_epoch" +%u 2>/dev/null) || start_dow=1
+else
+  start_dow=$(date -d "@$now_epoch" +%u 2>/dev/null) || start_dow=1
+fi
+
 workdays_left=0
-for (( day_offset=0; day_offset<days_left; day_offset++ )); do
-  future_epoch=$((now_epoch + day_offset * 86400))
-  if [[ "$(uname)" == "Darwin" ]]; then
-    day_of_week=$(date -j -f "%s" "$future_epoch" +%u 2>/dev/null) || continue
-  else
-    day_of_week=$(date -d "@$future_epoch" +%u 2>/dev/null) || continue
-  fi
-  # %u: 1=Mon ... 5=Fri, 6=Sat, 7=Sun
-  [[ $day_of_week -le 5 ]] && workdays_left=$((workdays_left + 1))
+for (( i=0; i<days_left; i++ )); do
+  dow=$(( (start_dow + i - 1) % 7 + 1 ))
+  [[ $dow -le 5 ]] && workdays_left=$((workdays_left + 1))
 done
 
 # Calculate daily budget: remaining% / days_left
+[[ $days_left -gt 0 ]] || exit 0
 remaining_pct=$((100 - seven_day_pct))
 [[ $remaining_pct -lt 0 ]] && remaining_pct=0
 daily_budget=$((remaining_pct / days_left))
@@ -127,6 +111,4 @@ fi
 
 result="${five_hour_pct}|${seven_day_pct}|${daily_budget}|${days_left}|${workdays_left}|${pace}"
 
-# Cache and output
-echo "$result" > "$CACHE_FILE"
-echo "$result"
+write_cache "$CACHE_FILE" "$result"

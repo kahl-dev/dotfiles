@@ -9,16 +9,16 @@ set -euo pipefail
 width="${1:-200}"
 [[ "$width" =~ ^[0-9]+$ ]] || width=200
 
-# Catppuccin Mocha colors
-readonly BG="#1e1e2e"
-readonly TEXT="#cdd6f4"
-readonly BLUE="#89b4fa"
-readonly GREEN="#a6e3a1"
-readonly YELLOW="#f9e2af"
-readonly RED="#f38ba8"
-readonly PEACH="#fab387"
-readonly DIM="#6c7086"
-readonly SURFACE="#313244"
+# Catppuccin Mocha colors (from TMUX_* env vars with fallbacks)
+readonly BG="${TMUX_BG:-#1e1e2e}"
+readonly TEXT="${TMUX_TEXT:-#cdd6f4}"
+readonly BLUE="${TMUX_BLUE:-#89b4fa}"
+readonly GREEN="${TMUX_GREEN:-#a6e3a1}"
+readonly YELLOW="${TMUX_YELLOW:-#f9e2af}"
+readonly RED="${TMUX_RED:-#f38ba8}"
+readonly PEACH="${TMUX_PEACH:-#fab387}"
+readonly DIM="${TMUX_DIM:-#6c7086}"
+readonly SURFACE="${TMUX_SURFACE:-#313244}"
 
 # Helper: color by threshold (blue <50, peach 50-79, red 80+)
 color_by_threshold() {

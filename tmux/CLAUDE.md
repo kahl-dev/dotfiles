@@ -19,19 +19,18 @@ tmux/
 ├── plugins/               # TPM-managed plugins
 ├── resurrect/             # Session save files (tmux-resurrect)
 └── scripts/
-    ├── status-line-main.sh    # 🔑 Main renderer — assembles all segments
-    ├── cpu-simple.sh          # CPU usage % (bare integer)
-    ├── mem-simple.sh          # RAM usage % (bare integer)
-    ├── disk-simple.sh         # Disk usage % (bare integer)
-    ├── uptime-simple.sh       # Compact uptime (18d0h, 5h32m, 12m)
-    ├── claude-usage.sh        # Claude Code OAuth quota (5h|7d|budget|pace)
-    ├── host-icon.sh           # OS-specific Nerd Font icon
-    ├── hostname-display.sh    # Machine name (empty on primary Mac)
-    ├── lit-info-urls.sh       # TYPO3 project URL opener (Prefix+U)
-    ├── tmux-cheatsheet.sh     # Renders cheatsheet.md via glow
-    ├── tmux-cheatsheet-search.sh  # fzf keybinding search
-    ├── mem_check.sh           # ⚠️ DEAD — replaced by mem-simple.sh
-    └── tmux_mem.sh            # ⚠️ DEAD — replaced by mem-simple.sh
+    ├── cache-lib.sh               # 🔧 Shared cache utilities (sourced by all metric scripts)
+    ├── status-line-main.sh        # 🔑 Main renderer — assembles all segments
+    ├── cpu-simple.sh              # CPU usage % (bare integer)
+    ├── mem-simple.sh              # RAM usage % (bare integer)
+    ├── disk-simple.sh             # Disk usage % (bare integer)
+    ├── uptime-simple.sh           # Compact uptime (18d0h, 5h32m, 12m)
+    ├── claude-usage.sh            # Claude Code OAuth quota (5h|7d|budget|pace)
+    ├── host-icon.sh               # OS-specific Nerd Font icon
+    ├── hostname-display.sh        # Machine name (empty on primary Mac)
+    ├── lit-info-urls.sh           # TYPO3 project URL opener (Prefix+U)
+    ├── tmux-cheatsheet.sh         # Renders cheatsheet.md via glow
+    └── tmux-cheatsheet-search.sh  # fzf keybinding search
 ```
 
 ## 🎨 Visual Conventions
@@ -62,7 +61,7 @@ GREEN="#a6e3a1"    YELLOW="#f9e2af"   RED="#f38ba8"
 PEACH="#fab387"    DIM="#6c7086"      SURFACE="#313244"
 ```
 
-Colors are also exported as `TMUX_*` environment variables in `custom-status.conf` for use by scripts and panes.
+Colors are exported as `TMUX_*` environment variables in `custom-status.conf`. Scripts read these via `${TMUX_*:-fallback}` — env vars are the single source of truth inside tmux, fallbacks enable standalone testing.
 
 ### Color Thresholds
 
@@ -190,36 +189,35 @@ Auto-detected via `if-shell 'test -n "$SSH_CLIENT"'` → loads `tmux.remote.conf
 - Status bar moves to **bottom** (top on local)
 - OSC52 clipboard enabled (`set -s set-clipboard on`)
 - SSH agent socket managed via symlink: `~/.ssh/ssh_auth_sock` → actual socket
-- Hooks refresh SSH agent on: session-created, client-attached, pane-focus-in
+- Hooks refresh SSH agent on: session-created, client-attached
 - Fallback: finds working socket in `/tmp/ssh-*/agent.*`
 
 ## 🔧 Script Pattern
 
-All status scripts follow the same structure:
+All status scripts source `cache-lib.sh` for shared cache utilities:
 
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
 
-# 1. Cache check (cross-platform stat — branch on uname, never fallback chain)
-if [[ "$(uname)" == "Darwin" ]]; then
-  file_mtime=$(stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0)
-else
-  file_mtime=$(stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0)
-fi
+# 1. Source shared cache library
+source "$(dirname "$0")/cache-lib.sh"
+CACHE_FILE="$CACHE_DIR/tmux-<name>"
+check_cache "$CACHE_FILE" <TTL> && exit 0
 
 # 2. Platform-specific data collection
 # 3. Integer validation before arithmetic
 [[ "$value" =~ ^[0-9]+$ ]] || value=0
 
 # 4. Cache and output bare value (caller formats)
-echo "$result" > "$CACHE_FILE"
-echo "$result"
+write_cache "$CACHE_FILE" "$result"
 ```
+
+`cache-lib.sh` provides: `CACHE_DIR` setup, `check_cache FILE TTL` (returns 0 on hit), `write_cache FILE VALUE`.
 
 **Rules:**
 - Output bare integers — `status-line-main.sh` adds `%`, icons, colors
-- Cross-platform: always branch on `uname`, never use fallback chains
+- Cross-platform: cache-lib handles `stat` branching on `uname`
 - Silent failure: any error → `exit 0` or fallback to `"0"` (segment vanishes gracefully)
 - Validate ALL values as integers before arithmetic (`[[ "$var" =~ ^[0-9]+$ ]]`)
 - Cache at `${XDG_CACHE_HOME:-$HOME/.cache}/tmux-<name>`
