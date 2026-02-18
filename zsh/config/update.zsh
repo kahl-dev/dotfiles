@@ -101,6 +101,7 @@ _dot_update_wizard() {
         else
           echo "Cleaning up..."
           brew cleanup -s
+          _dot_touch_update "brew-update"
           update_status[Homebrew]="updated"
         fi
       fi
@@ -123,26 +124,13 @@ _dot_update_wizard() {
     fi
   fi
 
-  # 7. App Store (macOS only)
-  if is_macos && command_exists mas; then
-    if $all_yes || _dot_ask "Update App Store apps?"; then
-      echo "Updating App Store..."
-      if mas upgrade; then
-        update_status[AppStore]="updated"
-      else
-        update_status[AppStore]="failed"
-      fi
-    else
-      update_status[AppStore]="skipped"
-    fi
-  fi
-
-  # 8. Tmux plugins
+  # 7. Tmux plugins
   local tpm_update="$DOTFILES/tmux/plugins/tpm/bin/update_plugins"
   if [[ -x "$tpm_update" ]]; then
     if $all_yes || _dot_ask "Update tmux plugins?"; then
       echo "Updating tmux plugins..."
       if "$tpm_update" all; then
+        _dot_touch_update "tpm-update"
         update_status[tmux]="updated"
       else
         update_status[tmux]="failed"
@@ -152,11 +140,12 @@ _dot_update_wizard() {
     fi
   fi
 
-  # 9. Mise tools
+  # 8. Mise tools
   if command_exists mise; then
     if $all_yes || _dot_ask "Upgrade mise tools?"; then
       echo "Upgrading mise tools..."
       if mise upgrade; then
+        _dot_touch_update "mise-update"
         update_status[mise]="updated"
       else
         update_status[mise]="failed"
@@ -166,11 +155,25 @@ _dot_update_wizard() {
     fi
   fi
 
+  # 9. Repo sync
+  if (( ${#DOT_REPOS} > 0 )); then
+    if $all_yes || _dot_ask "Sync registered repos?"; then
+      echo "Syncing repos..."
+      if _dot_repos "sync"; then
+        update_status[repos]="updated"
+      else
+        update_status[repos]="failed"
+      fi
+    else
+      update_status[repos]="skipped"
+    fi
+  fi
+
   # Summary
   echo ""
   echo "Update complete:"
   local key status icon
-  for key in zinit LazyVim Treesitter Mason Homebrew Brewfile AppStore tmux mise; do
+  for key in zinit LazyVim Treesitter Mason Homebrew Brewfile tmux mise repos; do
     status="${update_status[$key]:-}"
     [[ -z "$status" ]] && continue
     case "$status" in

@@ -7,18 +7,25 @@
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}"
 mkdir -p "$CACHE_DIR"
 
+# file_mtime FILE — returns epoch mtime, or 0 if missing
+file_mtime() {
+  local file="$1"
+  [[ -f "$file" ]] || { echo 0; return; }
+  if [[ "$(uname)" == "Darwin" ]]; then
+    stat -f %m "$file" 2>/dev/null || echo 0
+  else
+    stat -c %Y "$file" 2>/dev/null || echo 0
+  fi
+}
+
 # check_cache CACHE_FILE CACHE_DURATION
 # Returns 0 (hit) and prints cached value, or 1 (miss)
 check_cache() {
   local cache_file=$1 cache_duration=$2
   [[ -f "$cache_file" ]] || return 1
-  local file_mtime
-  if [[ "$(uname)" == "Darwin" ]]; then
-    file_mtime=$(stat -f %m "$cache_file" 2>/dev/null || echo 0)
-  else
-    file_mtime=$(stat -c %Y "$cache_file" 2>/dev/null || echo 0)
-  fi
-  if [[ $(( $(date +%s) - file_mtime )) -lt $cache_duration ]]; then
+  local file_mod
+  file_mod=$(file_mtime "$cache_file")
+  if [[ $(( $(date +%s) - file_mod )) -lt $cache_duration ]]; then
     cat "$cache_file"
     return 0
   fi

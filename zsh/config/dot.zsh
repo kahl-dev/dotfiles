@@ -42,6 +42,11 @@ DOT_COMMANDS=(
   "mise/install"      "Install mise global tools"
   "mise/upgrade"      "Upgrade all mise tools to latest"
   "mise/outdated"     "Show outdated mise tools"
+  "repos/status"      "Show repository sync status"
+  "repos/list"        "List registered repository paths"
+  "repos/pull"        "Pull all registered repos"
+  "repos/push"        "Push all repos with unpushed commits"
+  "repos/sync"        "Pull and push all repositories"
   "edit"              "Open dotfiles in editor"
   "color-test"        "Run terminal color test"
   "clean"             "Unified cache and temp cleanup"
@@ -79,6 +84,13 @@ _dot_validate_name() {
     echo "dot $context: invalid name '$name'" >&2
     return 1
   fi
+}
+
+_dot_touch_update() {
+  local category="$1"
+  local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}"
+  touch "${cache_dir}/dot-last-${category}"
+  rm -f "${cache_dir}/tmux-update-check"
 }
 
 # ── Main Function ─────────────────────────────────────────────────────────────
@@ -160,7 +172,7 @@ dot() {
       case "$subcommand" in
         update)
           echo "Updating Homebrew..."
-          brew update && brew upgrade && brew cleanup -s
+          brew update && brew upgrade && { brew cleanup -s; _dot_touch_update "brew-update"; }
           ;;
         dump)
           if [[ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ]]; then
@@ -240,7 +252,7 @@ dot() {
           ;;
         upgrade)
           echo "Upgrading mise tools..."
-          mise upgrade
+          mise upgrade && _dot_touch_update "mise-update"
           ;;
         outdated)
           mise outdated
@@ -248,6 +260,16 @@ dot() {
         *)
           _dot_subcmd_error "mise" "$subcommand" "install|upgrade|outdated"
           ;;
+      esac
+      ;;
+
+    repos)
+      local subcommand="${1:-}"
+      [[ -n "$subcommand" ]] && shift
+      [[ -z "$subcommand" ]] && subcommand="status"
+      case "$subcommand" in
+        status|list|pull|push|sync) _dot_repos "$subcommand" "$@" ;;
+        *) _dot_subcmd_error "repos" "$subcommand" "status|list|pull|push|sync" ;;
       esac
       ;;
 
@@ -398,7 +420,7 @@ _dot_help() {
 
 # ── Completion ────────────────────────────────────────────────────────────────
 _dot() {
-  local -a commands install_subcmds brew_subcmds shell_subcmds nvim_subcmds mise_subcmds rb_subcmds
+  local -a commands install_subcmds brew_subcmds shell_subcmds nvim_subcmds mise_subcmds repos_subcmds rb_subcmds
 
   commands=(
     'install:Install dotbot profiles or ingredients'
@@ -406,6 +428,7 @@ _dot() {
     'shell:Shell configuration'
     'nvim:Neovim management'
     'mise:Mise global tools'
+    'repos:Repository fleet management'
     'rb:Remote Bridge'
     'update:Interactive update wizard'
     'edit:Open dotfiles in editor'
@@ -441,6 +464,14 @@ _dot() {
     'install:Install global tools'
     'upgrade:Upgrade all tools'
     'outdated:Show outdated tools'
+  )
+
+  repos_subcmds=(
+    'status:Show repository sync status'
+    'list:List registered paths'
+    'pull:Pull all repos'
+    'push:Push repos with unpushed commits'
+    'sync:Pull and push all'
   )
 
   rb_subcmds=(
@@ -481,6 +512,9 @@ _dot() {
       ;;
     mise)
       (( CURRENT == 3 )) && _describe 'subcommand' mise_subcmds
+      ;;
+    repos)
+      (( CURRENT == 3 )) && _describe 'subcommand' repos_subcmds
       ;;
     rb)
       (( CURRENT == 3 )) && _describe 'subcommand' rb_subcmds
@@ -554,5 +588,6 @@ source "$ZDOTDIR/config/doctor.zsh"
 source "$ZDOTDIR/config/clean.zsh"
 source "$ZDOTDIR/config/status.zsh"
 source "$ZDOTDIR/config/sync.zsh"
+source "$ZDOTDIR/config/repos.zsh"
 
 compdef _dot dot

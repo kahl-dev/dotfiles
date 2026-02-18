@@ -30,7 +30,9 @@ tmux/
     ├── hostname-display.sh        # Machine name (empty on primary Mac)
     ├── lit-info-urls.sh           # TYPO3 project URL opener (Prefix+U)
     ├── tmux-cheatsheet.sh         # Renders cheatsheet.md via glow
-    └── tmux-cheatsheet-search.sh  # fzf keybinding search
+    ├── tmux-cheatsheet-search.sh  # fzf keybinding search
+    ├── update-check.sh            # Staleness count for status bar (brew/mise/tpm/repos)
+    └── update-detail.sh           # Interactive update popup (Prefix+D)
 ```
 
 ## 🎨 Visual Conventions
@@ -47,6 +49,7 @@ tmux/
 | Uptime | 󰅐 | nf-md-clock-outline | `$DIM` |
 | Sessions | 󰘔 | nf-md-monitor-multiple | `$DIM` |
 | Claude | 󰚩 | nf-md-robot | `$DIM` |
+| Update | 󰚰 | nf-md-update | per-count color |
 | 5h window | 󰥔 | nf-md-clock-fast | per-value color |
 | 7d window | 󰃭 | nf-md-calendar-week | per-value color |
 | Zoom | 󰍉 | nf-md-magnify | — |
@@ -85,11 +88,11 @@ Invisible — styled `fg=black,bg=black` to blend with terminal background.
 
 `status-line-main.sh` receives `#{client_width}` from tmux and adapts:
 
-| Width | Resources | Environment | Claude | Hostname |
-|-------|-----------|-------------|--------|----------|
-| **≥120** (wide) | CPU/RAM/Disk | Uptime + Sessions | Full (with pace) | Yes |
-| **90-119** (medium) | CPU/RAM/Disk | Hidden | Full (with pace) | If ≥100 |
-| **<90** (narrow) | CPU/RAM only | Hidden | Compact (% only) | Hidden |
+| Width | Resources | Environment | Claude | Update | Hostname |
+|-------|-----------|-------------|--------|--------|----------|
+| **≥120** (wide) | CPU/RAM/Disk | Uptime + Sessions | Full (with pace) | If stale | Yes |
+| **90-119** (medium) | CPU/RAM/Disk | Hidden | Full (with pace) | If stale | If ≥100 |
+| **<90** (narrow) | CPU/RAM only | Hidden | Compact (% only) | If stale | Hidden |
 
 **Full Claude**: `󰚩 󰥔6%/󰃭44% ▲28%/d`
 **Compact Claude**: `󰥔6%/󰃭44%`
@@ -98,7 +101,7 @@ Config passes width: `#(~/.dotfiles/tmux/scripts/status-line-main.sh #{client_wi
 
 **Status bar layout** (single line, position top):
 ```
-[host-icon] session_name [windows...]          ...right-aligned: [resources │ env │ claude │ hostname]
+[host-icon] session_name [windows...]          ...right-aligned: [resources │ env │ claude │ update │ hostname]
 ```
 
 ## 🔑 Keybindings
@@ -109,6 +112,7 @@ Config passes width: `#(~/.dotfiles/tmux/scripts/status-line-main.sh #{client_wi
 |-----|--------|
 | `Prefix + R` | Reload status configuration |
 | `Prefix + C` | Toggle Claude usage display on/off |
+| `Prefix + D` | Update status detail popup (brew/mise/tpm/repos staleness) |
 | `Prefix + ?` | Show cheatsheet (glow popup, fallback: less) |
 | `Prefix + /` | fzf keybinding search (copies selection via rclip) |
 
@@ -191,6 +195,7 @@ Auto-detected via `if-shell 'test -n "$SSH_CLIENT"'` → loads `tmux.remote.conf
 - SSH agent socket managed via symlink: `~/.ssh/ssh_auth_sock` → actual socket
 - Hooks refresh SSH agent on: session-created, client-attached
 - Fallback: finds working socket in `/tmp/ssh-*/agent.*`
+- Update check disabled (`@show-update-check "off"`) — tools like brew/mise not installed on remote
 
 ## 🔧 Script Pattern
 
@@ -213,7 +218,7 @@ check_cache "$CACHE_FILE" <TTL> && exit 0
 write_cache "$CACHE_FILE" "$result"
 ```
 
-`cache-lib.sh` provides: `CACHE_DIR` setup, `check_cache FILE TTL` (returns 0 on hit), `write_cache FILE VALUE`.
+`cache-lib.sh` provides: `CACHE_DIR` setup, `file_mtime FILE` (epoch mtime or 0), `check_cache FILE TTL` (returns 0 on hit), `write_cache FILE VALUE`.
 
 **Rules:**
 - Output bare integers — `status-line-main.sh` adds `%`, icons, colors
@@ -233,6 +238,7 @@ write_cache "$CACHE_FILE" "$result"
 | claude-usage.sh | 60s | API rate limiting |
 | host-icon.sh | 3600s | Never changes at runtime |
 | hostname-display.sh | 300s | Never changes at runtime |
+| update-check.sh | 60s | Checks timestamp ages only |
 
 ## 🤖 Claude Usage Segment
 
@@ -251,6 +257,31 @@ Uses Anthropic OAuth API — no Python, no browser cookies, no Cloudflare bypass
 **Token expiry**: 401 → jq fails → silent exit → segment vanishes. Refreshes automatically when Claude Code runs next.
 
 **Toggle**: `Prefix + C` flips `@show-claude-usage` on/off.
+
+## 󰚰 Update Staleness Indicator
+
+Tracks when tools were last updated via timestamp files in `$CACHE_DIR`. Zero-cost in tmux — only `stat` calls, no network or git.
+
+**Timestamp files** (in `${XDG_CACHE_HOME:-$HOME/.cache}/`):
+
+| File | Written by |
+|------|------------|
+| `dot-last-brew-update` | `dot brew update`, `dot update` (brew step) |
+| `dot-last-mise-update` | `dot mise upgrade`, `dot update` (mise step) |
+| `dot-last-tpm-update` | `dot update` (tpm step) |
+| `dot-last-repos-sync` | `dot repos pull`, `dot repos sync` |
+
+**Staleness thresholds**: brew 7d, mise 7d, tpm 30d, repos 3d.
+
+**Color thresholds**: 1 stale = `$BLUE`, 2 = `$PEACH`, 3+ = `$RED`.
+
+**Missing timestamp = stale** (never updated triggers indicator immediately).
+
+**Cache invalidation**: `_dot_touch_update()` in `dot.zsh` touches the timestamp and deletes `tmux-update-check` cache to force tmux refresh.
+
+**Toggle**: `@show-update-check` on/off (disabled in `tmux.remote.conf`).
+
+**Detail popup**: `Prefix + D` opens `update-detail.sh` — shows ages, allows updating individual categories or all at once.
 
 ## ⚠️ Platform Gotchas
 

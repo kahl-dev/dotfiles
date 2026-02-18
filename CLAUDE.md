@@ -91,8 +91,16 @@ dot nvim reset                  # Reset lazy.nvim packages
 # Remote Bridge
 dot rb start|stop|restart|status|logs
 
+# Repository Fleet
+dot repos                       # Show status of all repos (alias for repos status)
+dot repos status                # Tabular: branch, dirty, ahead/behind
+dot repos list                  # Print registered paths
+dot repos pull                  # Fetch + pull --rebase all repos
+dot repos push                  # Push repos with unpushed commits
+dot repos sync                  # Pull all, then push all
+
 # Maintenance
-dot update                      # Interactive update wizard (LazyVim, Homebrew, App Store, macOS)
+dot update                      # Interactive update wizard (LazyVim, Homebrew, repos, tmux, mise)
 dot update --yes                # Skip confirmations
 dot edit                        # Open dotfiles in $EDITOR
 dot color-test                  # Terminal color test
@@ -157,6 +165,7 @@ The zsh setup uses modular configuration files in `zsh/config/`:
 - `tmuxinator.zsh` - Tmuxinator session management
 - `zinit.zsh` - Zinit plugin manager initialization
 - `dot.zsh` - Unified `dot` CLI with fzf menu, update wizard, and tab completion
+- `repos.zsh` - Multi-repo fleet management (`dot repos status/pull/push/sync`)
 - `worktree.zsh` - Git worktree helpers with git-native signatures (`gwta`, `gwts`, `gwtl`, `gwtr`, `gwtp`, `gwtmain`, `gwth`)
 
 #### Node.js Runtime Management

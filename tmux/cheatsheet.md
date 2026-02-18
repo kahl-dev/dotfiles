@@ -68,6 +68,7 @@
 | `<prefix> /` | Search keybindings (interactive fzf) |
 | `<prefix> u` | URL finder (tmux-fzf-url) |
 | `<prefix> r` | Reload tmux config |
+| `<prefix> D` | Update status detail popup |
 
 ## 🚀 Apps (prefix + a, then...)
 
