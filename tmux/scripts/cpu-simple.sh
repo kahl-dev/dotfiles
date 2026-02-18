@@ -9,14 +9,20 @@ readonly CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}"
 readonly CACHE_FILE="$CACHE_DIR/tmux-cpu"
 readonly CACHE_DURATION=3
 
-# Ensure cache directory exists with restrictive permissions
+# Ensure cache directory exists
 mkdir -p "$CACHE_DIR"
-chmod 700 "$CACHE_DIR"
 
-# Check if cache is valid (less than 3 seconds old)
-if [[ -f "$CACHE_FILE" ]] && [[ $(($(date +%s) - $(stat -c %Y "$CACHE_FILE" 2>/dev/null || stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0))) -lt $CACHE_DURATION ]]; then
-  cat "$CACHE_FILE"
-  exit 0
+# Check cache freshness (cross-platform stat)
+if [[ -f "$CACHE_FILE" ]]; then
+  if [[ "$(uname)" == "Darwin" ]]; then
+    file_mtime=$(stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0)
+  else
+    file_mtime=$(stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0)
+  fi
+  if [[ $(($(date +%s) - file_mtime)) -lt $CACHE_DURATION ]]; then
+    cat "$CACHE_FILE"
+    exit 0
+  fi
 fi
 
 # Get CPU usage - compatible with both macOS and Linux
@@ -55,8 +61,8 @@ fi
 # Round to integer
 cpu_usage=$(printf "%.0f" "$cpu_usage")
 
-# Format output
-result="${cpu_usage}%"
+# Format output (bare integer — caller adds %)
+result="${cpu_usage}"
 
 # Cache the result
 echo "$result" > "$CACHE_FILE"

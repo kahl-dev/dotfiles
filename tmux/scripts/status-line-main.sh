@@ -26,11 +26,11 @@ color_by_threshold() {
   fi
 }
 
-# Get CPU usage with icon
-cpu_info="#[fg=$YELLOW]⚡ $(~/.dotfiles/tmux/scripts/cpu-simple.sh)#[fg=$TEXT]"
-
-# Get memory usage with icon
-mem_info="#[fg=$GREEN]💾 $(~/.dotfiles/tmux/scripts/mem-simple.sh)#[fg=$TEXT]"
+# System stats: 󰻠38/󰍛34% (CPU/RAM combined)
+# System stats: both scripts return bare integers
+cpu_val=$(~/.dotfiles/tmux/scripts/cpu-simple.sh 2>/dev/null || echo "0")
+mem_val=$(~/.dotfiles/tmux/scripts/mem-simple.sh 2>/dev/null || echo "0")
+sys_info="#[fg=$YELLOW]󰻠${cpu_val}%#[fg=$DIM]/#[fg=$GREEN]󰘚${mem_val}%#[fg=$TEXT]"
 
 # Separator
 sep="#[fg=$DIM] │ #[fg=$TEXT]"
@@ -77,9 +77,9 @@ hostname_display="$(~/.dotfiles/tmux/scripts/hostname-display.sh)"
 # Build simple status line
 # Session name is handled by tmux built-in status-left
 if [[ -n "$hostname_display" ]]; then
-  status_line="${cpu_info}${sep}${mem_info}${claude_segment}${sep}#[fg=$DIM]${hostname_display}#[fg=$TEXT] "
+  status_line="${sys_info}${claude_segment}${sep}#[fg=$DIM]${hostname_display}#[fg=$TEXT] "
 else
-  status_line="${cpu_info}${sep}${mem_info}${claude_segment} "
+  status_line="${sys_info}${claude_segment} "
 fi
 
 echo "$status_line"

@@ -89,8 +89,11 @@ fi
 
 seconds_left=$((reset_epoch - now_epoch))
 
-# Window has reset or is resetting — skip budget calculation
-[[ $seconds_left -le 0 ]] && exit 0
+# Window has reset or is resetting — cache empty to avoid repeated API calls
+if [[ $seconds_left -le 0 ]]; then
+  echo "" > "$CACHE_FILE"
+  exit 0
+fi
 
 # Days left (ceiling: partial day counts as 1)
 days_left=$(( (seconds_left + 86399) / 86400 ))

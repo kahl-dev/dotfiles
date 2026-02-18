@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Host icon detector for tmux status bar
-# Returns appropriate icon based on OS and host type
+# Returns appropriate Nerd Font icon based on OS
 
 set -euo pipefail
 
@@ -9,62 +9,57 @@ readonly CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}"
 readonly CACHE_FILE="$CACHE_DIR/tmux-host-icon"
 readonly CACHE_DURATION=3600  # 1 hour - host doesn't change often
 
-# Ensure cache directory exists with restrictive permissions
+# Ensure cache directory exists
 mkdir -p "$CACHE_DIR"
-chmod 700 "$CACHE_DIR"
 
-# Check cache
-if [[ -f "$CACHE_FILE" ]] && [[ $(($(date +%s) - $(stat -c %Y "$CACHE_FILE" 2>/dev/null || stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0))) -lt $CACHE_DURATION ]]; then
-  cat "$CACHE_FILE"
-  exit 0
+# Check cache (cross-platform stat)
+if [[ -f "$CACHE_FILE" ]]; then
+  if [[ "$(uname)" == "Darwin" ]]; then
+    file_mtime=$(stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0)
+  else
+    file_mtime=$(stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0)
+  fi
+  if [[ $(($(date +%s) - file_mtime)) -lt $CACHE_DURATION ]]; then
+    cat "$CACHE_FILE"
+    exit 0
+  fi
 fi
 
-# Detect OS and host type
+# Detect OS and return Nerd Font icon
 get_host_icon() {
-  local os_type=$(uname -s)
-  local hostname=$(hostname -s)
-  
+  local os_type
+  os_type=$(uname -s)
+
   case "$os_type" in
     "Darwin")
-      # macOS - check for different Mac types
-      local model=$(system_profiler SPHardwareDataType 2>/dev/null | grep "Model Name" | cut -d: -f2 | xargs || echo "Mac")
-      case "$model" in
-        *"MacBook"*) echo "💻" ;;
-        *"iMac"*) echo "🖥️" ;;
-        *"Mac Studio"*) echo "🎛️" ;;
-        *"Mac Pro"*) echo "⚡" ;;
-        *"Mac mini"*) echo "📦" ;;
-        *) echo "🍎" ;;
-      esac
+      # nf-fa-apple
+      echo $'\uf179'
       ;;
     "Linux")
-      # Linux - detect distribution
       if [[ -f /etc/os-release ]]; then
-        local distro=$(grep "^ID=" /etc/os-release | cut -d= -f2 | tr -d '"')
+        local distro
+        distro=$(grep "^ID=" /etc/os-release | cut -d= -f2 | tr -d '"')
         case "$distro" in
-          "ubuntu") echo "🟠" ;;
-          "debian") echo "🔴" ;;
-          "fedora") echo "🔵" ;;
-          "centos"|"rhel") echo "💼" ;;
-          "arch") echo "🏗️" ;;
-          "alpine") echo "⛰️" ;;
-          "raspbian") echo "🍓" ;;
-          *) echo "🐧" ;;
+          "ubuntu")   echo $'\uf31b' ;;  # nf-linux-ubuntu
+          "debian")   echo $'\uf306' ;;  # nf-linux-debian
+          "fedora")   echo $'\uf30a' ;;  # nf-linux-fedora
+          "centos"|"rhel") echo $'\uf304' ;;  # nf-linux-centos
+          "arch")     echo $'\uf303' ;;  # nf-linux-archlinux
+          "alpine")   echo $'\uf300' ;;  # nf-linux-alpine
+          "raspbian") echo $'\uf315' ;;  # nf-linux-raspberry_pi
+          *)          echo $'\uf17c' ;;  # nf-fa-linux
         esac
+      elif [[ -f /proc/device-tree/model ]] && grep -q "Raspberry" /proc/device-tree/model 2>/dev/null; then
+        echo $'\uf315'  # nf-linux-raspberry_pi
       else
-        # Check for Raspberry Pi
-        if [[ -f /proc/device-tree/model ]] && grep -q "Raspberry" /proc/device-tree/model 2>/dev/null; then
-          echo "🍓"
-        else
-          echo "🐧"
-        fi
+        echo $'\uf17c'  # nf-fa-linux
       fi
       ;;
-    "FreeBSD") echo "😈" ;;
-    "OpenBSD") echo "🐡" ;;
-    "NetBSD") echo "🚩" ;;
-    "SunOS") echo "☀️" ;;
-    *) echo "💻" ;;
+    "FreeBSD") echo $'\uf30c' ;;  # nf-linux-freebsd
+    "OpenBSD") echo $'\uf17c' ;;  # nf-fa-linux (no native OpenBSD icon)
+    "NetBSD")  echo $'\uf17c' ;;  # nf-fa-linux (no native NetBSD icon)
+    "SunOS")   echo $'\uf185' ;;  # nf-fa-sun_o
+    *)         echo $'\uf17c' ;;  # nf-fa-linux fallback
   esac
 }
 
