@@ -2,22 +2,25 @@ tap "arl/arl"
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "jesseduffield/lazygit"
-# Extended crypt library for descrypt, md5crypt, bcrypt, and others
-brew "libxcrypt"
-# Clone of cat(1) with syntax highlighting and Git integration
-brew "bat"
+tap "rtk-ai/tap"
 # Generic-purpose lossless compression algorithm by Google
 brew "brotli"
+# Portable Foreign Function Interface library
+brew "libffi"
+# Command-line interface for SQLite
+brew "sqlite"
+# Browser automation CLI for AI agents
+brew "agent-browser"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
 # Message bus system, providing inter-application communication
 brew "dbus"
-# Command-line interface for SQLite
-brew "sqlite"
+# Extended crypt library for descrypt, md5crypt, bcrypt, and others
+brew "libxcrypt"
 # Collection of Linux utilities
 brew "util-linux"
-# Portable Foreign Function Interface library
-brew "libffi"
 # Perl compatible regular expressions library with a new API
 brew "pcre2"
 # Core application library for C
@@ -68,21 +71,16 @@ brew "neofetch"
 brew "neovim"
 # Command-line Git information tool
 brew "onefetch"
-# Cryptography and SSL/TLS Toolkit
-brew "openssl@1.1"
-# pnpm: managed by mise
-# python: managed by mise
-# Install various Ruby versions and implementations
-brew "ruby-build"
-# Ruby version manager
-brew "rbenv"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# AI coding agent, built for the terminal
+brew "opencode"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@1.1"
 # Powerful, clean, object-oriented scripting language
 brew "ruby"
 # Database of common MIME types
 brew "shared-mime-info"
-# shellcheck: managed by mise
 # Cross-shell prompt for astronauts
 brew "starship"
 # Terminal multiplexer
@@ -91,7 +89,8 @@ brew "tmux"
 brew "tmuxinator"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
-# uv: managed by mise
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
 # Feature-rich command-line audio/video downloader
@@ -102,3 +101,6 @@ brew "zoxide"
 brew "arl/arl/gitmux"
 # OpenAI's coding agent that runs in your terminal
 cask "codex"
+go "cmd/go"
+go "cmd/gofmt"
+cargo "rtk"
