@@ -110,6 +110,8 @@ brew "media-info"
 brew "mise"
 # Simple tool to make locally trusted development certificates
 brew "mkcert"
+# Remote terminal application
+brew "mosh"
 # Feature-rich command-line audio/video downloader
 brew "yt-dlp"
 # Media player based on MPlayer and mplayer2
@@ -275,6 +277,8 @@ cask "ngrok"
 cask "obsidian"
 # Replacement for Docker Desktop
 cask "orbstack"
+# All-in-one bookmark manager
+cask "raindropio"
 # Control your tools with a few keystrokes
 cask "raycast"
 # Email client
