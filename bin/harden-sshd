@@ -1,0 +1,77 @@
+#!/bin/bash
+# 🔒 Harden sshd_config for remote access
+# Safe to run after macOS updates — only adds missing settings, never duplicates
+# Usage: sudo harden-sshd
+
+set -euo pipefail
+
+SSHD_CONFIG="/etc/ssh/sshd_config"
+MARKER="# 🔒 Custom hardening (managed by dotfiles)"
+
+# Settings to enforce (key=value pairs)
+SETTINGS=(
+  "PubkeyAuthentication yes"
+  "PasswordAuthentication no"
+  "KbdInteractiveAuthentication no"
+  "PermitRootLogin no"
+  "AllowUsers kahl-dev"
+  "MaxAuthTries 3"
+  "LoginGraceTime 20"
+)
+
+if [[ $EUID -ne 0 ]]; then
+  echo "❌ Must run as root: sudo harden-sshd"
+  exit 1
+fi
+
+echo "🔍 Checking $SSHD_CONFIG..."
+
+CHANGES=0
+
+for ENTRY in "${SETTINGS[@]}"; do
+  KEY="${ENTRY%% *}"
+  VALUE="${ENTRY#* }"
+  DESIRED="$KEY $VALUE"
+
+  # Check if the active (uncommented) setting already exists with correct value
+  if grep -q "^${KEY} ${VALUE}$" "$SSHD_CONFIG" 2>/dev/null; then
+    echo "  ✅ $DESIRED (already set)"
+    continue
+  fi
+
+  # Comment out any existing (possibly wrong) active setting
+  if grep -q "^${KEY} " "$SSHD_CONFIG" 2>/dev/null; then
+    sed -i '' "s/^${KEY} .*$/# &  # overridden below/" "$SSHD_CONFIG"
+    echo "  🔄 $KEY — overriding previous value"
+  fi
+
+  # Add marker block if not present
+  if ! grep -q "$MARKER" "$SSHD_CONFIG" 2>/dev/null; then
+    echo "" >> "$SSHD_CONFIG"
+    echo "$MARKER" >> "$SSHD_CONFIG"
+  fi
+
+  # Append the setting
+  echo "$DESIRED" >> "$SSHD_CONFIG"
+  echo "  ➕ $DESIRED"
+  CHANGES=$((CHANGES + 1))
+done
+
+# Validate config
+echo ""
+echo "🧪 Validating sshd_config..."
+if sshd -t; then
+  echo "  ✅ Config valid"
+else
+  echo "  ❌ Config invalid — check $SSHD_CONFIG"
+  exit 1
+fi
+
+# Reload if changes were made
+if [[ $CHANGES -gt 0 ]]; then
+  echo "🔄 Reloading sshd..."
+  launchctl kickstart -k system/com.openssh.sshd
+  echo "✅ Done — $CHANGES setting(s) applied"
+else
+  echo "✅ No changes needed"
+fi

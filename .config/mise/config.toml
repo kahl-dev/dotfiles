@@ -21,9 +21,11 @@ legacy_version_file = true
 "npm:pyright" = "latest"
 
 # 🏗️ Runtimes & compilers
+node = "lts"
 go = "latest"
 bun = "latest"
 rust = "latest"
+uv = "latest"
 
 # 🔍 Linters & formatters
 shellcheck = "latest"

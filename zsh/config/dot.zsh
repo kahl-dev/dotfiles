@@ -42,6 +42,7 @@ DOT_COMMANDS=(
   "mise/install"      "Install mise global tools"
   "mise/upgrade"      "Upgrade all mise tools to latest"
   "mise/outdated"     "Show outdated mise tools"
+  "ssh/harden"        "Apply SSH hardening settings to sshd_config"
   "repos/status"      "Show repository sync status"
   "repos/list"        "List registered repository paths"
   "repos/pull"        "Pull all registered repos"
@@ -263,6 +264,19 @@ dot() {
       esac
       ;;
 
+    ssh)
+      local subcommand="${1:-}"
+      [[ -n "$subcommand" ]] && shift
+      case "$subcommand" in
+        harden)
+          sudo "$DOTFILES/bin/harden-sshd"
+          ;;
+        *)
+          _dot_subcmd_error "ssh" "$subcommand" "harden"
+          ;;
+      esac
+      ;;
+
     repos)
       local subcommand="${1:-}"
       [[ -n "$subcommand" ]] && shift
@@ -428,6 +442,7 @@ _dot() {
     'shell:Shell configuration'
     'nvim:Neovim management'
     'mise:Mise global tools'
+    'ssh:SSH server management'
     'repos:Repository fleet management'
     'rb:Remote Bridge'
     'update:Interactive update wizard'
@@ -512,6 +527,15 @@ _dot() {
       ;;
     mise)
       (( CURRENT == 3 )) && _describe 'subcommand' mise_subcmds
+      ;;
+    ssh)
+      if (( CURRENT == 3 )); then
+        local -a ssh_subcmds
+        ssh_subcmds=(
+          'harden:Apply SSH hardening settings'
+        )
+        _describe 'subcommand' ssh_subcmds
+      fi
       ;;
     repos)
       (( CURRENT == 3 )) && _describe 'subcommand' repos_subcmds
