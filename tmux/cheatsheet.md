@@ -65,6 +65,7 @@
 |------------|-------------|
 | `<prefix> ?` | This cheatsheet (beautiful glow rendering) |
 | `<prefix> /` | Search keybindings (interactive fzf) |
+| `<prefix> Space` | **Which-key menu** (all bindings, nested submenus) |
 | `<prefix> u` | URL finder (tmux-fzf-url) |
 | `<prefix> r` | Reload tmux config |
 | `<prefix> D` | Update status detail popup |
@@ -87,9 +88,11 @@ Press `<prefix> a` to enter apps mode, then:
 
 | Keybinding | Description |
 |------------|-------------|
-| `M-i` | Install plugins |
-| `M-u` | Update plugins |
-| `M-x` | Clean unused plugins |
+| `<prefix> t` | **Enter TPM layer** |
+| `i` | Install plugins |
+| `u` | Update plugins |
+| `x` | Clean unused plugins |
+| `Escape` | Cancel |
 
 ## 🪆 Nested Sessions
 

@@ -20,6 +20,7 @@ tmux/
 ├── resurrect/             # Session save files (tmux-resurrect)
 └── scripts/
     ├── tmux-session-manager.sh    # 🔑 Session manager (switch, create, rename, move pane/window)
+    ├── tmux-which-key.sh          # 🔑 Which-key menu (Prefix+Space, nested submenus for apps/tpm)
     ├── cache-lib.sh               # 🔧 Shared cache utilities (sourced by all metric scripts)
     ├── status-line-main.sh        # 🔑 Main renderer — assembles all segments
     ├── cpu-simple.sh              # CPU usage % (bare integer)
@@ -116,6 +117,21 @@ Config passes width: `#(~/.dotfiles/tmux/scripts/status-line-main.sh #{client_wi
 | `Prefix + D` | Update status detail popup (brew/mise/tpm/repos staleness) |
 | `Prefix + ?` | Show cheatsheet (glow popup, fallback: less) |
 | `Prefix + /` | fzf keybinding search (copies selection via rclip) |
+| `Prefix + Space` | Which-key menu (all bindings, nested submenus) |
+
+### Which-Key Menu (`Prefix + Space`)
+
+Discoverable keybinding menu using `display-menu`. Shows all prefix bindings organized by category. Layers open as nested submenus with `Escape` to go back.
+
+| Top-level key | Action |
+|---------------|--------|
+| `a` | Opens Apps submenu (window + popup variants) |
+| `t` | Opens TPM submenu (install, update, clean) |
+| Any other key | Executes directly (o, c, x, z, etc.) |
+
+**Implementation**: `tmux-which-key.sh` accepts a submenu argument (`root`, `apps`, `tpm`). Submenus call back into the script with the appropriate argument.
+
+**Maintenance**: When adding new prefix keybindings, update BOTH `tmux.conf` AND `tmux-which-key.sh` to keep the menu in sync.
 
 ### Apps Key Table (`Prefix + a`)
 
@@ -175,7 +191,7 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
 
 | Plugin | Purpose | Key Config |
 |--------|---------|------------|
-| **tpm** | Plugin manager | `M-i` install, `M-u` update, `M-x` clean |
+| **tpm** | Plugin manager | `Prefix + t` layer: `i` install, `u` update, `x` clean |
 | **tmux-resurrect** | Save/restore sessions | Saves ssh, vi, vim, nvim, man, tail, top, htop |
 | **tmux-continuum** | Auto-save every 15min | `@continuum-restore 'on'` for auto-restore on start |
 | **tmux-floax** | Floating window management | — |
@@ -306,3 +322,15 @@ Tracks when tools were last updated via timestamp files in `$CACHE_DIR`. Zero-co
    - Respect width tiers — add to narrow only if essential
 5. Test all three width tiers: `bash status-line-main.sh 200`, `100`, `80`
 6. Update this CLAUDE.md with the new segment
+
+## 🔑 Adding New Keybindings
+
+When adding or changing a prefix keybinding, update ALL of these:
+
+1. **`tmux.conf`** — the actual binding
+2. **`scripts/tmux-which-key.sh`** — add to the appropriate submenu (root, apps, tpm) or create a new submenu
+3. **`cheatsheet.md`** — the help popup rendered by `Prefix + ?`
+4. **`CLAUDE.md`** (this file) — keybindings section
+5. **`docs/tmux.md`** — human-readable documentation
+
+For new layers/key tables: add a submenu function in `tmux-which-key.sh`, wire it from the root menu with a `>` indicator, and add `Escape` → back navigation.

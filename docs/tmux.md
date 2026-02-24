@@ -25,8 +25,10 @@ tmux/
 │   ├── host-icon.sh             # System icon detection
 │   ├── hostname-display.sh      # Smart hostname formatting
 │   ├── lit-info-urls.sh         # Project URL helper
-│   ├── tmux-cheatsheet.sh       # Cheatsheet popup
-│   └── tmux-cheatsheet-search.sh# Cheatsheet search UI
+│   ├── tmux-session-manager.sh   # Session manager (switch, create, rename, move)
+│   ├── tmux-which-key.sh         # Which-key menu (nested submenus for apps/tpm)
+│   ├── tmux-cheatsheet.sh        # Cheatsheet popup
+│   └── tmux-cheatsheet-search.sh # Cheatsheet search UI
 ├── plugins/              # TPM plugin directory
 ├── resurrect/           # Session save data
 └── tmux-commands/       # Custom command scripts
@@ -81,12 +83,13 @@ tmux/
 #### Plugin & Tool Shortcuts
 | Key | Action | Description |
 |-----|--------|-------------|
-| `j` | Command palette | Open tmux command palette popup |
-| `?` | Cheatsheet | Show tmux cheatsheet popup |
+| `Space` | Which-key menu | All bindings with nested submenus (apps, tpm) |
+| `?` | Cheatsheet | Show tmux cheatsheet popup (full reference) |
+| `/` | Search bindings | Interactive fzf keybinding search |
 | `o` | Session manager | Switch, create, rename, delete, move pane/window |
 | `u` | FZF URL | Open URL finder |
-| `g` | Lazygit | Open lazygit in new window |
-| `l` | Glow | Open glow markdown viewer |
+| `a` | Apps layer | g/y/b/m = window, G/Y/B/M = popup (lazygit, yazi, btop, glow) |
+| `t` | TPM layer | i = install, u = update, x = clean |
 
 #### Remote Session Controls
 | Key | Action | Description |
