@@ -40,21 +40,7 @@ if command_exists fzf && command_exists fzf-tmux; then
   export FZF_TMUX_OPTS="-p80%,60%"
   export FZF_TMUX=1
 
-  _tm() {
-    [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
-
-    session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf -e --print-query --preview "tmux list-windows -t {}")
-
-    echo $session
-
-    if [ -n "$session" ]; then
-      selected_session=$(echo "$session" | tail -n 1)
-
-      tmux $change -t "$selected_session" 2>/dev/null || (tmux new-session -d -s "$selected_session" && tmux $change -t "$selected_session")
-    else
-      echo "No sessions found."
-    fi
-  }
+  # tm is aliased in aliases.zsh to tmux-session-manager.sh
 
   alias fal='alias | fzf --preview "echo {}" | awk -F "=" "{print \$1}" | xargs -I {} sh -c "{}"'
 

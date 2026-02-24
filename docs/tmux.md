@@ -133,12 +133,13 @@ tmux/
 #### Custom Session Manager (replaces tmux-sessionx)
 - **Purpose**: Unified session management with fzf
 - **Script**: `tmux/scripts/tmux-session-manager.sh`
-- **Binding**: `Prefix + o`
+- **Binding**: `Prefix + o` (inside tmux) or `tm` shell alias (outside tmux)
+- **Context-aware**: Detects `$TMUX` — uses popup inside tmux, plain fzf outside
 - **Features**:
-  - Session switching (LRU sorted, git branch display)
+  - Session switching/attaching (LRU sorted, git branch display)
   - Session creation (zoxide disambiguation, literal path `~/...`, fd browser)
   - Session rename (`ctrl-r`) and delete (`ctrl-d`)
-  - Move pane (`ctrl-s`) or window (`ctrl-w`) to another session
+  - Move pane (`ctrl-s`) or window (`ctrl-w`) to another session (inside tmux only)
   - `ctrl-f` to browse filesystem for new session directory
 
 #### tmux-floax

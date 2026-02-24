@@ -19,7 +19,7 @@ tmux/
 ├── plugins/               # TPM-managed plugins
 ├── resurrect/             # Session save files (tmux-resurrect)
 └── scripts/
-    ├── tmux-session-manager.sh    # 🔑 Session manager (switch, create, rename, move pane/window)
+    ├── tmux-session-manager.sh    # 🔑 Session manager (Prefix+o inside tmux, `tm` alias outside)
     ├── tmux-which-key.sh          # 🔑 Which-key menu (Prefix+Space, nested submenus for apps/tpm)
     ├── cache-lib.sh               # 🔧 Shared cache utilities (sourced by all metric scripts)
     ├── status-line-main.sh        # 🔑 Main renderer — assembles all segments
@@ -152,7 +152,7 @@ All apps inherit current pane's working directory. Status bar shows `󰀻 APPS` 
 | `C-h/j/k/l` | Smart pane navigation (vim/nvim/fzf-aware via `if-shell`) |
 | `C-\` | Jump to last pane (vim-aware) |
 | `C-Shift-Left/Right` | Swap window AND auto-select the swapped position |
-| `Prefix + o` | Session manager (switch, create, rename, move pane/window) |
+| `Prefix + o` / `tm` alias | Session manager (context-aware: popup inside tmux, plain fzf outside) |
 | `Prefix + u` | Extract and open URLs from pane (tmux-fzf-url → ropen) |
 | `Prefix + U` | Open TYPO3 project URLs (lit-info, conditional on `~/repos/li-tools`) |
 

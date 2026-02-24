@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 # tmux-session-manager.sh — Unified session management with fzf
-# Replaces tmux-sessionx with focused feature set:
+# Works both inside tmux (popup via Prefix+o) and outside (shell via `tm`)
+#
+# Features:
 #   - Session switching (LRU sorted, git branch display)
 #   - Session creation (zoxide disambiguation, literal path, path browser)
 #   - Session rename and delete
-#   - Move pane/window to session
+#   - Move pane/window to session (inside tmux only)
 
 set -euo pipefail
 
@@ -21,6 +23,44 @@ ICON_BRANCH=""
 ICON_TAG=""
 ICON_NEW="[+ New Session]"
 
+# Detect context: inside tmux or standalone shell
+INSIDE_TMUX="${TMUX:+1}"
+
+# ============================================================================
+# Context-Aware Wrappers
+# ============================================================================
+
+# fzf wrapper: popup inside tmux, plain fzf outside
+# First arg is popup size (ignored outside tmux), rest passed to fzf
+run_fzf() {
+    local popup_size="$1"
+    shift
+    if [[ -n "$INSIDE_TMUX" ]]; then
+        fzf-tmux -p "$popup_size" "$@"
+    else
+        fzf "$@"
+    fi
+}
+
+# Show notification: tmux message inside, stderr outside
+notify() {
+    if [[ -n "$INSIDE_TMUX" ]]; then
+        tmux display-message "$1"
+    else
+        echo "$1" >&2
+    fi
+}
+
+# Switch to or attach to a session
+goto_session() {
+    local target="$1"
+    if [[ -n "$INSIDE_TMUX" ]]; then
+        tmux switch-client -t "$target"
+    else
+        exec tmux attach-session -t "$target"
+    fi
+}
+
 # ============================================================================
 # Helper Functions
 # ============================================================================
@@ -35,13 +75,19 @@ strip_selection() {
 
 # Get sessions sorted by LRU (last used first), excluding current
 get_sessions() {
-    local current last_session sessions sorted
+    local current="" last_session="" sessions sorted
 
-    current=$(tmux display-message -p '#S')
-    last_session=$(tmux display-message -p '#{client_last_session}' 2>/dev/null || echo "")
+    if [[ -n "$INSIDE_TMUX" ]]; then
+        current=$(tmux display-message -p '#S')
+        last_session=$(tmux display-message -p '#{client_last_session}' 2>/dev/null || echo "")
+    fi
 
-    # Get all sessions except current
-    sessions=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | grep -Fxv "$current" || true)
+    # Get all sessions (exclude current if inside tmux)
+    sessions=$(tmux list-sessions -F '#{session_name}' 2>/dev/null || true)
+
+    if [[ -n "$current" && -n "$sessions" ]]; then
+        sessions=$(echo "$sessions" | grep -Fxv "$current" || true)
+    fi
 
     if [[ -z "$sessions" ]]; then
         echo ""
@@ -140,12 +186,17 @@ create_session_at() {
         counter=$((counter + 1))
     done
 
-    # Create session, then offer rename prompt so user can edit the name
-    tmux new-session -ds "$final_name" -c "$dir"
-    tmux switch-client -t "$final_name"
-    # Async: let user rename if desired (command-prompt runs in tmux, not blocking)
-    tmux command-prompt -I "$final_name" -p "Session name:" \
-        "rename-session '%%'"
+    if [[ -n "$INSIDE_TMUX" ]]; then
+        # Inside tmux: create detached, switch, offer rename
+        tmux new-session -ds "$final_name" -c "$dir"
+        tmux switch-client -t "$final_name"
+        # Async: let user rename if desired (command-prompt runs in tmux, not blocking)
+        tmux command-prompt -I "$final_name" -p "Session name:" \
+            "rename-session '%%'"
+    else
+        # Outside tmux: create and attach directly (takes over terminal)
+        exec tmux new-session -s "$final_name" -c "$dir"
+    fi
 }
 
 # Zoxide lookup with disambiguation via fzf
@@ -157,7 +208,7 @@ zoxide_lookup() {
     matches=$(zoxide query -l "$query" 2>/dev/null || true)
 
     if [[ -z "$matches" ]]; then
-        tmux display-message "No zoxide matches for '$query'. Use ctrl-f to browse."
+        notify "No zoxide matches for '$query'. Use ctrl-f to browse."
         return 1
     fi
 
@@ -168,13 +219,13 @@ zoxide_lookup() {
     local selected
     if [[ "$count" -eq 1 ]]; then
         # Single match — still show for confirmation
-        selected=$(echo "$matches" | fzf-tmux -p 70%,30% \
+        selected=$(echo "$matches" | run_fzf "70%,30%" \
             --prompt="Confirm directory: " \
             --header="Press Enter to confirm, Esc to cancel" \
             --no-multi)
     else
         # Multiple matches — let user pick
-        selected=$(echo "$matches" | fzf-tmux -p 70%,50% \
+        selected=$(echo "$matches" | run_fzf "70%,50%" \
             --prompt="Pick directory: " \
             --header="$count matches found" \
             --no-multi)
@@ -200,7 +251,7 @@ resolve_directory() {
         # Literal path — resolve and validate
         local resolved
         resolved=$(cd "$expanded" 2>/dev/null && pwd) || {
-            tmux display-message "Directory not found: $query"
+            notify "Directory not found: $query"
             return 1
         }
         echo "$resolved"
@@ -225,7 +276,7 @@ browse_directories() {
             --exclude __pycache__ \
             --max-depth 5 \
             . "$start_dir" 2>/dev/null | \
-            fzf-tmux -p 70%,60% \
+            run_fzf "70%,60%" \
                 --prompt="Browse: " \
                 --header="Select directory for new session" \
                 --preview="ls -la {}" \
@@ -236,7 +287,7 @@ browse_directories() {
             -not -path '*/node_modules/*' \
             -not -path '*/vendor/*' \
             2>/dev/null | \
-            fzf-tmux -p 70%,60% \
+            run_fzf "70%,60%" \
                 --prompt="Browse: " \
                 --header="Select directory for new session" \
                 --preview="ls -la {}" \
@@ -261,7 +312,7 @@ move_pane_to_session() {
 
     # Cannot move to self
     if [[ "$target" == "$current_session" ]]; then
-        tmux display-message "Already in session '$target'"
+        notify "Already in session '$target'"
         return 0
     fi
 
@@ -284,7 +335,7 @@ move_pane_to_session() {
     # Move that window to the target session
     tmux move-window -d -s "${current_session}:${new_window}" -t "${target}:"
 
-    tmux display-message "Pane moved to session '$target'"
+    notify "Pane moved to session '$target'"
 }
 
 # Move current window to target session
@@ -296,7 +347,7 @@ move_window_to_session() {
 
     # Cannot move to self
     if [[ "$target" == "$current_session" ]]; then
-        tmux display-message "Already in session '$target'"
+        notify "Already in session '$target'"
         return 0
     fi
 
@@ -308,11 +359,11 @@ move_window_to_session() {
         # Move window, then switch to target (since current session will die)
         tmux move-window -d -t "${target}:"
         tmux switch-client -t "$target"
-        tmux display-message "Window moved to '$target' (previous session closed)"
+        notify "Window moved to '$target' (previous session closed)"
     else
         # Move window, stay in current session
         tmux move-window -d -t "${target}:"
-        tmux display-message "Window moved to session '$target'"
+        notify "Window moved to session '$target'"
     fi
 }
 
@@ -346,25 +397,27 @@ create_session_for_move() {
 # Delete a session (with confirmation via fzf)
 delete_session() {
     local target="$1"
-    local current_session
-    current_session=$(tmux display-message -p '#S')
 
-    if [[ "$target" == "$current_session" ]]; then
-        tmux display-message "Cannot delete current session"
-        return 0
+    if [[ -n "$INSIDE_TMUX" ]]; then
+        local current_session
+        current_session=$(tmux display-message -p '#S')
+        if [[ "$target" == "$current_session" ]]; then
+            notify "Cannot delete current session"
+            return 0
+        fi
     fi
 
     # Confirm via fzf
     local confirm
     confirm=$(printf "Yes, delete '%s'\nNo, cancel" "$target" | \
-        fzf-tmux -p 50%,20% \
+        run_fzf "50%,20%" \
             --prompt="Delete session '$target'? " \
             --no-multi \
             --header="This will kill the session and all its windows")
 
     if [[ "$confirm" == "Yes, delete"* ]]; then
         tmux kill-session -t "$target"
-        tmux display-message "Session '$target' deleted"
+        notify "Session '$target' deleted"
     fi
 }
 
@@ -399,8 +452,15 @@ main() {
     esac
 
     # Main mode: Show session picker
-    local current
-    current=$(tmux display-message -p '#S')
+    local current=""
+    local border_label
+
+    if [[ -n "$INSIDE_TMUX" ]]; then
+        current=$(tmux display-message -p '#S')
+        border_label=" Sessions (current: $current) "
+    else
+        border_label=" Sessions "
+    fi
 
     # Build session list
     local sessions
@@ -419,28 +479,34 @@ main() {
         input="$ICON_NEW"
     fi
 
-    # Header with keybindings
-    local header="enter=switch/create | ctrl-r=rename | ctrl-d=delete | ctrl-f=browse | ctrl-s=send pane | ctrl-w=send window"
+    # Header and expect keys depend on context
+    local header expect_keys
+    if [[ -n "$INSIDE_TMUX" ]]; then
+        header="enter=switch/create | ctrl-r=rename | ctrl-d=delete | ctrl-f=browse | ctrl-s=send pane | ctrl-w=send window"
+        expect_keys="ctrl-f,ctrl-d,ctrl-s,ctrl-w"
+    else
+        header="enter=attach/create | ctrl-r=rename | ctrl-d=delete | ctrl-f=browse"
+        expect_keys="ctrl-f,ctrl-d"
+    fi
 
     # Rename binding: use execute() with bash read (gives terminal control)
-    # sessionx-inspired pattern — fzf pauses, user types, fzf resumes
     local script_path
     script_path="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
     local rename_command="bash -c 'target=\$(echo \"\$1\" | sed \"s/[[:space:]]*\$//\"); printf \"\\r\\033[K  New name: \"; read -r name; [[ -n \"\$name\" ]] && tmux rename-session -t \"\$target\" \"\$name\"' _ {1}"
 
-    # Run fzf with tab delimiter for clean field extraction
+    # Run fzf (popup inside tmux, plain fzf outside)
     local result
-    result=$(echo "$input" | fzf-tmux -p 80%,70% \
+    result=$(echo "$input" | run_fzf "80%,70%" \
         --ansi \
         --delimiter=$'\t' \
         --with-nth=1.. \
         --prompt="Session: " \
         --header="$header" \
-        --border-label=" Sessions (current: $current) " \
+        --border-label="$border_label" \
         --no-multi \
         --print-query \
         --bind "ctrl-r:execute($rename_command)+reload($script_path list)" \
-        --expect="ctrl-f,ctrl-d,ctrl-s,ctrl-w" \
+        --expect="$expect_keys" \
         --tabstop=4 \
         || true)
 
@@ -470,7 +536,11 @@ main() {
             exit 0
             ;;
         ctrl-s|ctrl-w)
-            # Move pane or window to selected session
+            # Move pane or window to selected session (inside tmux only)
+            if [[ -z "$INSIDE_TMUX" ]]; then
+                exit 0
+            fi
+
             local target=""
             if [[ -n "$selection" ]]; then
                 target=$(strip_selection "$selection")
@@ -480,7 +550,7 @@ main() {
             if [[ -z "$target" || "$target" == "$ICON_NEW" ]]; then
                 target=$(create_session_for_move)
                 if [[ -z "$target" ]]; then
-                    tmux display-message "Session creation cancelled"
+                    notify "Session creation cancelled"
                     exit 0
                 fi
             fi
@@ -494,7 +564,7 @@ main() {
             ;;
     esac
 
-    # Default: handle Enter (switch or create)
+    # Default: handle Enter (switch/attach or create)
     if [[ -n "$selection" ]]; then
         local clean_selection
         clean_selection=$(strip_selection "$selection")
@@ -511,8 +581,8 @@ main() {
                 create_session_at "$dir"
             fi
         else
-            # Existing session selected - switch to it
-            tmux switch-client -t "$clean_selection"
+            # Existing session selected
+            goto_session "$clean_selection"
         fi
     elif [[ -n "$query" ]]; then
         # No selection but query entered - try zoxide lookup
