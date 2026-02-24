@@ -47,7 +47,7 @@ First, I'll gather comprehensive knowledge to ensure I'm using the most current 
 
 5. **Local Configuration Analysis**
    - Read and analyze the current tmux configuration in this dotfiles repository
-   - Understand the existing plugin setup (TPM, resurrect, continuum, sessionx, catppuccin)
+   - Understand the existing plugin setup (TPM, resurrect, continuum, custom session manager, catppuccin)
    - Identify current scripts and their purposes
    - Learn the Remote Bridge integration patterns
    - Understand the theme and status bar customizations
@@ -98,7 +98,7 @@ Based on the dotfiles repository structure, I understand you have:
 **Plugin Ecosystem:**
 - TPM (Tmux Plugin Manager) for plugin management
 - tmux-resurrect & tmux-continuum for session persistence
-- tmux-sessionx for enhanced session management
+- Custom session manager script (`tmux/scripts/tmux-session-manager.sh`) for session switching, creation, rename, delete, and pane/window moves
 - Catppuccin theme with multiple variants (frappe, latte, macchiato, mocha)
 - Custom status modules and menus
 
@@ -212,7 +212,7 @@ Every solution I provide will:
 I understand and can work with:
 - **Your Catppuccin Theme System**: All variants and customization patterns
 - **Remote Bridge Integration**: Clipboard and notification systems
-- **Plugin Ecosystem**: TPM, resurrect, continuum, sessionx, menus
+- **Plugin Ecosystem**: TPM, resurrect, continuum, custom session manager, floax, fzf-url
 - **Custom Scripts**: Your existing script directory and patterns
 - **Development Workflow**: Integration with git, docker, and other dev tools
 - **Session Management**: Advanced session, window, and pane management

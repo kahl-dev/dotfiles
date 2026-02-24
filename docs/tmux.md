@@ -39,7 +39,7 @@ tmux/
 #### Session & Window Management
 | Key | Action | Description |
 |-----|--------|-------------|
-| `Ctrl+C` | `new-session` | Create new tmux session |
+| `o` | Session manager | Switch, create, rename, delete, move pane/window |
 | `c` | `new-window` | Create new window in current directory |
 | `x` | `kill-pane` | Kill current pane |
 | `X` | `kill-window` | Kill current window |
@@ -83,7 +83,7 @@ tmux/
 |-----|--------|-------------|
 | `j` | Command palette | Open tmux command palette popup |
 | `?` | Cheatsheet | Show tmux cheatsheet popup |
-| `o` | SessionX | Open session manager |
+| `o` | Session manager | Switch, create, rename, delete, move pane/window |
 | `u` | FZF URL | Open URL finder |
 | `g` | Lazygit | Open lazygit in new window |
 | `l` | Glow | Open glow markdown viewer |
@@ -129,10 +129,16 @@ tmux/
 
 ### Navigation & Search
 
-#### tmux-sessionx
-- **Purpose**: Advanced session manager with fuzzy search
+#### Custom Session Manager (replaces tmux-sessionx)
+- **Purpose**: Unified session management with fzf
+- **Script**: `tmux/scripts/tmux-session-manager.sh`
 - **Binding**: `Prefix + o`
-- **Features**: zoxide integration for directory-based session creation
+- **Features**:
+  - Session switching (LRU sorted, git branch display)
+  - Session creation (zoxide disambiguation, literal path `~/...`, fd browser)
+  - Session rename (`ctrl-r`) and delete (`ctrl-d`)
+  - Move pane (`ctrl-s`) or window (`ctrl-w`) to another session
+  - `ctrl-f` to browse filesystem for new session directory
 
 #### tmux-floax
 - **Purpose**: Floating window management

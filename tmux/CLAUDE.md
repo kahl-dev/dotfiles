@@ -19,6 +19,7 @@ tmux/
 ├── plugins/               # TPM-managed plugins
 ├── resurrect/             # Session save files (tmux-resurrect)
 └── scripts/
+    ├── tmux-session-manager.sh    # 🔑 Session manager (switch, create, rename, move pane/window)
     ├── cache-lib.sh               # 🔧 Shared cache utilities (sourced by all metric scripts)
     ├── status-line-main.sh        # 🔑 Main renderer — assembles all segments
     ├── cpu-simple.sh              # CPU usage % (bare integer)
@@ -137,7 +138,7 @@ All apps inherit current pane's working directory. Status bar shows `󰀻 APPS` 
 | `C-h/j/k/l` | Smart pane navigation (vim/nvim/fzf-aware via `if-shell`) |
 | `C-\` | Jump to last pane (vim-aware) |
 | `C-Shift-Left/Right` | Swap window AND auto-select the swapped position |
-| `Prefix + o` | Session switcher (tmux-sessionx with zoxide) |
+| `Prefix + o` | Session manager (switch, create, rename, move pane/window) |
 | `Prefix + u` | Extract and open URLs from pane (tmux-fzf-url → ropen) |
 | `Prefix + U` | Open TYPO3 project URLs (lit-info, conditional on `~/repos/li-tools`) |
 
@@ -177,12 +178,11 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
 | **tpm** | Plugin manager | `M-i` install, `M-u` update, `M-x` clean |
 | **tmux-resurrect** | Save/restore sessions | Saves ssh, vi, vim, nvim, man, tail, top, htop |
 | **tmux-continuum** | Auto-save every 15min | `@continuum-restore 'on'` for auto-restore on start |
-| **tmux-sessionx** | Enhanced session switcher | `Prefix + o`, zoxide mode enabled |
 | **tmux-floax** | Floating window management | — |
 | **tmux-fzf-url** | URL extraction from pane | `Prefix + u`, opens via `ropen`, 2000 URL history |
 | **tmux-prefix-highlight** | Shows prefix active state | Integrated in status-right |
 
-**Removed plugins** (replaced by custom scripts): catppuccin/tmux, tmux-cpu, tmux-loadavg, vim-tmux-navigator.
+**Removed plugins** (replaced by custom scripts): catppuccin/tmux, tmux-cpu, tmux-loadavg, vim-tmux-navigator, tmux-sessionx.
 
 **Session-closed hook**: Fires resurrect save on session close to prevent ghost sessions on restore.
 

@@ -7,8 +7,7 @@
 
 | Keybinding | Description |
 |------------|-------------|
-| `<prefix> C-c` | Create new session |
-| `<prefix> o` | SessionX (enhanced session switcher) |
+| `<prefix> o` | Session manager (switch, create, rename, move pane/window) |
 
 ## 🖼️ Windows
 
@@ -121,6 +120,18 @@ Press `<prefix> a` to enter apps mode, then:
 All copy operations automatically use `rclip` for seamless local/remote synchronization.
 - Works transparently across SSH sessions and nested tmux environments
 - Supports OSC52 fallback when Remote Bridge tunnel is unavailable
+
+## 📡 Session Manager (`<prefix> o`)
+
+| Key | Action |
+|-----|--------|
+| `Enter` | Switch to selected session |
+| `Enter` (on `[+ New Session]`) | Create session via zoxide or typed path (`~/...`) |
+| `ctrl-r` | Rename selected session |
+| `ctrl-d` | Delete selected session (with confirmation) |
+| `ctrl-f` | Browse filesystem to create session |
+| `ctrl-s` | Move current pane to selected session |
+| `ctrl-w` | Move current window to selected session |
 
 ## 💡 Pro Tips
 
