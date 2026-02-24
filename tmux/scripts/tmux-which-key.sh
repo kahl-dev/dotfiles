@@ -41,8 +41,7 @@ show_root() {
         "  [r] Reload config"          "r" "source-file ~/.dotfiles/tmux/tmux.conf \; display-message 'Config reloaded!'" \
         "" \
         "Help" "" "" \
-        "  [?] Cheatsheet"             "?" "run-shell -b \"tmux display-popup -d '#{pane_current_path}' -xC -yC -w90% -h90% -E 'bash $SCRIPT_DIR/tmux-cheatsheet.sh'\"" \
-        "  [/] Search bindings"        "/" "run-shell -b \"tmux display-popup -d '#{pane_current_path}' -xC -yC -w80% -h40% -E 'bash $SCRIPT_DIR/tmux-cheatsheet-search.sh'\""
+        "  [?] Cheatsheet"             "?" "run-shell -b \"tmux display-popup -d '#{pane_current_path}' -xC -yC -w90% -h90% -E 'bash $SCRIPT_DIR/tmux-cheatsheet.sh'\""
 }
 
 show_apps() {

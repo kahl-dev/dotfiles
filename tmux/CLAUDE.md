@@ -32,7 +32,6 @@ tmux/
     ├── hostname-display.sh        # Machine name (empty on primary Mac)
     ├── lit-info-urls.sh           # TYPO3 project URL opener (Prefix+U)
     ├── tmux-cheatsheet.sh         # Renders cheatsheet.md via glow
-    ├── tmux-cheatsheet-search.sh  # fzf keybinding search
     ├── update-check.sh            # Staleness count for status bar (brew/mise/tpm/repos)
     └── update-detail.sh           # Interactive update popup (Prefix+D)
 ```
@@ -116,7 +115,6 @@ Config passes width: `#(~/.dotfiles/tmux/scripts/status-line-main.sh #{client_wi
 | `Prefix + C` | Toggle Claude usage display on/off |
 | `Prefix + D` | Update status detail popup (brew/mise/tpm/repos staleness) |
 | `Prefix + ?` | Show cheatsheet (glow popup, fallback: less) |
-| `Prefix + /` | fzf keybinding search (copies selection via rclip) |
 | `Prefix + Space` | Which-key menu (all bindings, nested submenus) |
 
 ### Which-Key Menu (`Prefix + Space`)

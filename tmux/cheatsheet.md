@@ -64,7 +64,6 @@
 | Keybinding | Description |
 |------------|-------------|
 | `<prefix> ?` | This cheatsheet (beautiful glow rendering) |
-| `<prefix> /` | Search keybindings (interactive fzf) |
 | `<prefix> Space` | **Which-key menu** (all bindings, nested submenus) |
 | `<prefix> u` | URL finder (tmux-fzf-url) |
 | `<prefix> r` | Reload tmux config |
@@ -138,7 +137,7 @@ All copy operations automatically use `rclip` for seamless local/remote synchron
 
 ## 💡 Pro Tips
 
-- **Quick Search**: Use `<prefix> /` to instantly search for specific keybindings
+- **Which-Key**: Use `<prefix> Space` to discover all available keybindings
 - **Focus Mode**: `<prefix> z` quickly zooms/unzooms panes for focused work  
 - **Vim Integration**: `C-h/j/k/l` navigation works seamlessly with vim splits
 - **Smart Clipboard**: Mouse selection automatically copies to system clipboard via rclip

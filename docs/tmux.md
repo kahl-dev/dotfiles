@@ -27,8 +27,7 @@ tmux/
 │   ├── lit-info-urls.sh         # Project URL helper
 │   ├── tmux-session-manager.sh   # Session manager (switch, create, rename, move)
 │   ├── tmux-which-key.sh         # Which-key menu (nested submenus for apps/tpm)
-│   ├── tmux-cheatsheet.sh        # Cheatsheet popup
-│   └── tmux-cheatsheet-search.sh # Cheatsheet search UI
+│   └── tmux-cheatsheet.sh        # Cheatsheet popup
 ├── plugins/              # TPM plugin directory
 ├── resurrect/           # Session save data
 └── tmux-commands/       # Custom command scripts
@@ -85,7 +84,6 @@ tmux/
 |-----|--------|-------------|
 | `Space` | Which-key menu | All bindings with nested submenus (apps, tpm) |
 | `?` | Cheatsheet | Show tmux cheatsheet popup (full reference) |
-| `/` | Search bindings | Interactive fzf keybinding search |
 | `o` | Session manager | Switch, create, rename, delete, move pane/window |
 | `u` | FZF URL | Open URL finder |
 | `a` | Apps layer | g/y/b/m = window, G/Y/B/M = popup (lazygit, yazi, btop, glow) |
