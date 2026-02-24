@@ -58,6 +58,7 @@
 | `v` | Start selection |
 | `C-v` | Rectangle select |
 | `y` | Yank/copy (via rclip) |
+| `o` | Switch selection ends (other-end) |
 
 ## 🛠️ Tools
 
@@ -66,6 +67,10 @@
 | `<prefix> ?` | This cheatsheet (beautiful glow rendering) |
 | `<prefix> Space` | **Which-key menu** (all bindings, nested submenus) |
 | `<prefix> u` | URL finder (tmux-fzf-url) |
+| `<prefix> Tab` | Extract text from pane (extrakto — paths, hashes, words) |
+| `<prefix> F` | Thumbs hint copy (Vimium-style letter hints) |
+| `<prefix> /` | Fuzzy scrollback search (fuzzback) |
+| `<prefix> *` | Kill hung process in pane (cowboy) |
 | `<prefix> r` | Reload tmux config |
 | `<prefix> D` | Update status detail popup |
 

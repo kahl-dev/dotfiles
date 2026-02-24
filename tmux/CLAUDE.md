@@ -154,6 +154,10 @@ All apps inherit current pane's working directory. Status bar shows `󰀻 APPS` 
 | `C-Shift-Left/Right` | Swap window AND auto-select the swapped position |
 | `Prefix + o` / `tm` alias | Session manager (preview pane, icons, git branches, window count) |
 | `Prefix + u` | Extract and open URLs from pane (tmux-fzf-url → ropen) |
+| `Prefix + Tab` | Fuzzy extract text from pane — paths, hashes, words (extrakto) |
+| `Prefix + F` | Vimium-style hint copy — highlights patterns with letter hints (tmux-thumbs) |
+| `Prefix + /` | Fuzzy scrollback search with fzf preview (tmux-fuzzback) |
+| `Prefix + *` | Kill hung process in current pane (tmux-cowboy) |
 | `Prefix + U` | Open TYPO3 project URLs (lit-info, conditional on `~/repos/li-tools`) |
 
 ### Kill Operations (Auto-Save)
@@ -182,10 +186,11 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
 - OSC52 fallback when Remote Bridge unavailable
 - All copy-mode bindings (vi AND emacs) route through rclip:
   - `v` = begin-selection, `y` = copy, `Y` = copy line, `Enter` = copy
+  - `o` = switch selection ends (other-end)
   - Double-click = select word + auto-copy, Triple-click = select line + auto-copy
   - Mouse drag stays in copy mode on release
 
-## 🔌 Plugins (6 total, TPM-managed)
+## 🔌 Plugins (10 total, TPM-managed)
 
 | Plugin | Purpose | Key Config |
 |--------|---------|------------|
@@ -195,6 +200,10 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
 | **tmux-floax** | Floating window management | — |
 | **tmux-fzf-url** | URL extraction from pane | `Prefix + u`, opens via `ropen`, 2000 URL history |
 | **tmux-prefix-highlight** | Shows prefix active state | Integrated in status-right |
+| **extrakto** | Fuzzy text extraction from pane | `Prefix + Tab`, copy via rclip, insert at cursor with Enter |
+| **tmux-thumbs** | Vimium-style hint copy | `Prefix + F`, highlights patterns with letter hints |
+| **tmux-fuzzback** | Fuzzy scrollback search | `Prefix + /`, fzf popup with preview |
+| **tmux-cowboy** | Kill hung process | `Prefix + *`, sends `kill -9` to pane process |
 
 **Removed plugins** (replaced by custom scripts): catppuccin/tmux, tmux-cpu, tmux-loadavg, vim-tmux-navigator, tmux-sessionx.
 
@@ -307,6 +316,7 @@ Tracks when tools were last updated via timestamp files in `$CACHE_DIR`. Zero-co
 - **macOS `memory_pressure`**: Primary source for RAM %, `vm_stat` as fallback (page counts need integer validation)
 - **`df -P`**: Forces POSIX output format — consistent across platforms
 - **`C-\` in if-shell**: Needs double-escaped backslash (`C-\\`) for vim-aware pane nav
+- **tmux-thumbs** requires Rust toolchain for first install — TPM compiles it automatically
 
 ## 🏗️ Adding New Segments
 

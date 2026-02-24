@@ -37,6 +37,10 @@ show_root() {
         "" \
         "Tools" "" "" \
         "  [u] URLs in pane"           "u" "run-shell -b '~/.dotfiles/tmux/plugins/tmux-fzf-url/fzf-url.sh'" \
+        "  [Tab] Extract text (fzf)"   "Tab" "run-shell -b '~/.dotfiles/tmux/plugins/extrakto/scripts/open.sh'" \
+        "  [F] Thumbs (hint copy)"     "F" "run-shell -b '~/.dotfiles/tmux/plugins/tmux-thumbs/tmux-thumbs.sh'" \
+        "  [/] Search scrollback"      "/" "run-shell -b '~/.dotfiles/tmux/plugins/tmux-fuzzback/fuzzback.sh'" \
+        "  [*] Kill process"           "*" "run-shell '~/.dotfiles/tmux/plugins/tmux-cowboy/scripts/cowboy.sh'" \
         "  [C] Toggle Claude usage"    "C" "run-shell 'current=\$(tmux show -gqv @show-claude-usage); if [ \"\$current\" = \"on\" ]; then tmux set -g @show-claude-usage \"off\"; tmux display-message \"Claude usage: OFF\"; else tmux set -g @show-claude-usage \"on\"; tmux display-message \"Claude usage: ON\"; fi; tmux refresh-client -S'" \
         "  [D] Update status"          "D" "display-popup -E -xC -yC -w 80% -h 80% '~/.dotfiles/tmux/scripts/update-detail.sh'" \
         "  [Enter] Copy mode"          "Enter" "copy-mode" \

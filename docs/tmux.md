@@ -79,6 +79,7 @@ tmux/
 | `v` | `begin-selection` | Start selection (in copy mode) |
 | `y` | `copy-pipe-and-cancel 'rclip'` | Copy selection to clipboard |
 | `Y` | `select-line + copy-pipe` | Copy entire line via rclip |
+| `o` | `other-end` | Switch selection ends |
 
 #### Plugin & Tool Shortcuts
 | Key | Action | Description |
@@ -87,6 +88,10 @@ tmux/
 | `?` | Cheatsheet | Show tmux cheatsheet popup (full reference) |
 | `o` | Session manager | Switch, create, rename, delete, move pane/window |
 | `u` | FZF URL | Open URL finder |
+| `Tab` | Extrakto | Fuzzy extract text from pane (paths, hashes, words) |
+| `F` | Thumbs | Vimium-style hint copy with letter labels |
+| `/` | Fuzzback | Fuzzy search scrollback buffer with preview |
+| `*` | Cowboy | Kill hung process in current pane |
 | `U` | TYPO3 URLs | Open project URLs via lit-info (conditional) |
 | `a` | Apps layer | g/y/b/m = window, G/Y/B/M = popup (lazygit, yazi, btop, glow) |
 | `t` | TPM layer | i = install, u = update, x = clean |
@@ -148,6 +153,31 @@ tmux/
 - **Purpose**: Quick URL opening from terminal output
 - **Binding**: `Prefix + u`
 - **Features**: Scan terminal for URLs and open with fzf selection
+
+### Text Extraction & Search
+
+#### extrakto
+- **Purpose**: Fuzzy text extraction from pane content (paths, hashes, words, IPs)
+- **Binding**: `Prefix + Tab`
+- **Features**: `Tab` to copy via rclip, `Enter` to insert at cursor position
+
+#### tmux-thumbs
+- **Purpose**: Vimium-style hint copy — highlights patterns with letter labels
+- **Binding**: `Prefix + F`
+- **Features**: Highlights all recognizable patterns (paths, hashes, IPs, URLs), press letter to copy via rclip
+- **Note**: Requires Rust toolchain (compiled automatically by TPM on first install)
+
+#### tmux-fuzzback
+- **Purpose**: Fuzzy search through scrollback buffer with fzf preview
+- **Binding**: `Prefix + /`
+- **Features**: Full scrollback search with context preview, jumps to match in copy mode
+
+### Process Management
+
+#### tmux-cowboy
+- **Purpose**: One-key process kill for hung processes
+- **Binding**: `Prefix + *`
+- **Action**: Sends `kill -9` to the foreground process in current pane
 
 ### Visual Enhancements
 
@@ -272,6 +302,7 @@ When connecting via SSH, `tmux.remote.conf` is automatically loaded:
 - **tmux 3.0+** (3.3+ recommended for advanced formatting)
 - **rclip** (universal clipboard tool)
 - **bash 4.0+** (advanced regex, associative arrays)
+- **Rust toolchain** (for tmux-thumbs compilation via TPM)
 
 ### Installation Steps
 
