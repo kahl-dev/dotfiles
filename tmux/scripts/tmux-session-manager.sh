@@ -618,13 +618,15 @@ main() {
         input="$ICON_NEW"
     fi
 
-    # Header with ANSI-colored keybinding hints
+    # Header with ANSI-colored keybinding hints (2 lines inside tmux to avoid cutoff)
     local header expect_keys
     if [[ -n "$INSIDE_TMUX" ]]; then
-        header="${COLOR_DIM}⏎${COLOR_TEXT} switch ${COLOR_DIM}│ ^r${COLOR_TEXT} rename ${COLOR_DIM}│ ^d${COLOR_TEXT} delete ${COLOR_DIM}│ ^f${COLOR_TEXT} browse ${COLOR_DIM}│ ^s${COLOR_TEXT} pane ${COLOR_DIM}│ ^w${COLOR_TEXT} window${COLOR_RESET}"
+        local line1="${COLOR_DIM}⏎${COLOR_TEXT} switch  ${COLOR_DIM}^r${COLOR_TEXT} rename  ${COLOR_DIM}^d${COLOR_TEXT} delete  ${COLOR_DIM}^f${COLOR_TEXT} browse"
+        local line2="${COLOR_DIM}^s${COLOR_TEXT} move pane  ${COLOR_DIM}^w${COLOR_TEXT} move window"
+        header="${line1}${COLOR_RESET}"$'\n'"${line2}${COLOR_RESET}"
         expect_keys="ctrl-f,ctrl-d,ctrl-s,ctrl-w"
     else
-        header="${COLOR_DIM}⏎${COLOR_TEXT} attach ${COLOR_DIM}│ ^r${COLOR_TEXT} rename ${COLOR_DIM}│ ^d${COLOR_TEXT} delete ${COLOR_DIM}│ ^f${COLOR_TEXT} browse${COLOR_RESET}"
+        header="${COLOR_DIM}⏎${COLOR_TEXT} attach  ${COLOR_DIM}^r${COLOR_TEXT} rename  ${COLOR_DIM}^d${COLOR_TEXT} delete  ${COLOR_DIM}^f${COLOR_TEXT} browse${COLOR_RESET}"
         expect_keys="ctrl-f,ctrl-d"
     fi
 
