@@ -6,7 +6,7 @@ set -euo pipefail
 
 source "$(dirname "$0")/cache-lib.sh"
 CACHE_FILE="$CACHE_DIR/tmux-cpu"
-check_cache "$CACHE_FILE" 3 && exit 0
+check_cache "$CACHE_FILE" 5 && exit 0
 
 # Get CPU usage - compatible with both macOS and Linux
 if command -v top >/dev/null 2>&1; then

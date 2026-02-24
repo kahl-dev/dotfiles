@@ -120,7 +120,7 @@ if [[ -n "$update_val" ]] && [[ "$update_val" =~ ^[0-9]+$ ]] && [[ $update_val -
 fi
 
 # Get hostname display
-hostname_display="$(~/.dotfiles/tmux/scripts/hostname-display.sh)"
+hostname_display="$(~/.dotfiles/tmux/scripts/hostname-display.sh 2>/dev/null || true)"
 
 # Build status line: resources [│ env] [│ claude] [│ update] [│ hostname]
 status_line="${resources}"

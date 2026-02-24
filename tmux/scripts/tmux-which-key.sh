@@ -37,8 +37,11 @@ show_root() {
         "" \
         "Tools" "" "" \
         "  [u] URLs in pane"           "u" "run-shell -b '~/.dotfiles/tmux/plugins/tmux-fzf-url/fzf-url.sh'" \
+        "  [C] Toggle Claude usage"    "C" "run-shell 'current=\$(tmux show -gqv @show-claude-usage); if [ \"\$current\" = \"on\" ]; then tmux set -g @show-claude-usage \"off\"; tmux display-message \"Claude usage: OFF\"; else tmux set -g @show-claude-usage \"on\"; tmux display-message \"Claude usage: ON\"; fi; tmux refresh-client -S'" \
+        "  [D] Update status"          "D" "display-popup -E -xC -yC -w 80% -h 80% '~/.dotfiles/tmux/scripts/update-detail.sh'" \
         "  [Enter] Copy mode"          "Enter" "copy-mode" \
         "  [r] Reload config"          "r" "source-file ~/.dotfiles/tmux/tmux.conf \; display-message 'Config reloaded!'" \
+        "  [_] Full-width split"       "_" "split-window -fv" \
         "" \
         "Help" "" "" \
         "  [?] Cheatsheet"             "?" "run-shell -b \"tmux display-popup -d '#{pane_current_path}' -xC -yC -w90% -h90% -E 'bash $SCRIPT_DIR/tmux-cheatsheet.sh'\""

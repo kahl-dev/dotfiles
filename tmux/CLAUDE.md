@@ -111,7 +111,7 @@ Config passes width: `#(~/.dotfiles/tmux/scripts/status-line-main.sh #{client_wi
 
 | Key | Action |
 |-----|--------|
-| `Prefix + R` | Reload status configuration |
+| `Prefix + r` | Reload tmux config |
 | `Prefix + C` | Toggle Claude usage display on/off |
 | `Prefix + D` | Update status detail popup (brew/mise/tpm/repos staleness) |
 | `Prefix + ?` | Show cheatsheet (glow popup, fallback: less) |
@@ -185,7 +185,7 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
   - Double-click = select word + auto-copy, Triple-click = select line + auto-copy
   - Mouse drag stays in copy mode on release
 
-## 🔌 Plugins (7 total, TPM-managed)
+## 🔌 Plugins (6 total, TPM-managed)
 
 | Plugin | Purpose | Key Config |
 |--------|---------|------------|
@@ -208,7 +208,7 @@ Auto-detected via `if-shell 'test -n "$SSH_CLIENT"'` → loads `tmux.remote.conf
 - OSC52 clipboard enabled (`set -s set-clipboard on`)
 - SSH agent socket managed via symlink: `~/.ssh/ssh_auth_sock` → actual socket
 - Hooks refresh SSH agent on: session-created, client-attached
-- Fallback: finds working socket in `/tmp/ssh-*/agent.*`
+- Manual refresh: `Prefix + R` — finds working socket in `/tmp/ssh-*/agent.*`
 - Update check disabled (`@show-update-check "off"`) — tools like brew/mise not installed on remote
 
 ## 🔧 Script Pattern
@@ -245,7 +245,7 @@ write_cache "$CACHE_FILE" "$result"
 
 | Script | TTL | Reason |
 |--------|-----|--------|
-| cpu-simple.sh | 3s | Changes rapidly |
+| cpu-simple.sh | 5s | Matches status-interval |
 | mem-simple.sh | 5s | Changes rapidly |
 | disk-simple.sh | 30s | Changes slowly |
 | uptime-simple.sh | 60s | Changes slowly |

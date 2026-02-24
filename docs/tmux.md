@@ -27,10 +27,11 @@ tmux/
 │   ├── lit-info-urls.sh         # Project URL helper
 │   ├── tmux-session-manager.sh   # Session manager (switch, create, rename, move)
 │   ├── tmux-which-key.sh         # Which-key menu (nested submenus for apps/tpm)
-│   └── tmux-cheatsheet.sh        # Cheatsheet popup
+│   ├── tmux-cheatsheet.sh        # Cheatsheet popup
+│   ├── update-check.sh           # Staleness count for status bar
+│   └── update-detail.sh          # Interactive update popup
 ├── plugins/              # TPM plugin directory
-├── resurrect/           # Session save data
-└── tmux-commands/       # Custom command scripts
+└── resurrect/           # Session save data
 ```
 
 ## Key Bindings Reference
@@ -77,7 +78,7 @@ tmux/
 | `Ctrl+[` | `copy-mode` | Enter copy mode (alternative) |
 | `v` | `begin-selection` | Start selection (in copy mode) |
 | `y` | `copy-pipe-and-cancel 'rclip'` | Copy selection to clipboard |
-| `Y` | `copy-line` | Copy entire line |
+| `Y` | `select-line + copy-pipe` | Copy entire line via rclip |
 
 #### Plugin & Tool Shortcuts
 | Key | Action | Description |
@@ -86,6 +87,7 @@ tmux/
 | `?` | Cheatsheet | Show tmux cheatsheet popup (full reference) |
 | `o` | Session manager | Switch, create, rename, delete, move pane/window |
 | `u` | FZF URL | Open URL finder |
+| `U` | TYPO3 URLs | Open project URLs via lit-info (conditional) |
 | `a` | Apps layer | g/y/b/m = window, G/Y/B/M = popup (lazygit, yazi, btop, glow) |
 | `t` | TPM layer | i = install, u = update, x = clean |
 
@@ -108,11 +110,7 @@ tmux/
 #### TPM (Tmux Plugin Manager)
 - **Purpose**: Plugin management system
 - **Installation**: Auto-installs on first tmux start
-- **Controls**: `Alt+I` (install), `Alt+U` (update), `Alt+X` (clean)
-
-#### tmux-sensible
-- **Purpose**: Sensible default settings
-- **Features**: Better defaults for escape time, status interval, etc.
+- **Controls**: `Prefix + t` layer: `i` (install), `u` (update), `x` (clean)
 
 ### Session Management
 
@@ -150,10 +148,6 @@ tmux/
 - **Purpose**: Quick URL opening from terminal output
 - **Binding**: `Prefix + u`
 - **Features**: Scan terminal for URLs and open with fzf selection
-
-#### tmux-menus
-- **Purpose**: Context menus for tmux operations
-- **Features**: Right-click or keyboard-driven menus
 
 ### Visual Enhancements
 
@@ -211,7 +205,7 @@ When connecting via SSH, `tmux.remote.conf` is automatically loaded:
 - Uses symlinked socket at `~/.ssh/ssh_auth_sock`
 
 **Manual refresh:**
-- `Prefix + R`: Find working SSH agent and refresh connection
+- `Prefix + R`: Find working SSH agent and refresh connection (remote only)
 
 ### Nested Session Handling
 
@@ -227,7 +221,7 @@ When connecting via SSH, `tmux.remote.conf` is automatically loaded:
 
 ### CPU Monitoring
 - **Script**: `scripts/cpu-simple.sh`
-- **Cache**: 3-second TTL in `~/.cache/tmux-cpu`
+- **Cache**: 5-second TTL in `~/.cache/tmux-cpu`
 - **Algorithm**: `busy_cpu = 100 - idle_cpu`
 - **Platforms**: macOS (via `top`), Linux (via `top` or `iostat`)
 
@@ -236,7 +230,7 @@ When connecting via SSH, `tmux.remote.conf` is automatically loaded:
 - **Cache**: 5-second TTL in `~/.cache/tmux-mem`
 - **macOS**: `memory_pressure` or `vm_stat` fallback
 - **Linux**: `/proc/meminfo` parsing
-- **Format**: Human-readable (8.2G, 512M, 2048K)
+- **Format**: Bare integer percentage (caller adds `%`)
 
 ### Host Information
 - **Icon detection**: System-specific icons (MacBook, iMac, Linux)
@@ -254,19 +248,10 @@ When connecting via SSH, `tmux.remote.conf` is automatically loaded:
 ### Cache Management
 ```bash
 # Cache locations and TTLs
-~/.cache/tmux-cpu        # 3 seconds
+~/.cache/tmux-cpu        # 5 seconds
 ~/.cache/tmux-mem        # 5 seconds  
 ~/.cache/tmux-host-icon  # 1 hour
 ~/.cache/tmux-hostname   # 5 minutes
-```
-
-### Smart Refresh Triggers
-```bash
-# Multiple refresh mechanisms
-set -g status-interval 5                    # Base refresh rate
-set-hook -g session-created 'refresh-client -S'     # New session
-set-hook -g session-closed 'refresh-client -S'      # Session end  
-set-hook -g client-session-changed 'refresh-client -S'  # Switch
 ```
 
 ## Color Scheme (Catppuccin Mocha)
@@ -358,7 +343,7 @@ tmux -V
 ## Maintenance
 
 ### Regular Tasks
-- **Plugin updates**: `Alt+U` in tmux session
+- **Plugin updates**: `Prefix + t`, then `u`
 - **Session cleanup**: Automatic via continuum (24-hour retention)
 - **Cache cleanup**: Automatic via system (respects TTL)
 

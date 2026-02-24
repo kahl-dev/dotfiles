@@ -115,7 +115,7 @@ done
 echo ""
 separator
 echo ""
-echo "  ${COLOR_BLUE}a${COLOR_TEXT} all tools ${COLOR_DIM}│${COLOR_RESET} ${COLOR_BLUE}r${COLOR_TEXT} repos ${COLOR_DIM}│${COLOR_RESET} ${COLOR_DIM}q${COLOR_TEXT} close${COLOR_RESET}"
+echo "  ${COLOR_DIM}1-4${COLOR_TEXT} individual ${COLOR_DIM}│${COLOR_RESET} ${COLOR_BLUE}a${COLOR_TEXT} all tools ${COLOR_DIM}│${COLOR_RESET} ${COLOR_BLUE}r${COLOR_TEXT} repos ${COLOR_DIM}│${COLOR_RESET} ${COLOR_DIM}q${COLOR_TEXT} close${COLOR_RESET}"
 echo ""
 
 read -rsn1 choice
@@ -142,7 +142,12 @@ case "$choice" in
     ;;
   4|r)
     section_header "󰊢" "Syncing Repos..."
-    for repo_dir in "$HOME/.dotfiles" "$HOME/repos/claude-config" "$HOME/repos/louis-claude-marketplace"; do
+    SYNC_REPOS=("$HOME/.dotfiles" "$HOME/repos/claude-config")
+    if [[ -n "${TMUX_EXTRA_SYNC_REPOS:-}" ]]; then
+      IFS=':' read -ra extra <<< "$TMUX_EXTRA_SYNC_REPOS"
+      SYNC_REPOS+=("${extra[@]}")
+    fi
+    for repo_dir in "${SYNC_REPOS[@]}"; do
       [[ -d "$repo_dir/.git" ]] || continue
       name=$(basename "$repo_dir")
       echo "  ${COLOR_DIM}${name}${COLOR_RESET}"
