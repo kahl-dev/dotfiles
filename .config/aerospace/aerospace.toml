@@ -83,6 +83,14 @@ run = ['layout floating']
 if.app-name-regex-substring = 'superwisper'
 run = ['layout floating']
 
+[[on-window-detected]]
+if.app-name-regex-substring = 'notes'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'reminders'
+run = ['layout floating']
+
 # Possible values: (qwerty|dvorak|colemak)
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
 [key-mapping]
