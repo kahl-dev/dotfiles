@@ -5,7 +5,6 @@ return {
       keymap = {
         ["<C-j>"] = { "select_next", "fallback" },
         ["<C-k>"] = { "select_prev", "fallback" },
-        -- ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
       },
       sources = {
         min_keyword_length = function(ctx)
