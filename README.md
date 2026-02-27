@@ -97,6 +97,34 @@ brewup                     # Update all brew packages and cleanup
 brewdump                   # Export current packages to Brewfile
 ```
 
+## ✅ Post-Installation Checklist
+
+Manual steps after running `./install-profile macos`:
+
+### System Settings
+- [ ] iCloud → Drive → enable Desktop & Documents sync
+- [ ] Accessibility → Pointer Control → Trackpad Options → enable 3-finger drag
+- [ ] Keyboard → Modifier Keys → verify Caps Lock → Control (Karabiner handles this, but verify)
+
+### Accounts & Auth
+- [ ] Sign into 1Password + enable SSH Agent
+- [ ] Add SSH keys to `~/.dotfiles-local/ssh-config` (work servers, home lab, etc.)
+- [ ] Create `~/.dotfiles-local/.zshenv` for machine-specific env vars
+- [ ] Create `~/.dotfiles-local/zshrc` for machine-specific shell config
+- [ ] Add shared iCloud accounts for Contacts sync (if needed)
+
+### App Configuration
+- [ ] Bartender — configure menu bar items
+- [ ] Stream Deck — set up profiles and actions
+- [ ] Raycast — sign in for settings sync
+- [ ] Alfred — set sync folder to restore preferences (if using Alfred over Raycast)
+
+### Verify
+- [ ] `brewup` — update all packages
+- [ ] `mackup restore` — restore app settings from backup
+- [ ] SSH connections work (`ssh <host>` for each configured host)
+- [ ] Remote Bridge clipboard works (`echo "test" | pbcopy` over SSH)
+
 ## 🆘 Troubleshooting
 
 **Broken symlinks**  

@@ -22,6 +22,9 @@ end
 hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", reloadConfig):start()
 hs.alert.show("Hammerspoon loaded")
 
+-- Enable IPC for hs CLI (used by AeroSpace cheatsheet)
+require("hs.ipc")
+
 -- Load modules
 local config = require("modules.config")
 local audioManager = require("modules.audio-manager")
@@ -29,6 +32,7 @@ local usbManager = require("modules.usb-device-manager")
 local displayManager = require("modules.display-manager")
 local ipadManager = require("modules.ipad-manager")
 local hotkeyLayer = require("modules.hotkey-layer")
+require("modules.aerospace-cheatsheet") -- loaded for hs CLI access from AeroSpace
 
 -- Initialize configuration
 config.init()
