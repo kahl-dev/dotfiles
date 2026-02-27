@@ -3,7 +3,8 @@ if command_exists nvim; then
   export VISUAL="nvim"
 
   if command_exists mise; then
-    export NEOVIM_NODE_HOST=$(mise which node 2>/dev/null)
+    # Use global mise node (not project-local) so Neovim/LSP always has a modern Node
+    export NEOVIM_NODE_HOST="$(mise where node@lts 2>/dev/null)/bin/node"
   elif command_exists fnm; then
     export NEOVIM_NODE_HOST=$(fnm exec --using lts-latest -- which node)
   fi
