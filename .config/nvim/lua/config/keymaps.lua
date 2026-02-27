@@ -82,3 +82,16 @@ map("n", "<leader>Cogf", "<cmd>lua require('url_utils').open_file()<CR>", { desc
 map("n", "<leader>y", '"+y', { desc = "Copy to system clipboard" })
 map("v", "<leader>y", '"+y', { desc = "Copy to system clipboard" })
 map("n", "<leader>Y", '"+Y', { desc = "Copy line to system clipboard" })
+
+-- Copy file path to clipboard (overrides built-in Ctrl+G file info)
+map("n", "<C-g>", function()
+  local path = vim.fn.expand("%:.")
+  vim.fn.setreg("+", path)
+  vim.notify("📋 " .. path)
+end, { desc = "Copy relative file path" })
+
+map("n", "g<C-g>", function()
+  local path = vim.fn.expand("%:p")
+  vim.fn.setreg("+", path)
+  vim.notify("📋 " .. path)
+end, { desc = "Copy absolute file path" })
