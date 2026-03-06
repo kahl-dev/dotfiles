@@ -162,7 +162,7 @@ ctrl-alt-shift-cmd-k = 'move-node-to-monitor --wrap-around up --focus-follows-wi
 ctrl-alt-shift-cmd-semicolon = 'mode service'
 ctrl-alt-shift-cmd-a = 'mode apps'
 
-# Cheatsheet (alt-? = show all keybindings)
+# Help overlays (? = universal help key)
 alt-shift-slash = '''exec-and-forget /opt/homebrew/bin/hs -c "require('modules.aerospace-cheatsheet').toggle()"'''
 
 # ╔══════════════════════════════════════════════════════════════╗
@@ -170,15 +170,18 @@ alt-shift-slash = '''exec-and-forget /opt/homebrew/bin/hs -c "require('modules.a
 # ╚══════════════════════════════════════════════════════════════╝
 
 [workspace-to-monitor-force-assignment]
-1 = 'main'
-2 = 'main'
-3 = 'main'
-4 = 'main'
-5 = 'main'
-6 = 'secondary'
-7 = 'secondary'
-8 = 'secondary'
-9 = 'secondary'
+# Primary workspaces → LG HDR 4K (main work)
+1 = ['LG HDR 4K', 'main']
+2 = ['LG HDR 4K', 'main']
+3 = ['LG HDR 4K', 'main']
+4 = ['LG HDR 4K', 'main']
+5 = ['LG HDR 4K', 'main']
+# Secondary workspaces → LG Ultra HD (reference/docs)
+6 = ['LG Ultra HD', 'secondary', 'main']
+7 = ['LG Ultra HD', 'secondary', 'main']
+# Tertiary workspaces → MacBook (chat/music/monitoring)
+8 = ['Built-in Retina Display', 'secondary', 'main']
+9 = ['Built-in Retina Display', 'secondary', 'main']
 
 # ╔══════════════════════════════════════════════════════════════╗
 # ║  Service Mode (hyper+;)                                       ║
