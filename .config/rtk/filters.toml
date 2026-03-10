@@ -1,0 +1,5 @@
+# RTK Custom Filters — user-global, synced via dotfiles
+# Project-local .rtk/filters.toml takes precedence over these.
+# Docs: https://github.com/rtk-ai/rtk#custom-filters
+# Discover gaps: rtk discover
+schema_version = 1

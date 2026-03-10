@@ -131,6 +131,50 @@
           echo "✓ RTK installed ($(rtk --version 2>/dev/null))"
         fi
 
+    - description: "Symlink RTK config to dotfiles (cross-platform)"
+      command: |
+        DOTFILES_RTK="$HOME/.dotfiles/.config/rtk"
+        if [ ! -d "$DOTFILES_RTK" ]; then
+          echo "⚠️  RTK dotfiles config not found at $DOTFILES_RTK, skipping"
+          exit 0
+        fi
+
+        # Detect OS-native RTK config location
+        case "$(uname -s)" in
+          Darwin) RTK_CONFIG="$HOME/Library/Application Support/rtk" ;;
+          *)      RTK_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/rtk" ;;
+        esac
+
+        # Skip if already correctly linked
+        if [ -L "$RTK_CONFIG" ] && [ "$(readlink "$RTK_CONFIG")" = "$DOTFILES_RTK" ]; then
+          echo "✓ RTK config already linked"
+          exit 0
+        fi
+
+        # Move existing config files into dotfiles if not symlinked
+        if [ -d "$RTK_CONFIG" ] && [ ! -L "$RTK_CONFIG" ]; then
+          echo "🔄 Migrating existing RTK config to dotfiles..."
+          cp -n "$RTK_CONFIG"/* "$DOTFILES_RTK/" 2>/dev/null || true
+          rm -rf "$RTK_CONFIG"
+        fi
+
+        mkdir -p "$(dirname "$RTK_CONFIG")"
+        ln -sfn "$DOTFILES_RTK" "$RTK_CONFIG"
+        echo "✓ RTK config linked: $RTK_CONFIG → $DOTFILES_RTK"
+
+    - description: "Configure Claude Code MCP servers"
+      command: |
+        CLAUDE="$HOME/.local/bin/claude"
+        if [ ! -x "$CLAUDE" ]; then
+          echo "⚠️  Claude Code CLI not found, skipping MCP setup"
+          exit 0
+        fi
+
+        # EXA — semantic web search + code context (neural, not keyword-based)
+        # https://docs.exa.ai/reference/exa-mcp
+        "$CLAUDE" mcp add --transport http -s user exa "https://mcp.exa.ai/mcp?tools=web_search_exa,get_code_context_exa"
+        echo "✓ MCP servers configured"
+
     - description: "Create AI workspace directories for Claude"
       command: |
         mkdir -p ~/tmp/ai/screenshots \

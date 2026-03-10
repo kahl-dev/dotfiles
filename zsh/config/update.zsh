@@ -155,7 +155,48 @@ _dot_update_wizard() {
     fi
   fi
 
-  # 9. Repo sync
+  # 9. RTK (Rust Token Killer)
+  if command -v rtk &>/dev/null; then
+    if $all_yes || _dot_ask "Update RTK?"; then
+      echo "Checking RTK version..."
+      local rtk_current rtk_latest
+      rtk_current="$(rtk --version 2>/dev/null | grep -o '[0-9]*\.[0-9]*\.[0-9]*' || echo 'unknown')"
+
+      rtk_latest="$(curl -fsSL --connect-timeout 5 https://api.github.com/repos/rtk-ai/rtk/releases/latest 2>/dev/null \
+        | grep -o '"tag_name": *"[^"]*"' | head -1 | sed 's/.*"tag_name": *"//;s/"//;s/^v//')"
+
+      if [[ -z "$rtk_latest" ]]; then
+        echo "⚠️  Could not fetch latest RTK version (network error), skipping" >&2
+        update_status[RTK]="failed"
+      elif [[ "$rtk_current" == "$rtk_latest" ]]; then
+        echo "✓ RTK already up to date ($rtk_current)"
+        update_status[RTK]="updated"
+      else
+        echo "📦 Updating RTK $rtk_current → $rtk_latest..."
+        # Activate mise rust environment
+        eval "$(mise env -s bash rust 2>/dev/null)" 2>/dev/null
+        if ! command -v cargo &>/dev/null; then
+          echo "⚠️  cargo not available (add rust to mise config), skipping RTK update" >&2
+          update_status[RTK]="failed"
+        elif _dot_timeout 120 cargo install --git https://github.com/rtk-ai/rtk --quiet 2>&1; then
+          echo "✓ RTK updated to $(rtk --version 2>/dev/null | grep -o '[0-9]*\.[0-9]*\.[0-9]*')"
+          # Auto-update hook if RTK reports it's outdated
+          if rtk --version 2>&1 | grep -qi "hook outdated\|hook.*outdated"; then
+            echo "🔄 Hook outdated, running rtk init -g --auto-patch..."
+            rtk init -g --auto-patch 2>&1 || echo "⚠️  Hook update failed (non-blocking)" >&2
+          fi
+          update_status[RTK]="updated"
+        else
+          echo "⚠️  RTK update failed (cargo build error)" >&2
+          update_status[RTK]="failed"
+        fi
+      fi
+    else
+      update_status[RTK]="skipped"
+    fi
+  fi
+
+  # 10. Repo sync
   if (( ${#DOT_REPOS} > 0 )); then
     if $all_yes || _dot_ask "Sync registered repos?"; then
       echo "Syncing repos..."
@@ -173,7 +214,7 @@ _dot_update_wizard() {
   echo ""
   echo "Update complete:"
   local key status icon
-  for key in zinit LazyVim Treesitter Mason Homebrew Brewfile tmux mise repos; do
+  for key in zinit LazyVim Treesitter Mason Homebrew Brewfile tmux mise RTK repos; do
     status="${update_status[$key]:-}"
     [[ -z "$status" ]] && continue
     case "$status" in
