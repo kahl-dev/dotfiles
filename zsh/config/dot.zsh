@@ -590,14 +590,25 @@ _dot() {
       fi
       ;;
     update)
-      if (( CURRENT == 3 )); then
-        local -a update_opts
-        update_opts=(
-          '--yes:Skip all confirmation prompts'
-          '-y:Skip all confirmation prompts'
-        )
-        _describe 'option' update_opts
-      fi
+      local -a update_opts update_tools
+      update_opts=(
+        '--yes:Skip all confirmation prompts'
+        '-y:Skip all confirmation prompts'
+      )
+      update_tools=(
+        'zinit:Zinit self + plugins'
+        'lazyvim:LazyVim plugins'
+        'treesitter:Treesitter parsers'
+        'mason:Mason LSPs'
+        'brew:Homebrew packages'
+        'brewfile:Brew bundle dump'
+        'tpm:Tmux plugins'
+        'mise:Mise tools'
+        'rtk:RTK (Rust Token Killer)'
+        'repos:Sync registered repos'
+      )
+      _describe 'option' update_opts
+      _describe 'tool' update_tools
       ;;
     *)
       (( CURRENT == 2 )) && _describe 'command' commands
