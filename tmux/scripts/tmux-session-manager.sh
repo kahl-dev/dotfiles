@@ -290,6 +290,8 @@ browse_directories() {
     if command -v fd &>/dev/null; then
         selected=$(fd --type d --hidden \
             --exclude .git \
+            --exclude .gemini \
+            --exclude .claude \
             --exclude node_modules \
             --exclude vendor \
             --exclude .cache \
@@ -304,6 +306,8 @@ browse_directories() {
     else
         selected=$(find "$start_dir" -type d -maxdepth 5 \
             -not -path '*/.git/*' \
+            -not -path '*/.gemini/*' \
+            -not -path '*/.claude/*' \
             -not -path '*/node_modules/*' \
             -not -path '*/vendor/*' \
             2>/dev/null | \
