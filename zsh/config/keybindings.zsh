@@ -42,6 +42,14 @@ bindkey '^J' history-search-forward
 bindkey '^Z' autosuggest-toggle # toggle suggestions
 bindkey '^F' autosuggest-accept # accept suggestions
 
+# Expand aliases on space (shows full command before execution)
+expand-alias() {
+  zle _expand_alias
+  zle self-insert
+}
+zle -N expand-alias
+bindkey -M viins " " expand-alias
+
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^E' edit-command-line
