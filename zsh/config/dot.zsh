@@ -60,11 +60,14 @@ DOT_COMMANDS=(
 # ── Helpers ───────────────────────────────────────────────────────────────────
 _dot_ask() {
   local question="$1"
-  echo -n "$question [y/N] "
-  read -q
-  local result=$?
+  echo -n "$question [y/N/a] "
+  read -k1 answer
   echo ""
-  return $result
+  case "$answer" in
+    a|A) all_yes=true; return 0 ;;
+    y|Y) return 0 ;;
+    *) return 1 ;;
+  esac
 }
 
 _dot_subcmd_error() {
