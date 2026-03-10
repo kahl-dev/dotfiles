@@ -267,18 +267,18 @@ _dot_update_wizard() {
   # Summary
   echo ""
   echo "Update complete:"
-  local key status icon
+  local key tool_status icon
   for key in zinit LazyVim Treesitter Mason Homebrew Brewfile tmux mise RTK repos; do
-    status="${update_status[$key]:-}"
-    [[ -z "$status" ]] && continue
-    case "$status" in
+    tool_status="${update_status[$key]:-}"
+    [[ -z "$tool_status" ]] && continue
+    case "$tool_status" in
       updated) icon="✓" ;;
       failed)  icon="✗" ;;
       skipped) icon="-" ;;
       timeout) icon="⏱" ;;
       *)       icon="?" ;;
     esac
-    printf "  %s %-14s %s\n" "$icon" "$key" "$status"
+    printf "  %s %-14s %s\n" "$icon" "$key" "$tool_status"
   done
   echo ""
 }
