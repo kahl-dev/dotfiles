@@ -64,6 +64,12 @@ brew "fzf"
 brew "gemini-cli"
 # GitHub command-line tool
 brew "gh"
+# OpenType text shaping engine
+brew "harfbuzz"
+# Framework for layout and rendering of i18n text
+brew "pango"
+# OCR (Optical Character Recognition) engine
+brew "tesseract"
 # Distributed revision control system
 brew "git"
 # Enable transparent encryption/decryption of files in a git repo
@@ -76,12 +82,14 @@ brew "git-extras"
 brew "glow"
 # GNU Privacy Guard (OpenPGP)
 brew "gnupg"
-# OpenType text shaping engine
-brew "harfbuzz"
 # Improved top (interactive process viewer)
 brew "htop"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.14"
 # User-friendly cURL replacement (command-line HTTP client)
 brew "httpie"
+# Command-line benchmarking tool
+brew "hyperfine"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 # Simple terminal UI for git commands
@@ -124,6 +132,8 @@ brew "neofetch"
 brew "neovim"
 # Libraries for security-enabled client and server applications
 brew "nss"
+# Adds an OCR text layer to scanned PDF files
+brew "ocrmypdf"
 # Create, run, and share large language models (LLMs)
 brew "ollama"
 # Search tool like grep and The Silver Searcher
@@ -132,8 +142,6 @@ brew "ripgrep"
 brew "opencode"
 # Swiss-army knife of markup format conversion
 brew "pandoc"
-# Framework for layout and rendering of i18n text
-brew "pango"
 # Shell command parallelization utility
 brew "parallel"
 # Execute binaries from Python packages in isolated environments
@@ -148,8 +156,6 @@ brew "poppler"
 brew "postgresql@15", restart_service: :changed, link: true
 # Nicer 'git pull'
 brew "pygitup"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.11"
 # Reattach process (e.g., tmux) to background
 brew "reattach-to-user-namespace"
 # Safe, concurrent, practical language
@@ -168,8 +174,6 @@ brew "stylua"
 brew "switchaudio-osx"
 # Send macOS User Notifications from the command-line
 brew "terminal-notifier"
-# OCR (Optical Character Recognition) engine
-brew "tesseract"
 # Enables extra languages support for Tesseract
 brew "tesseract-lang"
 # Programmatically correct mistyped console commands
@@ -255,8 +259,6 @@ cask "google-chrome"
 cask "google-drive"
 # Desktop automation application
 cask "hammerspoon"
-# AI-powered speech-to-text transcription
-cask "hyperwhisper"
 # System monitoring app
 cask "istat-menus"
 # Keyboard customiser
@@ -371,3 +373,8 @@ vscode "vue.volar"
 go "cmd/go"
 go "cmd/gofmt"
 cargo "kanata"
+cargo "rtk"
+uv "black"
+uv "mypy"
+uv "pre-commit"
+uv "ruff"
