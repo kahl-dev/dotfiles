@@ -47,15 +47,44 @@ tmux/
 | `X` | `kill-window` | Kill current window |
 | `Q` | `kill-session` | Kill current session (with confirmation) |
 
-#### Pane Operations
-| Key | Action | Description |
-|-----|--------|-------------|
-| `\|` | `split-window -h` | Split pane horizontally |
-| `-` | `split-window -v` | Split pane vertically |
-| `_` | `split-window -fv` | Full-width vertical split |
-| `z` | `resize-pane -Z` | Zoom/unzoom pane |
-| `B` | `break-pane` | Break pane out to new window |
-| `E` | `join-pane` | Join pane from another window |
+#### Panes Layer (`Prefix + v`)
+
+Enter panes mode with `Prefix + v`, then press a key:
+
+**Layouts:**
+| Key | Action | Mnemonic |
+|-----|--------|----------|
+| `=` | Balance all panes equally | equal sign |
+| `t` | Tiled auto grid | **t**iled |
+| `m` | Main-vertical (big left) | **m**ain |
+| `M` | Main-horizontal (big top) | **M**ain |
+| `1` | Max 1 row (all side-by-side) | row count |
+| `2` | Max 2 rows | row count |
+| `3` | Max 3 rows | row count |
+
+**Split / Structure:**
+| Key | Action | Mnemonic |
+|-----|--------|----------|
+| `\|` | Split horizontal | visual |
+| `-` | Split vertical | visual |
+| `_` | Full-width vertical split | visual |
+| `j` | Join pane from another window | **j**oin |
+| `b` | Break pane out to new window | **b**reak |
+
+**Swap / Move:**
+| Key | Action | Mnemonic |
+|-----|--------|----------|
+| `h` | Swap with previous pane | vim left |
+| `l` | Swap with next pane | vim right |
+| `s` | Swap by number (overlay) | **s**wap |
+| `r` | Rotate all panes | **r**otate |
+
+**Manage:**
+| Key | Action |
+|-----|--------|
+| `x` | Kill pane |
+| `z` | Zoom/unzoom |
+| `Escape` | Cancel |
 
 #### Pane Navigation (Vim-aware)
 | Key | Action | Description |
@@ -84,8 +113,7 @@ tmux/
 #### Plugin & Tool Shortcuts
 | Key | Action | Description |
 |-----|--------|-------------|
-| `Space` | Which-key menu | All bindings with nested submenus (apps, tpm) |
-| `?` | Cheatsheet | Show tmux cheatsheet popup (full reference) |
+| `?` | Which-key menu | All bindings with nested submenus (apps, tpm) |
 | `o` | Session manager | Switch, create, rename, delete, move pane/window |
 | `u` | FZF URL | Open URL finder |
 | `Tab` | Extrakto | Fuzzy extract text from pane (paths, hashes, words) |
@@ -94,6 +122,7 @@ tmux/
 | `*` | Cowboy | Kill hung process in current pane |
 | `U` | TYPO3 URLs | Open project URLs via lit-info (conditional) |
 | `a` | Apps layer | g/y/b/m = window, G/Y/B/M = popup (lazygit, yazi, btop, glow) |
+| `v` | Panes layer | Layouts, splits, swap, structure (see Panes Layer section) |
 | `t` | TPM layer | i = install, u = update, x = clean |
 
 #### Remote Session Controls

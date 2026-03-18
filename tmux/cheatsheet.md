@@ -16,16 +16,44 @@
 | `<prefix> c` | Create new window |
 | `C-S-Left/Right` | Move window left/right |
 
-## 📦 Panes
+## 📦 Panes (`<prefix> v` layer)
 
-| Keybinding | Description |
-|------------|-------------|
-| `<prefix> \|` | Split horizontal |
-| `<prefix> -` | Split vertical |
-| `<prefix> _` | Split vertical (full height) |
-| `<prefix> z` | Zoom/unzoom pane |
-| `<prefix> B` | Break pane to new window |
-| `<prefix> E` | Join pane from another window |
+Press `<prefix> v` to enter panes mode, then:
+
+### Layouts
+| Key | Description | Mnemonic |
+|-----|-------------|----------|
+| `=` | Balance all panes equally | equal sign |
+| `t` | Tiled auto grid | **t**iled |
+| `m` | Main pane left, rest stacked right | **m**ain |
+| `M` | Main pane top, rest below | **M**ain (shifted) |
+| `1` | All panes in single row | max **1** row |
+| `2` | Grid with max 2 rows | max **2** rows |
+| `3` | Grid with max 3 rows | max **3** rows |
+
+### Split / Structure
+| Key | Description | Mnemonic |
+|-----|-------------|----------|
+| `\|` | Split horizontal | visual |
+| `-` | Split vertical | visual |
+| `_` | Split full-width vertical | visual (wide) |
+| `j` | Join pane from another window | **j**oin |
+| `b` | Break pane out to new window | **b**reak |
+
+### Swap / Move
+| Key | Description | Mnemonic |
+|-----|-------------|----------|
+| `h` | Swap with previous pane | vim left |
+| `l` | Swap with next pane | vim right |
+| `s` | Swap by number (shows pane overlay) | **s**wap |
+| `r` | Rotate all panes | **r**otate |
+
+### Manage
+| Key | Description |
+|-----|-------------|
+| `x` | Kill pane |
+| `z` | Zoom/unzoom pane |
+| `Escape` | Cancel |
 
 ## 🗑️ Kill/Delete
 
@@ -64,8 +92,7 @@
 
 | Keybinding | Description |
 |------------|-------------|
-| `<prefix> ?` | This cheatsheet (beautiful glow rendering) |
-| `<prefix> Space` | **Which-key menu** (all bindings, nested submenus) |
+| `<prefix> ?` | **Which-key menu** (all bindings, nested submenus) |
 | `<prefix> u` | URL finder (tmux-fzf-url) |
 | `<prefix> Tab` | Extract text from pane (extrakto — paths, hashes, words) |
 | `<prefix> F` | Thumbs hint copy (Vimium-style letter hints) |

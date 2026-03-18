@@ -33,6 +33,7 @@ show_root() {
         "" \
         "Layers" "" "" \
         "  [a] Apps  󰀻  >"             "a" "run-shell 'bash $SCRIPT_DIR/tmux-which-key.sh apps'" \
+        "  [v] Panes    >"             "v" "run-shell 'bash $SCRIPT_DIR/tmux-which-key.sh panes'" \
         "  [t] Plugins (TPM)  >"       "t" "run-shell 'bash $SCRIPT_DIR/tmux-which-key.sh tpm'" \
         "" \
         "Tools" "" "" \
@@ -48,7 +49,11 @@ show_root() {
         "  [_] Full-width split"       "_" "split-window -fv" \
         "" \
         "Help" "" "" \
-        "  [?] Cheatsheet"             "?" "run-shell -b \"tmux display-popup -d '#{pane_current_path}' -xC -yC -w90% -h90% -E 'bash $SCRIPT_DIR/tmux-cheatsheet.sh'\""
+        "  [?] Cheatsheet"             "?" "run-shell -b \"tmux display-popup -d '#{pane_current_path}' -xC -yC -w90% -h90% -E 'bash $SCRIPT_DIR/tmux-cheatsheet.sh'\"" \
+        "" \
+        "Other Help Keys" "" "" \
+        "  aerospace   alt ?"          "" "" \
+        "  hammerspoon hyper ."        "" ""
 }
 
 show_apps() {
@@ -70,6 +75,41 @@ show_apps() {
         "  [Esc] Back"                 "Escape" "run-shell 'bash $SCRIPT_DIR/tmux-which-key.sh root'"
 }
 
+show_panes() {
+    tmux display-menu -xC -yC -T "  Panes " \
+        "" \
+        "Layouts" "" "" \
+        "  [=] Balance equally"          "=" "select-layout -E" \
+        "  [t] Tiled (auto grid)"        "t" "select-layout tiled" \
+        "  [m] Main vertical  ◧"         "m" "select-layout main-vertical" \
+        "  [M] Main horizontal  ⬒"      "M" "select-layout main-horizontal" \
+        "  [1] Max 1 row  ─│─│─"         "1" "run-shell 'bash $SCRIPT_DIR/tmux-grid-layout.sh 1'" \
+        "  [2] Max 2 rows  ╍╍"           "2" "run-shell 'bash $SCRIPT_DIR/tmux-grid-layout.sh 2'" \
+        "  [3] Max 3 rows  ┇┇"           "3" "run-shell 'bash $SCRIPT_DIR/tmux-grid-layout.sh 3'" \
+        "" \
+        "Split" "" "" \
+        "  [|] Horizontal  │"            "|" "split-window -h -c '#{pane_current_path}'" \
+        "  [-] Vertical  ─"              "-" "split-window -v -c '#{pane_current_path}'" \
+        "  [_] Full-width vertical"      "_" "split-window -fv" \
+        "" \
+        "Structure" "" "" \
+        "  [j] Join pane from..."        "j" "command-prompt -p 'join pane from: ' 'join-pane -h -s \"%%\"'" \
+        "  [b] Break pane out"           "b" "break-pane -d" \
+        "" \
+        "Swap" "" "" \
+        "  [h] Swap prev"                "h" "swap-pane -U" \
+        "  [l] Swap next"                "l" "swap-pane -D" \
+        "  [s] Swap by number"           "s" "display-panes 'swap-pane -t \"%%\"'" \
+        "" \
+        "Manage" "" "" \
+        "  [x] Kill pane"                "x" "kill-pane \; run-shell '~/.dotfiles/tmux/plugins/tmux-resurrect/scripts/save.sh >/dev/null 2>&1 || true'" \
+        "  [z] Zoom toggle"              "z" "resize-pane -Z" \
+        "  [r] Rotate"                   "r" "rotate-window" \
+        "" \
+        "" "" "" \
+        "  [Esc] Back"                   "Escape" "run-shell 'bash $SCRIPT_DIR/tmux-which-key.sh root'"
+}
+
 show_tpm() {
     tmux display-menu -xC -yC -T "  Plugins (TPM) " \
         "" \
@@ -82,8 +122,9 @@ show_tpm() {
 }
 
 case "$SUBMENU" in
-    root) show_root ;;
-    apps) show_apps ;;
-    tpm)  show_tpm ;;
-    *)    show_root ;;
+    root)  show_root ;;
+    apps)  show_apps ;;
+    panes) show_panes ;;
+    tpm)   show_tpm ;;
+    *)     show_root ;;
 esac

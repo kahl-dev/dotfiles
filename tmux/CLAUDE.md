@@ -15,7 +15,7 @@ tmux/
 ├── .tmux.reset.conf       # ⚠️ AUTO-GENERATED — never hand-edit
 ├── createTmuxReset.sh     # Generates .tmux.reset.conf from tmux defaults
 ├── tmux.popup.sh          # Floating popup session helper
-├── cheatsheet.md          # Keybinding reference (rendered by Prefix+?)
+├── cheatsheet.md          # Keybinding reference (via which-key menu)
 ├── plugins/               # TPM-managed plugins
 ├── resurrect/             # Session save files (tmux-resurrect)
 └── scripts/
@@ -31,6 +31,7 @@ tmux/
     ├── host-icon.sh               # OS-specific Nerd Font icon
     ├── hostname-display.sh        # Machine name (empty on primary Mac)
     ├── lit-info-urls.sh           # TYPO3 project URL opener (Prefix+U)
+    ├── tmux-grid-layout.sh        # Custom grid layout with max-rows constraint
     ├── tmux-cheatsheet.sh         # Renders cheatsheet.md via glow
     ├── update-check.sh            # Staleness count for status bar (brew/mise/tpm/repos)
     └── update-detail.sh           # Interactive update popup (Prefix+D)
@@ -114,10 +115,9 @@ Config passes width: `#(~/.dotfiles/tmux/scripts/status-line-main.sh #{client_wi
 | `Prefix + r` | Reload tmux config |
 | `Prefix + C` | Toggle Claude usage display on/off |
 | `Prefix + D` | Update status detail popup (brew/mise/tpm/repos staleness) |
-| `Prefix + ?` | Show cheatsheet (glow popup, fallback: less) |
-| `Prefix + Space` | Which-key menu (all bindings, nested submenus) |
+| `Prefix + ?` | Which-key menu (all bindings, nested submenus) |
 
-### Which-Key Menu (`Prefix + Space`)
+### Which-Key Menu (`Prefix + ?`)
 
 Discoverable keybinding menu using `display-menu`. Shows all prefix bindings organized by category. Layers open as nested submenus with `Escape` to go back.
 
@@ -144,6 +144,51 @@ Enters a custom key table with app launchers. **Convention**: lowercase = new wi
 | `Escape` | — | — | Exit apps table |
 
 All apps inherit current pane's working directory. Status bar shows `󰀻 APPS` in yellow when in this table.
+
+### Panes Key Table (`Prefix + v`)
+
+Pane management layer. Status bar shows `󰕰` in blue when active.
+
+**Layouts** (mnemonic keys + number = max rows):
+
+| Key | Action | Mnemonic |
+|-----|--------|----------|
+| `=` | Balance equally | visual: equal sign |
+| `t` | Tiled (auto grid) | **t**iled |
+| `m` | Main-vertical (big left, rest right) | **m**ain |
+| `M` | Main-horizontal (big top, rest below) | **M**ain (shifted) |
+| `1` | Grid, max 1 row (all side-by-side) | max **1** row |
+| `2` | Grid, max 2 rows | max **2** rows |
+| `3` | Grid, max 3 rows | max **3** rows |
+
+**Split / Structure:**
+
+| Key | Action | Mnemonic |
+|-----|--------|----------|
+| `\|` | Split horizontal | visual |
+| `-` | Split vertical | visual |
+| `_` | Split full-width vertical | visual (wide) |
+| `j` | Join pane from another window | **j**oin |
+| `b` | Break pane out to new window | **b**reak |
+
+**Swap / Move:**
+
+| Key | Action | Mnemonic |
+|-----|--------|----------|
+| `h` | Swap prev | vim left |
+| `l` | Swap next | vim right |
+| `s` | Swap by number (display-panes overlay) | **s**wap |
+| `r` | Rotate panes | **r**otate |
+
+**Manage:**
+
+| Key | Action |
+|-----|--------|
+| `x` | Kill pane (auto-saves session) |
+| `z` | Zoom toggle |
+| `Escape` | Cancel |
+
+Grid layout script: `scripts/tmux-grid-layout.sh <max_rows>` — computes custom tmux layout string with `ceil(N/max_rows)` columns.
 
 ### Navigation
 
@@ -337,7 +382,7 @@ When adding or changing a prefix keybinding, update ALL of these:
 
 1. **`tmux.conf`** — the actual binding
 2. **`scripts/tmux-which-key.sh`** — add to the appropriate submenu (root, apps, tpm) or create a new submenu
-3. **`cheatsheet.md`** — the help popup rendered by `Prefix + ?`
+3. **`cheatsheet.md`** — detailed reference (via which-key > ?)
 4. **`CLAUDE.md`** (this file) — keybindings section
 5. **`docs/tmux.md`** — human-readable documentation
 
