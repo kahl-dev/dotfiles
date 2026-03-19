@@ -26,6 +26,7 @@ Options:
     --sound <sound>      Override notification sound
     --timeout <sec>      Notification timeout in seconds
     --data <json>        Attach JSON data (or use --json for stdin)
+    --data-file=<file>   Read JSON data from file (safe for complex content)
     --json               Read JSON data from stdin
     --reply              Enable reply/interaction
     -h, --help           Show this help message
@@ -107,6 +108,15 @@ while [[ $# -gt 0 ]]; do
         --data)
             DATA="$2"
             shift 2
+            ;;
+        --data-file=*)
+            DATA_FILE="${1#--data-file=}"
+            if [ ! -f "$DATA_FILE" ]; then
+                echo "Error: Data file not found: $DATA_FILE" >&2
+                exit 1
+            fi
+            DATA=$(cat "$DATA_FILE")
+            shift
             ;;
         --json)
             JSON_MODE=true

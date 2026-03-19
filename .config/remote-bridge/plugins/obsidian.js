@@ -96,9 +96,32 @@ function parseArguments(commandString) {
   return arguments_;
 }
 
+/**
+ * Inject stdin content into command arguments.
+ * Replaces --stdin or --content-file flags with content=<stdinData>.
+ */
+function injectStdinContent(arguments_, stdinData) {
+  const result = [];
+  let injected = false;
+
+  for (const argument of arguments_) {
+    if (argument === '--stdin') {
+      result.push(`content=${stdinData}`);
+      injected = true;
+    } else if (argument === '--content-file' || argument.startsWith('--content-file=')) {
+      result.push(`content=${stdinData}`);
+      injected = true;
+    } else {
+      result.push(argument);
+    }
+  }
+
+  return result;
+}
+
 module.exports = {
   name: 'obsidian',
-  version: '1.0.0',
+  version: '1.1.0',
 
   endpoints: [
     {
@@ -106,12 +129,18 @@ module.exports = {
       method: 'POST',
       handler: async (request, response) => {
         const command = request.decodedData;
+        const stdinData = request.stdinData;
 
         if (!command || typeof command !== 'string' || command.trim().length === 0) {
           return response.status(400).json({ error: 'No command provided' });
         }
 
-        const arguments_ = parseArguments(command.trim());
+        let arguments_ = parseArguments(command.trim());
+
+        // Inject stdin content into arguments if provided
+        if (stdinData) {
+          arguments_ = injectStdinContent(arguments_, stdinData);
+        }
 
         try {
           await ensureObsidianRunning();
@@ -119,7 +148,7 @@ module.exports = {
           return response.status(503).json({ error: startupError.message });
         }
 
-        execFile(OBSIDIAN_BINARY, arguments_, (error, stdout, stderr) => {
+        execFile(OBSIDIAN_BINARY, arguments_, { maxBuffer: 50 * 1024 * 1024 }, (error, stdout, stderr) => {
           const exitCode = error
             ? (typeof error.code === 'number' ? error.code : 1)
             : 0;

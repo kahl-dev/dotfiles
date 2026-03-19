@@ -2,6 +2,7 @@
 
 # Remote Obsidian CLI wrapper
 # Local: execs obsidian directly. Remote: proxies through Remote Bridge.
+# Supports --stdin and --content-file for safe content passing (no shell escaping issues).
 
 set -euo pipefail
 
@@ -13,25 +14,33 @@ show_help() {
 robsidian - Obsidian CLI wrapper for local and remote use
 
 Usage:
-    robsidian <command> [args...]      Run obsidian CLI command
-    robsidian vault                    Show vault info
-    robsidian search query="X"         Search vault
-    robsidian tags counts format=json  List tags
+    robsidian <command> [args...]                    Run obsidian CLI command
+    robsidian create path="X" --stdin < file.md      Create note from stdin
+    robsidian create path="X" --content-file=F       Create note from file
+    robsidian append path="X" --stdin < file.md      Append from stdin
 
 Options:
-    -h, --help       Show this help message
+    --stdin              Read content from stdin (replaces content= argument)
+    --content-file=F     Read content from file F (replaces content= argument)
+    -h, --help           Show this help message
 
 Environment:
     REMOTE_BRIDGE_PORT    If set, proxy through Remote Bridge (default: local exec)
 
+Content Modes:
+    1. Inline:   robsidian create path="X" content="simple text"
+    2. Stdin:    cat note.md | robsidian create path="X" --stdin
+    3. File:     robsidian create path="X" --content-file=/path/to/note.md
+
+    Modes 2 and 3 bypass shell argument handling, safely supporting
+    backticks, \$variables, unicode (®™), and any special characters.
+
 Examples:
     robsidian vault
     robsidian search query="daily notes" format=json
-    robsidian tags counts format=json
-    robsidian backlinks path="notes/my-note.md" format=json
-
-Local mode:  Executes obsidian CLI directly (requires Obsidian app running)
-Remote mode: Proxies through Remote Bridge SSH tunnel
+    robsidian create path="notes/test.md" content="Hello"
+    cat research.md | robsidian create path="notes/research.md" --stdin
+    robsidian append path="notes/log.md" --content-file=/tmp/entry.md
 EOF
 }
 
@@ -58,7 +67,6 @@ ensure_obsidian_running() {
     echo "Starting Obsidian..." >&2
     open -g -a Obsidian
 
-    # Poll for CLI readiness
     local attempts=0
     local max_attempts=30
     while [ $attempts -lt $max_attempts ]; do
@@ -73,8 +81,47 @@ ensure_obsidian_running() {
     return 1
 }
 
-# Collect all arguments as the command string
-COMMAND="$*"
+# Extract --stdin and --content-file from arguments
+STDIN_MODE=false
+CONTENT_FILE=""
+FILTERED_ARGS=()
+
+for arg in "$@"; do
+    case "$arg" in
+        --stdin)
+            STDIN_MODE=true
+            ;;
+        --content-file=*)
+            CONTENT_FILE="${arg#--content-file=}"
+            ;;
+        --content-file)
+            echo "Error: --content-file requires =path (e.g., --content-file=/tmp/note.md)" >&2
+            exit 1
+            ;;
+        *)
+            FILTERED_ARGS+=("$arg")
+            ;;
+    esac
+done
+
+# Read content from stdin or file
+STDIN_CONTENT=""
+if [ "$STDIN_MODE" = true ]; then
+    if [ -t 0 ]; then
+        echo "Error: --stdin specified but no data piped" >&2
+        exit 1
+    fi
+    STDIN_CONTENT=$(cat)
+elif [ -n "$CONTENT_FILE" ]; then
+    if [ ! -f "$CONTENT_FILE" ]; then
+        echo "Error: Content file not found: $CONTENT_FILE" >&2
+        exit 1
+    fi
+    STDIN_CONTENT=$(cat "$CONTENT_FILE")
+fi
+
+# Build command from filtered args
+COMMAND="${FILTERED_ARGS[*]}"
 
 # Remote mode: proxy through bridge
 if [ -n "$BRIDGE_PORT" ]; then
@@ -88,7 +135,7 @@ if [ -n "$BRIDGE_PORT" ]; then
     fi
 
     # Base64 encode the command
-    ENCODED_COMMAND=$(echo -n "$COMMAND" | base64)
+    ENCODED_COMMAND=$(printf '%s' "$COMMAND" | base64)
 
     # Build metadata
     METADATA=$(jq -n \
@@ -98,13 +145,25 @@ if [ -n "$BRIDGE_PORT" ]; then
         --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
         '$ARGS.named')
 
+    # Build JSON payload — with or without stdin content
+    if [ -n "$STDIN_CONTENT" ]; then
+        ENCODED_STDIN=$(printf '%s' "$STDIN_CONTENT" | base64)
+        PAYLOAD=$(jq -n \
+            --arg data "$ENCODED_COMMAND" \
+            --arg stdin "$ENCODED_STDIN" \
+            --argjson metadata "$METADATA" \
+            '{data: $data, stdin: $stdin, metadata: $metadata}')
+    else
+        PAYLOAD=$(jq -n \
+            --arg data "$ENCODED_COMMAND" \
+            --argjson metadata "$METADATA" \
+            '{data: $data, metadata: $metadata}')
+    fi
+
     # Send request
     RESPONSE=$(curl -sS -X POST "$BRIDGE_URL" \
         -H "Content-Type: application/json" \
-        -d "$(jq -n \
-            --arg data "$ENCODED_COMMAND" \
-            --argjson metadata "$METADATA" \
-            '{data: $data, metadata: $metadata}')" \
+        -d "$PAYLOAD" \
         2>&1)
 
     CURL_EXIT=$?
@@ -131,7 +190,6 @@ if [ -n "$BRIDGE_PORT" ]; then
 
     # Output stderr to stderr (suppressing obsidian loader noise)
     if [ -n "$STDERR" ]; then
-        # Filter out known loader noise, keep real errors
         FILTERED_STDERR=$(echo "$STDERR" | grep -v "^\[.*\] " 2>/dev/null || true)
         [ -n "$FILTERED_STDERR" ] && echo "$FILTERED_STDERR" >&2
     fi
@@ -141,4 +199,13 @@ fi
 
 # Local mode: ensure Obsidian is running, then exec
 ensure_obsidian_running
-exec obsidian $COMMAND 2>/dev/null
+
+if [ -n "$STDIN_CONTENT" ]; then
+    # Write stdin content to temp file, inject as content= argument
+    TMPFILE=$(mktemp)
+    trap 'rm -f "$TMPFILE"' EXIT
+    printf '%s' "$STDIN_CONTENT" > "$TMPFILE"
+    exec obsidian ${FILTERED_ARGS[*]} content="$(cat "$TMPFILE")" 2>/dev/null
+else
+    exec obsidian $COMMAND 2>/dev/null
+fi
