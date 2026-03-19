@@ -104,6 +104,11 @@ for arg in "$@"; do
     esac
 done
 
+# Re-add --stdin flag for remote mode (server needs it to detect stdin write)
+if [ "$STDIN_MODE" = true ]; then
+    FILTERED_ARGS+=("--stdin")
+fi
+
 # Read content from stdin or file
 STDIN_CONTENT=""
 if [ "$STDIN_MODE" = true ]; then
@@ -120,8 +125,20 @@ elif [ -n "$CONTENT_FILE" ]; then
     STDIN_CONTENT=$(cat "$CONTENT_FILE")
 fi
 
-# Build command from filtered args
-COMMAND="${FILTERED_ARGS[*]}"
+# Build command from filtered args, preserving values with spaces
+COMMAND=""
+for arg in "${FILTERED_ARGS[@]}"; do
+    if [[ "$arg" == *=* ]]; then
+        # key=value arg — quote the value to preserve spaces
+        KEY="${arg%%=*}"
+        VALUE="${arg#*=}"
+        COMMAND="${COMMAND:+$COMMAND }${KEY}=\"${VALUE}\""
+    elif [[ "$arg" == *" "* ]]; then
+        COMMAND="${COMMAND:+$COMMAND }\"${arg}\""
+    else
+        COMMAND="${COMMAND:+$COMMAND }${arg}"
+    fi
+done
 
 # Remote mode: proxy through bridge
 if [ -n "$BRIDGE_PORT" ]; then
@@ -205,7 +222,7 @@ if [ -n "$STDIN_CONTENT" ]; then
     TMPFILE=$(mktemp)
     trap 'rm -f "$TMPFILE"' EXIT
     printf '%s' "$STDIN_CONTENT" > "$TMPFILE"
-    exec obsidian ${FILTERED_ARGS[*]} content="$(cat "$TMPFILE")" 2>/dev/null
+    exec obsidian "${FILTERED_ARGS[@]}" content="$(cat "$TMPFILE")" 2>/dev/null
 else
-    exec obsidian $COMMAND 2>/dev/null
+    exec obsidian "${FILTERED_ARGS[@]}" 2>/dev/null
 fi
