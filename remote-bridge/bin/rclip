@@ -121,7 +121,7 @@ send_via_bridge() {
     
     # Base64 encode if not in JSON mode
     if [ "$JSON_MODE" = false ]; then
-        data=$(echo -n "$data" | base64)
+        data=$(echo -n "$data" | base64 -w0 2>/dev/null || echo -n "$data" | base64)
     fi
     
     # Build metadata

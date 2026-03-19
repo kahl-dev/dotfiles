@@ -134,8 +134,8 @@ if [ -n "$BRIDGE_PORT" ]; then
         exit 1
     fi
 
-    # Base64 encode the command
-    ENCODED_COMMAND=$(printf '%s' "$COMMAND" | base64)
+    # Base64 encode the command (no line wrapping for JSON safety)
+    ENCODED_COMMAND=$(printf '%s' "$COMMAND" | base64 -w0 2>/dev/null || printf '%s' "$COMMAND" | base64)
 
     # Build metadata
     METADATA=$(jq -n \
@@ -147,7 +147,7 @@ if [ -n "$BRIDGE_PORT" ]; then
 
     # Build JSON payload — with or without stdin content
     if [ -n "$STDIN_CONTENT" ]; then
-        ENCODED_STDIN=$(printf '%s' "$STDIN_CONTENT" | base64)
+        ENCODED_STDIN=$(printf '%s' "$STDIN_CONTENT" | base64 -w0 2>/dev/null || printf '%s' "$STDIN_CONTENT" | base64)
         PAYLOAD=$(jq -n \
             --arg data "$ENCODED_COMMAND" \
             --arg stdin "$ENCODED_STDIN" \
