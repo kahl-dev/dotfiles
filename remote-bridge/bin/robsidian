@@ -105,7 +105,7 @@ for arg in "$@"; do
 done
 
 # Re-add --stdin flag for remote mode (server needs it to detect stdin write)
-if [ "$STDIN_MODE" = true ]; then
+if [ "$STDIN_MODE" = true ] || [ -n "$CONTENT_FILE" ]; then
     FILTERED_ARGS+=("--stdin")
 fi
 
