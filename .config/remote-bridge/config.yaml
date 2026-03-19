@@ -44,5 +44,5 @@ logging:
 
 # Plugins - uncomment to enable
 plugins:
-  enabled: ["vault"]
+  enabled: ["obsidian"]
   # enabled: ["claude-handler"]

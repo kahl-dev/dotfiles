@@ -1,0 +1,144 @@
+#!/usr/bin/env bash
+
+# Remote Obsidian CLI wrapper
+# Local: execs obsidian directly. Remote: proxies through Remote Bridge.
+
+set -euo pipefail
+
+BRIDGE_PORT="${REMOTE_BRIDGE_PORT:-}"
+BRIDGE_URL="http://localhost:${BRIDGE_PORT}/obsidian/exec"
+
+show_help() {
+    cat << EOF
+robsidian - Obsidian CLI wrapper for local and remote use
+
+Usage:
+    robsidian <command> [args...]      Run obsidian CLI command
+    robsidian vault                    Show vault info
+    robsidian search query="X"         Search vault
+    robsidian tags counts format=json  List tags
+
+Options:
+    -h, --help       Show this help message
+
+Environment:
+    REMOTE_BRIDGE_PORT    If set, proxy through Remote Bridge (default: local exec)
+
+Examples:
+    robsidian vault
+    robsidian search query="daily notes" format=json
+    robsidian tags counts format=json
+    robsidian backlinks path="notes/my-note.md" format=json
+
+Local mode:  Executes obsidian CLI directly (requires Obsidian app running)
+Remote mode: Proxies through Remote Bridge SSH tunnel
+EOF
+}
+
+# Parse for help flags
+case "${1:-}" in
+    -h|--help)
+        show_help
+        exit 0
+        ;;
+    "")
+        echo "Error: No command provided" >&2
+        echo "" >&2
+        show_help
+        exit 1
+        ;;
+esac
+
+# Ensure Obsidian is running (local mode only)
+ensure_obsidian_running() {
+    if pgrep -x Obsidian >/dev/null 2>&1; then
+        return 0
+    fi
+
+    echo "Starting Obsidian..." >&2
+    open -g -a Obsidian
+
+    # Poll for CLI readiness
+    local attempts=0
+    local max_attempts=30
+    while [ $attempts -lt $max_attempts ]; do
+        if obsidian version 2>/dev/null >/dev/null; then
+            return 0
+        fi
+        sleep 1
+        attempts=$((attempts + 1))
+    done
+
+    echo "Error: Obsidian failed to start within ${max_attempts}s" >&2
+    return 1
+}
+
+# Collect all arguments as the command string
+COMMAND="$*"
+
+# Remote mode: proxy through bridge
+if [ -n "$BRIDGE_PORT" ]; then
+    # Check if bridge is available
+    if ! curl -sf "http://localhost:${BRIDGE_PORT}/health" >/dev/null 2>&1; then
+        echo "Error: Remote Bridge is not available on port $BRIDGE_PORT" >&2
+        echo "Make sure:" >&2
+        echo "1. Remote Bridge service is running on your local machine" >&2
+        echo "2. SSH tunnel is active (RemoteForward $BRIDGE_PORT localhost:$BRIDGE_PORT)" >&2
+        exit 1
+    fi
+
+    # Base64 encode the command
+    ENCODED_COMMAND=$(echo -n "$COMMAND" | base64)
+
+    # Build metadata
+    METADATA=$(jq -n \
+        --arg host "$(hostname -s)" \
+        --arg session "${TMUX_PANE:-$$}" \
+        --arg user "$USER" \
+        --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        '$ARGS.named')
+
+    # Send request
+    RESPONSE=$(curl -sS -X POST "$BRIDGE_URL" \
+        -H "Content-Type: application/json" \
+        -d "$(jq -n \
+            --arg data "$ENCODED_COMMAND" \
+            --argjson metadata "$METADATA" \
+            '{data: $data, metadata: $metadata}')" \
+        2>&1)
+
+    CURL_EXIT=$?
+
+    if [ $CURL_EXIT -ne 0 ]; then
+        echo "Error: Failed to connect to Remote Bridge: $RESPONSE" >&2
+        exit 1
+    fi
+
+    # Check for HTTP-level errors
+    if echo "$RESPONSE" | jq -e '.error' >/dev/null 2>&1; then
+        ERROR=$(echo "$RESPONSE" | jq -r '.error')
+        echo "Error: $ERROR" >&2
+        exit 1
+    fi
+
+    # Extract wrapped response
+    STDOUT=$(echo "$RESPONSE" | jq -r '.stdout // ""')
+    STDERR=$(echo "$RESPONSE" | jq -r '.stderr // ""')
+    EXIT_CODE=$(echo "$RESPONSE" | jq -r '.exitCode // 0')
+
+    # Output stdout
+    [ -n "$STDOUT" ] && echo -n "$STDOUT"
+
+    # Output stderr to stderr (suppressing obsidian loader noise)
+    if [ -n "$STDERR" ]; then
+        # Filter out known loader noise, keep real errors
+        FILTERED_STDERR=$(echo "$STDERR" | grep -v "^\[.*\] " 2>/dev/null || true)
+        [ -n "$FILTERED_STDERR" ] && echo "$FILTERED_STDERR" >&2
+    fi
+
+    exit "$EXIT_CODE"
+fi
+
+# Local mode: ensure Obsidian is running, then exec
+ensure_obsidian_running
+exec obsidian $COMMAND 2>/dev/null

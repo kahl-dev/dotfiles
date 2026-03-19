@@ -19,10 +19,5 @@
     <string>/Users/kahl-dev/.local/share/remote-bridge/service.error.log</string>
     <key>WorkingDirectory</key>
     <string>/Users/kahl-dev/.dotfiles/remote-bridge</string>
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>OBSIDIAN_VAULT_PATH</key>
-        <string>/Users/kahl-dev/Library/Mobile Documents/iCloud~md~obsidian/Documents/kahl_dev/</string>
-    </dict>
 </dict>
 </plist>

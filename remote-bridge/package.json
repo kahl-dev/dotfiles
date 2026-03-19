@@ -6,24 +6,29 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node src/server.js --dev",
-    "test": "echo \"No tests yet\"",
+    "test": "node --test 'test/**/*.test.js'",
     "preinstall": "npx only-allow pnpm"
   },
   "packageManager": "pnpm@8.14.0",
-  "keywords": ["ssh", "remote", "clipboard", "notifications"],
+  "keywords": [
+    "ssh",
+    "remote",
+    "clipboard",
+    "notifications"
+  ],
   "author": "kahl-dev",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
     "body-parser": "^1.20.2",
-    "js-yaml": "^4.1.0",
-    "winston": "^3.11.0",
-    "express-rate-limit": "^7.1.5",
-    "node-notifier": "^10.0.1",
+    "chokidar": "^3.5.3",
     "clipboardy": "^3.0.0",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "js-yaml": "^4.1.0",
+    "node-notifier": "^10.0.1",
     "open": "^9.1.0",
-    "yargs": "^17.7.2",
-    "chokidar": "^3.5.3"
+    "winston": "^3.11.0",
+    "yargs": "^17.7.2"
   },
   "engines": {
     "node": ">=16.0.0"
@@ -32,6 +37,10 @@
     "remote-bridge": "./bin/remote-bridge",
     "rclip": "./bin/rclip",
     "ropen": "./bin/ropen",
-    "rnotify": "./bin/rnotify"
+    "rnotify": "./bin/rnotify",
+    "robsidian": "./bin/robsidian"
+  },
+  "devDependencies": {
+    "supertest": "^7.2.2"
   }
 }
