@@ -7,8 +7,10 @@ Uses **Catppuccin Mocha** for consistency with other tools.
 
 - **Transparency**: 85% opacity with blur
 - **Bloom shader**: Subtle glow effect (`bloom025.glsl`)
-- **tmux-friendly**: All window/tab/split keybinds disabled (tmux handles this)
+- **tmux-friendly**: Default keybinds disabled, Ghostty-native management via `Ctrl+G` leader key
 - **Quick terminal**: `Ctrl+Opt+Shift+Cmd+O` toggles dropdown terminal
+- **Command notifications**: Desktop notification when commands >5s finish while unfocused
+- **Auto-scroll**: Scrolls to bottom on any output
 
 ## macOS Option Key & Umlauts
 
@@ -51,6 +53,24 @@ This keeps Option in character mode for umlauts, and maps `Ctrl+T` to send the `
 | Keys | Action | Why |
 |------|--------|-----|
 | `Ctrl+T` | Send `Alt+T` (thinking toggle) | Option needed for umlauts |
+| `Ctrl+G` → key | Ghostty leader key (key table) | Native window mgmt without tmux conflicts |
+
+### Ghostty Leader Key (`Ctrl+G`)
+
+Press `Ctrl+G` to enter Ghostty mode, then:
+
+| Key | Action |
+|-----|--------|
+| `d` | Split right |
+| `Shift+D` | Split down |
+| `Enter` | Toggle split zoom |
+| `←↑↓→` | Navigate splits |
+| `=` | Equalize splits |
+| `w` | Close surface |
+| `f` | Toggle fullscreen |
+| `Escape` | Cancel |
+
+Note: No tab keybinds — AeroSpace conflicts with Ghostty native tabs. Use tmux for multiplexing.
 
 ## Shaders
 
