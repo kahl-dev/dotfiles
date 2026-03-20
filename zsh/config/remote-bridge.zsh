@@ -1,8 +1,22 @@
 # Remote Bridge Integration
 # Provides SSH tunnel configuration and utilities
 
+# Compute per-user bridge port from a username
+# Deterministic: same username always produces the same port (POSIX cksum)
+# Range: 49152–65534 (dynamic/private ports, avoids well-known services)
+_remote_bridge_user_port() {
+    local username="$1"
+    echo $(( 49152 + $(printf '%s' "$username" | cksum | cut -d' ' -f1) % 16383 ))
+}
+
 # Export port for CLI tools
-export REMOTE_BRIDGE_PORT=8377
+# Remote SSH sessions: unique port per user (prevents cross-talk on shared servers)
+# Local machine: fixed port 8377 (where the bridge service listens)
+if [[ -n "${SSH_CLIENT:-}" ]]; then
+    export REMOTE_BRIDGE_PORT=$(_remote_bridge_user_port "$USER")
+else
+    export REMOTE_BRIDGE_PORT=8377
+fi
 
 # Add Remote Bridge CLI tools to PATH
 if [[ -d "$DOTFILES/remote-bridge/bin" ]]; then
@@ -32,7 +46,7 @@ remote-bridge-status() {
         echo
         echo "Possible causes:"
         echo "1. Service not running on local machine"
-        echo "2. SSH tunnel not configured (add 'RemoteForward $REMOTE_BRIDGE_PORT localhost:$REMOTE_BRIDGE_PORT' to SSH config)"
+        echo "2. SSH tunnel not configured (add 'RemoteForward $REMOTE_BRIDGE_PORT localhost:8377' to SSH config)"
         echo "3. Connected without tunnel forwarding"
     fi
     
@@ -79,25 +93,39 @@ remote-bridge-test() {
     echo "To test URL opening, run: ropen 'https://github.com'"
 }
 
-# Add SSH config helper
+# SSH config helper — outputs RemoteForward line with per-user port
+# Usage: remote-bridge-ssh-config [hostname]
+#   With hostname: resolves remote username from ssh -G
+#   Without: uses $USER
 remote-bridge-ssh-config() {
-    cat << 'EOF'
-# Add this to your ~/.ssh/config on your LOCAL machine:
+    local remote_user remote_port host="$1"
 
-Host *
-    # Remote Bridge tunnel
-    RemoteForward 8377 localhost:8377
-    SetEnv REMOTE_BRIDGE_PORT=8377
-    
-    # Optional: Keep connection alive
-    ServerAliveInterval 60
-    ServerAliveCountMax 3
+    if [[ -n "$host" ]]; then
+        remote_user=$(ssh -G "$host" 2>/dev/null | awk '/^user /{print $2}')
+        if [[ -z "$remote_user" ]]; then
+            echo "remote-bridge-ssh-config: could not resolve user for ${host}" >&2
+            return 1
+        fi
+    else
+        remote_user="$USER"
+    fi
 
-# For specific hosts, you can override:
-# Host myserver
-#     RemoteForward 8377 localhost:8377
-#     SetEnv REMOTE_BRIDGE_PORT=8377
-EOF
+    remote_port=$(_remote_bridge_user_port "$remote_user")
+
+    echo "# Remote Bridge SSH config"
+    echo "# Remote user: ${remote_user}"
+    echo "# Bridge port: ${remote_port} (derived from username)"
+    echo "#"
+    if [[ -n "$host" ]]; then
+        echo "# Add to your SSH config for host ${host}:"
+        echo ""
+        echo "Host ${host}"
+        echo "    RemoteForward ${remote_port} localhost:8377"
+    else
+        echo "# Add to your SSH config per host:"
+        echo ""
+        echo "RemoteForward ${remote_port} localhost:8377"
+    fi
 }
 
 # Info message for interactive sessions

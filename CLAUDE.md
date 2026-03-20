@@ -125,6 +125,11 @@ sm-kill                         # Kill all active tunnels
 
 **Workflow**: `sm t3` → tunnel starts → mosh connects → `prefix + R` in remote tmux refreshes SSH agent → git works. On mosh exit, tunnel killed when last session closes.
 
+**Per-user port isolation**: On shared servers, each developer gets a unique Remote Bridge port derived from their username (`cksum` hash, range 49152–65534). This prevents cross-talk. The port is computed identically on both sides:
+- **Remote** (`remote-bridge.zsh`): `REMOTE_BRIDGE_PORT` computed from `$USER` in SSH sessions
+- **Local** (`ssh-config`): `RemoteForward <port> localhost:8377` per host (use `remote-bridge-ssh-config <host>` to generate)
+- **sm**: detects any `RemoteForward` from `ssh -G` — no hardcoded port
+
 ### Future `dot` CLI Enhancements
 
 Deferred from v1 (reviewed by multi-agent debate):

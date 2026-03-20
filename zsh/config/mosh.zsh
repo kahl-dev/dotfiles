@@ -9,17 +9,15 @@
 
 # --- Internal helpers ---
 
-# Detect if host has RemoteForward for bridge port in SSH config
-# Outputs the detected port on success
+# Detect first RemoteForward port from ssh -G output
+# Handles bind-address syntax: "remoteforward 0.0.0.0:60190 localhost:8377"
 _sm_detect_bridge_port() {
-    local host="$1"
-    local bridge_port="${REMOTE_BRIDGE_PORT:-8377}"
-
-    if ssh -G "$host" 2>/dev/null | grep -qiE "^remoteforward ([^ ]*:)?${bridge_port} "; then
-        echo "$bridge_port"
-        return 0
-    fi
-    return 1
+    local ssh_config="$1"
+    echo "$ssh_config" | awk '/^remoteforward /{
+        port = $2
+        if (index(port, ":")) sub(/.*:/, "", port)
+        print port; exit
+    }'
 }
 
 # Extract host argument from mosh-style arguments (preserves user@ prefix)
@@ -124,8 +122,13 @@ sm() {
     fi
 
     local host="${host_argument#*@}"
+
+    # Resolve SSH config once (used by detection)
+    local ssh_config
+    ssh_config=$(ssh -G "$host" 2>/dev/null)
+
     local bridge_port
-    bridge_port=$(_sm_detect_bridge_port "$host")
+    bridge_port=$(_sm_detect_bridge_port "$ssh_config")
     local tunneled=false
 
     if [[ -n "$bridge_port" ]]; then
@@ -144,7 +147,6 @@ sm() {
             AUTOSSH_PIDFILE="$pid_file" autossh -M 0 -f -T \
                 -o "ServerAliveInterval=10" \
                 -o "ServerAliveCountMax=2" \
-                -o "ExitOnForwardFailure=yes" \
                 "$host_argument" "tail -f /dev/null"
 
             # autossh -f backgrounds immediately (GATETIME=0), always returns 0.
@@ -166,7 +168,14 @@ sm() {
         tunneled=true
     fi
 
-    mosh "$@"
+    # When tunnel is active, prevent mosh's bootstrap SSH from also trying
+    # RemoteForward (port conflict). ClearAllForwardings disables all forwards
+    # for the bootstrap connection only — autossh handles forwarding.
+    if $tunneled; then
+        mosh --ssh="ssh -o ClearAllForwardings=yes" "$@"
+    else
+        mosh "$@"
+    fi
     local mosh_exit=$?
 
     if $tunneled; then
@@ -199,7 +208,7 @@ sm-status() {
             local tunnel_pid=$(cat "$pid_file")
             local session_count=$(_sm_session_count "$state_directory")
             local bridge_port
-            bridge_port=$(_sm_detect_bridge_port "$host")
+            bridge_port=$(_sm_detect_bridge_port "$(ssh -G "$host" 2>/dev/null)")
             echo "${host}: pid=${tunnel_pid} port=${bridge_port:-?} sessions=${session_count}"
         else
             rm -f "$pid_file"

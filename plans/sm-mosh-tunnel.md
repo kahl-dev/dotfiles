@@ -8,9 +8,10 @@ Durable decisions that apply across all phases:
 
 - **Command**: `sm` — separate command, does NOT wrap/alias `mosh`
 - **File**: `zsh/config/mosh.zsh` (new file, sourced after `remote-bridge.zsh` in `.zshrc`)
-- **Detection**: `ssh -G <host>` to resolve effective SSH config; anchored regex for `remoteforward` matching port via `REMOTE_BRIDGE_PORT` env var
-- **Port source**: Parsed from `ssh -G` output via `REMOTE_BRIDGE_PORT` (default 8377) — adapts if port changes
-- **Tunnel tool**: `autossh -M 0 -f -T` with `tail -f /dev/null` (creates session channel for SSH agent forwarding), overridden keepalives (`ServerAliveInterval=10`, `ServerAliveCountMax=2`, `ExitOnForwardFailure=yes`) — no explicit `-R` flag, SSH config's RemoteForward is picked up automatically
+- **Per-user port**: Each developer gets a unique port derived from username: `$(( 49152 + $(printf '%s' "$USER" | cksum | cut -d' ' -f1) % 16383 ))`. Computed identically on local (via `ssh -G` remote user) and remote (via `$USER`). Prevents cross-talk on shared servers
+- **Detection**: `ssh -G <host>` output cached once per invocation. First `remoteforward` port extracted via awk — no hardcoded port
+- **Port source**: Extracted from SSH config's `RemoteForward` directive. SSH config has per-user port hardcoded (one-time setup via `remote-bridge-ssh-config <host>`)
+- **Tunnel tool**: `autossh -M 0 -f -T` with `tail -f /dev/null` (creates session channel for SSH agent forwarding), overridden keepalives (`ServerAliveInterval=10`, `ServerAliveCountMax=2`) — no ExitOnForwardFailure (allows connection even if port already bound by another session)
 - **Why `-T` + command, not `-N`**: `-N` prevents session channel creation, which disables SSH agent forwarding. Agent forwarding is needed so `prefix + R` in remote tmux can find a working agent socket for git operations
 - **Tunnel verification**: `sleep 1` + PID alive check after `autossh -f` (which always returns 0 due to GATETIME=0)
 - **Session state**: `/tmp/sm-<host>/` directory with one marker file per session (named by PID)
