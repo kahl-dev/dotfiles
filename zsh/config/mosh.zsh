@@ -15,7 +15,7 @@ _sm_detect_bridge_port() {
     local host="$1"
     local bridge_port="${REMOTE_BRIDGE_PORT:-8377}"
 
-    if ssh -G "$host" 2>/dev/null | grep -qi "^remoteforward.*${bridge_port}"; then
+    if ssh -G "$host" 2>/dev/null | grep -qiE "^remoteforward ([^ ]*:)?${bridge_port} "; then
         echo "$bridge_port"
         return 0
     fi
@@ -42,9 +42,9 @@ _sm_extract_host_argument() {
         case "$argument" in
             --)
                 after_separator=true ;;
-            --ssh=*|--predict=*|--server=*|--port=*|--bind-server=*|--family=*|--experimental-remote-ip=*)
+            --ssh=*|--predict=*|--server=*|--port=*|--bind-server=*|--family=*|--experimental-remote-ip=*|--client=*)
                 ;;
-            --ssh|--predict|--server|-p|--port|--bind-server|--family|--experimental-remote-ip)
+            --ssh|--predict|--server|-p|--port|--bind-server|--family|--experimental-remote-ip|--client)
                 skip_next=true ;;
             --*|-a|-n|-4|-6)
                 ;;
@@ -116,11 +116,6 @@ sm() {
         return 1
     fi
 
-    if ! command_exists autossh; then
-        echo "sm: autossh not found (brew install autossh)" >&2
-        return 1
-    fi
-
     local host_argument
     host_argument=$(_sm_extract_host_argument "$@")
     if [[ -z "$host_argument" ]]; then
@@ -134,6 +129,10 @@ sm() {
     local tunneled=false
 
     if [[ -n "$bridge_port" ]]; then
+        if ! command_exists autossh; then
+            echo "sm: autossh not found (brew install autossh)" >&2
+            return 1
+        fi
         local pid_file="/tmp/sm-${host}.pid"
         local state_directory="/tmp/sm-${host}"
 
@@ -142,14 +141,17 @@ sm() {
         if ! _sm_tunnel_alive "$pid_file"; then
             rm -f "$pid_file"
 
-            AUTOSSH_PIDFILE="$pid_file" autossh -M 0 -f -N \
+            AUTOSSH_PIDFILE="$pid_file" autossh -M 0 -f -T \
                 -o "ServerAliveInterval=10" \
                 -o "ServerAliveCountMax=2" \
                 -o "ExitOnForwardFailure=yes" \
-                "$host_argument"
+                "$host_argument" "tail -f /dev/null"
 
-            if [[ $? -ne 0 ]]; then
-                echo "sm: failed to start tunnel to ${host}" >&2
+            # autossh -f backgrounds immediately (GATETIME=0), always returns 0.
+            # Verify the tunnel actually started by checking PID after brief delay.
+            sleep 1
+            if ! _sm_tunnel_alive "$pid_file"; then
+                echo "sm: tunnel failed to start for ${host}" >&2
                 rm -f "$pid_file"
                 return 1
             fi
@@ -212,6 +214,11 @@ sm-status() {
 
 sm-kill() {
     local target_host="$1"
+
+    if [[ -n "$target_host" ]] && ! [[ "$target_host" =~ '^[a-zA-Z0-9._-]+$' ]]; then
+        echo "sm-kill: invalid hostname: ${target_host}" >&2
+        return 1
+    fi
 
     if [[ -z "$target_host" ]]; then
         local pid_file

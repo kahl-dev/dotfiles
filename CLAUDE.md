@@ -109,6 +109,22 @@ dot help                        # Show all commands
 
 Backward-compatible aliases still work: `brewup`, `brewdump`, `zsh-reload`, `dotedit`.
 
+### sm (ssh-mosh) — Mosh with auto tunnel
+
+`sm` wraps mosh with automatic autossh tunnel management for hosts with `RemoteForward` configured in SSH config. Provides SSH agent forwarding (for git) and Remote Bridge port forwarding.
+
+```bash
+sm t3                           # Mosh + auto tunnel (detects RemoteForward via ssh -G)
+sm user@t3                      # Works with user@ prefix
+sm --ssh="ssh -p 2222" t3       # All mosh args pass through
+sm plainserver                  # No RemoteForward = plain mosh (no autossh needed)
+sm-status                       # List active tunnels with PID, port, session count
+sm-kill t3                      # Force-kill tunnel for a host
+sm-kill                         # Kill all active tunnels
+```
+
+**Workflow**: `sm t3` → tunnel starts → mosh connects → `prefix + R` in remote tmux refreshes SSH agent → git works. On mosh exit, tunnel killed when last session closes.
+
 ### Future `dot` CLI Enhancements
 
 Deferred from v1 (reviewed by multi-agent debate):
@@ -160,6 +176,7 @@ The zsh setup uses modular configuration files in `zsh/config/`:
 - `node.zsh` - Node.js version management (fnm fallback) and npm aliases
 - `plugins.zsh` - Plugin management via zinit
 - `prompt.zsh` - Starship prompt configuration
+- `mosh.zsh` - `sm` command: mosh with auto Remote Bridge tunnel via autossh (`sm`, `sm-status`, `sm-kill`)
 - `remote-bridge.zsh` - Remote Bridge clipboard/URL/notification integration
 - `ssh-agent.zsh` - SSH agent management
 - `tmuxinator.zsh` - Tmuxinator session management
