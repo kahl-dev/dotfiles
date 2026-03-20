@@ -139,8 +139,16 @@ if [[ -o interactive ]]; then
     # Only start if not already running and we have a valid SSH_AUTH_SOCK
     if [[ -n "${SSH_AUTH_SOCK:-}" ]]; then
         if [[ ! -f "$HOME/.ssh/ssh-agent-keeper.pid" ]] || ! kill -0 "$(cat "$HOME/.ssh/ssh-agent-keeper.pid" 2>/dev/null)" 2>/dev/null; then
-            # Start silently
+            # Start silently (keeper uses the real socket for initial symlink setup)
             (nohup "$HOME/.dotfiles/bin/ssh-agent-keeper" >/dev/null 2>&1 &)
         fi
+    fi
+
+    # Use the stable symlink maintained by ssh-agent-keeper.
+    # This survives connection changes (mosh bootstrap dies, new SSH connects).
+    # Same as what tmux.remote.conf does with set-environment.
+    # prefix + R is still available as a manual override in tmux.
+    if [[ -e "$HOME/.ssh/ssh_auth_sock" ]]; then
+        export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
     fi
 fi
