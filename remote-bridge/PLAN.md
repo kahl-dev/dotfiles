@@ -130,13 +130,20 @@ plugins:
 
 ### SSH Configuration
 
-Add to `~/.ssh/config`:
+Generate the per-user `RemoteForward` line per host:
+
+```bash
+remote-bridge-ssh-config <hostname>   # Computes unique port from remote username
+```
+
+Add the output to `~/.ssh/config`. Each developer gets a unique port (prevents cross-talk on shared servers):
 
 ```
-Host *
-    RemoteForward 8377 localhost:8377
-    SetEnv REMOTE_BRIDGE_PORT=8377
+Host myserver
+    RemoteForward 60190 localhost:8377
 ```
+
+The remote port is derived from the username. The local destination is always `localhost:8377`.
 
 ## Plugin System
 

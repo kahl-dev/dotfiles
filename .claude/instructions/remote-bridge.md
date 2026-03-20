@@ -10,7 +10,8 @@ Remote Bridge is a unified clipboard and URL handling system that works seamless
 
 ### Architecture
 - **Local service**: Node.js/Express server on port 8377
-- **SSH tunnel**: Uses reverse port forwarding (`RemoteForward 8377 localhost:8377`)
+- **SSH tunnel**: Reverse port forwarding with per-user port (prevents cross-talk on shared servers)
+- **Per-user port**: Derived from remote username via `cksum` hash (range 49152–65534). Computed identically on local (`ssh -G`) and remote (`$USER`)
 - **Protocol**: Base64-encoded JSON over HTTP
 - **Security**: Localhost-only binding with rate limiting
 
@@ -24,12 +25,16 @@ Remote Bridge is a unified clipboard and URL handling system that works seamless
    ```
 
 2. **Configure SSH for automatic tunneling**:
-   Add to `~/.ssh/config`:
+   Generate the per-user `RemoteForward` line:
+   ```bash
+   remote-bridge-ssh-config <hostname>   # Computes port from remote username
    ```
-   Host *
-       RemoteForward 8377 localhost:8377
-       SetEnv REMOTE_BRIDGE_PORT=8377
+   Add the output to `~/.ssh/config` per host. Example:
    ```
+   Host t3
+       RemoteForward 60190 localhost:8377
+   ```
+   The remote port (60190) is unique to your username. The local destination is always 8377 (the bridge service).
 
 3. **Usage from anywhere**:
    ```bash
@@ -83,7 +88,7 @@ Configured in `tmux/tmux.conf`:
 **Check if Remote Bridge is accessible**:
 ```bash
 remote-bridge-status  # or rb-status
-curl http://localhost:8377/health
+curl http://localhost:${REMOTE_BRIDGE_PORT}/health
 ```
 
 **View logs**:

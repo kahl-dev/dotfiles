@@ -32,13 +32,20 @@ pnpm install
 
 ### SSH Configuration
 
-Add to your `~/.ssh/config`:
+Generate the per-user `RemoteForward` line for each host:
+
+```bash
+remote-bridge-ssh-config <hostname>   # Computes unique port from remote username
+```
+
+Add the output to your `~/.ssh/config`. Each developer gets a unique port (prevents cross-talk on shared servers):
 
 ```
-Host *
-    RemoteForward 8377 localhost:8377
-    SetEnv REMOTE_BRIDGE_PORT=8377
+Host myserver
+    RemoteForward 60190 localhost:8377
 ```
+
+The remote port is derived from your username. The local destination is always `localhost:8377` (the bridge service).
 
 ### Basic Usage
 
@@ -206,11 +213,11 @@ remote-bridge test-tunnel  # Test SSH tunnel
 1. Check service status: `remote-bridge status`
 2. Check logs: `remote-bridge logs`
 3. Test tunnel: `remote-bridge test-tunnel`
-4. Verify SSH config includes `RemoteForward 8377 localhost:8377`
+4. Verify SSH config includes `RemoteForward <port> localhost:8377` (run `remote-bridge-ssh-config <host>` to get the correct port)
 
 ### Commands not working
 
-1. Check if tunnel is active: `curl http://localhost:8377/health`
+1. Check if tunnel is active: `curl http://localhost:${REMOTE_BRIDGE_PORT}/health`
 2. Verify `REMOTE_BRIDGE_PORT` environment variable
 3. Check service logs for errors
 4. Fallback to OSC52 should work for clipboard
@@ -225,8 +232,9 @@ remote-bridge test-tunnel  # Test SSH tunnel
 ## Architecture
 
 - **Local Service**: Node.js/Express server on port 8377
+- **Per-user port isolation**: Each developer gets a unique remote port derived from username (`cksum` hash). Prevents cross-talk on shared servers
 - **Communication**: Base64-encoded JSON over HTTP
-- **Security**: Localhost-only binding + SSH tunnel
+- **Security**: Localhost-only binding + SSH tunnel with per-user port
 - **Extensibility**: JavaScript plugin system
 - **Logging**: Winston with rotation
 

@@ -18,6 +18,12 @@ else
     export REMOTE_BRIDGE_PORT=8377
 fi
 
+# Propagate to tmux global environment so popups and subprocesses inherit it.
+# Same pattern as tmux.remote.conf does for SSH_AUTH_SOCK.
+if [[ -n "${TMUX:-}" ]]; then
+    tmux set-environment -g REMOTE_BRIDGE_PORT "$REMOTE_BRIDGE_PORT" 2>/dev/null
+fi
+
 # Add Remote Bridge CLI tools to PATH
 if [[ -d "$DOTFILES/remote-bridge/bin" ]]; then
     export PATH="$DOTFILES/remote-bridge/bin:$PATH"
