@@ -235,12 +235,12 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
   - Double-click = select word + auto-copy, Triple-click = select line + auto-copy
   - Mouse drag stays in copy mode on release
 
-## 🔌 Plugins (10 total, TPM-managed)
+## 🔌 Plugins (11 total, TPM-managed)
 
 | Plugin | Purpose | Key Config |
 |--------|---------|------------|
 | **tpm** | Plugin manager | `Prefix + t` layer: `i` install, `u` update, `x` clean |
-| **tmux-resurrect** | Save/restore sessions | Saves ssh, vi, vim, nvim, man, tail, top, htop |
+| **tmux-resurrect** | Save/restore sessions | Saves ssh, vi, vim, nvim, man, tail, top, htop, claude (with `-c` resume) |
 | **tmux-continuum** | Auto-save every 15min | `@continuum-restore 'on'` for auto-restore on start |
 | **tmux-floax** | Floating window management | — |
 | **tmux-fzf-url** | URL extraction from pane | `Prefix + u`, opens via `ropen`, 2000 URL history |
@@ -249,10 +249,11 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
 | **tmux-thumbs** | Vimium-style hint copy | `Prefix + F`, highlights patterns with letter hints |
 | **tmux-fuzzback** | Fuzzy scrollback search | `Prefix + /`, fzf popup with preview |
 | **tmux-cowboy** | Kill hung process | `Prefix + *`, sends `kill -9` to pane process |
+| **tmux-claude-sessions** | Browse/resume Claude conversations | `Prefix + g`, fzf popup grouped by project |
 
-**Removed plugins** (replaced by custom scripts): catppuccin/tmux, tmux-cpu, tmux-loadavg, vim-tmux-navigator, tmux-sessionx.
+**Removed plugins** (replaced by custom scripts): catppuccin/tmux, tmux-cpu, tmux-loadavg, vim-tmux-navigator, tmux-sessionx. Removed: claude-tmux-hop (tried, didn't fit workflow).
 
-**Session-closed hook**: Fires resurrect save on session close to prevent ghost sessions on restore.
+**Session persistence**: Resurrect captures pane contents (`@resurrect-capture-pane-contents 'on'`), auto-cleans saves (keeps 50), and restores Claude with `claude -c --dangerously-skip-permissions`. Session-closed hook fires resurrect save to prevent ghost sessions.
 
 ## 🌐 Remote Session Support
 
