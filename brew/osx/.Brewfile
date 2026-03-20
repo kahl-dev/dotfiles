@@ -18,6 +18,8 @@ brew "admesh"
 brew "node"
 # Browser automation CLI for AI agents
 brew "agent-browser"
+# Automatically restart SSH sessions and tunnels
+brew "autossh"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
 # Programmable completion for Bash 3.2
