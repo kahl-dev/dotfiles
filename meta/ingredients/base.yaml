@@ -37,3 +37,4 @@
 
 - shell:
       - [git submodule update --init, Installing submodules]
+      - [command -v ya >/dev/null && ya pkg install || true, Installing yazi plugins]
