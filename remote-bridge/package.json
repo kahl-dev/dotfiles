@@ -38,7 +38,8 @@
     "rclip": "./bin/rclip",
     "ropen": "./bin/ropen",
     "rnotify": "./bin/rnotify",
-    "robsidian": "./bin/robsidian"
+    "robsidian": "./bin/robsidian",
+    "rtime": "./bin/rtime"
   },
   "devDependencies": {
     "supertest": "^7.2.2"

@@ -66,7 +66,7 @@ class RemoteBridgeServer {
 
   async loadPlugins() {
     // Load core plugins
-    const corePlugins = ['clipboard', 'browser', 'notify'];
+    const corePlugins = ['clipboard', 'browser', 'notify', 'time-tracking'];
     for (const name of corePlugins) {
       try {
         const plugin = require(`./plugins/${name}`);

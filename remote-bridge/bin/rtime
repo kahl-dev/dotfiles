@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+
+# Remote time tracking data fetch
+# Fetches JSONL time tracking data from Remote Bridge server
+
+set -euo pipefail
+
+BRIDGE_PORT="${REMOTE_BRIDGE_PORT:-8377}"
+BRIDGE_URL="http://localhost:${BRIDGE_PORT}/time-tracking"
+
+show_help() {
+    cat << EOF
+rtime - Fetch time tracking data from Remote Bridge
+
+Usage:
+    rtime fetch --dates 2026-03-25,2026-03-24   # Fetch specific dates
+    rtime fetch --week                           # Fetch last 7 days
+    rtime fetch --today                          # Fetch today
+    rtime dates                                  # List available dates
+
+Options:
+    --dates <dates>  Comma-separated dates (YYYY-MM-DD)
+    --week           Last 7 days
+    --today          Today only
+    --output <dir>   Save JSONL files to directory (default: stdout JSON)
+    -h, --help       Show this help message
+
+Environment:
+    REMOTE_BRIDGE_PORT    Port for Remote Bridge (default: 8377)
+
+Output:
+    JSON with hostname and per-date JSONL content.
+    With --output, writes individual YYYY-MM-DD.jsonl files to the directory.
+EOF
+}
+
+fetch_dates() {
+    local dates="$1"
+    local output_dir="${2:-}"
+
+    response=$(curl -sf "${BRIDGE_URL}?dates=${dates}" 2>/dev/null) || {
+        echo "Error: Cannot connect to Remote Bridge on port ${BRIDGE_PORT}" >&2
+        exit 1
+    }
+
+    if [ -n "$output_dir" ]; then
+        mkdir -p "$output_dir"
+        echo "$response" | jq -r '.dates | to_entries[] | select(.value != "") | "\(.key)\t\(.value)"' | while IFS=$'\t' read -r date content; do
+            echo "$content" > "${output_dir}/${date}.jsonl"
+            echo "  ${date}.jsonl ($(echo "$content" | wc -l | tr -d ' ') lines)" >&2
+        done
+        hostname=$(echo "$response" | jq -r '.hostname')
+        echo "Fetched from: ${hostname}" >&2
+    else
+        echo "$response"
+    fi
+}
+
+list_dates() {
+    curl -sf "${BRIDGE_URL}/dates" 2>/dev/null || {
+        echo "Error: Cannot connect to Remote Bridge on port ${BRIDGE_PORT}" >&2
+        exit 1
+    }
+}
+
+generate_date_list() {
+    local mode="$1"
+    case "$mode" in
+        today)
+            date -u +%Y-%m-%d
+            ;;
+        week)
+            for i in $(seq 0 6); do
+                date -u -v-${i}d +%Y-%m-%d 2>/dev/null || date -u -d "-${i} days" +%Y-%m-%d
+            done | paste -sd, -
+            ;;
+    esac
+}
+
+# Parse arguments
+if [ $# -eq 0 ]; then
+    show_help
+    exit 0
+fi
+
+COMMAND="${1:-}"
+shift || true
+
+case "$COMMAND" in
+    fetch)
+        DATES=""
+        OUTPUT_DIR=""
+        while [ $# -gt 0 ]; do
+            case "$1" in
+                --dates) DATES="$2"; shift 2 ;;
+                --week) DATES=$(generate_date_list week); shift ;;
+                --today) DATES=$(generate_date_list today); shift ;;
+                --output) OUTPUT_DIR="$2"; shift 2 ;;
+                -h|--help) show_help; exit 0 ;;
+                *) echo "Unknown option: $1" >&2; exit 1 ;;
+            esac
+        done
+        [ -z "$DATES" ] && { echo "Error: specify --dates, --week, or --today" >&2; exit 1; }
+        fetch_dates "$DATES" "$OUTPUT_DIR"
+        ;;
+    dates)
+        list_dates
+        ;;
+    -h|--help)
+        show_help
+        ;;
+    *)
+        echo "Unknown command: $COMMAND (use 'fetch' or 'dates')" >&2
+        exit 1
+        ;;
+esac
