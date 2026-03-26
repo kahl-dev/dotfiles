@@ -80,7 +80,7 @@ Used for CPU, RAM, Disk, and Claude usage percentages:
 
 ### Pane Borders
 
-Invisible — styled `fg=black,bg=black` to blend with terminal background.
+Active pane: solid bar in Catppuccin Surface1 (`#45475a`), inactive: thin dim line (`#313244`). No pane-border-status text.
 
 ### Window Naming
 
@@ -251,7 +251,7 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
 | **tmux-cowboy** | Kill hung process | `Prefix + *`, sends `kill -9` to pane process |
 | **tmux-claude-sessions** | Browse/resume Claude conversations | `Prefix + g`, fzf popup grouped by project |
 
-**Removed plugins** (replaced by custom scripts): catppuccin/tmux, tmux-cpu, tmux-loadavg, vim-tmux-navigator, tmux-sessionx. Removed: claude-tmux-hop (tried, didn't fit workflow).
+**Removed plugins** (replaced by custom scripts): catppuccin/tmux, tmux-cpu, tmux-loadavg, vim-tmux-navigator, tmux-sessionx. Removed: claude-tmux-hop (tried, didn't fit workflow), tmux-agent-indicator (focus stealing via select-pane hooks).
 
 **Session persistence**: Resurrect captures pane contents (`@resurrect-capture-pane-contents 'on'`), auto-cleans saves (keeps 50), and restores Claude with `claude -c --dangerously-skip-permissions`. Session-closed hook fires resurrect save to prevent ghost sessions.
 
