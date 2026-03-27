@@ -162,6 +162,23 @@
         ln -sfn "$DOTFILES_RTK" "$RTK_CONFIG"
         echo "✓ RTK config linked: $RTK_CONFIG → $DOTFILES_RTK"
 
+    - description: "Install or update codebase-memory-mcp (code knowledge graph)"
+      command: |
+        CBM="$HOME/.local/bin/codebase-memory-mcp"
+        LATEST=$(curl -fsSL https://api.github.com/repos/DeusData/codebase-memory-mcp/releases/latest | grep -o '"tag_name": *"[^"]*"' | head -1 | sed 's/.*"tag_name": *"//;s/"//;s/^v//')
+        CURRENT=$("$CBM" --version 2>/dev/null | grep -o '[0-9]*\.[0-9]*\.[0-9]*' || echo "none")
+
+        if [ "$CURRENT" = "$LATEST" ]; then
+          echo "✓ codebase-memory-mcp already up to date ($CURRENT)"
+        else
+          echo "📦 Installing codebase-memory-mcp $LATEST (current: $CURRENT)..."
+          TMPSCRIPT=$(mktemp)
+          curl -fsSL https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/install.sh -o "$TMPSCRIPT"
+          bash "$TMPSCRIPT" --skip-config
+          rm -f "$TMPSCRIPT"
+          echo "✓ codebase-memory-mcp installed ($("$CBM" --version 2>/dev/null))"
+        fi
+
     - description: "Configure Claude Code MCP servers"
       command: |
         CLAUDE="$HOME/.local/bin/claude"
@@ -173,6 +190,13 @@
         # EXA — semantic web search + code context (neural, not keyword-based)
         # https://docs.exa.ai/reference/exa-mcp
         "$CLAUDE" mcp add --transport http -s user exa "https://mcp.exa.ai/mcp?tools=web_search_exa,get_code_context_exa"
+
+        # codebase-memory-mcp — code knowledge graph (120x fewer tokens for exploration)
+        # https://github.com/DeusData/codebase-memory-mcp
+        if [ -x "$HOME/.local/bin/codebase-memory-mcp" ]; then
+          "$CLAUDE" mcp add -s user codebase-memory-mcp -- "$HOME/.local/bin/codebase-memory-mcp"
+        fi
+
         echo "✓ MCP servers configured"
 
     - description: "Create AI workspace directories for Claude"
