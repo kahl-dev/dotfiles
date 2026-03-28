@@ -38,7 +38,7 @@ require("modules.aerospace-cheatsheet") -- loaded for hs CLI access from AeroSpa
 config.init()
 
 -- Initialize modules
-audioManager.init()
+-- audioManager is started by usbManager when Wave:3 USB device is detected
 usbManager.init()
 displayManager.init()
 -- ipadManager.init() -- Disabled to avoid duplicate hotkeys

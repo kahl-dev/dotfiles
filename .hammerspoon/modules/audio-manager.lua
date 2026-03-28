@@ -1,24 +1,38 @@
 -- Audio Device Manager Module
--- Input always stays on Wave:3 (desk mic)
--- Prevents AirPods from auto-hijacking output on connect
--- Primary audio switching via Wave Link Stream Deck plugin (Row 1)
--- Emergency fallback switching via Hammerspoon .app bundles (Row 2)
--- Volume key interception: only when Wave Link active (macOS output = Wave:3),
---   auto-detects which monitor device is receiving audio
+-- Direct macOS output switching (no Wave Link in signal path)
+-- Input always guarded on Wave:3 when docked
+-- Only active when Wave:3 is USB-connected (managed by usb-device-manager)
 
 local M = {}
 
 -- Configuration
 M.config = {
-    elgatoDeviceName = "Wave:3",
+    wave3Name = "Wave:3",
     edifierName = "EDIFIER M60",
     airpodsPattern = "AirPods",
-    switchDelay = 0.5,
-    volumeStep = 6.25, -- 16 steps from 0-100 (matches macOS 16-segment OSD)
+    sonyPattern = "WH%-1000XM6",
+    macbookPattern = "MacBook",
+    builtInPattern = "Built%-in",
+    -- Ordered priority list for fallback selection
+    outputPriority = {
+        { pattern = "WH%-1000XM6", label = "Sony XM6" },
+        { pattern = "AirPods",     label = "AirPods" },
+        { pattern = "EDIFIER M60", label = "Edifier M60" },
+        { pattern = "Wave:3",      label = "Wave:3 Kopfhörer" },
+        -- MacBook Speakers = implicit last fallback (always present)
+    },
+    debounceDelay = 0.5,
+    bluetoothGracePeriod = 3.0,
+    edifierReconnectCooldown = 5.0,
 }
 
 -- State
-M.volumeTap = nil
+M.state = {
+    active = false,
+    lastExplicitOutput = nil,
+    pendingDeviceCheck = nil,
+    edifierDroppedAt = nil,
+}
 
 -- Find an output device by name pattern
 function M.findOutputDevice(pattern)
@@ -33,7 +47,7 @@ end
 -- Find Wave:3 input device
 function M.findWaveInput()
     for _, device in ipairs(hs.audiodevice.allInputDevices()) do
-        if string.find(device:name(), M.config.elgatoDeviceName) then
+        if string.find(device:name(), M.config.wave3Name) then
             return device
         end
     end
@@ -43,11 +57,10 @@ end
 -- Ensure input is always Wave:3
 function M.guardInput()
     local waveInput = M.findWaveInput()
-    if waveInput then
-        local current = hs.audiodevice.defaultInputDevice()
-        if not current or not string.find(current:name(), M.config.elgatoDeviceName) then
-            waveInput:setDefaultInputDevice()
-        end
+    if not waveInput then return end
+    local current = hs.audiodevice.defaultInputDevice()
+    if not current or not string.find(current:name(), M.config.wave3Name) then
+        waveInput:setDefaultInputDevice()
     end
 end
 
@@ -57,202 +70,167 @@ function M.showFeedback(label)
     hs.alert.show(label, 1.5)
 end
 
--- Show volume bar feedback
-function M.showVolumeFeedback(vol, deviceName)
-    hs.alert.closeAll()
-    local bars = math.floor(vol / 6.25)
-    local display = string.rep("█", bars) .. string.rep("░", 16 - bars)
-    hs.alert.show(string.format("🔊 %s\n%s %d%%", deviceName, display, math.floor(vol)), 1)
-end
-
--- Detect which external device is currently receiving audio from Wave Link
--- Checks inUse() on physical output devices (USB, Bluetooth)
--- Excludes: Wave:3, built-in speakers, virtual devices, DisplayPort monitors
-function M.detectActiveMonitorDevice()
-    local validTransport = { USB = true, Bluetooth = true }
-    for _, device in ipairs(hs.audiodevice.allOutputDevices()) do
-        local name = device:name()
-        local transport = device:transportType()
-        if validTransport[transport]
-           and not string.find(name, M.config.elgatoDeviceName)
-           and device:inUse() then
-            return device
+-- Select highest priority available output device
+function M.selectHighestPriorityOutput()
+    for _, entry in ipairs(M.config.outputPriority) do
+        local device = M.findOutputDevice(entry.pattern)
+        if device then
+            return device, entry.label
         end
     end
-    -- No external monitor device found — fall back to Wave:3 output
-    -- (headphones plugged into Wave:3 headphone jack)
-    return M.findOutputDevice(M.config.elgatoDeviceName)
+    -- Implicit last fallback: MacBook Speakers
+    return M.findOutputDevice(M.config.macbookPattern)
+        or M.findOutputDevice(M.config.builtInPattern),
+        "MacBook Speakers"
 end
 
--- === Volume Control ===
-
-function M.volumeUp()
-    local device = M.detectActiveMonitorDevice()
-    if not device then
-        M.showFeedback("No active monitor device")
-        return false
-    end
-    local vol = device:volume()
-    if vol == nil then
-        M.showFeedback("Volume not supported: " .. device:name())
-        return false
-    end
-    local newVol = math.min(100, vol + M.config.volumeStep)
-    device:setVolume(newVol)
-    M.showVolumeFeedback(newVol, device:name())
-    return true
+-- Check if a device name matches a Bluetooth pattern
+function M.isBluetoothDevice(deviceName)
+    return string.find(deviceName, M.config.sonyPattern)
+        or string.find(deviceName, M.config.airpodsPattern)
 end
 
-function M.volumeDown()
-    local device = M.detectActiveMonitorDevice()
-    if not device then
-        M.showFeedback("No active monitor device")
-        return false
-    end
-    local vol = device:volume()
-    if vol == nil then
-        M.showFeedback("Volume not supported: " .. device:name())
-        return false
-    end
-    local newVol = math.max(0, vol - M.config.volumeStep)
-    device:setVolume(newVol)
-    M.showVolumeFeedback(newVol, device:name())
-    return true
-end
-
-function M.volumeToggleMute()
-    local device = M.detectActiveMonitorDevice()
-    if not device then return false end
-    local muted = device:muted()
-    if muted == nil then return false end
-    device:setMuted(not muted)
-    if not muted then
-        M.showFeedback("🔇 Muted: " .. device:name())
-    else
-        M.showFeedback("🔊 Unmuted: " .. device:name())
-    end
-    return true
-end
-
--- === Emergency Fallback Switches (Row 2) ===
-
-function M.switchToEdifier()
-    local device = M.findOutputDevice(M.config.edifierName)
+-- Switch to a specific device by pattern (called by Stream Deck / hotkeys)
+function M.switchToDevice(pattern)
+    if not M.state.active then return false end
+    local device = M.findOutputDevice(pattern)
     if device then
-        device:setDefaultOutputDevice()
-        M.guardInput()
-        M.showFeedback("Edifier M60")
-        return true
+        local success = device:setDefaultOutputDevice()
+        if success then
+            M.state.lastExplicitOutput = device:name()
+            M.guardInput()
+            M.showFeedback(device:name())
+            return true
+        end
     end
-    M.showFeedback("Edifier not found")
+    M.showFeedback("Device not found: " .. pattern)
     return false
+end
+
+-- Convenience switch functions (for Hammerspoon CLI / .app bundles)
+function M.switchToSony()
+    return M.switchToDevice(M.config.sonyPattern)
 end
 
 function M.switchToAirPods()
-    local device = M.findOutputDevice(M.config.airpodsPattern)
-    if device then
-        device:setDefaultOutputDevice()
-        M.guardInput()
-        M.showFeedback("AirPods Pro")
-        return true
-    end
-    M.showFeedback("AirPods not found")
-    return false
+    return M.switchToDevice(M.config.airpodsPattern)
 end
 
-function M.switchToWaveLink()
-    local device = M.findOutputDevice(M.config.elgatoDeviceName)
-    if device then
-        device:setDefaultOutputDevice()
-        M.guardInput()
-        M.showFeedback("Wave Link")
-        return true
-    end
-    M.showFeedback("Wave:3 not found")
-    return false
+function M.switchToEdifier()
+    return M.switchToDevice(M.config.edifierName)
 end
 
--- === Volume Key Interception ===
-
-function M.setupVolumeInterceptor()
-    M.volumeTap = hs.eventtap.new({hs.eventtap.event.types.systemDefined}, function(event)
-        local data = event:systemKey()
-        if not data then return false end
-        if not data.down then return false end
-
-        local key = data.key
-        if key ~= "SOUND_UP" and key ~= "SOUND_DOWN" and key ~= "MUTE" then
-            return false
-        end
-
-        -- Only intercept when Wave:3 is macOS system output (= Wave Link is active)
-        -- When output is AirPods, Edifier, or anything else: let macOS handle natively
-        local currentOutput = hs.audiodevice.defaultOutputDevice()
-        if not currentOutput then return false end
-        if not string.find(currentOutput:name(), M.config.elgatoDeviceName) then
-            return false
-        end
-
-        -- Wave:3 is system output → Wave Link is routing audio
-        -- Detect which external device is actually receiving audio
-        if key == "SOUND_UP" then
-            M.volumeUp()
-        elseif key == "SOUND_DOWN" then
-            M.volumeDown()
-        elseif key == "MUTE" then
-            M.volumeToggleMute()
-        end
-
-        return true
-    end)
-    M.volumeTap:start()
+function M.switchToWave3()
+    return M.switchToDevice(M.config.wave3Name)
 end
 
--- === Audio Device Change Handler ===
+function M.switchToMacBook()
+    return M.switchToDevice(M.config.macbookPattern)
+        or M.switchToDevice(M.config.builtInPattern)
+end
 
--- "dOut"/"dIn " = output/input changed -> only guard input
--- "dev#" = device count changed (connected/disconnected) -> prevent hijack + fallback on disconnect
-function M.handleAudioDeviceChange(event)
+-- Evaluate current output state and fix if needed
+function M.evaluateOutputState()
+    if not M.state.active then return end
     M.guardInput()
 
-    if event == "dev#" then
-        hs.timer.doAfter(1.0, function()
-            local currentOutput = hs.audiodevice.defaultOutputDevice()
-            if not currentOutput then return end
+    local currentOutput = hs.audiodevice.defaultOutputDevice()
+    if not currentOutput then
+        -- No output at all — emergency fallback
+        local fallback, label = M.selectHighestPriorityOutput()
+        if fallback then
+            fallback:setDefaultOutputDevice()
+            M.state.lastExplicitOutput = fallback:name()
+            M.showFeedback(label .. " (fallback)")
+        end
+        return
+    end
 
-            -- Case 1: AirPods connected and hijacked macOS output → restore to Wave:3
-            if string.find(currentOutput:name(), M.config.airpodsPattern) then
-                local wave = M.findOutputDevice(M.config.elgatoDeviceName)
-                if wave then
-                    wave:setDefaultOutputDevice()
-                    M.showFeedback("Wave:3 (auto-restored)")
-                end
-                return
-            end
+    local currentName = currentOutput:name()
 
-            -- Case 2: In Wave Link mode but monitor device disconnected
-            -- (e.g. AirPods put in case, Edifier USB dropout)
-            -- Bypass Wave Link entirely — set macOS output directly to fallback device
-            if string.find(currentOutput:name(), M.config.elgatoDeviceName) then
-                local monitor = M.detectActiveMonitorDevice()
-                if not monitor then
-                    local fallback = M.findOutputDevice(M.config.edifierName)
-                        or M.findOutputDevice(M.config.airpodsPattern)
-                    if fallback then
-                        -- Set macOS output to fallback directly (bypasses Wave Link)
-                        fallback:setDefaultOutputDevice()
-                        M.guardInput()
-                        M.showFeedback("🔊 " .. fallback:name() .. " (direct — monitor lost)")
-                    end
-                end
-            end
-        end)
+    -- AirPods hijack detection: macOS auto-switched to AirPods on connect
+    -- but user didn't explicitly choose them
+    if string.find(currentName, M.config.airpodsPattern)
+       and M.state.lastExplicitOutput
+       and not string.find(M.state.lastExplicitOutput, M.config.airpodsPattern) then
+        local restore = M.findOutputDevice(M.state.lastExplicitOutput)
+        if restore then
+            restore:setDefaultOutputDevice()
+            M.showFeedback(restore:name() .. " (auto-restored)")
+            return
+        end
+    end
+
+    -- macOS fell back to Built-in Speakers but better device available
+    -- Only promote if user didn't explicitly choose MacBook
+    local explicitlyChoseMacBook = M.state.lastExplicitOutput
+        and (string.find(M.state.lastExplicitOutput, M.config.macbookPattern)
+             or string.find(M.state.lastExplicitOutput, M.config.builtInPattern))
+
+    if not explicitlyChoseMacBook
+       and (string.find(currentName, M.config.macbookPattern)
+            or string.find(currentName, M.config.builtInPattern)) then
+        local better, label = M.selectHighestPriorityOutput()
+        if better and better:name() ~= currentName then
+            better:setDefaultOutputDevice()
+            M.state.lastExplicitOutput = better:name()
+            M.showFeedback(label .. " (promoted)")
+            return
+        end
+    end
+
+    -- Check if current output device still exists in device list
+    local stillExists = false
+    for _, device in ipairs(hs.audiodevice.allOutputDevices()) do
+        if device:uid() == currentOutput:uid() then
+            stillExists = true
+            break
+        end
+    end
+
+    if not stillExists then
+        -- Device disappeared — use fallback chain
+        local fallback, label = M.selectHighestPriorityOutput()
+        if fallback then
+            fallback:setDefaultOutputDevice()
+            M.state.lastExplicitOutput = fallback:name()
+            M.showFeedback(label .. " (fallback)")
+        end
     end
 end
 
--- === Lifecycle ===
+-- Debounced audio device change handler
+function M.handleAudioDeviceChange(event)
+    if not M.state.active then return end
 
+    -- Always guard input immediately (no debounce needed)
+    M.guardInput()
+
+    -- Debounce the output evaluation
+    if M.state.pendingDeviceCheck then
+        M.state.pendingDeviceCheck:stop()
+    end
+
+    local delay = M.config.debounceDelay
+    -- Longer grace period for Bluetooth disconnects (profile switching)
+    if event == "dev#" then
+        local currentOutput = hs.audiodevice.defaultOutputDevice()
+        if currentOutput and M.isBluetoothDevice(currentOutput:name()) then
+            delay = M.config.bluetoothGracePeriod
+        end
+    end
+
+    M.state.pendingDeviceCheck = hs.timer.doAfter(delay, function()
+        M.state.pendingDeviceCheck = nil
+        M.evaluateOutputState()
+    end)
+end
+
+-- Lifecycle: called by usb-device-manager when Wave:3 connects
 function M.init()
+    if M.state.active then return end
+    M.state.active = true
+
     local configModule = package.loaded["modules.config"]
     if configModule and configModule.audio then
         for key, value in pairs(configModule.audio) do
@@ -260,21 +238,32 @@ function M.init()
         end
     end
 
+    -- Guard input immediately
+    M.guardInput()
+
+    -- Record current output as explicit choice
+    local currentOutput = hs.audiodevice.defaultOutputDevice()
+    if currentOutput then
+        M.state.lastExplicitOutput = currentOutput:name()
+    end
+
+    -- Start audio device watcher
     hs.audiodevice.watcher.setCallback(function(event)
         M.handleAudioDeviceChange(event)
     end)
     hs.audiodevice.watcher.start()
-
-    M.setupVolumeInterceptor()
-
-    M.guardInput()
 end
 
+-- Lifecycle: called by usb-device-manager when Wave:3 disconnects
 function M.stop()
+    if not M.state.active then return end
+    M.state.active = false
+
     hs.audiodevice.watcher.stop()
-    if M.volumeTap then
-        M.volumeTap:stop()
-        M.volumeTap = nil
+
+    if M.state.pendingDeviceCheck then
+        M.state.pendingDeviceCheck:stop()
+        M.state.pendingDeviceCheck = nil
     end
 end
 

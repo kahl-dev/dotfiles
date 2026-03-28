@@ -133,34 +133,48 @@ end
 -- Handle device connection
 function M.handleDeviceConnection(deviceKey, deviceConfig)
     M.state.deviceStates[deviceKey] = true
-    M.state.manuallyQuit[deviceConfig.app_bundle_id] = nil
+    if deviceConfig.app_bundle_id then
+        M.state.manuallyQuit[deviceConfig.app_bundle_id] = nil
+    end
 
-    -- Special handling for Wave Link audio
-    if deviceKey == "wave_link" and deviceConfig.coordinate_audio then
+    -- Audio coordination: activate immediately (no delay)
+    if deviceConfig.coordinate_audio then
         local audioManager = package.loaded["modules.audio-manager"]
-        if audioManager and audioManager.onWaveDeviceConnected then
-            audioManager.onWaveDeviceConnected()
+        if audioManager then
+            audioManager.init()
         end
     end
 
-    -- Launch app after delay
-    hs.timer.doAfter(M.config.settings.launch_delay, function()
-        if M.isDeviceConnected(deviceConfig) then
-            M.launchApp(deviceConfig.app_bundle_id, deviceConfig.app_name, deviceConfig)
-        end
-    end)
+    -- Launch app after delay (skip if no app configured)
+    if deviceConfig.app_bundle_id then
+        hs.timer.doAfter(M.config.settings.launch_delay, function()
+            if M.isDeviceConnected(deviceConfig) then
+                M.launchApp(deviceConfig.app_bundle_id, deviceConfig.app_name, deviceConfig)
+            end
+        end)
+    end
 end
 
 -- Handle device disconnection
 function M.handleDeviceDisconnection(deviceKey, deviceConfig)
     M.state.deviceStates[deviceKey] = false
 
-    -- Quit app after short delay
-    hs.timer.doAfter(1.0, function()
-        if not M.isDeviceConnected(deviceConfig) then
-            M.quitApp(deviceConfig.app_bundle_id, deviceConfig.app_name)
+    -- Audio coordination: deactivate immediately
+    if deviceConfig.coordinate_audio then
+        local audioManager = package.loaded["modules.audio-manager"]
+        if audioManager then
+            audioManager.stop()
         end
-    end)
+    end
+
+    -- Quit app after short delay (skip if no app configured)
+    if deviceConfig.app_bundle_id then
+        hs.timer.doAfter(1.0, function()
+            if not M.isDeviceConnected(deviceConfig) then
+                M.quitApp(deviceConfig.app_bundle_id, deviceConfig.app_name)
+            end
+        end)
+    end
 end
 
 -- Check all devices

@@ -7,12 +7,12 @@
       "app_name": "Elgato Stream Deck",
       "launch_hidden": true
     },
-    "wave_link": {
+    "wave3_audio": {
       "vendor_id": 4057,
       "product_ids": [102, 103, 112, 113],
-      "app_bundle_id": "com.elgato.WaveLink3",
-      "app_name": "Elgato Wave Link",
-      "launch_hidden": true,
+      "app_bundle_id": null,
+      "app_name": null,
+      "launch_hidden": false,
       "coordinate_audio": true
     }
   },
@@ -22,8 +22,8 @@
     "debounce_delay": 2.0
   },
   "audio": {
-    "elgatoDeviceName": "Wave:3",
-    "switchDelay": 0.5
+    "wave3Name": "Wave:3",
+    "sonyPattern": "WH%-1000XM6"
   },
   "displays": {
     "desk_setup": {
