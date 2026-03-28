@@ -3,23 +3,7 @@
 
 local M = {}
 
--- ╔══════════════════════════════════════════════════════════════╗
--- ║  Catppuccin Mocha Palette                                    ║
--- ╚══════════════════════════════════════════════════════════════╝
-
-local colors = {
-  base      = { red = 0.118, green = 0.118, blue = 0.180, alpha = 0.92 }, -- #1e1e2e
-  surface0  = { red = 0.192, green = 0.196, blue = 0.267, alpha = 1.0 },  -- #313244
-  text      = { red = 0.804, green = 0.839, blue = 0.957, alpha = 1.0 },  -- #cdd6f4
-  subtext0  = { red = 0.651, green = 0.678, blue = 0.784, alpha = 1.0 },  -- #a6adc8
-  blue      = { red = 0.537, green = 0.706, blue = 0.980, alpha = 1.0 },  -- #89b4fa
-  lavender  = { red = 0.706, green = 0.745, blue = 0.996, alpha = 1.0 },  -- #b4befe
-  yellow    = { red = 0.976, green = 0.886, blue = 0.686, alpha = 1.0 },  -- #f9e2af
-  peach     = { red = 0.980, green = 0.702, blue = 0.529, alpha = 1.0 },  -- #fab387
-  green     = { red = 0.651, green = 0.890, blue = 0.631, alpha = 1.0 },  -- #a6e3a1
-  mauve     = { red = 0.796, green = 0.651, blue = 0.969, alpha = 1.0 },  -- #cba6f7
-  overlay0  = { red = 0.424, green = 0.439, blue = 0.525, alpha = 1.0 },  -- #6c7086
-}
+local colors = require("modules.catppuccin")
 
 -- ╔══════════════════════════════════════════════════════════════╗
 -- ║  Binding Definitions                                         ║
@@ -220,7 +204,7 @@ function M.show()
   local titleBarHeight = 40
 
   -- Total overlay dimensions
-  local footerHeight = 24
+  local footerHeight = 44
   local columnWidth = config.keyWidth + config.descWidth
   local overlayWidth = (columnWidth * 2) + config.columnGap + (config.padding * 2)
   local overlayHeight = contentHeight + titleBarHeight + footerHeight + (config.padding * 2)
@@ -347,19 +331,50 @@ function M.show()
     elementIndex = elementIndex + 1
   end
 
-  -- Footer
-  local footerText = hs.styledtext.new("Press any key to dismiss", {
+  -- Footer separator line
+  canvas[elementIndex] = {
+    type = "rectangle",
+    fillColor = colors.surface0,
+    frame = {
+      x = config.padding,
+      y = overlayHeight - config.padding - footerHeight,
+      w = overlayWidth - (config.padding * 2),
+      h = 1,
+    },
+  }
+  elementIndex = elementIndex + 1
+
+  -- Footer line 1: dismiss hint
+  local footerLine1 = hs.styledtext.new("Press any key to dismiss", {
     font = { name = config.font, size = 11 },
     color = colors.overlay0,
   })
   canvas[elementIndex] = {
     type = "text",
-    text = footerText,
+    text = footerLine1,
     textAlignment = "center",
     frame = {
-      x = 0,
-      y = overlayHeight - config.padding - 4,
-      w = overlayWidth,
+      x = config.padding,
+      y = overlayHeight - config.padding - footerHeight + 10,
+      w = overlayWidth - (config.padding * 2),
+      h = 16,
+    },
+  }
+  elementIndex = elementIndex + 1
+
+  -- Footer line 2: cross-tool references
+  local footerLine2 = hs.styledtext.new("hammerspoon: hyper .  ·  tmux: prefix ?", {
+    font = { name = config.font, size = 11 },
+    color = colors.overlay0,
+  })
+  canvas[elementIndex] = {
+    type = "text",
+    text = footerLine2,
+    textAlignment = "center",
+    frame = {
+      x = config.padding,
+      y = overlayHeight - config.padding - footerHeight + 26,
+      w = overlayWidth - (config.padding * 2),
       h = 16,
     },
   }

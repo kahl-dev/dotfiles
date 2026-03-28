@@ -21,7 +21,7 @@ M.defaults = {
             wave_link = {
                 vendor_id = 4057,
                 product_ids = {102, 103, 112, 113},
-                app_bundle_id = "com.elgato.WaveLink",
+                app_bundle_id = "com.elgato.WaveLink3",
                 app_name = "Elgato Wave Link",
                 launch_hidden = true,
                 coordinate_audio = true
@@ -35,9 +35,8 @@ M.defaults = {
         }
     },
     audio = {
-        elgatoInputName = "Wave:3",
-        airpodsPattern = "AirPods",
-        switchDelay = 0.5
+        elgatoDeviceName = "Wave:3",
+        switchDelay = 0.5,
     }
 }
 

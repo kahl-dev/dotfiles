@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- Display Manager Module
 -- Automatically manages desk setup power based on display connections and lock/unlock state
 

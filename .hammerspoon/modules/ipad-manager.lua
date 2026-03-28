@@ -108,7 +108,7 @@ end
 -- Setup hotkeys (disabled - using hotkey layer instead)
 function M.setupHotkeys()
     -- Hotkeys moved to hotkey-layer module
-    M.log("iPad hotkeys now managed by hotkey layer (cmd+H)")
+    M.log("iPad hotkeys now managed by hotkey layer (hyper+.)")
 end
 
 -- Initialize module
