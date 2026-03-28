@@ -140,8 +140,8 @@ for arg in "${FILTERED_ARGS[@]}"; do
     fi
 done
 
-# Remote mode: proxy through bridge
-if [ -n "$BRIDGE_PORT" ]; then
+# Remote mode: proxy through bridge (skip if running on macOS — local Obsidian is available)
+if [ -n "$BRIDGE_PORT" ] && [ "$(uname)" != "Darwin" ]; then
     # Check if bridge is available
     if ! curl -sf "http://localhost:${BRIDGE_PORT}/health" >/dev/null 2>&1; then
         echo "Error: Remote Bridge is not available on port $BRIDGE_PORT" >&2
