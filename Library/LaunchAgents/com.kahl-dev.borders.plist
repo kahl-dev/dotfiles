@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.kahl-dev.borders</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/opt/homebrew/bin/borders</string>
+		<string>style=round</string>
+		<string>width=8.0</string>
+		<string>hidpi=on</string>
+		<string>active_color=0xff89b4fa</string>
+		<string>inactive_color=0x80313244</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>KeepAlive</key>
+	<true/>
+	<key>StandardOutPath</key>
+	<string>/tmp/borders.log</string>
+	<key>StandardErrorPath</key>
+	<string>/tmp/borders.error.log</string>
+</dict>
+</plist>

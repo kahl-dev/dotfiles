@@ -5,9 +5,7 @@
 config-version = 2
 
 # Commands that run after AeroSpace startup
-after-startup-command = [
-  'exec-and-forget ~/.config/borders/bordersrc'
-]
+after-startup-command = []
 
 # Start AeroSpace at login
 start-at-login = true
@@ -26,6 +24,9 @@ default-root-container-orientation = 'auto'
 
 # Mouse follows focus on monitor change (lazy = only if cursor not already there)
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+# Update border color based on floating/tiling state
+on-focus-changed = ['exec-and-forget /bin/bash ~/.config/aerospace/borders-focus.sh']
 
 # Disable macOS "Hide application" (cmd-h) workaround
 automatically-unhide-macos-hidden-apps = false

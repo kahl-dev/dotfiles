@@ -23,11 +23,13 @@
     ~/.config/sketchybar: ./.config/sketchybar/
     ~/.config/aerospace: ./.config/aerospace/
     ~/.config/ghostty: ./.config/ghostty/
+    ~/.config/borders: ./.config/borders/
     ~/.config/zed: ./.config/zed/
 
     ~/.hammerspoon: ./.hammerspoon/
 
     ~/Library/LaunchAgents/com.kahl_dev.add_ssh.plist: ./Library/LaunchAgents/com.kahl_dev.add_ssh.plist
+    ~/Library/LaunchAgents/com.kahl-dev.borders.plist: ./Library/LaunchAgents/com.kahl-dev.borders.plist
 
 - shell:
     - command: ./scripts/setup_homebrew.zsh
