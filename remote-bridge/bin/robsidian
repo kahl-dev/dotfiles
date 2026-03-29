@@ -130,8 +130,10 @@ COMMAND=""
 for arg in "${FILTERED_ARGS[@]}"; do
     if [[ "$arg" == *=* ]]; then
         # key=value arg — quote the value to preserve spaces
+        # Escape embedded " in value to prevent premature quote closure
         KEY="${arg%%=*}"
         VALUE="${arg#*=}"
+        VALUE="${VALUE//\"/\\\"}"
         COMMAND="${COMMAND:+$COMMAND }${KEY}=\"${VALUE}\""
     elif [[ "$arg" == *" "* ]]; then
         COMMAND="${COMMAND:+$COMMAND }\"${arg}\""
