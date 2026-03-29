@@ -93,8 +93,10 @@ show_panes() {
         "  [_] Full-width vertical"      "_" "split-window -fv" \
         "" \
         "Structure" "" "" \
-        "  [j] Join pane from..."        "j" "command-prompt -p 'join pane from: ' 'join-pane -h -s \"%%\"'" \
+        "  [j] Join pane (tree)"         "j" "choose-tree -Z 'join-pane -h -s \"%%\"'" \
         "  [b] Break pane out"           "b" "break-pane -d" \
+        "  [g] Grab pane ─ (fzf)"       "g" "display-popup -E -w 80% -h 60% 'bash ~/.dotfiles/tmux/scripts/tmux-grab-pane.sh h'" \
+        "  [G] Grab pane │ (fzf)"       "G" "display-popup -E -w 80% -h 60% 'bash ~/.dotfiles/tmux/scripts/tmux-grab-pane.sh v'" \
         "" \
         "Swap" "" "" \
         "  [h] Swap prev"                "h" "swap-pane -U" \

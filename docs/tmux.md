@@ -68,8 +68,10 @@ Enter panes mode with `Prefix + v`, then press a key:
 | `\|` | Split horizontal | visual |
 | `-` | Split vertical | visual |
 | `_` | Full-width vertical split | visual |
-| `j` | Join pane from another window | **j**oin |
+| `j` | Join pane (tree picker) | **j**oin |
 | `b` | Break pane out to new window | **b**reak |
+| `g` | Grab pane horizontal (fzf popup) | **g**rab |
+| `G` | Grab pane vertical (fzf popup) | **G**rab |
 
 **Swap / Move:**
 | Key | Action | Mnemonic |
