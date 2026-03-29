@@ -26,6 +26,8 @@ brew "bash"
 brew "bash-completion"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Bash Automated Testing System
+brew "bats-core"
 # Get/set bluetooth power and discoverable state
 brew "blueutil"
 # CLI of the open-source IDE For exploring and testing APIs
@@ -164,6 +166,10 @@ brew "reattach-to-user-namespace"
 brew "rust"
 # Intuitive find & replace CLI
 brew "sd"
+# Incremental parsing library
+brew "tree-sitter"
+# Easily detect and prevent bugs and anti-patterns in your codebase
+brew "semgrep"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
 # SOund eXchange: universal sound sample translator
@@ -186,8 +192,6 @@ brew "tmux"
 brew "tmuxinator"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
-# Incremental parsing library
-brew "tree-sitter"
 # Command-line unarchiving tools supporting multiple formats
 brew "unar"
 # Extremely fast Python package installer and resolver, written in Rust
