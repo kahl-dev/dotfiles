@@ -55,3 +55,10 @@ logs
 
 # Karabiner temporary backup files (not automatic_backups)
 .config/karabiner/karabiner.json.backup*
+
+# RTK runtime artifacts
+.config/rtk/.hook_warn_last
+.config/rtk/tee/
+
+# Yazi installed plugins (managed by ya pkg)
+.config/yazi/plugins/
