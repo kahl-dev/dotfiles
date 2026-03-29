@@ -1,5 +1,5 @@
 -- Catppuccin Mocha palette for Hammerspoon canvas overlays
--- Shared by aerospace-cheatsheet and hotkey-layer modules
+-- Shared by unified-overlay and other Hammerspoon modules
 
 return {
   base      = { red = 0.118, green = 0.118, blue = 0.180, alpha = 0.92 }, -- #1e1e2e

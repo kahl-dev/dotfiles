@@ -105,10 +105,10 @@ function M.enableUniversalControl()
 end
 
 
--- Setup hotkeys (disabled - using hotkey layer instead)
+-- Setup hotkeys (disabled - managed by unified overlay)
 function M.setupHotkeys()
-    -- Hotkeys moved to hotkey-layer module
-    M.log("iPad hotkeys now managed by hotkey layer (hyper+.)")
+    -- Hotkeys managed by unified-overlay module (alt+?)
+    M.log("iPad hotkeys managed by unified overlay (alt+?)")
 end
 
 -- Initialize module

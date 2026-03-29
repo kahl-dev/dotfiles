@@ -163,8 +163,8 @@ ctrl-alt-shift-cmd-k = 'move-node-to-monitor --wrap-around up --focus-follows-wi
 ctrl-alt-shift-cmd-semicolon = 'mode service'
 ctrl-alt-shift-cmd-a = 'mode apps'
 
-# Help overlays (? = universal help key)
-alt-shift-slash = '''exec-and-forget /opt/homebrew/bin/hs -c "require('modules.aerospace-cheatsheet').toggle()"'''
+# Help overlay (alt+? = unified keybinding overlay via Hammerspoon)
+alt-shift-slash = '''exec-and-forget /opt/homebrew/bin/hs -c "require('modules.unified-overlay').toggle()"'''
 
 # ╔══════════════════════════════════════════════════════════════╗
 # ║  Workspace Monitor Assignment                                ║

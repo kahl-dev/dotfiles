@@ -1,7 +1,7 @@
 -- Hammerspoon Configuration
 -- Manages Elgato devices automatically
 
--- Manual reload hotkey moved to hotkey layer
+-- Manual reload hotkey in unified overlay (alt+? → R)
 -- hs.hotkey.bind({ "cmd", "alt" }, "R", function()
 --     hs.reload()
 -- end)
@@ -22,7 +22,7 @@ end
 hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", reloadConfig):start()
 hs.alert.show("Hammerspoon loaded")
 
--- Enable IPC for hs CLI (used by AeroSpace cheatsheet)
+-- Enable IPC for hs CLI (used by AeroSpace to trigger unified overlay)
 require("hs.ipc")
 
 -- Load modules
@@ -31,8 +31,7 @@ local audioManager = require("modules.audio-manager")
 local usbManager = require("modules.usb-device-manager")
 local displayManager = require("modules.display-manager")
 local ipadManager = require("modules.ipad-manager")
-local hotkeyLayer = require("modules.hotkey-layer")
-require("modules.aerospace-cheatsheet") -- loaded for hs CLI access from AeroSpace
+require("modules.unified-overlay") -- loaded for hs CLI access from AeroSpace (alt+?)
 
 -- Initialize configuration
 config.init()
@@ -41,8 +40,7 @@ config.init()
 -- audioManager is started by usbManager when Wave:3 USB device is detected
 usbManager.init()
 displayManager.init()
--- ipadManager.init() -- Disabled to avoid duplicate hotkeys
-hotkeyLayer.init() -- Unified hotkey system
+-- ipadManager.init() -- Disabled: hotkeys managed by unified overlay
 
 -- TEMPORARY: Comprehensive watcher tests
 -- Uncomment the line below to test all watchers, then press Ctrl+Cmd+Shift+Alt+T to stop

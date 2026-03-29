@@ -173,7 +173,7 @@ Works both inside tmux (popup) and outside (plain fzf). Use `tm` from any shell.
 
 ## 💡 Pro Tips
 
-- **Which-Key**: Use `<prefix> Space` to discover all available keybindings
+- **Which-Key**: Use `<prefix> ?` to discover all available keybindings
 - **Focus Mode**: `<prefix> z` quickly zooms/unzooms panes for focused work  
 - **Vim Integration**: `C-h/j/k/l` navigation works seamlessly with vim splits
 - **Smart Clipboard**: Mouse selection automatically copies to system clipboard via rclip

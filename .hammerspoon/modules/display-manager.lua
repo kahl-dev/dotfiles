@@ -616,7 +616,7 @@ function M.init()
     -- M.callMonitorTimer = hs.timer.doEvery(5, M.monitorCallStatus)
     -- M.callMonitorTimer:start()
 
-    -- Hotkeys moved to hotkey layer system
+    -- Hotkeys managed by unified overlay (alt+?)
 
     M.log("Display Manager initialized")
 end

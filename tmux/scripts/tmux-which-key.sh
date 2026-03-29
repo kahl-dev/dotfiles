@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Which-key style menu for tmux prefix bindings.
-# Triggered via Prefix + Space — shows all available keybindings.
+# Triggered via Prefix + ? — shows all available keybindings.
 # Layers (Apps, TPM) open as nested submenus.
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -52,8 +52,7 @@ show_root() {
         "  [?] Cheatsheet"             "?" "run-shell -b \"tmux display-popup -d '#{pane_current_path}' -xC -yC -w90% -h90% -E 'bash $SCRIPT_DIR/tmux-cheatsheet.sh'\"" \
         "" \
         "Other Help Keys" "" "" \
-        "  aerospace   alt ?"          "" "" \
-        "  hammerspoon hyper ."        "" ""
+        "  unified overlay   alt ?"    "" ""
 }
 
 show_apps() {

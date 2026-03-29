@@ -129,9 +129,12 @@ Create `~/.hammerspoon/config/private.json` with your real Home Assistant creden
 .hammerspoon/
 ├── init.lua                     # Main entry point
 ├── modules/
+│   ├── unified-overlay.lua     # Keybinding overlay (alt+?) — AeroSpace + tmux + Hammerspoon
 │   ├── usb-device-manager.lua  # USB detection & app management
 │   ├── audio-manager.lua       # Audio device switching
-│   ├── display-manager.lua     # Display & power management 🆕
+│   ├── display-manager.lua     # Display & power management
+│   ├── ipad-manager.lua        # iPad Sidecar & Universal Control
+│   ├── catppuccin.lua          # Shared Catppuccin Mocha color palette
 │   └── config.lua              # Configuration loader
 └── config/
     ├── devices.json            # Public settings (safe for git)

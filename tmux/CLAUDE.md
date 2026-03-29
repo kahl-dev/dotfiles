@@ -20,7 +20,7 @@ tmux/
 ├── resurrect/             # Session save files (tmux-resurrect)
 └── scripts/
     ├── tmux-session-manager.sh    # 🔑 Session manager (Prefix+o / `tm`, preview pane, icons, colored header)
-    ├── tmux-which-key.sh          # 🔑 Which-key menu (Prefix+Space, nested submenus for apps/tpm)
+    ├── tmux-which-key.sh          # 🔑 Which-key menu (Prefix+?, nested submenus for apps/tpm)
     ├── cache-lib.sh               # 🔧 Shared cache utilities (sourced by all metric scripts)
     ├── status-line-main.sh        # 🔑 Main renderer — assembles all segments
     ├── cpu-simple.sh              # CPU usage % (bare integer)
