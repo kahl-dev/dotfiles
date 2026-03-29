@@ -53,6 +53,9 @@ logs
 # Hammerspoon private configuration
 .hammerspoon/config/private.json
 
+# Hammerspoon generated LSP stubs
+.hammerspoon/Spoons/EmmyLua.spoon/
+
 # Karabiner temporary backup files (not automatic_backups)
 .config/karabiner/karabiner.json.backup*
 
