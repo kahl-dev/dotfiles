@@ -8,6 +8,7 @@ legacy_version_file = true
 "npm:@antfu/ni" = "latest"
 
 # 🛠️ Dev tools
+"npm:vercel" = "latest"
 "npm:prettier" = "latest"
 "npm:diff-so-fancy" = "latest"
 "npm:serve" = "latest"
