@@ -1,6 +1,7 @@
 base
 bat
 tmux
+sesh
 mise
 fnm_build
 fzf_build
