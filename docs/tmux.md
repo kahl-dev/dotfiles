@@ -25,7 +25,7 @@ tmux/
 │   ├── host-icon.sh             # System icon detection
 │   ├── hostname-display.sh      # Smart hostname formatting
 │   ├── lit-info-urls.sh         # Project URL helper
-│   ├── tmux-session-manager.sh   # Session manager (switch, create, rename, move)
+│   ├── tmux-sesh.sh              # Session manager (sesh + fzf-tmux popup)
 │   ├── tmux-which-key.sh         # Which-key menu (nested submenus for apps/tpm)
 │   ├── tmux-cheatsheet.sh        # Cheatsheet popup
 │   ├── update-check.sh           # Staleness count for status bar
@@ -41,7 +41,7 @@ tmux/
 #### Session & Window Management
 | Key | Action | Description |
 |-----|--------|-------------|
-| `o` | Session manager | Switch, create, rename, delete, move pane/window |
+| `o` | Session manager (sesh) | Switch, create, kill sessions (tmux + zoxide) |
 | `c` | `new-window` | Create new window in current directory |
 | `x` | `kill-pane` | Kill current pane |
 | `X` | `kill-window` | Kill current window |
@@ -72,6 +72,7 @@ Enter panes mode with `Prefix + v`, then press a key:
 | `b` | Break pane out to new window | **b**reak |
 | `g` | Grab pane horizontal (fzf popup) | **g**rab |
 | `G` | Grab pane vertical (fzf popup) | **G**rab |
+| `w` | Grab window from other session (tree) | **w**indow |
 
 **Swap / Move:**
 | Key | Action | Mnemonic |
@@ -116,7 +117,7 @@ Enter panes mode with `Prefix + v`, then press a key:
 | Key | Action | Description |
 |-----|--------|-------------|
 | `?` | Which-key menu | All bindings with nested submenus (apps, tpm) |
-| `o` | Session manager | Switch, create, rename, delete, move pane/window |
+| `o` | Session manager (sesh) | Switch, create, kill sessions (tmux + zoxide) |
 | `u` | FZF URL | Open URL finder |
 | `Tab` | Extrakto | Fuzzy extract text from pane (paths, hashes, words) |
 | `F` | Thumbs | Vimium-style hint copy with letter labels |
@@ -164,17 +165,19 @@ Enter panes mode with `Prefix + v`, then press a key:
 
 ### Navigation & Search
 
-#### Custom Session Manager (replaces tmux-sessionx)
-- **Purpose**: Unified session management with fzf
-- **Script**: `tmux/scripts/tmux-session-manager.sh`
+#### sesh — Smart Session Manager
+- **Purpose**: Session management combining tmux sessions + zoxide directories
+- **Tool**: [sesh](https://github.com/joshmedeski/sesh) (Go binary, `brew install sesh`)
+- **Script**: `tmux/scripts/tmux-sesh.sh` (fzf wrapper with Catppuccin styling)
 - **Binding**: `Prefix + o` (inside tmux) or `tm` shell alias (outside tmux)
-- **Context-aware**: Detects `$TMUX` — uses popup inside tmux, plain fzf outside
+- **Config**: `~/.config/sesh/sesh.toml`
 - **Features**:
-  - Session switching/attaching (LRU sorted, git branch display)
-  - Session creation (zoxide disambiguation, literal path `~/...`, fd browser)
-  - Session rename (`ctrl-r`) and delete (`ctrl-d`)
-  - Move pane (`ctrl-s`) or window (`ctrl-w`) to another session (inside tmux only)
-  - `ctrl-f` to browse filesystem for new session directory
+  - Lists active tmux sessions and frequently-visited zoxide directories in one picker
+  - Creates sessions automatically when selecting a zoxide path
+  - Filter by type: `ctrl-a` all, `ctrl-t` tmux, `ctrl-x` zoxide
+  - Kill sessions: `ctrl-d`
+  - Browse filesystem: `ctrl-f` (fd-based)
+  - Preview pane via `sesh preview`
 
 #### tmux-floax
 - **Purpose**: Floating window management
@@ -331,6 +334,7 @@ When connecting via SSH, `tmux.remote.conf` is automatically loaded:
 
 ### Prerequisites
 - **tmux 3.0+** (3.3+ recommended for advanced formatting)
+- **sesh** (session manager — `brew install sesh`)
 - **rclip** (universal clipboard tool)
 - **bash 4.0+** (advanced regex, associative arrays)
 - **Rust toolchain** (for tmux-thumbs compilation via TPM)

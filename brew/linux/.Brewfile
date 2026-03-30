@@ -85,8 +85,8 @@ brew "shared-mime-info"
 brew "starship"
 # Terminal multiplexer
 brew "tmux"
-# Manage complex tmux sessions easily
-brew "tmuxinator"
+# Smart terminal session manager
+brew "sesh"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Extremely fast Python package installer and resolver, written in Rust

@@ -40,7 +40,7 @@ if command_exists fzf && command_exists fzf-tmux; then
   export FZF_TMUX_OPTS="-p80%,60%"
   export FZF_TMUX=1
 
-  # tm is aliased in aliases.zsh to tmux-session-manager.sh
+  # tm is aliased in aliases.zsh to tmux-sesh.sh
 
   alias fal='alias | fzf --preview "echo {}" | awk -F "=" "{print \$1}" | xargs -I {} sh -c "{}"'
 

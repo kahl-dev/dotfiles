@@ -147,7 +147,7 @@ command_exists yazi && alias y='yazi'
 # tmux
 alias tmux-clear-resurrect='rm -rf ~/.tmux/resurrect/* && echo "Cleared all tmux-resurrect entries!"'
 
-alias tm='bash ~/.dotfiles/tmux/scripts/tmux-session-manager.sh'
+alias tm='bash ~/.dotfiles/tmux/scripts/tmux-sesh.sh'
 
 # lazygit
 command_exists lazygit && alias lg='lazygit'

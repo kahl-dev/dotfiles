@@ -184,7 +184,6 @@ The zsh setup uses modular configuration files in `zsh/config/`:
 - `mosh.zsh` - `sm` command: mosh with auto Remote Bridge tunnel via autossh (`sm`, `sm-status`, `sm-kill`)
 - `remote-bridge.zsh` - Remote Bridge clipboard/URL/notification integration
 - `ssh-agent.zsh` - SSH agent management
-- `tmuxinator.zsh` - Tmuxinator session management
 - `zinit.zsh` - Zinit plugin manager initialization
 - `dot.zsh` - Unified `dot` CLI with fzf menu, update wizard, and tab completion
 - `repos.zsh` - Multi-repo fleet management (`dot repos status/pull/push/sync`)

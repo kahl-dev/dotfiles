@@ -98,7 +98,7 @@ Based on the dotfiles repository structure, I understand you have:
 **Plugin Ecosystem:**
 - TPM (Tmux Plugin Manager) for plugin management
 - tmux-resurrect & tmux-continuum for session persistence
-- Custom session manager script (`tmux/scripts/tmux-session-manager.sh`) for session switching, creation, rename, delete, and pane/window moves
+- sesh (`tmux/scripts/tmux-sesh.sh`) for session management — combines tmux sessions + zoxide directories in one fzf picker
 - Catppuccin theme with multiple variants (frappe, latte, macchiato, mocha)
 - Custom status modules and menus
 

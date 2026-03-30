@@ -2,6 +2,7 @@ base
 macos_settings
 macos_general
 tmux
+sesh
 remote-bridge
 mise
 claude

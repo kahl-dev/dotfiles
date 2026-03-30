@@ -188,8 +188,8 @@ brew "tesseract-lang"
 brew "thefuck"
 # Terminal multiplexer
 brew "tmux"
-# Manage complex tmux sessions easily
-brew "tmuxinator"
+# Smart terminal session manager
+brew "sesh"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Command-line unarchiving tools supporting multiple formats

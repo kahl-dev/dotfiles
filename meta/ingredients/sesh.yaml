@@ -1,0 +1,8 @@
+- defaults:
+    link:
+      relink: true
+      force: true
+      relative: false
+
+- link:
+    ~/.config/sesh: ./.config/sesh

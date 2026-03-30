@@ -7,7 +7,8 @@
 
 | Keybinding | Description |
 |------------|-------------|
-| `<prefix> o` | Session manager (switch, create, rename, move pane/window) |
+| `<prefix> o` | Session manager (sesh — switch, create, kill) |
+| `<prefix> L` | Last session toggle |
 
 ## 🖼️ Windows
 
@@ -41,6 +42,7 @@ Press `<prefix> v` to enter panes mode, then:
 | `b` | Break pane out to new window | **b**reak |
 | `g` | Grab pane horizontal (fzf) | **g**rab |
 | `G` | Grab pane vertical (fzf) | **G**rab |
+| `w` | Grab window from other session (tree) | **w**indow |
 
 ### Swap / Move
 | Key | Description | Mnemonic |
@@ -157,19 +159,19 @@ All copy operations automatically use `rclip` for seamless local/remote synchron
 - Works transparently across SSH sessions and nested tmux environments
 - Supports OSC52 fallback when Remote Bridge tunnel is unavailable
 
-## 📡 Session Manager (`<prefix> o` or `tm` in shell)
+## 📡 Session Manager — sesh (`<prefix> o` or `tm` in shell)
 
+Powered by [sesh](https://github.com/joshmedeski/sesh). Shows tmux sessions + zoxide directories in one picker.
 Works both inside tmux (popup) and outside (plain fzf). Use `tm` from any shell.
 
 | Key | Action |
 |-----|--------|
-| `Enter` | Switch/attach to selected session |
-| `Enter` (on `[+ New Session]`) | Create session via zoxide or typed path (`~/...`) |
-| `ctrl-r` | Rename selected session |
-| `ctrl-d` | Delete selected session (with confirmation) |
-| `ctrl-f` | Browse filesystem to create session |
-| `ctrl-s` | Move current pane to selected session (tmux only) |
-| `ctrl-w` | Move current window to selected session (tmux only) |
+| `Enter` | Switch/attach to selected session (creates if new) |
+| `ctrl-a` | Show all (tmux + zoxide + config) |
+| `ctrl-t` | Filter: tmux sessions only |
+| `ctrl-x` | Filter: zoxide directories only |
+| `ctrl-d` | Kill selected session |
+| `ctrl-f` | Browse filesystem (fd) |
 
 ## 💡 Pro Tips
 

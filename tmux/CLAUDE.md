@@ -19,7 +19,7 @@ tmux/
 ├── plugins/               # TPM-managed plugins
 ├── resurrect/             # Session save files (tmux-resurrect)
 └── scripts/
-    ├── tmux-session-manager.sh    # 🔑 Session manager (Prefix+o / `tm`, preview pane, icons, colored header)
+    ├── tmux-sesh.sh               # 🔑 Session manager (Prefix+o / `tm`, sesh + fzf-tmux popup)
     ├── tmux-which-key.sh          # 🔑 Which-key menu (Prefix+?, nested submenus for apps/tpm)
     ├── cache-lib.sh               # 🔧 Shared cache utilities (sourced by all metric scripts)
     ├── status-line-main.sh        # 🔑 Main renderer — assembles all segments
@@ -172,6 +172,7 @@ Pane management layer. Status bar shows `󰕰` in blue when active.
 | `b` | Break pane out to new window | **b**reak |
 | `g` | Grab pane horizontal (fzf popup) | **g**rab |
 | `G` | Grab pane vertical (fzf popup) | **G**rab |
+| `w` | Grab window from other session (tree) | **w**indow |
 
 **Swap / Move:**
 
@@ -199,7 +200,7 @@ Grid layout script: `scripts/tmux-grid-layout.sh <max_rows>` — computes custom
 | `C-h/j/k/l` | Smart pane navigation (vim/nvim/fzf-aware via `if-shell`) |
 | `C-\` | Jump to last pane (vim-aware) |
 | `C-Shift-Left/Right` | Swap window AND auto-select the swapped position |
-| `Prefix + o` / `tm` alias | Session manager (preview pane, icons, git branches, window count) |
+| `Prefix + o` / `tm` alias | Session manager — sesh (tmux sessions + zoxide paths, preview, icons) |
 | `Prefix + u` | Extract and open URLs from pane (tmux-fzf-url → ropen) |
 | `Prefix + Tab` | Fuzzy extract text from pane — paths, hashes, words (extrakto) |
 | `Prefix + F` | Vimium-style hint copy — highlights patterns with letter hints (tmux-thumbs) |
@@ -253,7 +254,7 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
 | **tmux-cowboy** | Kill hung process | `Prefix + *`, sends `kill -9` to pane process |
 | **tmux-claude-sessions** | Browse/resume Claude conversations | `Prefix + g`, fzf popup grouped by project |
 
-**Removed plugins** (replaced by custom scripts): catppuccin/tmux, tmux-cpu, tmux-loadavg, vim-tmux-navigator, tmux-sessionx. Removed: claude-tmux-hop (tried, didn't fit workflow), tmux-agent-indicator (focus stealing via select-pane hooks).
+**Removed plugins** (replaced by custom scripts or external tools): catppuccin/tmux, tmux-cpu, tmux-loadavg, vim-tmux-navigator, tmux-sessionx, custom session-manager.sh (replaced by sesh). Removed: claude-tmux-hop (tried, didn't fit workflow), tmux-agent-indicator (focus stealing via select-pane hooks).
 
 **Session persistence**: Resurrect captures pane contents (`@resurrect-capture-pane-contents 'on'`), auto-cleans saves (keeps 50), and restores Claude with `claude -c --dangerously-skip-permissions`. Session-closed hook fires resurrect save to prevent ghost sessions.
 

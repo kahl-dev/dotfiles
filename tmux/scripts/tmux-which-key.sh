@@ -12,7 +12,7 @@ show_root() {
     tmux display-menu -xC -yC -T " 󰌌 Which Key " \
         "" \
         "Sessions" "" "" \
-        "  [o] Session manager"        "o" "run-shell -b 'bash $SCRIPT_DIR/tmux-session-manager.sh'" \
+        "  [o] Session manager (sesh)"  "o" "run-shell -b 'bash $SCRIPT_DIR/tmux-sesh.sh'" \
         "  [Q] Kill session"           "Q" "confirm-before -p 'kill-session #S? (y/n)' 'kill-session \; run-shell \"~/.dotfiles/tmux/plugins/tmux-resurrect/scripts/save.sh >/dev/null 2>&1 || true\"'" \
         "  [L] Last session"           "L" "switch-client -l" \
         "  [d] Detach"                 "d" "detach-client" \
@@ -96,6 +96,7 @@ show_panes() {
         "  [b] Break pane out"           "b" "break-pane -d" \
         "  [g] Grab pane ─ (fzf)"       "g" "display-popup -E -w 80% -h 60% 'bash ~/.dotfiles/tmux/scripts/tmux-grab-pane.sh h'" \
         "  [G] Grab pane │ (fzf)"       "G" "display-popup -E -w 80% -h 60% 'bash ~/.dotfiles/tmux/scripts/tmux-grab-pane.sh v'" \
+        "  [w] Grab window (tree)"      "w" "choose-tree -Z 'move-window -d -s \"%%\"'" \
         "" \
         "Swap" "" "" \
         "  [h] Swap prev"                "h" "swap-pane -U" \

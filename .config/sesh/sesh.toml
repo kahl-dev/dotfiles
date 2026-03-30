@@ -1,0 +1,3 @@
+# Intentionally minimal — tmuxinator templates dropped in sesh migration.
+# Sessions created from zoxide history; add [[session]] entries for custom startup needs.
+blacklist = ["scratch"]
