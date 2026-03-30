@@ -85,3 +85,6 @@ enabled = true
 navigate = true
 light = false
 line-numbers = true
+
+[url "git@github.com:"]
+	insteadOf = https://github.com/
