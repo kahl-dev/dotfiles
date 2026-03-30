@@ -57,6 +57,9 @@ export MANWIDTH=999
 # Allow Git to discover repositories across filesystem boundaries
 export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 
+# AI tools: point lit-ai-context to claude-config monorepo
+export LIA_DOCS_PATH="$HOME/repos/claude-config"
+
 # Add syntax highlighting to man pages
 if command_exists bat; then
   if command_exists fzf; then
