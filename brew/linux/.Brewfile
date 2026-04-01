@@ -79,14 +79,14 @@ brew "opencode"
 brew "openssl@1.1"
 # Powerful, clean, object-oriented scripting language
 brew "ruby"
+# Smart session manager for the terminal
+brew "sesh"
 # Database of common MIME types
 brew "shared-mime-info"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Terminal multiplexer
 brew "tmux"
-# Smart terminal session manager
-brew "sesh"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Extremely fast Python package installer and resolver, written in Rust

@@ -170,6 +170,7 @@ Works both inside tmux (popup) and outside (plain fzf). Use `tm` from any shell.
 | `ctrl-a` | Show all (tmux + zoxide + config) |
 | `ctrl-t` | Filter: tmux sessions only |
 | `ctrl-x` | Filter: zoxide directories only |
+| `ctrl-n` | Create new session in same directory |
 | `ctrl-d` | Kill selected session |
 | `ctrl-f` | Browse filesystem (fd) |
 

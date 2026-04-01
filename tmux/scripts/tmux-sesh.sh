@@ -26,7 +26,7 @@ else
     border_label=" 󰆍 sesh "
 fi
 
-header=$' ^a all  ^t tmux  ^x zoxide  ^d kill  ^f find'
+header=$' ^a all  ^t tmux  ^x zoxide  ^n new  ^d kill  ^f find'
 
 # ctrl-d: only kills if target is an active tmux session, saves resurrect state first
 kill_command='session={2..}; tmux has-session -t "$session" 2>/dev/null && tmux confirm-before -p "kill session $session? (y/n)" "kill-session -t \"$session\" \; run-shell \"~/.dotfiles/tmux/plugins/tmux-resurrect/scripts/save.sh >/dev/null 2>&1 || true\"" || tmux display-message "Not a tmux session"'
@@ -41,6 +41,7 @@ fzf_args=(
     --bind 'ctrl-a:change-prompt(⚡ )+reload(sesh list --icons)'
     --bind 'ctrl-t:change-prompt(🪟 )+reload(sesh list -t --icons)'
     --bind 'ctrl-x:change-prompt(📁 )+reload(sesh list -z --icons)'
+    --bind "ctrl-n:become(echo NEW_SESSION:{})"
     --bind "ctrl-d:execute($kill_command)+reload(sleep 0.2 && sesh list --icons)"
     --bind 'ctrl-f:change-prompt(🔎 )+reload(fd --type d --hidden --exclude .git --exclude node_modules --exclude .cache --max-depth 4 . ~)'
     --preview-window 'right:55%'
@@ -60,4 +61,40 @@ session_list=$(sesh list --icons)
 selected=$(printf '%s\n' "$session_list" | run_fzf) || exit 0
 [[ -z "$selected" ]] && exit 0
 
-sesh connect "$selected"
+if [[ "$selected" == NEW_SESSION:* ]]; then
+    raw="${selected#NEW_SESSION:}"
+    # Strip leading icon field (sesh list --icons prepends an icon + space)
+    target="${raw#* }"
+
+    if [[ "$target" == ~* || "$target" == /* ]]; then
+        session_path="${target/#\~/$HOME}"
+        base=$(basename "$session_path")
+    else
+        session_path=$(tmux display-message -t "$target" -p "#{session_path}" 2>/dev/null)
+        base="$target"
+    fi
+    if [[ -z "$session_path" ]]; then
+        echo "Session '$target' no longer exists or has no path" >&2
+        exit 1
+    fi
+
+    name="$base"
+    counter=2
+    max_attempts=20
+    while ! tmux new-session -d -s "$name" -c "$session_path" 2>/dev/null; do
+        if (( counter > max_attempts )); then
+            echo "Failed to create session '${base}' after ${max_attempts} attempts" >&2
+            exit 1
+        fi
+        name="${base}-${counter}"
+        ((counter++))
+    done
+
+    if [[ -n "${TMUX:-}" ]]; then
+        tmux switch-client -t "$name"
+    else
+        tmux attach-session -t "$name"
+    fi
+else
+    sesh connect "$selected"
+fi

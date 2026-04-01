@@ -175,6 +175,7 @@ Enter panes mode with `Prefix + v`, then press a key:
   - Lists active tmux sessions and frequently-visited zoxide directories in one picker
   - Creates sessions automatically when selecting a zoxide path
   - Filter by type: `ctrl-a` all, `ctrl-t` tmux, `ctrl-x` zoxide
+  - Create new session in same directory: `ctrl-n`
   - Kill sessions: `ctrl-d`
   - Browse filesystem: `ctrl-f` (fd-based)
   - Preview pane via `sesh preview`

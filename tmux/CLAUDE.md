@@ -200,7 +200,7 @@ Grid layout script: `scripts/tmux-grid-layout.sh <max_rows>` — computes custom
 | `C-h/j/k/l` | Smart pane navigation (vim/nvim/fzf-aware via `if-shell`) |
 | `C-\` | Jump to last pane (vim-aware) |
 | `C-Shift-Left/Right` | Swap window AND auto-select the swapped position |
-| `Prefix + o` / `tm` alias | Session manager — sesh (tmux sessions + zoxide paths, preview, icons) |
+| `Prefix + o` / `tm` alias | Session manager — sesh (tmux sessions + zoxide paths, preview, icons). Inside picker: `ctrl-a` all, `ctrl-t` tmux, `ctrl-x` zoxide, `ctrl-n` new session in same dir, `ctrl-d` kill, `ctrl-f` find dirs |
 | `Prefix + u` | Extract and open URLs from pane (tmux-fzf-url → ropen) |
 | `Prefix + Tab` | Fuzzy extract text from pane — paths, hashes, words (extrakto) |
 | `Prefix + F` | Vimium-style hint copy — highlights patterns with letter hints (tmux-thumbs) |
