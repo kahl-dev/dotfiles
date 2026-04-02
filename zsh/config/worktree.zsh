@@ -88,8 +88,11 @@ _gwta() {
   }
   [[ ${#opt_b} -gt 0 ]] && flag_branch="${opt_b[2]}"
 
-  local name_or_path="$1"
+  local name_or_path="${1:l}"
   local commit_ish="$2"
+
+  # Enforce lowercase on branch name from -b flag
+  [[ -n "$flag_branch" ]] && flag_branch="${flag_branch:l}"
 
   if [[ -z "$name_or_path" ]]; then
     _gwt_error "Usage: gwta [-b <branch>] <name-or-path> [<commit-ish>]"
