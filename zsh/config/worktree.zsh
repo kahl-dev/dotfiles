@@ -36,28 +36,42 @@ _gwt_default_base() {
   echo "${main_path:h}"
 }
 
+# Detect project type from composer.json in the given directory
+_gwt_is_typo3_project() {
+  local dir="$1"
+  [[ -f "$dir/composer.json" ]] && command grep -q '"typo3/cms-core"' "$dir/composer.json" 2>/dev/null
+}
+
 # Auto-detect gitignored config files worth copying to new worktrees
 # Execution order: skip junk dirs -> check file exists -> filter size -> match config patterns
 _gwt_detect_local_configs() {
   local source_dir="$1"
   local file size
+  local is_typo3=false
+  _gwt_is_typo3_project "$source_dir" && is_typo3=true
 
   git -C "$source_dir" ls-files -z --others --ignored --exclude-standard 2>/dev/null \
     | while IFS= read -r -d '' file; do
-        # 1. Skip known junk directories
+        # 1. Skip known junk directories (universal)
         case "$file" in
           *node_modules/*|*vendor/*|var/*|.cache/*|.git/*) continue ;;
-          public/fileadmin/*|public/uploads/*|public/typo3temp/*|public/_assets/*) continue ;;
         esac
 
-        # 2. Must be a regular file
+        # 2. Skip framework-specific directories
+        if $is_typo3; then
+          case "$file" in
+            public/fileadmin/*|public/uploads/*|public/typo3temp/*|public/_assets/*) continue ;;
+          esac
+        fi
+
+        # 3. Must be a regular file
         [[ -f "$source_dir/$file" ]] || continue
 
-        # 3. Size filter: < 100KB
+        # 4. Size filter: < 100KB
         size=$(zstat -L +size "$source_dir/$file" 2>/dev/null) || continue
         (( ${size:-0} > 102400 )) && continue
 
-        # 4. Match config-like patterns (match against basename only)
+        # 5. Match config-like patterns (match against basename only)
         local basename="${file:t}"
         case "$basename" in
           # "local" in name — strongest signal
