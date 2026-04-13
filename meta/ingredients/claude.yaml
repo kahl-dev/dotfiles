@@ -179,6 +179,25 @@
           echo "✓ codebase-memory-mcp installed ($("$CBM" --version 2>/dev/null))"
         fi
 
+    - description: "Install Claude Code plugins from settings"
+      command: |
+        CLAUDE="$HOME/.local/bin/claude"
+        if [ ! -x "$CLAUDE" ]; then
+          echo "⚠️  Claude Code CLI not found, skipping plugin setup"
+          exit 0
+        fi
+
+        if ! "$CLAUDE" plugin marketplace add openai/codex-plugin-cc; then
+          echo "⚠️  Failed to add codex marketplace, skipping plugin install"
+          exit 0
+        fi
+
+        if "$CLAUDE" plugin install codex@openai-codex; then
+          echo "✓ Claude Code plugins installed"
+        else
+          echo "⚠️  codex plugin install failed"
+        fi
+
     - description: "Configure Claude Code MCP servers"
       command: |
         CLAUDE="$HOME/.local/bin/claude"
