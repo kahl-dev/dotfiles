@@ -136,3 +136,5 @@ fi
 
 # Deduplicate PATH in nested shells (tmux panes, SSH sessions)
 typeset -U PATH path
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
