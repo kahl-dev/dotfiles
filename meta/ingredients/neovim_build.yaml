@@ -1,24 +1,43 @@
 - shell:
-    - |
-      [ ! -d "$DOTFILES/build" ] && mkdir -p "$DOTFILES/build"
-      [ ! -d "$HOME/.local/bin" ] && mkdir -p "$HOME/.local/bin"
+    - description: "Build and install Neovim from source"
+      command: |
+        DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
+        BUILD_DIR="$DOTFILES/build/neovim"
+        INSTALL_PREFIX="$HOME/.local"
+        NVIM_BIN="$INSTALL_PREFIX/bin/nvim"
 
-      rm -f ~/.local/state/nvim/log
-      rm -f ~/.local/state/nvim/*.log
+        mkdir -p "$INSTALL_PREFIX/bin"
 
-      # Clone the Neovim repository
-      git clone git@github.com:neovim/neovim.git "$DOTFILES/build/neovim"
-      cd "$DOTFILES/build/neovim"
-      # git checkout stable  # Uncomment to use the stable branch if desired
+        # Check if nvim is already installed and recent (skip rebuild if less than 7 days old)
+        if [ -x "$NVIM_BIN" ]; then
+          AGE_DAYS=$(( ($(date +%s) - $(stat -c %Y "$NVIM_BIN" 2>/dev/null || stat -f %m "$NVIM_BIN" 2>/dev/null || echo 0)) / 86400 ))
+          if [ "$AGE_DAYS" -lt 7 ]; then
+            echo "✓ Neovim already installed ($AGE_DAYS days old), skipping rebuild"
+            "$NVIM_BIN" --version | head -1
+            exit 0
+          fi
+          echo "🔄 Neovim is $AGE_DAYS days old, rebuilding..."
+        else
+          echo "📦 Neovim not found, building from source..."
+        fi
 
-      # Remove any previous Neovim installation in .local/bin
-      rm -rf "$HOME/.local/bin/nvim"
+        rm -f ~/.local/state/nvim/log
+        rm -f ~/.local/state/nvim/*.log
 
-      # Build and install Neovim to .local/bin
-      make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX="$HOME/.local"
+        # Clone or update the repository
+        if [ -d "$BUILD_DIR" ]; then
+          git -C "$BUILD_DIR" fetch --depth 1
+          git -C "$BUILD_DIR" reset --hard origin/master
+        else
+          git clone --depth 1 git@github.com:neovim/neovim.git "$BUILD_DIR"
+        fi
 
-      make install
+        cd "$BUILD_DIR"
+        make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX="$INSTALL_PREFIX"
+        make install
 
-      # Clean up the build directory
-      cd $DOTFILES
-      rm -rf "$DOTFILES/build/neovim"
+        cd "$DOTFILES"
+        rm -rf "$BUILD_DIR"
+
+        echo "✓ Neovim installed:"
+        "$NVIM_BIN" --version | head -1

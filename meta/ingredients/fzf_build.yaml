@@ -1,4 +1,12 @@
 - shell:
-    - |
-      git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-      ~/.fzf/install --all
+    - description: "Install or update fzf"
+      command: |
+        if [ -d "$HOME/.fzf" ]; then
+          echo "🔄 Updating fzf..."
+          git -C "$HOME/.fzf" pull --depth 1
+        else
+          echo "📦 Installing fzf..."
+          git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
+        fi
+        "$HOME/.fzf/install" --all --no-update-rc
+        echo "✓ fzf ready"
