@@ -24,6 +24,24 @@ The configuration includes:
 
 This separation keeps agency-specific intellectual property private while allowing the public dotfiles to remain shareable.
 
+### Private Dotfiles
+
+Host-specific and confidential configuration (work identity, SSH hosts, secrets) lives in a **separate private repository** and is wired in via the `private` dotbot ingredient:
+
+- **Repository**: `github.com:kahl-dev/dotfiles-private` (private)
+- **Location**: `~/repos/dotfiles-private/`
+- **Installation**: Automatic via the `private` ingredient (included in all recipes). The `private-macos` ingredient adds macOS-only symlinks.
+- **Failure mode**: If cloning fails (SSH key missing, no access), the ingredient prints a warning and continues — the install does not abort.
+
+Universal symlinks (all platforms):
+- `~/.zshenv-private` → private env vars
+- `~/.gitconfig-local` → work git identity
+
+macOS-only symlinks (via `private-macos`):
+- `~/.ssh/config.d/private-hosts`
+- `~/.hammerspoon/config/private.json`
+- `~/.config/audio-manager/private.json`
+
 ## Architecture & Structure
 
 ### Core Components
@@ -31,7 +49,7 @@ This separation keeps agency-specific intellectual property private while allowi
 - **`meta/`** - Contains dotbot configuration system
   - `base.yaml` - Base dotbot configuration with shell defaults
   - `ingredients/` - Individual configuration modules (e.g., `bat.yaml`, `neovim_build.yaml`, `tmux.yaml`)
-  - `recipes/` - Installation profiles combining multiple ingredients (`liadev`, `macos`, `pi`)
+  - `recipes/` - Installation profiles combining multiple ingredients (`liadev`, `macos`, `pi`, `server`)
 - **`scripts/`** - Shell scripts for installation, setup, and maintenance
 - **Configuration directories** organized by tool:
   - `zsh/` - Shell configuration and utilities
@@ -86,7 +104,8 @@ The `dot` command consolidates all dotfiles operations into a single interface w
 dot
 
 # Installation
-dot install profile macos       # Install a dotbot profile
+dot install                     # Re-run the locked profile (reads .dotbot-profile)
+dot install profile macos       # Install a dotbot profile (writes the lock on success)
 dot install standalone tmux     # Install a standalone ingredient
 
 # Homebrew
