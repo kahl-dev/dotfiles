@@ -2,5 +2,7 @@ cleanup
 base
 private
 tmux
+sesh
 mise
 liadev
+claude
