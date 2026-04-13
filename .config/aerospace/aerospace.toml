@@ -10,6 +10,9 @@ after-startup-command = []
 # Start AeroSpace at login
 start-at-login = true
 
+# Sticky windows — move Wispr Flow to current workspace on every switch
+exec-on-workspace-change = ['/bin/bash', '/Users/kahl-dev/.config/aerospace/sticky-wispr.sh']
+
 # Normalizations
 # See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
@@ -66,6 +69,11 @@ run = ['layout floating']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.reminders'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.electron.wispr-flow.accessibility-mac-app'
+check-further-callbacks = true
 run = ['layout floating']
 
 # ╔══════════════════════════════════════════════════════════════╗
