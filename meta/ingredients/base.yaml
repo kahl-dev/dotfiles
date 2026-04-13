@@ -35,6 +35,7 @@
       ~/.config/starship.toml: ./.config/starship.toml
       ~/.config/audio-manager: ./.config/audio-manager/
       ~/.config/yazi: ./.config/yazi/
+      ~/.config/lit-test: ./.config/lit-test/
 
 - shell:
       - [git submodule update --init, Installing submodules]
