@@ -15,7 +15,12 @@ help: ## Show available targets
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-install: ## Install all dotfiles via dotbot
+install: ## Install all dotfiles via dotbot (macOS bootstrap only)
+	@if [ "$$(uname -s)" != "Darwin" ]; then \
+		echo "Error: 'make install' is macOS-only."; \
+		echo "Run ./install-profile <name> directly (liadev, server, pi)."; \
+		exit 1; \
+	fi
 	@./install-profile macos
 
 uninstall: ## Remove all symlinks and configurations

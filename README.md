@@ -81,6 +81,10 @@ cd ~/.dotfiles && git remote set-url origin git@github.com:kahl-dev/dotfiles.git
 ./install-profile macos     # Complete macOS setup
 ```
 
+#### Profile Lock
+
+After the first successful `./install-profile <name>`, the machine is locked to that recipe (stored in `.dotbot-profile`). Subsequent attempts to install a different profile — or a standalone ingredient that isn't part of the locked recipe — are refused. To switch profiles, remove the lock file: `rm .dotbot-profile`. Running `dot install` with no arguments re-runs the locked profile (useful after pulling new ingredients).
+
 #### 📝 Tab Completion
 The dotfiles system includes intelligent tab completion for both installation scripts:
 

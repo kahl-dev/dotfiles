@@ -17,10 +17,39 @@ BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${BASE_DIR}"
 git submodule update --init --remote
 
+LOCK_FILE="${BASE_DIR}/.dotbot-profile"
+LOCKED=""
+if [[ -f "$LOCK_FILE" ]]; then
+	LOCKED="$(cat "$LOCK_FILE")"
+	if [[ -z "$LOCKED" ]]; then
+		echo "Error: lock file is empty or corrupt." >&2
+		echo "To switch profiles, run: rm ${LOCK_FILE}" >&2
+		exit 1
+	fi
+	RECIPE_FILE="${BASE_DIR}/${META_DIR}/${PROFILES_DIR}/${LOCKED}"
+	if [[ ! -f "$RECIPE_FILE" ]]; then
+		echo "Error: locked profile '$LOCKED' no longer exists in ${META_DIR}/${PROFILES_DIR}/." >&2
+		echo "To switch profiles, run: rm ${LOCK_FILE}" >&2
+		exit 1
+	fi
+fi
+
 for config in ${@}; do
+	suffix="-sudo"
+
+	if [[ -n "$LOCKED" ]]; then
+		INGREDIENT="${config%"$suffix"}"
+		if ! grep -qxF "$INGREDIENT" "$RECIPE_FILE"; then
+			echo "Error: this machine is locked to profile '$LOCKED'." >&2
+			echo "Refusing to install ingredient '$INGREDIENT' (not part of the locked profile)." >&2
+			echo "Allowed ingredients: $(tr '\n' ' ' < "$RECIPE_FILE")" >&2
+			echo "To switch profiles, run: rm ${LOCK_FILE}" >&2
+			exit 1
+		fi
+	fi
+
 	# create temporary file
 	configFile="$(mktemp)"
-	suffix="-sudo"
 	echo -e "$(<"${BASE_DIR}/${META_DIR}/${BASE_CONFIG}${CONFIG_SUFFIX}")\n$(<"${BASE_DIR}/${META_DIR}/${CONFIG_DIR}/${config%"$suffix"}${CONFIG_SUFFIX}")" >"$configFile"
 
 	cmd=("${BASE_DIR}/${META_DIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASE_DIR}" -c "$configFile")

@@ -7,4 +7,3 @@
 - link:
     ~/.tmux: ./tmux
     ~/.tmux.conf: ./tmux/tmux.conf
-    ~/.tmux/plugins/tmux/custom/memory.sh: ./tmux/custom/memory.sh

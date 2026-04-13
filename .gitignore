@@ -28,9 +28,6 @@ bin/git-lia/
 
 !.config/bat/themes/*
 
-# Allow specific files
-!tmux/plugins/tmux/custom/memory.sh
-
 alfred_scripts/script.log
 
 .config/zed/settings_backup.json
@@ -68,3 +65,6 @@ logs
 
 # Yazi installed plugins (managed by ya pkg)
 .config/yazi/plugins/
+
+# Per-machine profile lock (written by install-profile on success)
+.dotbot-profile

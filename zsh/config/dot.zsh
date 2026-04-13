@@ -119,6 +119,21 @@ dot() {
     install)
       local subcommand="${1:-}"
       [[ -n "$subcommand" ]] && shift
+      if [[ -z "$subcommand" ]]; then
+        local lock_file="$DOTFILES/.dotbot-profile"
+        if [[ -f "$lock_file" ]]; then
+          local locked
+          locked="$(<"$lock_file")"
+          echo "Re-running locked profile: $locked"
+          "$DOTFILES/install-profile" "$locked"
+          return $?
+        else
+          echo "No profile locked." >&2
+          echo "Run: dot install profile <name>" >&2
+          echo "Available: $(ls "$DOTFILES/meta/recipes/" 2>/dev/null | tr '\n' ' ')" >&2
+          return 1
+        fi
+      fi
       case "$subcommand" in
         profile)
           local name="${1:-}"
@@ -360,8 +375,15 @@ _dot_fzf_menu() {
     entries+=("$(printf "%-24s %s\t%s" "$key" "$description" "$key")")
   done
 
+  local header_profile
+  if [[ -f "$DOTFILES/.dotbot-profile" ]]; then
+    header_profile="Profile: $(<"$DOTFILES/.dotbot-profile") (locked)"
+  else
+    header_profile="Profile: none"
+  fi
+
   local selection
-  selection=$(printf '%s\n' "${entries[@]}" | fzf --ansi --with-nth=1 --delimiter=$'\t' --prompt="dot> " --header="dotfiles commands" --reverse)
+  selection=$(printf '%s\n' "${entries[@]}" | fzf --ansi --with-nth=1 --delimiter=$'\t' --prompt="dot> " --header="dotfiles commands  |  $header_profile" --reverse)
   [[ -z "$selection" ]] && return 0
 
   # Extract the key (after tab delimiter)

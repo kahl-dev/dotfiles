@@ -47,6 +47,19 @@ The repository uses a two-tiered installation approach:
 
 Both scripts use dotbot to process the appropriate YAML configurations, combining base settings with specific ingredients.
 
+#### Profile Lock (`.dotbot-profile`)
+
+On a successful `./install-profile <name>`, the recipe name is written to `.dotbot-profile` at the repo root (git-ignored). This locks the machine to that profile:
+
+- `./install-profile <other>` — hard-fails with the unlock hint (`rm .dotbot-profile`)
+- `./install-standalone <ingredient>` — refused if the ingredient is not listed in the locked recipe
+- `dot install` (no args) — reads the lock and re-runs the locked profile; errors if no lock exists
+- The fzf `dot` menu header shows `Profile: <name> (locked)` or `Profile: none`
+
+Switching profiles requires manually deleting `.dotbot-profile`. The lock is also guarded against corruption: an empty lock file or a lock pointing at a missing recipe both hard-fail with reset guidance.
+
+`make install` is a macOS-only bootstrap entry point (fails on non-macOS with instructions to use `./install-profile` directly).
+
 ### Tab Completion System
 
 Two completion systems coexist:

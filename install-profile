@@ -15,6 +15,31 @@ DOTBOT_BIN="bin/dotbot"
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cd "${BASE_DIR}"
+
+LOCK_FILE="${BASE_DIR}/.dotbot-profile"
+REQUESTED="$1"
+
+if [[ -f "$LOCK_FILE" ]]; then
+	LOCKED="$(cat "$LOCK_FILE")"
+	if [[ -z "$LOCKED" ]]; then
+		echo "Error: lock file is empty or corrupt." >&2
+		echo "To switch profiles, run: rm ${LOCK_FILE}" >&2
+		exit 1
+	fi
+	RECIPE_FILE="${BASE_DIR}/${META_DIR}/${PROFILES_DIR}/${LOCKED}"
+	if [[ ! -f "$RECIPE_FILE" ]]; then
+		echo "Error: locked profile '$LOCKED' no longer exists in ${META_DIR}/${PROFILES_DIR}/." >&2
+		echo "To switch profiles, run: rm ${LOCK_FILE}" >&2
+		exit 1
+	fi
+	if [[ "$LOCKED" != "$REQUESTED" ]]; then
+		echo "Error: this machine is locked to profile '$LOCKED'." >&2
+		echo "Refusing to install profile '$REQUESTED'." >&2
+		echo "To switch profiles, run: rm ${LOCK_FILE}" >&2
+		exit 1
+	fi
+fi
+
 git -C "${BASE_DIR}" submodule sync --quiet
 git submodule update --init "${BASE_DIR}"
 
@@ -40,5 +65,7 @@ for config in ${CONFIGS} ${@}; do
 	"${cmd[@]}"
 	rm -f "$configFile"
 done
+
+echo "$REQUESTED" > "$LOCK_FILE"
 
 cd "${BASE_DIR}"
