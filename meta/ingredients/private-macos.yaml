@@ -1,0 +1,10 @@
+- defaults:
+    link:
+      relink: true
+      create: true
+      force: true
+
+- link:
+    ~/.ssh/config.d/private-hosts: ~/repos/dotfiles-private/ssh/config.d/private-hosts
+    ~/.hammerspoon/config/private.json: ~/repos/dotfiles-private/.hammerspoon/config/private.json
+    ~/.config/audio-manager/private.json: ~/repos/dotfiles-private/.config/audio-manager/private.json
