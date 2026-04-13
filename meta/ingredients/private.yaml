@@ -31,24 +31,6 @@
           fi
         fi
 
-    - description: "Remove macOS-only symlinks on non-macOS systems"
-      command: |
-        if [ "$(uname -s)" = "Darwin" ]; then
-          exit 0
-        fi
-
-        MACOS_ONLY_LINKS=(
-          "$HOME/.ssh/config.d/private-hosts"
-          "$HOME/.hammerspoon/config/private.json"
-          "$HOME/.config/audio-manager/private.json"
-        )
-
-        for link in "${MACOS_ONLY_LINKS[@]}"; do
-          if [ -L "$link" ]; then
-            rm "$link"
-            echo "🧹 Removed macOS-only symlink: $link"
-          fi
-        done
 
 - link:
     ~/.zshenv-private: ~/repos/dotfiles-private/.zshenv

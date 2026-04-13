@@ -1,0 +1,29 @@
+- shell:
+    - description: "Remove obsolete and platform-mismatched symlinks"
+      command: |
+        OBSOLETE=(
+          "$HOME/.tern-config"
+          "$HOME/.agignore"
+          "$HOME/.skhdrc"
+        )
+
+        if [ "$(uname -s)" != "Darwin" ]; then
+          OBSOLETE+=(
+            "$HOME/.ssh/config.d/private-hosts"
+            "$HOME/.hammerspoon/config/private.json"
+            "$HOME/.config/audio-manager/private.json"
+          )
+        fi
+
+        CLEANED=false
+        for link in "${OBSOLETE[@]}"; do
+          if [ -L "$link" ]; then
+            rm "$link"
+            echo "🧹 Removed: $link"
+            CLEANED=true
+          fi
+        done
+
+        if [ "$CLEANED" = false ]; then
+          echo "✓ Nothing to clean up"
+        fi

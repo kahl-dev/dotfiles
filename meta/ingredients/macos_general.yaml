@@ -15,7 +15,6 @@
     ~/.ssh/config: ./.ssh/config
 
     ~/.finicky.js: ./.finicky.js
-    ~/.skhdrc: ./.skhdrc
     ~/.mackup.cfg: ./.mackup.cfg
 
     ~/.config/wezterm: ./.config/wezterm/

@@ -18,10 +18,8 @@
       ~/.gitconfig: ./git/gitconfig
       ~/.gittemplate: ./git/template
 
-      ~/.tern-config: ./.tern-config
       ~/.prettierrc.js: ./.prettierrc.js
       ~/.zshenv: ./.zshenv
-      ~/.agignore: ./.agignore
       ~/.ripgreprc: ./.ripgreprc
       # ~/.npmrc: ./.npmrc
 
