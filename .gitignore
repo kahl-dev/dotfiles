@@ -53,6 +53,9 @@ logs
 # Hammerspoon private configuration
 .hammerspoon/config/private.json
 
+# Audio manager private configuration (BT MAC addresses)
+.config/audio-manager/private.json
+
 # Hammerspoon generated LSP stubs
 .hammerspoon/Spoons/EmmyLua.spoon/
 

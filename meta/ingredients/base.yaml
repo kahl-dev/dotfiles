@@ -33,6 +33,7 @@
       ~/.config/.nuxtrc: ./.config/.nuxtrc
       ~/.config/nvim: ./.config/nvim/
       ~/.config/starship.toml: ./.config/starship.toml
+      ~/.config/audio-manager: ./.config/audio-manager/
       ~/.config/yazi: ./.config/yazi/
 
 - shell:

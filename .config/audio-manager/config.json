@@ -1,0 +1,43 @@
+{
+  "devices": [
+    {
+      "name": "WH-1000XM6",
+      "label": "Sony XM6",
+      "priority": 1,
+      "icon": "sony-xm6",
+      "hidden": false,
+      "bluetooth": true
+    },
+    {
+      "name": "AirPods",
+      "label": "AirPods Pro",
+      "priority": 2,
+      "icon": "airpods",
+      "hidden": false,
+      "bluetooth": true
+    },
+    {
+      "name": "EDIFIER M60",
+      "label": "Edifier M60",
+      "priority": 3,
+      "icon": "edifier",
+      "hidden": false
+    },
+    {
+      "name": "Wave:3",
+      "label": "Wave:3 Headphones",
+      "priority": 4,
+      "icon": "wave3",
+      "hidden": false
+    },
+    {
+      "name": "MacBook Pro Speakers",
+      "label": "MacBook Speakers",
+      "priority": 5,
+      "icon": "macbook",
+      "hidden": true
+    }
+  ],
+  "inputGuard": "Wave:3",
+  "showAllDevices": false
+}

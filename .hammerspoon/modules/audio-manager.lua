@@ -2,10 +2,13 @@
 -- Direct macOS output switching (no Wave Link in signal path)
 -- Input always guarded on Wave:3 when docked
 -- Only active when Wave:3 is USB-connected (managed by usb-device-manager)
+-- Priority list read from ~/.config/audio-manager/config.json (shared with Raycast)
 
 local M = {}
 
--- Configuration
+local SHARED_CONFIG_PATH = os.getenv("HOME") .. "/.config/audio-manager/config.json"
+
+-- Default configuration (used when shared config is missing or invalid)
 M.config = {
     wave3Name = "Wave:3",
     edifierName = "EDIFIER M60",
@@ -13,18 +16,65 @@ M.config = {
     sonyPattern = "WH%-1000XM6",
     macbookPattern = "MacBook",
     builtInPattern = "Built%-in",
-    -- Ordered priority list for fallback selection
     outputPriority = {
         { pattern = "WH%-1000XM6", label = "Sony XM6" },
         { pattern = "AirPods",     label = "AirPods" },
         { pattern = "EDIFIER M60", label = "Edifier M60" },
         { pattern = "Wave:3",      label = "Wave:3 Kopfhörer" },
-        -- MacBook Speakers = implicit last fallback (always present)
     },
     debounceDelay = 0.5,
     bluetoothGracePeriod = 3.0,
     edifierReconnectCooldown = 5.0,
 }
+
+-- Load shared config and build priority list from it
+function M.loadSharedConfig()
+    local file = io.open(SHARED_CONFIG_PATH, "r")
+    if not file then
+        return false
+    end
+
+    local content = file:read("*a")
+    file:close()
+
+    local success, config = pcall(hs.json.decode, content)
+    if not success or not config or not config.devices then
+        return false
+    end
+
+    -- Build priority list from config devices (sorted by priority)
+    local devices = {}
+    for _, device in ipairs(config.devices) do
+        if not device.hidden then
+            table.insert(devices, {
+                pattern = device.name,
+                label = device.label or device.name,
+                priority = device.priority or 999,
+            })
+        end
+    end
+
+    table.sort(devices, function(a, b) return a.priority < b.priority end)
+
+    local priorityList = {}
+    for _, device in ipairs(devices) do
+        -- Skip MacBook (implicit last fallback)
+        if not string.find(device.pattern, "MacBook", 1, true) then
+            table.insert(priorityList, { pattern = device.pattern, label = device.label })
+        end
+    end
+
+    if #priorityList > 0 then
+        M.config.outputPriority = priorityList
+    end
+
+    -- Read inputGuard
+    if config.inputGuard then
+        M.config.wave3Name = config.inputGuard
+    end
+
+    return true
+end
 
 -- State
 M.state = {
@@ -34,10 +84,10 @@ M.state = {
     edifierDroppedAt = nil,
 }
 
--- Find an output device by name pattern
-function M.findOutputDevice(pattern)
+-- Find an output device by name (plain string match, not Lua pattern)
+function M.findOutputDevice(name)
     for _, device in ipairs(hs.audiodevice.allOutputDevices()) do
-        if string.find(device:name(), pattern) then
+        if string.find(device:name(), name, 1, true) then
             return device
         end
     end
@@ -47,7 +97,7 @@ end
 -- Find Wave:3 input device
 function M.findWaveInput()
     for _, device in ipairs(hs.audiodevice.allInputDevices()) do
-        if string.find(device:name(), M.config.wave3Name) then
+        if string.find(device:name(), M.config.wave3Name, 1, true) then
             return device
         end
     end
@@ -59,7 +109,7 @@ function M.guardInput()
     local waveInput = M.findWaveInput()
     if not waveInput then return end
     local current = hs.audiodevice.defaultInputDevice()
-    if not current or not string.find(current:name(), M.config.wave3Name) then
+    if not current or not string.find(current:name(), M.config.wave3Name, 1, true) then
         waveInput:setDefaultInputDevice()
     end
 end
@@ -231,6 +281,10 @@ function M.init()
     if M.state.active then return end
     M.state.active = true
 
+    -- Load shared config (Raycast audio-manager config.json)
+    M.loadSharedConfig()
+
+    -- Merge Hammerspoon-local config overrides (if any)
     local configModule = package.loaded["modules.config"]
     if configModule and configModule.audio then
         for key, value in pairs(configModule.audio) do
