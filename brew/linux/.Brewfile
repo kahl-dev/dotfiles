@@ -39,8 +39,6 @@ brew "fnm"
 brew "fzf"
 # Interact with Google Gemini AI models from the command-line
 brew "gemini-cli"
-# GNOME XML library
-brew "libxml2"
 # GitHub command-line tool
 brew "gh"
 # Syntax-highlighting pager for git and diff output
@@ -63,6 +61,8 @@ brew "lazygit"
 brew "libevent"
 # Version of the SSL/TLS protocol forked from OpenSSL
 brew "libressl"
+# GNOME XML library
+brew "libxml2"
 # YAML Parser
 brew "libyaml"
 # Fast, highly customisable system info script
@@ -105,3 +105,7 @@ go "cmd/go"
 go "cmd/gofmt"
 cargo "rtk"
 uv "pre-commit"
+npm "browser-sync"
+npm "grunt"
+npm "gulp-cli"
+npm "npm-check-updates"
