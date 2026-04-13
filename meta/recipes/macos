@@ -1,4 +1,5 @@
 base
+private
 macos_settings
 macos_general
 tmux

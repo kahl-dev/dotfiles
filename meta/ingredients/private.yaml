@@ -1,0 +1,39 @@
+- defaults:
+    link:
+      relink: true
+      create: true
+      force: true
+    shell:
+      quiet: false
+      stderr: true
+
+- shell:
+    - description: "Clone or update dotfiles-private repository"
+      command: |
+        REPO_DIR="$HOME/repos/dotfiles-private"
+        REPO_URL="git@github.com:kahl-dev/dotfiles-private.git"
+
+        if [ ! -d "$REPO_DIR" ]; then
+          echo "📦 Cloning dotfiles-private repository..."
+          if ! git clone "$REPO_URL" "$REPO_DIR"; then
+            echo "⚠️  Warning: Failed to clone dotfiles-private"
+            echo "   Ensure you have access to: $REPO_URL"
+            echo "   Continuing without private configuration..."
+            exit 0
+          fi
+          echo "✓ dotfiles-private cloned successfully"
+        else
+          echo "🔄 Updating dotfiles-private repository..."
+          if ! git -C "$REPO_DIR" pull; then
+            echo "⚠️  Warning: Failed to pull updates, using local version"
+          else
+            echo "✓ dotfiles-private updated successfully"
+          fi
+        fi
+
+- link:
+    ~/.zshenv-private: ~/repos/dotfiles-private/.zshenv
+    ~/.gitconfig-local: ~/repos/dotfiles-private/git/gitconfig-local
+    ~/.ssh/config.d/private-hosts: ~/repos/dotfiles-private/ssh/config.d/private-hosts
+    ~/.hammerspoon/config/private.json: ~/repos/dotfiles-private/.hammerspoon/config/private.json
+    ~/.config/audio-manager/private.json: ~/repos/dotfiles-private/.config/audio-manager/private.json

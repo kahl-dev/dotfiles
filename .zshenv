@@ -60,6 +60,9 @@ export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 # AI tools: point lit-ai-context to claude-config monorepo
 export LIA_DOCS_PATH="$HOME/repos/claude-config"
 
+# Raycast development repository
+export RAYCAST_DEV_PATH="$HOME/repos/raycast"
+
 # Add syntax highlighting to man pages
 if command_exists bat; then
   if command_exists fzf; then
@@ -82,6 +85,7 @@ fi
 # Prevent intelephense from crashing
 export NODE_OPTIONS=--max_old_space_size=8192
 
+file_exists "$HOME/.zshenv-private" && source "$HOME/.zshenv-private"
 file_exists "$HOME/.dotfiles-local/.zshenv" && source "$HOME/.dotfiles-local/.zshenv"
 
 export TERM=xterm-256color
