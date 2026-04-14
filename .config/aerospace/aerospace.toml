@@ -179,15 +179,16 @@ alt-shift-slash = '''exec-and-forget /opt/homebrew/bin/hs -c "require('modules.u
 # ╚══════════════════════════════════════════════════════════════╝
 
 [workspace-to-monitor-force-assignment]
-# Primary workspaces → LG HDR 4K (main work)
-1 = ['LG HDR 4K', 'main']
-2 = ['LG HDR 4K', 'main']
-3 = ['LG HDR 4K', 'main']
-4 = ['LG HDR 4K', 'main']
-5 = ['LG HDR 4K', 'main']
-# Secondary workspaces → LG Ultra HD (reference/docs)
-6 = ['LG Ultra HD', 'secondary', 'main']
-7 = ['LG Ultra HD', 'secondary', 'main']
+# Primary workspaces (home: LG HDR 4K | work: LG Ultra HD)
+1 = ['LG HDR 4K', 'LG Ultra HD', 'main']
+2 = ['LG HDR 4K', 'LG Ultra HD', 'main']
+3 = ['LG HDR 4K', 'LG Ultra HD', 'main']
+4 = ['LG HDR 4K', 'LG Ultra HD', 'main']
+5 = ['LG HDR 4K', 'LG Ultra HD', 'main']
+# Secondary workspaces (home: LG Ultra HD | work: HP Z24i)
+# HP Z24i only exists at work, so falls through to LG Ultra HD at home
+6 = ['HP Z24i', 'LG Ultra HD', 'secondary', 'main']
+7 = ['HP Z24i', 'LG Ultra HD', 'secondary', 'main']
 # Tertiary workspaces → MacBook (chat/music/monitoring)
 8 = ['Built-in Retina Display', 'secondary', 'main']
 9 = ['Built-in Retina Display', 'secondary', 'main']
