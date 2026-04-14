@@ -151,7 +151,7 @@ Press `<prefix> a` to enter apps mode, then:
 |------------|-------------|
 | `<prefix> <` | Window menu (swap, rename, etc.) |
 | `<prefix> >` | Pane menu (split, swap, kill, etc.) |
-| `<prefix> R` | Reload status configuration |
+| `<prefix> R` | Refresh SSH agent socket (remote only) |
 
 ## 📋 Clipboard (Remote Bridge)
 

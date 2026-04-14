@@ -265,8 +265,10 @@ Auto-detected via `if-shell 'test -n "$SSH_CLIENT"'` → loads `tmux.remote.conf
 - Status bar moves to **bottom** (top on local)
 - OSC52 clipboard enabled (`set -s set-clipboard on`)
 - SSH agent socket managed via symlink: `~/.ssh/ssh_auth_sock` → actual socket
-- Hooks refresh SSH agent on: session-created, client-attached
-- Manual refresh: `Prefix + R` — finds working socket in `/tmp/ssh-*/agent.*`
+- All refresh paths (hooks, keybind, `ssh-agent-keeper` daemon) delegate to `bin/ssh-agent-find-socket`, the single source of truth
+- Every `ssh-add -l` probe bounded by `timeout 1` — an orphaned agent (e.g. stuck gpg-agent) cannot hang the probe or freeze tmux
+- Hooks refresh SSH agent on: session-created, client-attached (`run-shell -b` + `--quiet`)
+- Manual refresh: `Prefix + R` — runs `ssh-agent-find-socket` via `run-shell -b` so tmux stays responsive; displays status in the tmux message line
 - Update check disabled (`@show-update-check "off"`) — tools like brew/mise not installed on remote
 
 ## 🔧 Script Pattern

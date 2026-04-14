@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# ssh-agent-find-socket - Find a responsive SSH agent socket and update the
+# stable symlink at ~/.ssh/ssh_auth_sock (plus tmux env when tmux is running).
+#
+# Every `ssh-add -l` probe is bounded by `timeout 1` because an orphaned agent
+# (stuck gpg-agent, zombie ssh-agent) leaves a socket file whose owner never
+# responds — unbounded probes block forever, and synchronous tmux `run-shell`
+# callers freeze the client.
+#
+# Usage:
+#   ssh-agent-find-socket            # interactive: emits tmux display-messages
+#   ssh-agent-find-socket --quiet    # silent, logs to ~/.ssh/ssh-agent-keeper.log
+
+set -euo pipefail
+
+QUIET=0
+if [[ "${1:-}" == "--quiet" ]]; then
+    QUIET=1
+fi
+
+SSH_AUTH_SOCK_LINK="$HOME/.ssh/ssh_auth_sock"
+LOG_FILE="$HOME/.ssh/ssh-agent-keeper.log"
+PROBE_TIMEOUT=1
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [find-socket] $*" >> "$LOG_FILE" 2>/dev/null || true
+}
+
+tmux_message() {
+    [[ $QUIET -eq 1 ]] && return 0
+    command -v tmux >/dev/null 2>&1 || return 0
+    tmux list-sessions >/dev/null 2>&1 || return 0
+    tmux display-message "$1" >/dev/null 2>&1 || true
+}
+
+probe_socket() {
+    local socket="$1"
+    [[ -S "$socket" ]] || return 1
+    SSH_AUTH_SOCK="$socket" timeout "$PROBE_TIMEOUT" ssh-add -l >/dev/null 2>&1
+}
+
+apply_socket() {
+    local socket="$1"
+    ln -sfn "$socket" "$SSH_AUTH_SOCK_LINK"
+    if command -v tmux >/dev/null 2>&1 && tmux list-sessions >/dev/null 2>&1; then
+        tmux set-environment -g SSH_AUTH_SOCK "$SSH_AUTH_SOCK_LINK" >/dev/null 2>&1 || true
+    fi
+    log "Applied socket: $socket"
+}
+
+# Short-circuit: if current symlink points to a responsive agent, nothing to do.
+if [[ -L "$SSH_AUTH_SOCK_LINK" ]]; then
+    current_target=$(readlink "$SSH_AUTH_SOCK_LINK" 2>/dev/null || echo "")
+    if [[ -n "$current_target" ]] && probe_socket "$current_target"; then
+        exit 0
+    fi
+fi
+
+# Scan newest sockets first. `ls -1t` sorts by mtime descending so fresh
+# mosh/ssh sessions win over accumulated stale ones.
+found_socket=""
+while IFS= read -r socket; do
+    [[ -z "$socket" ]] && continue
+    if probe_socket "$socket"; then
+        found_socket="$socket"
+        break
+    fi
+done < <(ls -1t /tmp/ssh-*/agent.* 2>/dev/null || true)
+
+if [[ -n "$found_socket" ]]; then
+    apply_socket "$found_socket"
+    tmux_message "SSH agent refreshed: $(basename "$(dirname "$found_socket")")/$(basename "$found_socket")"
+    exit 0
+fi
+
+log "No working SSH agent found"
+tmux_message "No working SSH agent found"
+exit 1

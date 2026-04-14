@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-# SSH Agent Keeper - Maintains SSH agent forwarding in tmux sessions
-# Only activates on remote servers (when SSH_CLIENT is set)
-# Keeps SSH agent socket accessible across connection changes
+# SSH Agent Keeper - Maintains SSH agent forwarding across connection changes.
+# Only activates on remote servers (when SSH_CLIENT is set).
+#
+# Runs as a background daemon, delegating the actual scan-and-apply logic
+# to bin/ssh-agent-find-socket (single source of truth, bounded by timeout 1
+# on every ssh-add probe so a broken agent cannot hang the loop).
 
 set -euo pipefail
 
@@ -10,12 +13,11 @@ if [[ -z "${SSH_CLIENT:-}" ]]; then
     exit 0
 fi
 
-# Configuration
-SSH_AUTH_SOCK_LINK="$HOME/.ssh/ssh_auth_sock"
 LOG_FILE="$HOME/.ssh/ssh-agent-keeper.log"
 PID_FILE="$HOME/.ssh/ssh-agent-keeper.pid"
+FIND_SOCKET="$HOME/.dotfiles/bin/ssh-agent-find-socket"
+POLL_INTERVAL=5
 
-# Debug mode
 DEBUG=${SSH_AGENT_DEBUG:-0}
 debug() {
     [[ $DEBUG -eq 1 ]] && echo "[SSH-AGENT-KEEPER] $*" | tee -a "$LOG_FILE" >&2
@@ -25,7 +27,7 @@ log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "$LOG_FILE"
 }
 
-# Check if already running
+# Refuse to start if another keeper is already running.
 if [[ -f "$PID_FILE" ]]; then
     old_pid=$(cat "$PID_FILE")
     if kill -0 "$old_pid" 2>/dev/null; then
@@ -37,10 +39,8 @@ if [[ -f "$PID_FILE" ]]; then
     fi
 fi
 
-# Create PID file
 echo $$ > "$PID_FILE"
 
-# Cleanup on exit
 cleanup() {
     debug "Cleaning up SSH agent keeper"
     rm -f "$PID_FILE"
@@ -48,103 +48,22 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-# Create SSH directory if it doesn't exist
 mkdir -p "$HOME/.ssh"
 chmod 700 "$HOME/.ssh"
 
-# Function to update SSH agent socket
-update_ssh_agent_socket() {
-    local current_socket="${SSH_AUTH_SOCK:-}"
-    
-    if [[ -z "$current_socket" ]]; then
-        debug "No SSH_AUTH_SOCK set, skipping update"
-        return 1
-    fi
-    
-    if [[ ! -S "$current_socket" ]]; then
-        debug "SSH_AUTH_SOCK points to non-existent socket: $current_socket"
-        return 1
-    fi
-    
-    # Check if symlink needs updating
-    if [[ -L "$SSH_AUTH_SOCK_LINK" ]]; then
-        local current_target
-        current_target=$(readlink "$SSH_AUTH_SOCK_LINK")
-        if [[ "$current_target" == "$current_socket" ]]; then
-            debug "SSH agent socket already up to date"
-            return 0
-        fi
-    fi
-    
-    # Update symlink
-    ln -sf "$current_socket" "$SSH_AUTH_SOCK_LINK"
-    chmod 600 "$SSH_AUTH_SOCK_LINK"
-    
-    log "Updated SSH agent socket: $current_socket -> $SSH_AUTH_SOCK_LINK"
-    debug "SSH agent socket updated successfully"
-    
-    # Update tmux environment if tmux is running
-    if command -v tmux >/dev/null 2>&1 && tmux list-sessions >/dev/null 2>&1; then
-        # Update all tmux sessions
-        tmux set-environment -g SSH_AUTH_SOCK "$SSH_AUTH_SOCK_LINK"
-        debug "Updated tmux environment with new SSH_AUTH_SOCK"
-        
-        # Refresh existing sessions
-        tmux list-sessions -F '#{session_name}' 2>/dev/null | while read -r session; do
-            tmux refresh-client -S -t "$session" 2>/dev/null || true
-        done
-    fi
-    
-    return 0
-}
+if [[ ! -x "$FIND_SOCKET" ]]; then
+    log "ERROR: helper not found or not executable: $FIND_SOCKET"
+    exit 1
+fi
 
-# Function to test SSH agent
-test_ssh_agent() {
-    local socket="$1"
-    
-    if [[ ! -S "$socket" ]]; then
-        return 1
-    fi
-    
-    # Test if agent responds
-    SSH_AUTH_SOCK="$socket" ssh-add -l >/dev/null 2>&1
-    return $?
-}
-
-# Initial setup
 log "Starting SSH agent keeper on $(hostname)"
 debug "SSH_CLIENT: ${SSH_CLIENT:-}"
 debug "SSH_AUTH_SOCK: ${SSH_AUTH_SOCK:-}"
 
-# Initial update
-update_ssh_agent_socket
-
-# Monitor for changes
-previous_socket="${SSH_AUTH_SOCK:-}"
+# Main loop: delegate to the shared helper. The helper short-circuits when
+# ~/.ssh/ssh_auth_sock already points to a responsive agent, so the steady-
+# state cost here is a single bounded `ssh-add -l` probe every POLL_INTERVAL.
 while true; do
-    current_socket="${SSH_AUTH_SOCK:-}"
-    
-    # Check if socket changed
-    if [[ "$current_socket" != "$previous_socket" ]]; then
-        debug "SSH agent socket changed: $previous_socket -> $current_socket"
-        if update_ssh_agent_socket; then
-            previous_socket="$current_socket"
-        fi
-    fi
-    
-    # Check if current socket is still valid
-    if [[ -n "$current_socket" ]] && ! test_ssh_agent "$current_socket"; then
-        debug "Current SSH agent socket is no longer valid"
-        # Try to find a new valid socket
-        for socket in /tmp/ssh-*/agent.* /tmp/ssh-*/ssh_auth_sock.*; do
-            if [[ -S "$socket" ]] && test_ssh_agent "$socket"; then
-                debug "Found alternative SSH agent socket: $socket"
-                export SSH_AUTH_SOCK="$socket"
-                update_ssh_agent_socket
-                break
-            fi
-        done
-    fi
-    
-    sleep 5
+    "$FIND_SOCKET" --quiet || debug "No working SSH agent in this cycle"
+    sleep "$POLL_INTERVAL"
 done

@@ -139,14 +139,16 @@ test_ssh_agent() {
     print_header "SSH Agent Test"
     
     if [[ -n "${SSH_AUTH_SOCK:-}" ]]; then
-        if ssh-add -l >/dev/null 2>&1; then
+        if timeout 1 ssh-add -l >/dev/null 2>&1; then
             print_success "SSH agent responds to queries"
             echo "Loaded keys:"
-            ssh-add -l | sed 's/^/  /'
+            timeout 1 ssh-add -l | sed 's/^/  /'
         else
             local exit_code=$?
             if [[ $exit_code -eq 1 ]]; then
                 print_warning "SSH agent has no keys loaded"
+            elif [[ $exit_code -eq 124 ]]; then
+                print_error "SSH agent timed out (probable stuck/orphaned agent)"
             else
                 print_error "SSH agent not responding (exit code: $exit_code)"
             fi
@@ -182,10 +184,12 @@ check_system_sockets() {
     print_header "System SSH Sockets"
     
     echo "Finding SSH agent sockets:"
+    # Probes are bounded by `timeout 1` so an unresponsive agent cannot hang
+    # the diagnostic tool itself (see bin/ssh-agent-find-socket).
     for socket in /tmp/ssh-*/agent.* /tmp/ssh-*/ssh_auth_sock.* /tmp/ssh-*; do
         if [[ -S "$socket" ]]; then
             echo "  Found: $socket"
-            if SSH_AUTH_SOCK="$socket" ssh-add -l >/dev/null 2>&1; then
+            if SSH_AUTH_SOCK="$socket" timeout 1 ssh-add -l >/dev/null 2>&1; then
                 echo "    Status: WORKING"
             else
                 echo "    Status: NOT WORKING"

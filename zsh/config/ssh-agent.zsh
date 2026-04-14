@@ -84,14 +84,20 @@ ssh-agent-status() {
         echo "Symlink: NOT FOUND"
     fi
     
-    # Test SSH agent
+    # Test SSH agent. Bounded with `timeout 1` so an unresponsive agent
+    # (orphaned gpg-agent, stuck ssh-agent) cannot hang this status command.
     if [[ -n "${SSH_AUTH_SOCK:-}" ]]; then
-        if ssh-add -l >/dev/null 2>&1; then
+        if timeout 1 ssh-add -l >/dev/null 2>&1; then
             echo "SSH agent test: SUCCESS"
             echo "Loaded keys:"
-            ssh-add -l
+            timeout 1 ssh-add -l
         else
-            echo "SSH agent test: FAILED"
+            local exit_code=$?
+            if [[ $exit_code -eq 124 ]]; then
+                echo "SSH agent test: TIMED OUT (stuck/orphaned agent)"
+            else
+                echo "SSH agent test: FAILED"
+            fi
         fi
     else
         echo "SSH agent test: SKIPPED (no SSH_AUTH_SOCK)"
