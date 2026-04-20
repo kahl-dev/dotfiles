@@ -583,9 +583,51 @@ alias mcc='make clearcache'
 
 # Claude aliases
 alias cc='claude -c'
-alias ccy='claude -c --dangerously-skip-permissions'
-alias cy='claude --dangerously-skip-permissions'
 alias ccu='npx ccusage'
+
+# YOLO mode wrappers — auto mode is Claude's new default, so prompt before
+# skipping permissions to keep the bypass deliberate (muscle memory retraining).
+# Drop any pre-existing aliases so the function definitions below parse cleanly
+# when this file is re-sourced in a shell that already has cy/ccy aliased.
+unalias cy ccy 2>/dev/null
+_claude_yolo_confirm() {
+  local continue_mode=0
+  if [[ "$1" == "--continue" ]]; then
+    continue_mode=1
+    shift
+  fi
+  local safe_alias="claude"
+  (( continue_mode )) && safe_alias="cc"
+  print -P "%F{yellow}⚠️  YOLO mode (--dangerously-skip-permissions)%f"
+  print -P "   Tip: use %F{green}${safe_alias}%f (auto mode) unless you really need bypass."
+  print -n "Skip all permissions? [y]es / [n]o (auto) / [Esc] cancel: "
+  local key
+  read -k 1 key
+  print
+  case "$key" in
+    y|Y)
+      if (( continue_mode )); then
+        claude -c --dangerously-skip-permissions "$@"
+      else
+        claude --dangerously-skip-permissions "$@"
+      fi
+      ;;
+    $'\e'|q|Q)
+      print -P "%F{red}→ Aborted. Claude not started.%f"
+      return 130
+      ;;
+    *)
+      print -P "%F{cyan}→ Falling back to auto mode.%f"
+      if (( continue_mode )); then
+        claude -c "$@"
+      else
+        claude "$@"
+      fi
+      ;;
+  esac
+}
+cy()  { _claude_yolo_confirm "$@"; }
+ccy() { _claude_yolo_confirm --continue "$@"; }
 
 # ############################## #
 # Dotfiles
