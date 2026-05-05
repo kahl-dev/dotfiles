@@ -34,7 +34,8 @@ tmux/
     ├── tmux-grid-layout.sh        # Custom grid layout with max-rows constraint
     ├── tmux-cheatsheet.sh         # Renders cheatsheet.md via glow
     ├── update-check.sh            # Staleness count for status bar (brew/mise/tpm/repos)
-    └── update-detail.sh           # Interactive update popup (Prefix+D)
+    ├── update-detail.sh           # Interactive update popup (Prefix+D)
+    └── resurrect-post-save.sh     # 🔑 Skip-empty-save guard + cleanup (post-save hook)
 ```
 
 ## 🎨 Visual Conventions
@@ -257,6 +258,8 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
 **Removed plugins** (replaced by custom scripts or external tools): catppuccin/tmux, tmux-cpu, tmux-loadavg, vim-tmux-navigator, tmux-sessionx, custom session-manager.sh (replaced by sesh). Removed: claude-tmux-hop (tried, didn't fit workflow), tmux-agent-indicator (focus stealing via select-pane hooks).
 
 **Session persistence**: Resurrect captures pane contents (`@resurrect-capture-pane-contents 'on'`), auto-cleans saves (keeps 50), and restores Claude with `claude -c --dangerously-skip-permissions`. Session-closed hook fires resurrect save to prevent ghost sessions.
+
+**Skip-empty-save guard** (`scripts/resurrect-post-save.sh`, wired via `@resurrect-hook-post-save-all`): if a snapshot contains no `pane` lines (continuum saved a session-less server right after a reboot, or a save was interrupted), the file is deleted and `last` is re-pointed to the most recent non-empty snapshot. Without this guard, an empty save can overwrite `last` and silently break continuum's auto-restore — the exact failure mode after a server reboot mid-tmux-session.
 
 ## 🌐 Remote Session Support
 
