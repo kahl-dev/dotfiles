@@ -3,3 +3,34 @@
 # Docs: https://github.com/rtk-ai/rtk#custom-filters
 # Discover gaps: rtk discover
 schema_version = 1
+
+[filters.fallow]
+description = "Compact fallow CLI output for TS/JS code-health audits — strip ANSI, blanks, cap long hotspot tails"
+match_command = "^(rtk proxy )?npx (-y |--yes )?fallow(@\\S+)?\\b"
+strip_ansi = true
+strip_lines_matching = [
+  "^\\s*$",
+]
+max_lines = 150
+
+[[filters.fallow.tests]]
+name = "strips blanks and preserves all finding categories"
+input = """
+Failed: dead-code (8 issues), health (9 above threshold)
+
+unused-type:src/foo.ts:42:Bar
+unused-devdep:@vue/language-core
+
+
+circular-dependency:src/composables/useChatSession/index.ts:8
+vital-signs:total_loc=3577,avg_cyclomatic=3.2
+high-complexity:src/widget.ts:28:handleInit:cyclomatic=41,cognitive=39,severity=critical,crap=404.1
+"""
+expected_output = """
+Failed: dead-code (8 issues), health (9 above threshold)
+unused-type:src/foo.ts:42:Bar
+unused-devdep:@vue/language-core
+circular-dependency:src/composables/useChatSession/index.ts:8
+vital-signs:total_loc=3577,avg_cyclomatic=3.2
+high-complexity:src/widget.ts:28:handleInit:cyclomatic=41,cognitive=39,severity=critical,crap=404.1
+"""
