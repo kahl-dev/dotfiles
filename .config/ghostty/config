@@ -1,7 +1,7 @@
 # https://ghostty.org/docs
 
 # fonts
-font-size = 16
+font-size = 12
 font-style = medium
 bold-is-bright = true
 theme = Catppuccin Mocha
@@ -52,6 +52,14 @@ macos-option-as-alt = false
 macos-titlebar-style = hidden
 
 keybind = global:super+alt+shift+ctrl+o=toggle_quick_terminal
+
+# config (defaults made explicit for discoverability)
+keybind = super+shift+,=reload_config
+keybind = super+,=open_config
+
+# command palette — fuzzy-searchable list of every action + its keybind
+# (Ghostty's closest equivalent to Neovim's which-key)
+keybind = super+shift+p=toggle_command_palette
 
 # Remap Ctrl+T to send Alt+T (ESC+t) for Claude Code thinking toggle
 # Allows Option key to remain free for umlauts (ä, ö, ü)
