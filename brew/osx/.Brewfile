@@ -8,6 +8,7 @@ tap "homebrew/bundle"
 tap "homebrew/services"
 tap "jesseduffield/lazydocker"
 tap "koekeishiya/formulae"
+tap "mpecan/tokf"
 tap "nikitabobko/tap"
 tap "olets/tap"
 tap "supabase/tap"
@@ -86,6 +87,8 @@ brew "git-extras"
 brew "glow"
 # GNU Privacy Guard (OpenPGP)
 brew "gnupg"
+# Open source programming language to build simple/reliable/efficient software
+brew "go"
 # Improved top (interactive process viewer)
 brew "htop"
 # Interpreted, interactive, object-oriented programming language
@@ -118,6 +121,8 @@ brew "mackup"
 brew "mas"
 # Unified display of technical and tag data for audio/video
 brew "media-info"
+# CLI for Mermaid library
+brew "mermaid-cli"
 # Polyglot runtime manager (asdf rust clone)
 brew "mise"
 # Simple tool to make locally trusted development certificates
@@ -132,6 +137,8 @@ brew "mpv"
 brew "ncdu"
 # Fast, highly customisable system info script
 brew "neofetch"
+# Incremental parsing library
+brew "tree-sitter"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Libraries for security-enabled client and server applications
@@ -148,6 +155,8 @@ brew "opencode"
 brew "pandoc"
 # Shell command parallelization utility
 brew "parallel"
+# Open-source vector similarity search for Postgres
+brew "pgvector"
 # Execute binaries from Python packages in isolated environments
 brew "pipx"
 # Paste PNG into files
@@ -157,7 +166,11 @@ brew "pnpm"
 # PDF rendering library (based on the xpdf-3.0 code base)
 brew "poppler"
 # Object-relational database system
-brew "postgresql@15", restart_service: :changed, link: true
+brew "postgresql@15", link: true
+# Object-relational database system
+brew "postgresql@17"
+# Object-relational database system
+brew "postgresql@18", restart_service: :changed
 # Nicer 'git pull'
 brew "pygitup"
 # Reattach process (e.g., tmux) to background
@@ -166,10 +179,10 @@ brew "reattach-to-user-namespace"
 brew "rust"
 # Intuitive find & replace CLI
 brew "sd"
-# Incremental parsing library
-brew "tree-sitter"
 # Easily detect and prevent bugs and anti-patterns in your codebase
 brew "semgrep"
+# Smart session manager for the terminal
+brew "sesh"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
 # SOund eXchange: universal sound sample translator
@@ -178,6 +191,8 @@ brew "sox"
 brew "starship"
 # Opinionated Lua code formatter
 brew "stylua"
+# Open source Firebase alternative
+brew "supabase"
 # Change macOS audio source from the command-line
 brew "switchaudio-osx"
 # Send macOS User Notifications from the command-line
@@ -188,16 +203,18 @@ brew "tesseract-lang"
 brew "thefuck"
 # Terminal multiplexer
 brew "tmux"
-# Smart terminal session manager
-brew "sesh"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
+# USB hub per-port power control
+brew "uhubctl"
 # Command-line unarchiving tools supporting multiple formats
 brew "unar"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
 # Internet file retriever
 brew "wget"
+# CLI for Git worktree management, designed for parallel AI agent workflows
+brew "worktrunk"
 # Linter for YAML files
 brew "yamllint"
 # Blazing fast terminal file manager written in Rust, based on async I/O
@@ -214,8 +231,6 @@ brew "dotenvx/brew/dotenvx"
 brew "felixkratz/formulae/borders"
 # A simple terminal UI for docker, written in Go
 brew "jesseduffield/lazydocker/lazydocker"
-# Supabase CLI
-brew "supabase/tap/supabase"
 # BetterDisplay CLI proxy
 brew "waydabber/betterdisplay/betterdisplaycli"
 # Password manager that keeps all passwords secure behind one password
@@ -305,29 +320,6 @@ cask "whatsapp"
 cask "zed"
 # Gecko based web browser
 cask "zen"
-mas "1Password for Safari", id: 1569813296
-mas "Affinity Photo", id: 824183456
-mas "Amphetamine", id: 937984704
-mas "AusweisApp", id: 948660805
-mas "ControllerForHomeKit", id: 1198176727
-mas "Home Assistant", id: 1099568401
-mas "Keka", id: 470158793
-mas "Keynote", id: 409183694
-mas "LanguageTool", id: 1534275760
-mas "Marked 2", id: 890031187
-mas "Numbers", id: 409203825
-mas "Outbank", id: 1094255754
-mas "Pages", id: 409201541
-mas "PerformanceTest", id: 1560051043
-mas "Raycast Companion", id: 6738274497
-mas "Reeder", id: 1529448980
-mas "Spokenly", id: 6740315592
-mas "Tampermonkey Classic", id: 1482490089
-mas "TNEF's Enough", id: 986621173
-mas "Toggl Track", id: 1291898086
-mas "WISO Steuer 2023", id: 1635154215
-mas "WISO Steuer 2025", id: 6695752781
-mas "Xcode", id: 497799835
 vscode "alefragnani.project-manager"
 vscode "andrsdc.base16-themes"
 vscode "anthropic.claude-code"
@@ -342,7 +334,6 @@ vscode "docker.docker"
 vscode "eamodio.gitlens"
 vscode "editorconfig.editorconfig"
 vscode "esbenp.prettier-vscode"
-vscode "github.copilot"
 vscode "github.copilot-chat"
 vscode "github.copilot-labs"
 vscode "humao.rest-client"
