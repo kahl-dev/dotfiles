@@ -11,6 +11,8 @@ brew "libffi"
 brew "sqlite"
 # Browser automation CLI for AI agents
 brew "agent-browser"
+# Perl compatible regular expressions library with a new API
+brew "pcre2"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
@@ -21,8 +23,6 @@ brew "dbus"
 brew "libxcrypt"
 # Collection of Linux utilities
 brew "util-linux"
-# Perl compatible regular expressions library with a new API
-brew "pcre2"
 # Core application library for C
 brew "glib"
 # Vector graphics library with cross-device output support
