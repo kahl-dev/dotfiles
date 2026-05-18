@@ -7,33 +7,24 @@
 #    non-empty snapshot. Prevents continuum's auto-restore from loading an
 #    empty state and silently dropping pre-reboot work.
 # 2. Cleanup: keep only the most recent 50 snapshots to bound disk growth.
+#
+# Runs silently — fires on every save (continuum every 15min + on
+# session-closed). Real recovery notifications live in the companion
+# pre-restore hook.
 
 set -euo pipefail
 
-RESURRECT_DIR="${HOME}/.dotfiles/tmux/resurrect"
-LAST="${RESURRECT_DIR}/last"
-
-has_pane_lines() {
-    grep -qE '^pane[[:space:]]' "$1" 2>/dev/null
-}
+source "$(dirname "${BASH_SOURCE[0]}")/resurrect-lib.sh"
 
 if [[ -L "$LAST" ]]; then
     current_target="$(readlink "$LAST")"
     current_path="${RESURRECT_DIR}/${current_target}"
 
     if [[ -f "$current_path" ]] && ! has_pane_lines "$current_path"; then
-        previous=""
-        while IFS= read -r snapshot; do
-            [[ "$snapshot" == "$current_target" ]] && continue
-            if has_pane_lines "${RESURRECT_DIR}/${snapshot}"; then
-                previous="$snapshot"
-                break
-            fi
-        done < <(cd "$RESURRECT_DIR" && ls -1t tmux_resurrect_*.txt 2>/dev/null)
-
+        fallback="$(find_valid_fallback "$current_target")"
         rm -f "$current_path"
-        if [[ -n "$previous" ]]; then
-            ln -sfn "$previous" "$LAST"
+        if [[ -n "$fallback" ]]; then
+            ln -sfn "$fallback" "$LAST"
         else
             rm -f "$LAST"
         fi

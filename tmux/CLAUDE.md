@@ -35,7 +35,9 @@ tmux/
     ├── tmux-cheatsheet.sh         # Renders cheatsheet.md via glow
     ├── update-check.sh            # Staleness count for status bar (brew/mise/tpm/repos)
     ├── update-detail.sh           # Interactive update popup (Prefix+D)
-    └── resurrect-post-save.sh     # 🔑 Skip-empty-save guard + cleanup (post-save hook)
+    ├── resurrect-lib.sh           # 🔧 Shared helpers (RESURRECT_DIR, has_pane_lines, find_valid_fallback)
+    ├── resurrect-post-save.sh     # 🔑 Skip-empty-save guard + cleanup (post-save hook)
+    └── resurrect-pre-restore.sh   # 🔑 Heal broken `last` symlink before restore (pre-restore hook)
 ```
 
 ## 🎨 Visual Conventions
@@ -259,7 +261,9 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
 
 **Session persistence**: Resurrect captures pane contents (`@resurrect-capture-pane-contents 'on'`), auto-cleans saves (keeps 50), and restores Claude with `claude -c --dangerously-skip-permissions`. Session-closed hook fires resurrect save to prevent ghost sessions.
 
-**Skip-empty-save guard** (`scripts/resurrect-post-save.sh`, wired via `@resurrect-hook-post-save-all`): if a snapshot contains no `pane` lines (continuum saved a session-less server right after a reboot, or a save was interrupted), the file is deleted and `last` is re-pointed to the most recent non-empty snapshot. Without this guard, an empty save can overwrite `last` and silently break continuum's auto-restore — the exact failure mode after a server reboot mid-tmux-session.
+**Skip-empty-save guard** (`scripts/resurrect-post-save.sh`, wired via `@resurrect-hook-post-save-all`): if a snapshot contains no `pane` lines (continuum saved a session-less server right after a reboot, or a save was interrupted), the file is deleted and `last` is re-pointed to the most recent non-empty snapshot. Without this guard, an empty save can overwrite `last` and silently break continuum's auto-restore — the exact failure mode after a server reboot mid-tmux-session. Runs silently — fires on every save (continuum every 15min + session-closed), so notifications would spam.
+
+**Pre-restore recovery hook** (`scripts/resurrect-pre-restore.sh`, wired via `@resurrect-hook-pre-restore-all`): catches the residual failure the post-save guard cannot — a save that was SIGKILL'd by a hard reboot before its post-save hook could run, leaving `last` pointing to a 0-byte file. Fires immediately before restore reads `last`; if the target is broken (missing or no pane lines), re-points `last` to the most recent valid snapshot, drops the broken file, and emits a one-line `display-message` ("resurrect: skipped empty snapshot, restored from <timestamp>"). If no valid fallback exists, drops the dangling symlink and notifies that a fresh start is happening. Notifies (unlike post-save) because this path only triggers on real data-loss recovery, not routine cleanup.
 
 ## 🌐 Remote Session Support
 
