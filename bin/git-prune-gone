@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+# Requires fetch.prune = true (otherwise [gone] is never set).
+# Uses `git branch -D` — unmerged branches are also deleted on confirmation.
+# Reflog keeps deleted commits recoverable for ~90 days.
+
+set -u
+
+if ! git rev-parse --git-dir >/dev/null 2>&1; then
+  echo "git-prune-gone: not a git repository" >&2
+  exit 1
+fi
+
+if ! { : </dev/tty; } 2>/dev/null; then
+  echo "git-prune-gone: needs a TTY (interactive)" >&2
+  exit 1
+fi
+
+branches=()
+while IFS= read -r line; do
+  branches+=("$line")
+done < <(
+  git for-each-ref --format '%(refname:short) %(upstream:track)' refs/heads \
+    | awk '$2=="[gone]" {print $1}'
+)
+
+if [[ ${#branches[@]} -eq 0 ]]; then
+  echo "No branches with gone upstream."
+  exit 0
+fi
+
+echo "Found ${#branches[@]} branch(es) with [gone] upstream."
+
+deleted=0
+
+for branch in "${branches[@]}"; do
+  echo
+  git log -1 --format='  %h  %ar  %s' "$branch"
+  printf "  Delete branch '%s'? [y/N] " "$branch"
+  read -r answer </dev/tty
+  case "$answer" in
+    [yY]|[yY][eE][sS])
+      if git branch -D "$branch"; then
+        deleted=$((deleted + 1))
+      fi
+      ;;
+    *)
+      echo "  skipped"
+      ;;
+  esac
+done
+
+echo
+echo "Done. Deleted: $deleted of ${#branches[@]}."

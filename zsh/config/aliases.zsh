@@ -417,6 +417,7 @@ alias cdgr='cd "$(git rev-parse --show-toplevel)"'
 alias gup='git up'
 alias gupdate='git update'
 alias gbrclean='git fetch --prune && git branch -r | awk "{print \$1}" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk "{print \$1}" | xargs git branch -D'
+alias gbrgone='git prune-gone'
 
 alias grename="_grename"
 
