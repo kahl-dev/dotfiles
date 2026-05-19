@@ -31,6 +31,7 @@ local audioManager = require("modules.audio-manager")
 local usbManager = require("modules.usb-device-manager")
 local displayManager = require("modules.display-manager")
 local ipadManager = require("modules.ipad-manager")
+local presenceKeeper = require("modules.presence-keeper")
 require("modules.unified-overlay") -- loaded for hs CLI access from AeroSpace (alt+?)
 
 -- Initialize configuration
@@ -40,6 +41,7 @@ config.init()
 -- audioManager is started by usbManager when Wave:3 USB device is detected
 usbManager.init()
 displayManager.init()
+presenceKeeper.init()
 -- ipadManager.init() -- Disabled: hotkeys managed by unified overlay
 
 -- TEMPORARY: Comprehensive watcher tests
