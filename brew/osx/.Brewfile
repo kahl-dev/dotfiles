@@ -15,10 +15,6 @@ tap "supabase/tap"
 tap "waydabber/betterdisplay"
 # Processes triangulated solid meshes
 brew "admesh"
-# Open-source, cross-platform JavaScript runtime environment
-brew "node"
-# Browser automation CLI for AI agents
-brew "agent-browser"
 # Automatically restart SSH sessions and tunnels
 brew "autossh"
 # Bourne-Again SHell, a UNIX command interpreter
@@ -31,14 +27,10 @@ brew "bat"
 brew "bats-core"
 # Get/set bluetooth power and discoverable state
 brew "blueutil"
-# CLI of the open-source IDE For exploring and testing APIs
-brew "bruno-cli"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
 # Console Matrix
 brew "cmatrix"
-# Container runtimes on MacOS (and Linux) with minimal setup
-brew "colima"
 # Libraries to talk to Microsoft SQL Server and Sybase databases
 brew "freetds"
 # Network authentication protocol
@@ -65,6 +57,8 @@ brew "ffmpeg"
 brew "fnm"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# Open-source, cross-platform JavaScript runtime environment
+brew "node"
 # Interact with Google Gemini AI models from the command-line
 brew "gemini-cli"
 # GitHub command-line tool
@@ -115,8 +109,6 @@ brew "lua-language-server"
 brew "luarocks"
 # Python cleanup script for macOS
 brew "mac-cleanup-py"
-# Keep your Mac's application settings in sync
-brew "mackup"
 # Mac App Store command-line interface
 brew "mas"
 # Unified display of technical and tag data for audio/video
@@ -241,8 +233,6 @@ cask "1password-cli"
 cask "nikitabobko/tap/aerospace"
 # Menu bar tool to limit maximum charging percentage
 cask "aldente"
-# Application launcher and productivity software
-cask "alfred"
 # Application uninstaller
 cask "appcleaner"
 # Chromium based browser
@@ -255,16 +245,12 @@ cask "bartender"
 cask "betterdisplay"
 # 3D creation suite
 cask "blender"
-# Open source IDE for exploring and testing APIs
-cask "bruno"
 # Anthropic's official Claude AI desktop app
 cask "claude"
 # OpenAI's coding agent that runs in your terminal
 cask "codex"
 # Voice and text chat software
 cask "discord"
-# Assign keys, and then decorate and label them
-cask "elgato-stream-deck"
 # Utility for customizing which browser to start
 cask "finicky"
 # Web browser
@@ -318,8 +304,6 @@ cask "visual-studio-code"
 cask "whatsapp"
 # Multiplayer code editor
 cask "zed"
-# Gecko based web browser
-cask "zen"
 vscode "alefragnani.project-manager"
 vscode "andrsdc.base16-themes"
 vscode "anthropic.claude-code"
@@ -375,3 +359,4 @@ uv "black"
 uv "mypy"
 uv "pre-commit"
 uv "ruff"
+npm "corepack"

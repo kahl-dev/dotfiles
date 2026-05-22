@@ -119,13 +119,10 @@ Manual steps after running `./install-profile macos`:
 
 ### App Configuration
 - [ ] Bartender — configure menu bar items
-- [ ] Stream Deck — set up profiles and actions
 - [ ] Raycast — sign in for settings sync
-- [ ] Alfred — set sync folder to restore preferences (if using Alfred over Raycast)
 
 ### Verify
 - [ ] `brewup` — update all packages
-- [ ] `mackup restore` — restore app settings from backup
 - [ ] SSH connections work (`ssh <host>` for each configured host)
 - [ ] Remote Bridge clipboard works (`echo "test" | pbcopy` over SSH)
 
