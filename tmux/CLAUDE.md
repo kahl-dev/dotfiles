@@ -20,6 +20,7 @@ tmux/
 ├── resurrect/             # Session save files (tmux-resurrect)
 └── scripts/
     ├── tmux-sesh.sh               # 🔑 Session manager (Prefix+o / `tm`, sesh + fzf-tmux popup)
+    ├── tmux-claude-agents-picker.sh # 🔑 Claude Agents picker (Prefix+a c, fzf-tmux popup)
     ├── tmux-which-key.sh          # 🔑 Which-key menu (Prefix+?, nested submenus for apps/tpm)
     ├── cache-lib.sh               # 🔧 Shared cache utilities (sourced by all metric scripts)
     ├── status-line-main.sh        # 🔑 Main renderer — assembles all segments
@@ -136,7 +137,7 @@ Discoverable keybinding menu using `display-menu`. Shows all prefix bindings org
 
 ### Apps Key Table (`Prefix + a`)
 
-Enters a custom key table with app launchers. **Convention**: lowercase = new window, UPPERCASE = floating popup.
+Enters a custom key table with app launchers. **Convention**: lowercase = new window, UPPERCASE = floating popup. A single picker entry (`c`) lets you launch any app in a Claude background agent's cwd instead of the pane's.
 
 | Key | Window | Popup | App |
 |-----|--------|-------|-----|
@@ -144,9 +145,30 @@ Enters a custom key table with app launchers. **Convention**: lowercase = new wi
 | `y` / `Y` | yazi | yazi popup | File manager |
 | `b` / `B` | btop | btop popup | System monitor |
 | `m` / `M` | glow | glow popup | Markdown viewer |
+| `c` | — | picker | 󰚩 Claude Agents — pick agent, then `g`/`y`/`b`/`m` to launch in that agent's cwd |
 | `Escape` | — | — | Exit apps table |
 
-All apps inherit current pane's working directory. Status bar shows `󰀻 APPS` in yellow when in this table.
+The first four pairs inherit the current pane's working directory via `#{pane_current_path}`. The picker (`c`) exists because Claude Code's Agent View (`claude agents`) runs each background agent as a separate OS process with its own cwd, while the tmux pane is owned by the agent-view supervisor whose cwd is fixed at launch time. There is no hook, OSC sequence, or state file that records which agent is currently foregrounded, so `#{pane_current_path}` cannot follow the foregrounded agent — the picker is the explicit workaround.
+
+Status bar shows `󰀻 APPS` in yellow when in this table.
+
+#### `c` — Claude Agents picker (`scripts/tmux-claude-agents-picker.sh`)
+
+Lists every live session returned by `claude agents --json` (documented since Claude Code v2.1.145). For background agents, the row is enriched with state, detail, and name from `~/.claude/jobs/<short>/state.json` joined via `resumeSessionId`. Sort: `busy` first, then `idle`, recency desc as tiebreaker.
+
+fzf hotkeys inside the picker:
+
+| Key | Action |
+|-----|--------|
+| `g` or `Enter` | Open lazygit in the selected agent's cwd |
+| `y` | Open yazi |
+| `b` | Open btop |
+| `m` | Open glow |
+| `Esc` | Cancel |
+
+Empty list (no live agents): the picker still opens with a placeholder row; pressing `g`/`y`/`b`/`m` falls back to launching the app in `#{pane_current_path}` so the binding is never a dead end.
+
+Patterns reused: Catppuccin Mocha FZF colors and `fzf-tmux -p` invocation from `scripts/tmux-sesh.sh`; `display-popup -E -w 90% -h 90% -d "<cwd>" "<app>"` dispatch from the existing `bind-key -T apps G/Y/B/M` entries.
 
 ### Panes Key Table (`Prefix + v`)
 

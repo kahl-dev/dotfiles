@@ -124,9 +124,42 @@ Enter panes mode with `Prefix + v`, then press a key:
 | `/` | Fuzzback | Fuzzy search scrollback buffer with preview |
 | `*` | Cowboy | Kill hung process in current pane |
 | `U` | TYPO3 URLs | Open project URLs via lit-info (conditional) |
-| `a` | Apps layer | g/y/b/m = window, G/Y/B/M = popup (lazygit, yazi, btop, glow) |
+| `a` | Apps layer | g/y/b/m = window, G/Y/B/M = popup (lazygit, yazi, btop, glow), c = Claude Agents picker |
 | `v` | Panes layer | Layouts, splits, swap, structure (see Panes Layer section) |
 | `t` | TPM layer | i = install, u = update, x = clean |
+
+#### Claude Agents Picker (`Prefix + a → c`)
+
+Claude Code's Agent View (`claude agents`) runs each background agent as a
+separate OS process with its own cwd, but the tmux pane is owned by the
+agent-view supervisor whose cwd is fixed at launch. Therefore the four
+`Prefix + a → G/Y/B/M` popups (which use `#{pane_current_path}`) always
+open in the supervisor's launch dir, not in the directory of the agent
+the user is currently viewing.
+
+`Prefix + a → c` opens a `fzf-tmux` popup listing every live session from
+`claude agents --json` (documented since Claude Code v2.1.145), enriched
+with state and "needs input" detail from `~/.claude/jobs/<id>/state.json`.
+Inside the picker:
+
+| Key | Action |
+|-----|--------|
+| `g` or `Enter` | Open lazygit in selected agent's cwd |
+| `y` | Open yazi |
+| `b` | Open btop |
+| `m` | Open glow |
+| `Esc` | Cancel |
+
+Sort: `busy` first, then `idle`, recency desc as tiebreaker. Background
+agents and interactive sessions are both shown; the row shows kind +
+status. When no live agents exist, the picker still opens with a
+placeholder row — pressing an app key falls back to the pane's current
+working directory.
+
+Script: `scripts/tmux-claude-agents-picker.sh`. Reuses the
+`fzf-tmux -p` and Catppuccin Mocha colors pattern from `scripts/tmux-sesh.sh`
+and the `display-popup -E ...` dispatch pattern from the existing apps-table
+popups.
 
 #### Remote Session Controls
 | Key | Action | Description |
