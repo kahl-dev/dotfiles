@@ -24,8 +24,8 @@ if [[ "${1:-}" == "__preview" ]]; then
 
     if [[ "$sid" == "-" ]]; then
         printf '(no live agents)\n\n'
-        printf 'Press g/y/b/m to launch the app\n'
-        printf "in this pane's cwd.\n\n"
+        printf 'Press Enter to open the app menu,\n'
+        printf "which will launch in this pane's cwd.\n\n"
         printf 'Esc to cancel.\n'
         exit 0
     fi
@@ -152,9 +152,11 @@ if [[ ! -s "$CACHE_FILE" ]]; then
         "$FALLBACK_CWD" >"$CACHE_FILE"
 fi
 
-header=' g/Enter lazygit · y yazi · b btop · m glow · Esc cancel '
+header=' Type to filter · Enter to pick agent · Esc cancel '
 
-selection="$(
+# Stage 1 — filter and pick the agent. fzf is a pure picker here: typed
+# letters filter freely (no --expect that would steal g/y/b/m from search).
+row="$(
     fzf-tmux -p 80%,70% \
         --ansi \
         --no-sort \
@@ -168,32 +170,32 @@ selection="$(
         --color "$FZF_COLORS" \
         --preview "bash '$SCRIPT_PATH' __preview '$CACHE_FILE' {3}" \
         --preview-window 'right:50%:wrap' \
-        --expect='g,y,b,m' \
         --bind 'tab:down,btab:up' \
         <"$CACHE_FILE" \
     || true
 )"
 
-[[ -z "$selection" ]] && exit 0
-
-key="$(printf '%s\n' "$selection" | sed -n '1p')"
-row="$(printf '%s\n' "$selection" | sed -n '2p')"
-
 [[ -z "$row" ]] && exit 0
 
 cwd="$(printf '%s' "$row" | awk -F'\t' '{print $2}')"
+name="$(printf '%s' "$row" | awk -F'\t' '{print $6}')"
 
 if [[ -z "$cwd" || ! -d "$cwd" ]]; then
     tmux display-message "tmux-claude-agents: directory not found: $cwd" 2>/dev/null
     exit 1
 fi
 
-case "$key" in
-    y) app="yazi" ;;
-    b) app="btop" ;;
-    m) app="glow" ;;
-    g|"") app="lazygit" ;;
-    *)    app="lazygit" ;;
-esac
+# Stage 2 — app selector. Stash the agent context as tmux user options so
+# display-menu can reference them via format expansion (#{...}). Safer than
+# shell-interpolating $cwd, which may contain single quotes.
+tmux set-option -g @cc_picker_cwd  "$cwd"
+tmux set-option -g @cc_picker_name "$name"
 
-tmux display-popup -E -w 90% -h 90% -d "$cwd" "$app"
+tmux display-menu -xC -yC -T " 󰚩 #{@cc_picker_name} " \
+    "" \
+    "  [g] Lazygit"  "g"  "display-popup -E -w 90% -h 90% -d \"#{@cc_picker_cwd}\" 'lazygit'" \
+    "  [y] Yazi"     "y"  "display-popup -E -w 90% -h 90% -d \"#{@cc_picker_cwd}\" 'yazi'" \
+    "  [b] btop"     "b"  "display-popup -E -w 90% -h 90% -d \"#{@cc_picker_cwd}\" 'btop'" \
+    "  [m] glow"     "m"  "display-popup -E -w 90% -h 90% -d \"#{@cc_picker_cwd}\" 'glow'" \
+    "" \
+    "  [Esc] Cancel" "Escape" ""

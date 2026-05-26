@@ -137,29 +137,46 @@ agent-view supervisor whose cwd is fixed at launch. Therefore the four
 open in the supervisor's launch dir, not in the directory of the agent
 the user is currently viewing.
 
-`Prefix + a → c` opens a `fzf-tmux` popup listing every live session from
-`claude agents --json` (documented since Claude Code v2.1.145), enriched
-with state and "needs input" detail from `~/.claude/jobs/<id>/state.json`.
-Inside the picker:
+`Prefix + a → c` opens a two-stage picker. Stage 1 is an `fzf-tmux` popup
+listing every live session from `claude agents --json` (documented since
+Claude Code v2.1.145), enriched with state and "needs input" detail from
+`~/.claude/jobs/<id>/state.json`. Type to filter (letters are free —
+nothing is bound away from search); `Enter` confirms the agent. Stage 2
+is a small `display-menu` that mirrors the existing `Prefix + a` apps
+table:
 
-| Key | Action |
-|-----|--------|
-| `g` or `Enter` | Open lazygit in selected agent's cwd |
-| `y` | Open yazi |
-| `b` | Open btop |
-| `m` | Open glow |
-| `Esc` | Cancel |
+| Stage 1 (fzf)       | Action                                    |
+|---------------------|-------------------------------------------|
+| typing              | Filter agents by name / cwd / state       |
+| `↑` / `↓`, `Tab`    | Move selection                            |
+| `Enter`             | Confirm agent, open app menu              |
+| `Esc`               | Cancel                                    |
+
+| Stage 2 (menu)      | Action                                    |
+|---------------------|-------------------------------------------|
+| `g`                 | Open lazygit in agent's cwd               |
+| `y`                 | Open yazi                                 |
+| `b`                 | Open btop                                 |
+| `m`                 | Open glow                                 |
+| `Esc`               | Cancel                                    |
+
+The two-stage split is deliberate: binding `g`/`y`/`b`/`m` as fzf exit
+keys would steal them from the filter input — you couldn't search for
+"marketplace" by typing `m`. Stage 2 reuses the apps-menu mnemonics so
+your muscle memory carries over.
 
 Sort: `busy` first, then `idle`, recency desc as tiebreaker. Background
 agents and interactive sessions are both shown; the row shows kind +
 status. When no live agents exist, the picker still opens with a
-placeholder row — pressing an app key falls back to the pane's current
-working directory.
+placeholder row — pressing `Enter` opens the app menu rooted at the
+pane's current working directory.
 
 Script: `scripts/tmux-claude-agents-picker.sh`. Reuses the
 `fzf-tmux -p` and Catppuccin Mocha colors pattern from `scripts/tmux-sesh.sh`
 and the `display-popup -E ...` dispatch pattern from the existing apps-table
-popups.
+popups. The agent's cwd is stashed between stages as tmux user options
+`@cc_picker_cwd` / `@cc_picker_name` and referenced via format expansion
+inside the menu commands.
 
 #### Remote Session Controls
 | Key | Action | Description |

@@ -115,11 +115,11 @@ Press `<prefix> a` to enter apps mode, then:
 | `y` / `Y` | new window | overlay | Yazi (file manager) |
 | `b` / `B` | new window | overlay | Btop (system monitor) |
 | `m` / `M` | new window | overlay | Glow (markdown viewer) |
-| `c` | — | picker | 󰚩 Claude Agents (pick agent's cwd, then app) |
+| `c` | — | picker | 󰚩 Claude Agents (filter+pick agent, then pick app) |
 | `Escape` | - | - | Cancel |
 
 **Example:** `<prefix> a G` opens LazyGit as popup overlay
-**Example:** `<prefix> a c` opens the Claude Agents picker; pick an agent, then press `g`/`y`/`b`/`m` to launch the matching app in that agent's directory
+**Example:** `<prefix> a c` opens the Claude Agents picker — type to filter, `Enter` selects the agent, then a small menu pops up where `g`/`y`/`b`/`m` launch the matching app in that agent's directory
 
 ## 🔌 Plugins (TPM)
 

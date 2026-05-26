@@ -145,7 +145,7 @@ Enters a custom key table with app launchers. **Convention**: lowercase = new wi
 | `y` / `Y` | yazi | yazi popup | File manager |
 | `b` / `B` | btop | btop popup | System monitor |
 | `m` / `M` | glow | glow popup | Markdown viewer |
-| `c` | — | picker | 󰚩 Claude Agents — pick agent, then `g`/`y`/`b`/`m` to launch in that agent's cwd |
+| `c` | — | picker | 󰚩 Claude Agents — filter + pick agent (fzf), then pick app in a small menu |
 | `Escape` | — | — | Exit apps table |
 
 The first four pairs inherit the current pane's working directory via `#{pane_current_path}`. The picker (`c`) exists because Claude Code's Agent View (`claude agents`) runs each background agent as a separate OS process with its own cwd, while the tmux pane is owned by the agent-view supervisor whose cwd is fixed at launch time. There is no hook, OSC sequence, or state file that records which agent is currently foregrounded, so `#{pane_current_path}` cannot follow the foregrounded agent — the picker is the explicit workaround.
@@ -156,19 +156,27 @@ Status bar shows `󰀻 APPS` in yellow when in this table.
 
 Lists every live session returned by `claude agents --json` (documented since Claude Code v2.1.145). For background agents, the row is enriched with state, detail, and name from `~/.claude/jobs/<short>/state.json` joined via `resumeSessionId`. Sort: `busy` first, then `idle`, recency desc as tiebreaker.
 
-fzf hotkeys inside the picker:
+Two-stage flow — the picker keeps fzf's typing free for filtering, then mirrors the existing `Prefix + a` apps menu for the action:
 
-| Key | Action |
-|-----|--------|
-| `g` or `Enter` | Open lazygit in the selected agent's cwd |
-| `y` | Open yazi |
-| `b` | Open btop |
-| `m` | Open glow |
-| `Esc` | Cancel |
+| Stage | Keys | Action |
+|-------|------|--------|
+| 1 — fzf | typing | Filter agents by name / cwd / state |
+| 1 — fzf | `↑`/`↓`, `Tab`/`Shift-Tab` | Move selection |
+| 1 — fzf | `Enter` | Confirm agent, open app menu |
+| 1 — fzf | `Esc` | Cancel |
+| 2 — `display-menu` | `g` | Open lazygit in agent's cwd |
+| 2 — `display-menu` | `y` | Open yazi |
+| 2 — `display-menu` | `b` | Open btop |
+| 2 — `display-menu` | `m` | Open glow |
+| 2 — `display-menu` | `Esc` | Cancel |
 
-Empty list (no live agents): the picker still opens with a placeholder row; pressing `g`/`y`/`b`/`m` falls back to launching the app in `#{pane_current_path}` so the binding is never a dead end.
+The two-stage split is deliberate: a single-stage `--expect='g,y,b,m'` would make those letters trigger actions and prevent the user from typing them in the filter (you couldn't search for `marketplace` by typing `m`). Stage 2 reuses the apps-menu mnemonics so muscle memory is preserved.
 
-Patterns reused: Catppuccin Mocha FZF colors and `fzf-tmux -p` invocation from `scripts/tmux-sesh.sh`; `display-popup -E -w 90% -h 90% -d "<cwd>" "<app>"` dispatch from the existing `bind-key -T apps G/Y/B/M` entries.
+The agent's cwd and name are stashed between stages as tmux user options `@cc_picker_cwd` and `@cc_picker_name`, then referenced via format expansion (`#{@cc_picker_cwd}`) inside the menu commands — this avoids shell-interpolating paths that may contain single quotes.
+
+Empty list (no live agents): the picker still opens with a placeholder row; pressing `Enter` opens the app menu using `#{pane_current_path}` as fallback so the binding is never a dead end.
+
+Patterns reused: Catppuccin Mocha FZF colors and `fzf-tmux -p` invocation from `scripts/tmux-sesh.sh`; `display-popup -E -w 90% -h 90% -d "<cwd>" "<app>"` dispatch matches `bind-key -T apps G/Y/B/M`; the stage-2 `display-menu` layout mirrors the apps submenu in `scripts/tmux-which-key.sh`.
 
 ### Panes Key Table (`Prefix + v`)
 
