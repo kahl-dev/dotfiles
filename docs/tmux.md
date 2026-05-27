@@ -165,11 +165,23 @@ keys would steal them from the filter input — you couldn't search for
 "marketplace" by typing `m`. Stage 2 reuses the apps-menu mnemonics so
 your muscle memory carries over.
 
-Sort: `busy` first, then `idle`, recency desc as tiebreaker. Background
-agents and interactive sessions are both shown; the row shows kind +
-status. When no live agents exist, the picker still opens with a
-placeholder row — pressing `Enter` opens the app menu rooted at the
-pane's current working directory.
+Sort priorities (top to bottom):
+
+1. **★ likely current agent** — bg agent with the most recent
+   `state.json.updatedAt` within the last 5 minutes whose
+   `firstTerminalAt` is non-null. This is a heuristic for "the agent
+   you're currently looking at" — Claude Code exposes no direct attach
+   signal, so the script uses recency as a proxy. When you press
+   `Prefix + a → c` from within an active agent's conversation, the
+   starred row is almost always the right one and `Enter` does what
+   you'd expect.
+2. `busy` agents (currently running tools or generating output).
+3. `idle` agents, by `startedAt` desc.
+
+Background agents and interactive sessions are both shown; the row
+shows kind + status. When no live agents exist, the picker still
+opens with a placeholder row — pressing `Enter` opens the app menu
+rooted at the pane's current working directory.
 
 Script: `scripts/tmux-claude-agents-picker.sh`. Reuses the
 `fzf-tmux -p` and Catppuccin Mocha colors pattern from `scripts/tmux-sesh.sh`

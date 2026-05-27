@@ -110,15 +110,42 @@ AGENTS_JSON="$(claude agents --json 2>/dev/null || echo '[]')"
 #   1 display  2 cwd  3 sessionId  4 state  5 detail  6 name  7 kind
 #   8 status   9 startedAt
 # Display (col 1) is what fzf shows; the rest are queried by preview &
-# dispatch. Sort: busy first, then idle, recency desc as tiebreak.
+# dispatch.
+#
+# Sort priorities:
+#   1. Likely-current-view agent first (★ marker) — bg agent with the most
+#      recent state.json.updatedAt within the last 5 minutes, where
+#      firstTerminalAt is set. This is a heuristic for "the agent the user
+#      is currently looking at in Agent View." Claude Code exposes no
+#      direct attach signal (no hook, OSC, or status field), so this is
+#      the closest proxy.
+#   2. busy before idle.
+#   3. Recency desc by startedAt as tiebreak.
 printf '%s' "$AGENTS_JSON" | jq -r --argjson states "$STATE_MAP" --arg home "$HOME" '
     def rpad($n): tostring | (. + (" " * 80))[:$n];
     def strip_specials: tostring | gsub("[\\n\\t\\r]"; " ");
+    def is_fresh($s): ($s.firstTerminalAt // null) != null
+                  and ($s.updatedAt        // null) != null
+                  and ((now - ($s.updatedAt | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601)) < 300);
 
-    sort_by([
+    . as $agents
+    | (
+        [ $agents[]
+          | select(.kind == "background")
+          | . as $a
+          | ($states[$a.sessionId] // {}) as $s
+          | select(is_fresh($s))
+          | { sid: $a.sessionId, ts: ($s.updatedAt | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) }
+        ]
+        | sort_by(-.ts)
+        | (.[0].sid // "")
+      ) as $star_sid
+    | $agents
+    | sort_by([
+        (if .sessionId == $star_sid then 0 else 1 end),
         (if .status == "busy" then 0 else 1 end),
         -(.startedAt // 0)
-    ])
+      ])
     | .[]
     | . as $a
     | ($states[$a.sessionId] // {}) as $s
@@ -132,8 +159,9 @@ printf '%s' "$AGENTS_JSON" | jq -r --argjson states "$STATE_MAP" --arg home "$HO
     | (($a.cwd // "") | tostring | sub("^" + $home; "~")) as $cwd_short
     | (($s.state // "") | strip_specials) as $state
     | (($s.detail // $s.needs // "") | strip_specials) as $detail
+    | (if $a.sessionId == $star_sid then "★ " else "  " end) as $star
     | [
-        (($name | rpad(22)) + " " + ($kind | rpad(3)) + " " + ($status | rpad(5)) + " " + $cwd_short),
+        ($star + ($name | rpad(22)) + " " + ($kind | rpad(3)) + " " + ($status | rpad(5)) + " " + $cwd_short),
         ($a.cwd // ""),
         ($a.sessionId // ""),
         $state,
@@ -148,11 +176,11 @@ printf '%s' "$AGENTS_JSON" | jq -r --argjson states "$STATE_MAP" --arg home "$HO
 
 # Graceful fallback when no live agents exist
 if [[ ! -s "$CACHE_FILE" ]]; then
-    printf '(no live agents — Esc to cancel)\t%s\t-\t-\t-\t(no live agents)\t-\t-\t0\n' \
+    printf '  (no live agents — Esc to cancel)\t%s\t-\t-\t-\t(no live agents)\t-\t-\t0\n' \
         "$FALLBACK_CWD" >"$CACHE_FILE"
 fi
 
-header=' Type to filter · Enter to pick agent · Esc cancel '
+header=' ★ = likely current agent · Type to filter · Enter pick · Esc cancel '
 
 # Stage 1 — filter and pick the agent. fzf is a pure picker here: typed
 # letters filter freely (no --expect that would steal g/y/b/m from search).
