@@ -11,8 +11,6 @@
 # target cwd explicitly.
 set -euo pipefail
 
-SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
-
 # ---------------------------------------------------------------------------
 # Preview mode — re-invoked by fzf with (cache_file, sessionId). Looks the
 # row up in the cache and prints a formatted block. Run inside fzf for each
@@ -47,15 +45,20 @@ if [[ "${1:-}" == "__preview" ]]; then
         age="?"
     fi
 
-    cwd_short="${cwd/#$HOME/\~}"
+    # Length-based strip avoids glob-pattern semantics of ${var/#pattern/}
+    # which would mis-handle HOME paths containing `[`/`*`/`?` metacharacters.
+    if [[ "$cwd" == "$HOME"* ]]; then
+        cwd_short="~${cwd:${#HOME}}"
+    else
+        cwd_short="$cwd"
+    fi
     project="$(basename "$cwd")"
     sid_short="${sessionId:0:8}"
-    effective_state="${state:-$status}"
 
     printf '%s\n' "$name"
     printf '━%.0s' {1..40}; printf '\n\n'
     printf 'kind     %s\n' "$kind"
-    printf 'state    %s\n' "$effective_state"
+    printf 'state    %s\n' "${state:-$status}"
     [[ -n "$detail" ]] && printf '\n%s\n' "$detail"
     printf '\nProject  %s\n' "$project"
     printf 'cwd      %s\n' "$cwd_short"
@@ -67,6 +70,11 @@ fi
 # ---------------------------------------------------------------------------
 # Normal mode
 # ---------------------------------------------------------------------------
+# SCRIPT_PATH is only needed for the fzf --preview re-invocation below;
+# computing it after the __preview early-exit saves a subshell fork per
+# preview row.
+SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+
 FALLBACK_CWD="${1:-$HOME}"
 
 for dep in claude fzf jq; do
@@ -77,11 +85,13 @@ for dep in claude fzf jq; do
     fi
 done
 
-# Catppuccin Mocha — duplicated from FZF_DEFAULT_OPTS because run-shell
-# does not inherit zsh-exported environment. Mirrors tmux-sesh.sh.
-FZF_COLORS="bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8"
-FZF_COLORS+=",fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc"
-FZF_COLORS+=",marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
+# Catppuccin colors from shared fzf-lib.sh.
+# shellcheck source=fzf-lib.sh disable=SC1091
+source "$(dirname "${BASH_SOURCE[0]}")/fzf-lib.sh" || {
+    tmux display-message "tmux-claude-agents: cannot source fzf-lib.sh" 2>/dev/null \
+        || echo "tmux-claude-agents: cannot source fzf-lib.sh" >&2
+    exit 1
+}
 
 CACHE_FILE="$(mktemp "${TMPDIR:-/tmp}/cc-agents-XXXXXX")"
 trap 'rm -f "$CACHE_FILE"' EXIT
@@ -106,11 +116,19 @@ STATE_MAP="$(
 
 AGENTS_JSON="$(claude agents --json 2>/dev/null || echo '[]')"
 
-# TSV row layout (per agent):
-#   1 display  2 cwd  3 sessionId  4 state  5 detail  6 name  7 kind
-#   8 status   9 startedAt
-# Display (col 1) is what fzf shows; the rest are queried by preview &
-# dispatch. Sort: busy first, then idle, recency desc as tiebreak.
+# TSV row layout (per agent) — KEEP IN SYNC with the IFS read in the preview
+# block above AND with the dispatch read at the bottom of this file:
+#   1 display     fzf-rendered string (already includes name/kind/status/cwd)
+#   2 cwd         absolute path, used for `display-popup -d`
+#   3 sessionId   UUID, used by fzf preview `{3}` to look up enrichment
+#   4 state       from state.json (empty for interactive sessions)
+#   5 detail      from state.json `.detail` (or `.needs` fallback)
+#   6 name        from `claude agents --json` (or state.json fallback)
+#   7 kind        `bg` / `int` (abbreviated via object lookup)
+#   8 status      `busy` / `idle` from `claude agents --json`
+#   9 startedAt   epoch MILLISECONDS (note: ms, not s — preview divides by 1000)
+#
+# Sort: busy first, then idle, recency desc as tiebreak.
 printf '%s' "$AGENTS_JSON" | jq -r --argjson states "$STATE_MAP" --arg home "$HOME" '
     def rpad($n): tostring | (. + (" " * 80))[:$n];
     def strip_specials: tostring | gsub("[\\n\\t\\r]"; " ");
@@ -123,14 +141,13 @@ printf '%s' "$AGENTS_JSON" | jq -r --argjson states "$STATE_MAP" --arg home "$HO
     | . as $a
     | ($states[$a.sessionId] // {}) as $s
     | (($a.name // $s.name // "(unnamed)") | strip_specials) as $name
-    | (($a.kind // "?") |
-        if   . == "background"  then "bg"
-        elif . == "interactive" then "int"
-        else .
-        end | strip_specials) as $kind
+    | (($a.kind // "?") | ({"background":"bg","interactive":"int"}[.] // .) | strip_specials) as $kind
     | (($a.status // "?") | strip_specials) as $status
-    | (($a.cwd // "") | tostring | sub("^" + $home; "~")) as $cwd_short
+    | (($a.cwd // "") | tostring | if startswith($home) then "~" + ltrimstr($home) else . end) as $cwd_short
     | (($s.state // "") | strip_specials) as $state
+    # `.detail` is the active state.json description; `.needs` is the older
+    # field still set on idle agents waiting for input — fall back when the
+    # newer field is absent so we always have something to show in the preview.
     | (($s.detail // $s.needs // "") | strip_specials) as $detail
     | [
         (($name | rpad(22)) + " " + ($kind | rpad(3)) + " " + ($status | rpad(5)) + " " + $cwd_short),
@@ -167,8 +184,8 @@ row="$(
         --prompt '⚡ ' \
         --pointer='▶' \
         --header "$header" \
-        --color "$FZF_COLORS" \
-        --preview "bash '$SCRIPT_PATH' __preview '$CACHE_FILE' {3}" \
+        --color "$FZF_CATPPUCCIN_COLORS" \
+        --preview "bash '$SCRIPT_PATH' __preview '$CACHE_FILE' '{3}'" \
         --preview-window 'right:50%:wrap' \
         --bind 'tab:down,btab:up' \
         <"$CACHE_FILE" \
@@ -177,8 +194,8 @@ row="$(
 
 [[ -z "$row" ]] && exit 0
 
-cwd="$(printf '%s' "$row" | awk -F'\t' '{print $2}')"
-name="$(printf '%s' "$row" | awk -F'\t' '{print $6}')"
+# Mirrors the IFS read pattern in the preview block above.
+IFS=$'\t' read -r _display cwd _sid _state _detail name _kind _status _started <<<"$row"
 
 if [[ -z "$cwd" || ! -d "$cwd" ]]; then
     tmux display-message "tmux-claude-agents: directory not found: $cwd" 2>/dev/null

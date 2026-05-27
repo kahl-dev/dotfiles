@@ -21,6 +21,7 @@ tmux/
 └── scripts/
     ├── tmux-sesh.sh               # 🔑 Session manager (Prefix+o / `tm`, sesh + fzf-tmux popup)
     ├── tmux-claude-agents-picker.sh # 🔑 Claude Agents picker (Prefix+a c, fzf-tmux popup)
+    ├── fzf-lib.sh                   # 🔧 Shared Catppuccin FZF colors (sourced by pickers)
     ├── tmux-which-key.sh          # 🔑 Which-key menu (Prefix+?, nested submenus for apps/tpm)
     ├── cache-lib.sh               # 🔧 Shared cache utilities (sourced by all metric scripts)
     ├── status-line-main.sh        # 🔑 Main renderer — assembles all segments

@@ -13,11 +13,12 @@ if ! command -v fzf &>/dev/null; then
     exit 1
 fi
 
-# Catppuccin Mocha colors — duplicated from FZF_DEFAULT_OPTS because
-# run-shell invocations don't inherit zsh-exported environment
-FZF_COLORS="bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8"
-FZF_COLORS+=",fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc"
-FZF_COLORS+=",marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
+# Catppuccin colors from shared fzf-lib.sh.
+# shellcheck source=fzf-lib.sh disable=SC1091
+source "$(dirname "${BASH_SOURCE[0]}")/fzf-lib.sh" || {
+    echo "tmux-sesh: cannot source fzf-lib.sh" >&2
+    exit 1
+}
 
 if [[ -n "${TMUX:-}" ]]; then
     current_session=$(tmux display-message -p '#S')
@@ -46,7 +47,7 @@ fzf_args=(
     --bind 'ctrl-f:change-prompt(🔎 )+reload(fd --type d --hidden --exclude .git --exclude node_modules --exclude .cache --max-depth 4 . ~)'
     --preview-window 'right:55%'
     --preview 'sesh preview {}'
-    --color "$FZF_COLORS"
+    --color "$FZF_CATPPUCCIN_COLORS"
 )
 
 run_fzf() {

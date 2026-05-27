@@ -71,7 +71,7 @@ show_apps() {
         "  [M] glow"                   "M" "display-popup -E -w 90% -h 90% -d '#{pane_current_path}' 'glow'" \
         "" \
         "Picker (pick agent's cwd, then app)" "" "" \
-        "  [c] 󰚩 Claude Agents"        "c" "run-shell -b \"bash $SCRIPT_DIR/tmux-claude-agents-picker.sh '#{pane_current_path}'\"" \
+        "  [c] 󰚩 Claude Agents"        "c" "run-shell -b \"bash $SCRIPT_DIR/tmux-claude-agents-picker.sh \\\"#{pane_current_path}\\\"\"" \
         "" \
         "" "" "" \
         "  [Esc] Back"                 "Escape" "run-shell 'bash $SCRIPT_DIR/tmux-which-key.sh root'"

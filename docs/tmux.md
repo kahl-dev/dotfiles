@@ -26,6 +26,8 @@ tmux/
 │   ├── hostname-display.sh      # Smart hostname formatting
 │   ├── lit-info-urls.sh         # Project URL helper
 │   ├── tmux-sesh.sh              # Session manager (sesh + fzf-tmux popup)
+│   ├── tmux-claude-agents-picker.sh # Claude Agents picker (Prefix+a c, fzf-tmux popup)
+│   ├── fzf-lib.sh                   # Shared Catppuccin FZF colors (sourced by pickers)
 │   ├── tmux-which-key.sh         # Which-key menu (nested submenus for apps/tpm)
 │   ├── tmux-cheatsheet.sh        # Cheatsheet popup
 │   ├── update-check.sh           # Staleness count for status bar
