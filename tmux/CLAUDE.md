@@ -154,15 +154,7 @@ Status bar shows `󰀻 APPS` in yellow when in this table.
 
 #### `c` — Claude Agents picker (`scripts/tmux-claude-agents-picker.sh`)
 
-Lists every live session returned by `claude agents --json` (documented since Claude Code v2.1.145). For background agents, the row is enriched with state, detail, and name from `~/.claude/jobs/<short>/state.json` joined via `resumeSessionId`.
-
-**Sort priorities (top to bottom):**
-
-1. **★ likely current agent** — bg agent with the most recent `state.json.updatedAt` within the last 5 minutes, where `firstTerminalAt` is non-null (i.e. has been opened in Agent View at least once). When you're conversationally engaged with an agent (you typed a prompt, it answered) this heuristic almost always identifies it correctly. Claude Code exposes no direct attach signal (no hook, OSC, or `--json` field), so this is the closest proxy.
-2. `busy` agents (those actively running tools or generating a response)
-3. `idle` agents, by `startedAt` desc
-
-The star is purely informational — the picker shows every live session regardless. If the heuristic is wrong (e.g. the active agent has been idle > 5 min while you read its output), no star is shown and the normal busy/recency sort applies.
+Lists every live session returned by `claude agents --json` (documented since Claude Code v2.1.145). For background agents, the row is enriched with state, detail, and name from `~/.claude/jobs/<short>/state.json` joined via `resumeSessionId`. Sort: `busy` first, then `idle`, recency desc as tiebreaker.
 
 Two-stage flow — the picker keeps fzf's typing free for filtering, then mirrors the existing `Prefix + a` apps menu for the action:
 
