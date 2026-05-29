@@ -14,13 +14,19 @@ SETTINGS=(
   "PasswordAuthentication no"
   "KbdInteractiveAuthentication no"
   "PermitRootLogin no"
-  "AllowUsers kahl-dev"
+  "AllowUsers ${SUDO_USER:-}"
   "MaxAuthTries 3"
   "LoginGraceTime 20"
 )
 
 if [[ $EUID -ne 0 ]]; then
   echo "❌ Must run as root: sudo harden-sshd"
+  exit 1
+fi
+
+if [[ -z "${SUDO_USER:-}" ]]; then
+  echo "❌ SUDO_USER is empty — run via 'sudo harden-sshd', not as a direct root login"
+  echo "   (needed to restrict 'AllowUsers' to the invoking account)"
   exit 1
 fi
 
