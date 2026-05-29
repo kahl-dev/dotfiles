@@ -251,8 +251,6 @@ cask "claude"
 cask "codex"
 # Voice and text chat software
 cask "discord"
-# Utility for customizing which browser to start
-cask "finicky"
 # Web browser
 cask "firefox"
 cask "font-jetbrains-mono-nerd-font"

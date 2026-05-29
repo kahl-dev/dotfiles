@@ -12,10 +12,6 @@
 - link:
     ~/.icloud: ~/Library/Mobile Documents/com~apple~CloudDocs/
 
-    ~/.ssh/config: ./.ssh/config
-
-    ~/.finicky.js: ./.finicky.js
-
     ~/.config/wezterm: ./.config/wezterm/
     ~/.config/karabiner: ./.config/karabiner/
     ~/.config/sketchybar: ./.config/sketchybar/

@@ -6,5 +6,8 @@
 
 - link:
     ~/.ssh/config.d/private-hosts: ~/repos/dotfiles-private/ssh/config.d/private-hosts
+    ~/.ssh/config: ~/repos/dotfiles-private/ssh/config
     ~/.hammerspoon/config/private.json: ~/repos/dotfiles-private/.hammerspoon/config/private.json
+    ~/.hammerspoon/config/devices.json: ~/repos/dotfiles-private/.hammerspoon/config/devices.json
     ~/.config/audio-manager/private.json: ~/repos/dotfiles-private/.config/audio-manager/private.json
+    ~/.config/audio-manager/config.json: ~/repos/dotfiles-private/.config/audio-manager/config.json
