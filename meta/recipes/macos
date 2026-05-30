@@ -1,9 +1,9 @@
 cleanup
 base
 private
-private-macos
 macos_settings
 macos_general
+private-macos
 tmux
 sesh
 remote-bridge
