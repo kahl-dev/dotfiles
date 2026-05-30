@@ -28,11 +28,6 @@ bin/git-lia/
 
 !.config/bat/themes/*
 
-alfred_scripts/script.log
-
-.config/zed/settings_backup.json
-.config/zed/prompts/*
-
 # Claude Code sensitive data
 .claude.global/projects/
 .claude.global/todos/
@@ -41,9 +36,6 @@ alfred_scripts/script.log
 # Allow Claude configuration
 !.claude.global/CLAUDE.md
 !.claude.global/settings.json
-
-# Zed local settings with sensitive SSH configs
-.config/zed/settings.local.json
 
 logs
 
@@ -60,8 +52,9 @@ logs
 # Hammerspoon generated LSP stubs
 .hammerspoon/Spoons/EmmyLua.spoon/
 
-# Karabiner temporary backup files (not automatic_backups)
+# Karabiner backup files (temporary + auto-generated)
 .config/karabiner/karabiner.json.backup*
+.config/karabiner/automatic_backups/
 
 # RTK runtime artifacts
 .config/rtk/.hook_warn_last

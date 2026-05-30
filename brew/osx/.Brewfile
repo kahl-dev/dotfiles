@@ -300,8 +300,6 @@ cask "transmit"
 cask "visual-studio-code"
 # Native desktop client for WhatsApp
 cask "whatsapp"
-# Multiplayer code editor
-cask "zed"
 vscode "alefragnani.project-manager"
 vscode "andrsdc.base16-themes"
 vscode "anthropic.claude-code"

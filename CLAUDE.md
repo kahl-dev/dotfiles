@@ -369,7 +369,6 @@ All applications use **Catppuccin Mocha** flavor for consistent dark theme exper
 - **Starship**: Catppuccin Macchiato palette (`~/.config/starship.toml`)
 - **fzf**: Catppuccin Mocha colors (`zsh/config/fzf.zsh`)
 - **lazygit**: Catppuccin Mocha theme (`~/.config/lazygit/config.yml`)
-- **Zed**: Catppuccin Mocha with extension auto-install (`~/.config/zed/settings.json`)
 
 **Color Palette (Mocha):**
 - Background: `#1e1e2e`
@@ -393,4 +392,3 @@ All applications use **Catppuccin Mocha** flavor for consistent dark theme exper
 - Configuration files use XDG Base Directory specification where possible
 - Raycast settings are synced via cloud backup (not stored in dotfiles)
 - The system is designed for personal use and includes specific tools/preferences
-- **DO NOT commit Zed settings** - these are personal and machine-specific configurations

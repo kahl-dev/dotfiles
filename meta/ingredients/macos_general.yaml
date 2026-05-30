@@ -18,7 +18,6 @@
     ~/.config/aerospace: ./.config/aerospace/
     ~/.config/ghostty: ./.config/ghostty/
     ~/.config/borders: ./.config/borders/
-    ~/.config/zed: ./.config/zed/
 
     ~/.hammerspoon: ./.hammerspoon/
 
