@@ -277,7 +277,7 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
 | Plugin | Purpose | Key Config |
 |--------|---------|------------|
 | **tpm** | Plugin manager | `Prefix + t` layer: `i` install, `u` update, `x` clean |
-| **tmux-resurrect** | Save/restore sessions | Saves ssh, vi, vim, nvim, man, tail, top, htop, claude (with `-c` resume) |
+| **tmux-resurrect** | Save/restore sessions | Saves ssh, vi, vim, nvim, man, tail, top, htop, `~claude` (per-pane `--resume` patch) |
 | **tmux-continuum** | Auto-save every 15min | `@continuum-restore 'on'` for auto-restore on start |
 | **tmux-floax** | Floating window management | — |
 | **tmux-fzf-url** | URL extraction from pane | `Prefix + u`, opens via `ropen`, 2000 URL history |
@@ -290,7 +290,12 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
 
 **Removed plugins** (replaced by custom scripts or external tools): catppuccin/tmux, tmux-cpu, tmux-loadavg, vim-tmux-navigator, tmux-sessionx, custom session-manager.sh (replaced by sesh). Removed: claude-tmux-hop (tried, didn't fit workflow), tmux-agent-indicator (focus stealing via select-pane hooks).
 
-**Session persistence**: Resurrect captures pane contents (`@resurrect-capture-pane-contents 'on'`), auto-cleans saves (keeps 50), and restores Claude with `claude -c --dangerously-skip-permissions`. Session-closed hook fires resurrect save to prevent ghost sessions.
+**Session persistence**: Resurrect captures pane contents (`@resurrect-capture-pane-contents 'on'`), auto-cleans saves (keeps 50), and restores Claude via `~claude` (preserves the full saved command — `claude`, `claude agents`, etc.). Permission mode comes from `settings.json` (`defaultMode: auto`), not a CLI flag. Session-closed hook fires resurrect save to prevent ghost sessions.
+
+**Claude session restore** — two companion hooks make reboot restore exact for both foreground and background Claude sessions:
+
+- **Per-pane resume patcher** (`scripts/claude-resurrect-patch.sh`, chained after the post-save guard via `@resurrect-hook-post-save-all`): after each save, rewrites every foreground `claude` pane's saved command to `claude --resume <session-id>`, so each pane resumes its OWN conversation instead of `-c` (which collapses every pane in a directory onto the newest session). Source of truth is `~/.claude/sessions/<pid>.json` (Claude writes one per live interactive session since v2.1.15x, with a real TTY); the script maps PID→TTY→pane coordinates and patches only panes whose command is exactly `claude`. `claude agents` and other subcommands are left untouched (no PID file → not in the map). Idempotent; best-effort (exits 0 on any failure).
+- **Background respawn** (`scripts/claude-respawn-bg.sh`, chained after the pre-restore guard via `@resurrect-hook-pre-restore-all`): fires `claude respawn --all` once per boot to revive background sessions (`claude --bg` / agent-view), whose supervisor processes die on reboot while their state persists in `~/.claude/daemon/roster.json`. Gated on a per-boot marker (`~/.claude/.last-respawn-boot`, keyed on `kern.boottime` / Linux `boot_id`) so it fires only after an actual reboot, never on a manual `tmux kill-server` restart. Foreground sessions are not in the roster, so the two hooks never double-revive the same session.
 
 **Skip-empty-save guard** (`scripts/resurrect-post-save.sh`, wired via `@resurrect-hook-post-save-all`): if a snapshot contains no `pane` lines (continuum saved a session-less server right after a reboot, or a save was interrupted), the file is deleted and `last` is re-pointed to the most recent non-empty snapshot. Without this guard, an empty save can overwrite `last` and silently break continuum's auto-restore — the exact failure mode after a server reboot mid-tmux-session. Runs silently — fires on every save (continuum every 15min + session-closed), so notifications would spam.
 
