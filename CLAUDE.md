@@ -38,9 +38,17 @@ Universal symlinks (all platforms):
 - `~/.gitconfig-local` → work git identity
 
 macOS-only symlinks (via `private-macos`):
-- `~/.ssh/config.d/private-hosts`
-- `~/.hammerspoon/config/private.json`
-- `~/.config/audio-manager/private.json`
+- `~/.ssh/config` + `~/.ssh/config.d/private-hosts`
+- `~/.hammerspoon/config/private.json` + `~/.hammerspoon/config/devices.json`
+- `~/.config/audio-manager/private.json` + `~/.config/audio-manager/config.json`
+
+**Privacy rule:** Identifying or confidential config — work hosts/emails/keys,
+the whole `.ssh/config`, secrets, and device/home identifiers (display UUIDs,
+Bluetooth MACs, Home Assistant URLs/tokens/entity IDs) — belongs in
+dotfiles-private, never the public repo. If any part of a file is identifying,
+the whole file moves (a half-public split is how a work host once leaked into
+the public `.ssh/config`). Wiring and the move pattern live in
+`meta/ingredients/private-macos.yaml`.
 
 ## Architecture & Structure
 
