@@ -144,8 +144,6 @@ function M.init()
                                 config.eve_plug.token = privateConfig.homeassistant.token
                             end
                         end
-                        -- Entity ID is hardcoded since it's not sensitive
-                        config.eve_plug.entity_id = "switch.arbeitszimmer_1og_schreibtisch_2"
                     end
 
                     M.displays.displays[uuid] = config

@@ -60,12 +60,12 @@ Edit `~/.hammerspoon/config/devices.json` to customize behavior:
 {
   "displays": {
     "desk_setup": {
-      "display_uuid": "F7C9EE9C-B4E6-4D31-9218-BE5DB1C1BF99",
+      "display_uuid": "YOUR-EXTERNAL-DISPLAY-UUID",
       "display_name": "External Display",
       "eve_plug": {
         "enabled": true,
         "home_assistant_url": "http://homeassistant.local:8123",
-        "entity_id": "switch.eve_schreibtisch",
+        "entity_id": "switch.my_desk_plug",
         "token": "YOUR_LONG_LIVED_TOKEN"
       },
       "power_on_triggers": ["display_connected", "unlock_with_display"],
@@ -77,7 +77,7 @@ Edit `~/.hammerspoon/config/devices.json` to customize behavior:
       }
     }
   },
-  "macbook_display_uuid": "37D8832A-2D66-02CA-B9F7-8F30A301B230"
+  "macbook_display_uuid": "YOUR-MACBOOK-DISPLAY-UUID"
 }
 ```
 
@@ -114,8 +114,8 @@ Create `~/.hammerspoon/config/private.json` with your real Home Assistant creden
 1. Go to **Settings** → **Devices & Services**
 2. Find your Eve smart plug device
 3. Click on it to see entities
-4. Copy the entity ID (e.g., `switch.arbeitszimmer_1og_schreibtisch_2`)
-5. This goes in the main `devices.json` file (it's not sensitive)
+4. Copy the entity ID (e.g., `switch.your_smart_plug`)
+5. This goes in `devices.json` (git-ignored — it identifies your room/device, so keep it out of public repos)
 
 ### Finding Your Display UUID
 1. Connect your external display
@@ -137,8 +137,8 @@ Create `~/.hammerspoon/config/private.json` with your real Home Assistant creden
 │   ├── catppuccin.lua          # Shared Catppuccin Mocha color palette
 │   └── config.lua              # Configuration loader
 └── config/
-    ├── devices.json            # Public settings (safe for git)
-    └── private.json            # Private credentials (git ignored) 🔒
+    ├── devices.json            # Device/display config — git-ignored, lives in dotfiles-private 🔒
+    └── private.json            # Home Assistant credentials — git-ignored, lives in dotfiles-private 🔒
 ```
 
 ## 🔧 How It Works
