@@ -1,13 +1,14 @@
 -- Audio Device Manager Module
--- Direct macOS output switching (no Wave Link in signal path)
+-- Direct macOS switching, intent-aware (no Wave Link in signal path).
 -- Output = two-state machine: AUTO follows priority; a user pick (Raycast/Stream Deck) is sacred.
--- Input still guarded on Wave:3 when docked (reworked in Phase 2).
--- Only active when Wave:3 is USB-connected (managed by usb-device-manager)
--- Priority list read from ~/.config/audio-manager/config.json (shared with Raycast)
+-- Input = strict guard: the default is the inputGuard device (Wave:3); only a Raycast input pick
+--   (userExplicitInput) overrides it, and any other change is reverted back to Wave:3.
+-- Only active when Wave:3 is USB-connected (managed by usb-device-manager).
+-- Priority list read from ~/.config/audio-manager/config.json (shared with Raycast).
 --
 -- Intent channel: Raycast switches CoreAudio directly, then pushes the choice here via
--- `hs -c "require('modules.audio-manager').noteExplicit('output', '<name>')"`. That lets the
--- daemon tell a deliberate pick apart from a macOS auto-hijack instead of reverting the user.
+-- `hs -c "require('modules.audio-manager').noteExplicit('output'|'input', '<name>')"`. That lets
+-- the daemon tell a deliberate pick apart from a macOS auto-hijack instead of reverting the user.
 
 local M = {}
 
@@ -28,6 +29,7 @@ M.config = {
         { pattern = "Wave:3",      label = "Wave:3 Kopfhörer" },
     },
     debounceDelay = 0.5,
+    inputDebounce = 0.4,
     bluetoothGracePeriod = 3.0,
     edifierReconnectCooldown = 5.0,
     -- How long to ignore the watcher event our own switch triggers. hs.audiodevice exposes no
@@ -90,16 +92,20 @@ M.state = {
     active = false,
     -- Device NAME the user explicitly chose (Raycast/Stream Deck). nil = AUTO state.
     userExplicitOutput = nil,
-    -- Reserved for Phase 2 (input intent).
+    -- Device NAME the user explicitly chose as INPUT (Raycast). nil = strict Wave:3 default.
     userExplicitInput = nil,
-    -- True while the daemon performs its own switch, to ignore the resulting watcher event.
+    -- True while the daemon performs its own output/input switch, to ignore the resulting event.
     switchInProgress = false,
+    inputSwitchInProgress = false,
+    -- Last Wave:3 input gain before muting, so unmute restores it instead of blasting to 100.
+    preMuteInputVolume = nil,
     -- Set on a "dev#" (device add/remove) event, consumed at the next evaluation. Coarse by
     -- design: it says *something* changed in the burst, not which device — overlapping events in
     -- one debounce window collapse into this single flag. A transition-capture event model
     -- (old -> new default per event) would be more robust; tracked for a later phase.
     pendingHardwareChange = false,
     pendingDeviceCheck = nil,
+    pendingInputCheck = nil,
     edifierDroppedAt = nil,
 }
 
@@ -135,14 +141,82 @@ function M.findWaveInput()
     return nil
 end
 
--- Ensure input is always Wave:3 (Phase 2 makes this intent-aware)
-function M.guardInput()
-    local waveInput = M.findWaveInput()
-    if not waveInput then return end
+-- Perform a daemon-initiated input switch, suppressing the watcher event it triggers.
+function M.setInput(device)
+    if not device then return false end
+    M.state.inputSwitchInProgress = true
+    local ok = device:setDefaultInputDevice()
+    hs.timer.doAfter(M.config.selfEventSuppression, function() M.state.inputSwitchInProgress = false end)
+    return ok
+end
+
+-- Enforce the strict input policy: the default input is Wave:3 unless the user explicitly picked
+-- another mic via Raycast (userExplicitInput). Any other change (System Settings, an app, a
+-- Bluetooth connect grabbing the mic) is reverted to Wave:3. A disappeared pick falls back to
+-- Wave:3 but keeps the intent so it restores when the mic returns.
+function M.evaluateInputState()
+    if not M.state.active then return end
+    if M.state.inputSwitchInProgress then return end
+
     local current = hs.audiodevice.defaultInputDevice()
-    if not current or not string.find(current:name(), M.config.wave3Name, 1, true) then
-        waveInput:setDefaultInputDevice()
+    local currentName = current and current:name() or nil
+
+    -- Common case: the explicit pick is already active -> nothing to do, no enumeration needed.
+    if M.state.userExplicitInput and currentName == M.state.userExplicitInput then
+        return
     end
+
+    -- Otherwise locate both the explicit pick and the Wave:3 input in a single enumeration.
+    local pickDevice, waveInput
+    for _, device in ipairs(hs.audiodevice.allInputDevices()) do
+        local name = device:name()
+        if M.state.userExplicitInput and name == M.state.userExplicitInput then
+            pickDevice = device
+        end
+        if not waveInput and string.find(name, M.config.wave3Name, 1, true) then
+            waveInput = device
+        end
+    end
+
+    -- Explicit pick is connected but input drifted away from it (app/macOS hijack) -> restore it.
+    if pickDevice then
+        M.setInput(pickDevice)
+        return
+    end
+
+    -- No pick, or the pick disappeared -> force Wave:3 if present and not already active.
+    if waveInput and currentName ~= waveInput:name() then
+        M.setInput(waveInput)
+    end
+end
+
+-- Debounced input evaluation (coalesces rapid changes; avoids a tug-of-war with apps).
+function M.scheduleInputCheck()
+    if M.state.pendingInputCheck then
+        M.state.pendingInputCheck:stop()
+    end
+    M.state.pendingInputCheck = hs.timer.doAfter(M.config.inputDebounce, function()
+        M.state.pendingInputCheck = nil
+        M.evaluateInputState()
+    end)
+end
+
+-- Toggle mute on the CURRENT default input device by its per-device volume — so it mutes the mic
+-- actually capturing (Wave:3 under the strict guard, or an explicit Raycast pick), never a device
+-- the user isn't on. Muted state is inferred from the gain (0 = muted); the pre-mute gain is
+-- remembered so unmute restores it instead of blasting to full. ("MUTED" | "ON" | "NODEV" | "NOVOL").
+function M.toggleInputMute()
+    local dev = hs.audiodevice.defaultInputDevice()
+    if not dev then return "NODEV" end
+    local volume = dev:inputVolume()
+    if volume == nil then return "NOVOL" end
+    if volume > 0 then
+        M.state.preMuteInputVolume = volume
+        dev:setInputVolume(0)
+        return "MUTED"
+    end
+    dev:setInputVolume(M.state.preMuteInputVolume or 100)
+    return "ON"
 end
 
 -- Show audio switch feedback on screen
@@ -206,6 +280,15 @@ function M.noteExplicit(kind, name)
     end
 end
 
+-- Clear a recorded explicit pick (e.g. when the Raycast switch it was recorded for failed).
+function M.clearExplicit(kind)
+    if kind == "output" then
+        M.state.userExplicitOutput = nil
+    elseif kind == "input" then
+        M.state.userExplicitInput = nil
+    end
+end
+
 -- Switch to a specific device by pattern (Stream Deck / hotkeys / .app bundles).
 -- This is an explicit user action, so it sets userExplicitOutput.
 function M.switchToDevice(pattern)
@@ -214,7 +297,6 @@ function M.switchToDevice(pattern)
     if device then
         M.noteExplicit("output", device:name())
         local ok = M.setOutput(device, device:name())
-        M.guardInput()
         return ok
     end
     M.showFeedback("Device not found: " .. pattern)
@@ -256,7 +338,6 @@ function M.evaluateOutputState()
         end)
         return
     end
-    M.guardInput()
 
     local currentOutput = hs.audiodevice.defaultOutputDevice()
     if not currentOutput then
@@ -327,11 +408,13 @@ function M.handleAudioDeviceChange(event)
         M.state.pendingHardwareChange = true
     end
 
-    -- Suppress only the default-change self-event our own switch triggers — never a real dev#.
-    if M.state.switchInProgress and event ~= "dev#" then return end
+    -- Input handling is independent of output-switch suppression; skip only our own input switch.
+    if not M.state.inputSwitchInProgress then
+        M.scheduleInputCheck()
+    end
 
-    -- Always guard input immediately (no debounce needed)
-    M.guardInput()
+    -- Suppress only the default-change self-event our own OUTPUT switch triggers — never a dev#.
+    if M.state.switchInProgress and event ~= "dev#" then return end
 
     -- Debounce the output evaluation
     if M.state.pendingDeviceCheck then
@@ -358,11 +441,9 @@ function M.init()
     if M.state.active then return end
     M.state.active = true
 
-    -- Load shared config (Raycast audio-manager config.json)
-    M.loadSharedConfig()
-
-    -- Merge Hammerspoon-local config overrides (if any).
-    -- NOTE: this currently clobbers inputGuard from the shared config — fixed in Phase 3.
+    -- Config layering: literal defaults (above) -> Hammerspoon-local overrides -> shared JSON.
+    -- The shared config is loaded LAST so it owns the keys it defines (inputGuard, outputPriority)
+    -- and a local override can no longer silently clobber the guarded-input device.
     local configModule = package.loaded["modules.config"]
     if configModule and configModule.audio then
         for key, value in pairs(configModule.audio) do
@@ -370,13 +451,28 @@ function M.init()
         end
     end
 
-    -- Fresh dock = AUTO state, no explicit pick yet.
+    -- Load shared config (Raycast audio-manager config.json) last so inputGuard wins.
+    M.loadSharedConfig()
+
+    -- Fresh dock = AUTO output, strict Wave:3 input, no explicit picks yet.
     M.state.userExplicitOutput = nil
+    M.state.userExplicitInput = nil
     M.state.pendingHardwareChange = false
     M.state.switchInProgress = false
+    M.state.inputSwitchInProgress = false
 
-    -- Guard input immediately
-    M.guardInput()
+    -- Settle input onto Wave:3 immediately.
+    M.evaluateInputState()
+
+    -- Capture the current input gain as the mute-restore baseline, so the first unmute after a
+    -- dock/reload restores a real level instead of blasting to full.
+    local inputDevice = hs.audiodevice.defaultInputDevice()
+    if inputDevice then
+        local gain = inputDevice:inputVolume()
+        if gain and gain > 0 then
+            M.state.preMuteInputVolume = gain
+        end
+    end
 
     -- On dock, settle output onto the best available device (AUTO state).
     local best, label = M.selectHighestPriorityOutput()
@@ -403,9 +499,14 @@ function M.stop()
         M.state.pendingDeviceCheck:stop()
         M.state.pendingDeviceCheck = nil
     end
+    if M.state.pendingInputCheck then
+        M.state.pendingInputCheck:stop()
+        M.state.pendingInputCheck = nil
+    end
 
     M.state.pendingHardwareChange = false
     M.state.switchInProgress = false
+    M.state.inputSwitchInProgress = false
 end
 
 return M
