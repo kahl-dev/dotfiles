@@ -9,7 +9,8 @@ This document tracks the status of all event watchers after upgrading to macOS 2
 | Caffeinate (Sleep/Wake) | ✅ **FIXED** | Added `systemDidWake` and `systemWillSleep` handlers |
 | Screen (Display) | ✅ Working | No changes needed |
 | USB Device | ✅ Working | No changes needed |
-| Audio Device | ⚠️ **NEEDS TESTING** | Uses legacy FourCC codes that may have changed |
+| Audio Device | ✅ **Verified** | FourCC codes (`dIn `/`dOut`/`dev#`) confirmed firing; daemon reworked intent-aware (output two-state, strict input guard, mute) |
+| Config File | ✅ Working | `hs.pathwatcher` on the shared config dir → live reload of device priority / inputGuard |
 | Camera | ✅ Working | Using modern `hs.camera` API |
 | Application | ✅ Working | No changes needed |
 
@@ -36,20 +37,20 @@ elseif event == hs.caffeinate.watcher.systemWillSleep then
     M.handleMacBookLock()
 ```
 
-### ⚠️ Audio Device Watcher (NEEDS VERIFICATION)
-**File:** `modules/audio-manager.lua:68-79`
+### ✅ Audio Device Watcher (VERIFIED)
+**File:** `modules/audio-manager.lua`
 
-**Potential Issue:** Uses legacy CoreAudio FourCC codes:
+**Status:** Verified working. The legacy CoreAudio FourCC codes still fire:
 - `"dIn "` - Default input device changed
-- `"dev#"` - Number of devices changed
+- `"dOut"` - Default output device changed
+- `"dev#"` - Device list changed
 
-These are 4-character codes from the old CoreAudio API. Apple may have changed or deprecated these in macOS 26.
+The module was reworked into an intent-aware daemon (output two-state machine, strict Wave:3 input
+guard, per-device mute with gain memory) plus a shared-config `hs.pathwatcher` that live-reloads
+device priority / inputGuard from `~/.config/audio-manager/config.json`. All paths were live-verified.
 
-**Test Script Available:** Run `test-audio-events.lua` to verify which event codes actually fire.
-
-**Recommendation:** If audio device switching stops working, we may need to:
-1. Update to new event codes (if changed)
-2. Or switch to polling-based audio device monitoring
+**If audio switching ever regresses:** re-check the FourCC codes via `test-audio-events.lua`, or fall
+back to polling-based device monitoring.
 
 ### ✅ Other Watchers
 All other watchers use modern, stable APIs and should work fine:

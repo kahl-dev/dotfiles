@@ -30,6 +30,9 @@ M.config = {
     },
     debounceDelay = 0.5,
     inputDebounce = 0.4,
+    -- Coalesces a burst of config-file writes (editor temp-file+rename, Raycast saves) into one
+    -- reload. Separate from the audio-event debounce — unrelated timescales.
+    configReloadDebounce = 0.5,
     bluetoothGracePeriod = 3.0,
     edifierReconnectCooldown = 5.0,
     -- How long to ignore the watcher event our own switch triggers. hs.audiodevice exposes no
@@ -53,31 +56,26 @@ function M.loadSharedConfig()
         return false
     end
 
-    -- Build priority list from config devices (sorted by priority)
-    local devices = {}
+    -- Build the auto-selection priority list from devices the daemon MAY auto-pick (autoEligible,
+    -- default true) — the single source of eligibility truth, decoupled from `hidden` (UI-only).
+    -- A device can be manually selectable in Raycast yet excluded from auto/fallback: the Wave:3
+    -- mic's headphone output (autoEligible:false) must never receive system audio automatically.
+    -- MacBook stays in via autoEligible:true and sorts last (lowest priority) as the natural
+    -- fallback; selectHighestPriorityOutput keeps a hardcoded final safety on top of that.
+    local priorityList = {}
     for _, device in ipairs(config.devices) do
-        if not device.hidden then
-            table.insert(devices, {
+        if device.autoEligible ~= false then
+            table.insert(priorityList, {
                 pattern = device.name,
                 label = device.label or device.name,
                 priority = device.priority or 999,
             })
         end
     end
-
-    table.sort(devices, function(a, b) return a.priority < b.priority end)
-
-    local priorityList = {}
-    for _, device in ipairs(devices) do
-        -- Skip MacBook (implicit last fallback)
-        if not string.find(device.pattern, "MacBook", 1, true) then
-            table.insert(priorityList, { pattern = device.pattern, label = device.label })
-        end
-    end
-
-    if #priorityList > 0 then
-        M.config.outputPriority = priorityList
-    end
+    table.sort(priorityList, function(a, b) return a.priority < b.priority end)
+    -- Assign unconditionally (config parsed OK above), so an all-ineligible config yields an empty
+    -- list instead of silently retaining a stale one on hot-reload.
+    M.config.outputPriority = priorityList
 
     -- Read inputGuard
     if config.inputGuard then
@@ -85,6 +83,28 @@ function M.loadSharedConfig()
     end
 
     return true
+end
+
+-- Resolve the (possibly symlinked) shared-config path to the real directory containing it, so the
+-- file watcher sees edits made through the symlink (Raycast writes the real file in dotfiles-private,
+-- and FSEvents fires on the real path). hs.fs.pathToAbsolute resolves symlinks in-process — no
+-- subprocess, no shell-quoting, consistent with the module's other hs.* I/O.
+function M.resolveConfigDir()
+    -- nil when the path can't be resolved — the caller then skips the watcher rather than watching
+    -- the symlink's own directory, where FSEvents would never fire for writes to the real file.
+    local resolved = hs.fs.pathToAbsolute(SHARED_CONFIG_PATH)
+    if not resolved then return nil end
+    return resolved:match("^(.*/)")
+end
+
+-- React to a shared-config edit: reload the priority list / inputGuard in place. Debounced, and
+-- deliberately does NOT force an immediate switch — new priorities apply on the next device event.
+function M.handleConfigChange()
+    if M.state.pendingConfigReload then M.state.pendingConfigReload:stop() end
+    M.state.pendingConfigReload = hs.timer.doAfter(M.config.configReloadDebounce, function()
+        M.state.pendingConfigReload = nil
+        M.loadSharedConfig()
+    end)
 end
 
 -- State
@@ -106,6 +126,9 @@ M.state = {
     pendingHardwareChange = false,
     pendingDeviceCheck = nil,
     pendingInputCheck = nil,
+    -- Watches the shared config dir for live edits; pendingConfigReload debounces the reload.
+    configWatcher = nil,
+    pendingConfigReload = nil,
     edifierDroppedAt = nil,
 }
 
@@ -486,6 +509,20 @@ function M.init()
         M.handleAudioDeviceChange(event)
     end)
     hs.audiodevice.watcher.start()
+
+    -- Watch the shared config for live edits so Raycast priority/inputGuard changes take effect
+    -- without a redock. Watch the resolved real directory (writes via the symlink land there).
+    local configDir = M.resolveConfigDir()
+    if configDir then
+        -- React to any change in the config directory (debounced). A per-file path filter was
+        -- considered but FSEvents can coalesce a burst into a directory-granularity event with no
+        -- per-file path, which a filter would silently drop (stale config); a redundant reload on a
+        -- sibling-file write (e.g. private.json) is cheap by comparison.
+        M.state.configWatcher = hs.pathwatcher.new(configDir, function()
+            M.handleConfigChange()
+        end)
+        M.state.configWatcher:start()
+    end
 end
 
 -- Lifecycle: called by usb-device-manager when Wave:3 disconnects
@@ -502,6 +539,14 @@ function M.stop()
     if M.state.pendingInputCheck then
         M.state.pendingInputCheck:stop()
         M.state.pendingInputCheck = nil
+    end
+    if M.state.pendingConfigReload then
+        M.state.pendingConfigReload:stop()
+        M.state.pendingConfigReload = nil
+    end
+    if M.state.configWatcher then
+        M.state.configWatcher:stop()
+        M.state.configWatcher = nil
     end
 
     M.state.pendingHardwareChange = false
