@@ -99,6 +99,7 @@ end
 
 -- React to a shared-config edit: reload the priority list / inputGuard in place. Debounced, and
 -- deliberately does NOT force an immediate switch — new priorities apply on the next device event.
+-- Intentionally NOT gated by `paused`: a config reload is data-only (no switch), so it stays live.
 function M.handleConfigChange()
     if M.state.pendingConfigReload then M.state.pendingConfigReload:stop() end
     M.state.pendingConfigReload = hs.timer.doAfter(M.config.configReloadDebounce, function()
@@ -110,6 +111,9 @@ end
 -- State
 M.state = {
     active = false,
+    -- All automatic arbitration paused (Raycast toggle). Module-scope and NOT reset by init(), so
+    -- it survives undock/redock; clears only on a Hammerspoon reload or Mac restart.
+    paused = false,
     -- Device NAME the user explicitly chose (Raycast/Stream Deck). nil = AUTO state.
     userExplicitOutput = nil,
     -- Device NAME the user explicitly chose as INPUT (Raycast). nil = strict Wave:3 default.
@@ -179,6 +183,7 @@ end
 -- Wave:3 but keeps the intent so it restores when the mic returns.
 function M.evaluateInputState()
     if not M.state.active then return end
+    if M.state.paused then return end
     if M.state.inputSwitchInProgress then return end
 
     local current = hs.audiodevice.defaultInputDevice()
@@ -240,6 +245,44 @@ function M.toggleInputMute()
     end
     dev:setInputVolume(M.state.preMuteInputVolume or 100)
     return "ON"
+end
+
+-- Pause / resume all automatic audio arbitration (Raycast "Toggle Audio Automation"). While paused
+-- the daemon makes no output/input switches of its own, but manual switches (Raycast, Control
+-- Center, System Settings) still apply and stay. Paused state survives undock/redock (see M.state).
+function M.pause()
+    M.state.paused = true
+end
+
+function M.resume()
+    M.state.paused = false
+    -- Adopt whatever the user landed on during the pause as the new baseline, so resuming neither
+    -- yanks the output nor reverts the input on the next device event.
+    local currentOutput = hs.audiodevice.defaultOutputDevice()
+    if currentOutput then M.state.userExplicitOutput = currentOutput:name() end
+    -- Input is a strict guard (nil = enforced Wave:3), not a two-state machine. Only record a pick
+    -- if Wave:3 is PRESENT and the user landed on a different mic; on Wave:3 — or while Wave:3 is
+    -- absent (undocked) — keep the guard's strict nil state rather than pinning a stale device.
+    local currentInput = hs.audiodevice.defaultInputDevice()
+    local waveInput = M.findWaveInput()
+    if waveInput and currentInput and currentInput:name() ~= waveInput:name() then
+        M.state.userExplicitInput = currentInput:name()
+    else
+        M.state.userExplicitInput = nil
+    end
+end
+
+function M.togglePause()
+    if M.state.paused then
+        M.resume()
+        return "ACTIVE"
+    end
+    M.pause()
+    return "PAUSED"
+end
+
+function M.isPaused()
+    return M.state.paused
 end
 
 -- Show audio switch feedback on screen
@@ -351,6 +394,7 @@ end
 -- Evaluate current output state and correct it according to the two-state model.
 function M.evaluateOutputState()
     if not M.state.active then return end
+    if M.state.paused then return end
     if M.state.switchInProgress then
         -- A switch is mid-flight; re-check after suppression clears instead of dropping the work
         -- (otherwise a hardware change that lands during the window is silently lost).
@@ -423,6 +467,7 @@ end
 -- Debounced audio device change handler
 function M.handleAudioDeviceChange(event)
     if not M.state.active then return end
+    if M.state.paused then return end
 
     -- A device add/remove is never our own switch's self-event (our switch fires a default-change
     -- "dOut", not "dev#"). Always record it so a hijack arriving inside the self-suppression
@@ -477,31 +522,35 @@ function M.init()
     -- Load shared config (Raycast audio-manager config.json) last so inputGuard wins.
     M.loadSharedConfig()
 
-    -- Fresh dock = AUTO output, strict Wave:3 input, no explicit picks yet.
-    M.state.userExplicitOutput = nil
-    M.state.userExplicitInput = nil
+    -- Transient flags always reset on (re)init.
     M.state.pendingHardwareChange = false
     M.state.switchInProgress = false
     M.state.inputSwitchInProgress = false
 
-    -- Settle input onto Wave:3 immediately.
-    M.evaluateInputState()
+    -- Arbitration only when NOT paused: a redock must not switch anything if the user paused the
+    -- daemon (paused survives redock by design). While paused we leave the current output/input and
+    -- the existing picks untouched; resume() re-establishes the baseline from whatever is current.
+    if not M.state.paused then
+        -- Fresh dock = AUTO output, strict Wave:3 input, no explicit picks yet.
+        M.state.userExplicitOutput = nil
+        M.state.userExplicitInput = nil
+        -- Settle input onto Wave:3 immediately.
+        M.evaluateInputState()
+        -- Settle output onto the best available device (AUTO state).
+        local best, label = M.selectHighestPriorityOutput()
+        local currentOutput = hs.audiodevice.defaultOutputDevice()
+        if best and (not currentOutput or best:name() ~= currentOutput:name()) then
+            M.setOutput(best, label)
+        end
+    end
 
-    -- Capture the current input gain as the mute-restore baseline, so the first unmute after a
-    -- dock/reload restores a real level instead of blasting to full.
+    -- Capture the current input gain as the mute-restore baseline (data only; safe while paused).
     local inputDevice = hs.audiodevice.defaultInputDevice()
     if inputDevice then
         local gain = inputDevice:inputVolume()
         if gain and gain > 0 then
             M.state.preMuteInputVolume = gain
         end
-    end
-
-    -- On dock, settle output onto the best available device (AUTO state).
-    local best, label = M.selectHighestPriorityOutput()
-    local currentOutput = hs.audiodevice.defaultOutputDevice()
-    if best and (not currentOutput or best:name() ~= currentOutput:name()) then
-        M.setOutput(best, label)
     end
 
     -- Start audio device watcher
