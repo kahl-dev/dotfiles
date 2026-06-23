@@ -31,10 +31,10 @@ M.defaults = {
             debounce_delay = 2.0
         }
     },
-    audio = {
-        wave3Name = "Wave:3",
-        sonyPattern = "WH%-1000XM6",
-    }
+    -- Device identity is single-sourced: audio-manager.lua literal defaults (bootstrap) +
+    -- ~/.config/audio-manager/config.json (runtime). No device names are duplicated here, so an
+    -- escaped vs plain mismatch can't silently override and break the daemon's plain matching.
+    audio = {}
 }
 
 -- Load configuration from file

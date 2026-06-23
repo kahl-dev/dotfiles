@@ -19,11 +19,11 @@ M.config = {
     wave3Name = "Wave:3",
     edifierName = "EDIFIER M60",
     airpodsPattern = "AirPods",
-    sonyPattern = "WH%-1000XM6",
+    sonyPattern = "WH-1000XM6",
     macbookPattern = "MacBook",
-    builtInPattern = "Built%-in",
+    builtInPattern = "Built-in",
     outputPriority = {
-        { pattern = "WH%-1000XM6", label = "Sony XM6" },
+        { pattern = "WH-1000XM6", label = "Sony XM6" },
         { pattern = "AirPods",     label = "AirPods" },
         { pattern = "EDIFIER M60", label = "Edifier M60" },
         { pattern = "Wave:3",      label = "Wave:3 Kopfhörer" },
@@ -33,8 +33,12 @@ M.config = {
     -- Coalesces a burst of config-file writes (editor temp-file+rename, Raycast saves) into one
     -- reload. Separate from the audio-event debounce — unrelated timescales.
     configReloadDebounce = 0.5,
+    -- Bluetooth output names, rebuilt from the shared config's `bluetooth` field on load
+    -- (loadSharedConfig). This literal is the bootstrap fallback for a missing/unparseable
+    -- config.json, mirroring the BT devices in the default outputPriority above so the 3 s reconnect
+    -- grace still applies before the shared config loads. config.json is the source once it loads.
+    bluetoothNames = { "WH-1000XM6", "AirPods" },
     bluetoothGracePeriod = 3.0,
-    edifierReconnectCooldown = 5.0,
     -- How long to ignore the watcher event our own switch triggers. hs.audiodevice exposes no
     -- "this change was programmatic" signal, so we suppress by time window — must outlast the
     -- self-event latency without swallowing a real user change mid-window.
@@ -76,6 +80,17 @@ function M.loadSharedConfig()
     -- Assign unconditionally (config parsed OK above), so an all-ineligible config yields an empty
     -- list instead of silently retaining a stale one on hot-reload.
     M.config.outputPriority = priorityList
+
+    -- Build the Bluetooth-device set from the `bluetooth` field: a device with a bluetooth entry is
+    -- wireless and gets the longer reconnect grace (profile-switch settle). Assigned unconditionally
+    -- so removing the last BT device clears the set on hot-reload instead of retaining a stale one.
+    local bluetoothNames = {}
+    for _, device in ipairs(config.devices) do
+        if device.bluetooth then
+            table.insert(bluetoothNames, device.name)
+        end
+    end
+    M.config.bluetoothNames = bluetoothNames
 
     -- Read inputGuard
     if config.inputGuard then
@@ -133,7 +148,6 @@ M.state = {
     -- Watches the shared config dir for live edits; pendingConfigReload debounces the reload.
     configWatcher = nil,
     pendingConfigReload = nil,
-    edifierDroppedAt = nil,
 }
 
 -- Find an output device by name (plain substring match — used for config patterns)
@@ -327,10 +341,16 @@ function M.selectHighestPriorityOutput()
     return findIn(M.config.macbookPattern) or findIn(M.config.builtInPattern), "MacBook Speakers"
 end
 
--- Check if a device name matches a Bluetooth pattern (Phase 5 makes this config-driven)
+-- True if the device name matches a configured Bluetooth output (M.config.bluetoothNames, built
+-- from the shared config's `bluetooth` field). Plain substring match, consistent with the rest of
+-- the module's name matching.
 function M.isBluetoothDevice(deviceName)
-    return string.find(deviceName, M.config.sonyPattern)
-        or string.find(deviceName, M.config.airpodsPattern)
+    for _, name in ipairs(M.config.bluetoothNames) do
+        if string.find(deviceName, name, 1, true) then
+            return true
+        end
+    end
+    return false
 end
 
 -- Record an explicit user choice pushed from Raycast (via hs -c).
@@ -565,8 +585,8 @@ function M.init()
     if configDir then
         -- React to any change in the config directory (debounced). A per-file path filter was
         -- considered but FSEvents can coalesce a burst into a directory-granularity event with no
-        -- per-file path, which a filter would silently drop (stale config); a redundant reload on a
-        -- sibling-file write (e.g. private.json) is cheap by comparison.
+        -- per-file path, which a filter would silently drop (stale config); a redundant reload on an
+        -- unrelated write (e.g. an editor's temp file) is cheap by comparison.
         M.state.configWatcher = hs.pathwatcher.new(configDir, function()
             M.handleConfigChange()
         end)

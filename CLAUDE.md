@@ -40,7 +40,7 @@ Universal symlinks (all platforms):
 macOS-only symlinks (via `private-macos`):
 - `~/.ssh/config` + `~/.ssh/config.d/private-hosts`
 - `~/.hammerspoon/config/private.json` + `~/.hammerspoon/config/devices.json`
-- `~/.config/audio-manager/private.json` + `~/.config/audio-manager/config.json`
+- `~/.config/audio-manager/config.json`
 
 **Privacy rule:** Identifying or confidential config — work hosts/emails/keys,
 the whole `.ssh/config`, secrets, and device/home identifiers (display UUIDs,

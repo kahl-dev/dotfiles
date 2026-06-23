@@ -44,8 +44,6 @@ logs
 # Hammerspoon device config (display UUIDs, Home Assistant) — lives in dotfiles-private
 .hammerspoon/config/devices.json
 
-# Audio manager private configuration (BT MAC addresses)
-.config/audio-manager/private.json
 # Audio manager device config (BT MAC addresses) — lives in dotfiles-private
 .config/audio-manager/config.json
 
