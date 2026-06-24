@@ -4,9 +4,7 @@
 # Do not vendor the full default preset: it goes stale and breaks on schema changes.
 
 [mgr]
-show_hidden  = true
-mouse_events = [ "click", "scroll" ]
-title_format = "Yazi: {cwd}"
+show_hidden = true
 
 # git.yazi — Git status as linemode (theme + require("git"):setup in init.lua)
 [[plugin.prepend_fetchers]]
