@@ -30,7 +30,6 @@ local config = require("modules.config")
 local audioManager = require("modules.audio-manager")
 local usbManager = require("modules.usb-device-manager")
 local displayManager = require("modules.display-manager")
-local ipadManager = require("modules.ipad-manager")
 local presenceKeeper = require("modules.presence-keeper")
 require("modules.unified-overlay") -- loaded for hs CLI access from AeroSpace (alt+?)
 
@@ -42,7 +41,6 @@ config.init()
 usbManager.init()
 displayManager.init()
 presenceKeeper.init()
--- ipadManager.init() -- Disabled: hotkeys managed by unified overlay
 
 -- TEMPORARY: Comprehensive watcher tests
 -- Uncomment the line below to test all watchers, then press Ctrl+Cmd+Shift+Alt+T to stop

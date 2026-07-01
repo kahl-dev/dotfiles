@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Stream Deck: Connect iPad as Sidecar Extended Display
-# Uses centralized ipad-control script
-
-# Call the centralized script
-exec "$HOME/.dotfiles/bin/ipad-control" sidecar

@@ -133,7 +133,6 @@ Create `~/.hammerspoon/config/private.json` with your real Home Assistant creden
 │   ├── usb-device-manager.lua  # USB detection & app management
 │   ├── audio-manager.lua       # Audio device switching
 │   ├── display-manager.lua     # Display & power management
-│   ├── ipad-manager.lua        # iPad Sidecar & Universal Control
 │   ├── catppuccin.lua          # Shared Catppuccin Mocha color palette
 │   └── config.lua              # Configuration loader
 └── config/

@@ -212,18 +212,6 @@ local tmuxRightColumn = {
 
 local hsGroups = {
   {
-    title = "iPad Controls",
-    color = colors.blue,
-    commands = {
-      { key = "S", desc = "Sidecar Extended Display", action = function()
-        require("modules.ipad-manager").connectSidecarExtended()
-      end },
-      { key = "U", desc = "Universal Control", action = function()
-        require("modules.ipad-manager").connectUniversalControl()
-      end },
-    }
-  },
-  {
     title = "Audio/Call",
     color = colors.peach,
     commands = {
@@ -249,15 +237,13 @@ local hsGroups = {
       { key = "R", desc = "Reload Hammerspoon", action = function()
         hs.reload()
       end },
-      { key = "D", desc = "Toggle all debug modes", action = function()
+      { key = "D", desc = "Toggle display debug mode", action = function()
         local displayManager = require("modules.display-manager")
-        local ipadManager = require("modules.ipad-manager")
 
         displayManager.toggleDebugMode()
-        ipadManager.state.debugMode = not ipadManager.state.debugMode
 
         local debugState = displayManager.state.debugMode and "ON" or "OFF"
-        hs.alert.show("Debug modes: " .. debugState, 2)
+        hs.alert.show("Debug mode: " .. debugState, 2)
 
         print("=== Debug Mode Toggled: " .. debugState .. " ===")
         print("Display Manager Status:")
