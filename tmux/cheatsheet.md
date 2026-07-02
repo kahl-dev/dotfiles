@@ -38,17 +38,17 @@ Press `<prefix> v` to enter panes mode, then:
 | `\|` | Split horizontal | visual |
 | `-` | Split vertical | visual |
 | `_` | Split full-width vertical | visual (wide) |
-| `j` | Join pane (tree picker) | **j**oin |
+| `e` | Join pane (tree picker) | join (mirrors Prefix E) |
 | `b` | Break pane out to new window | **b**reak |
 | `g` | Grab pane horizontal (fzf) | **g**rab |
 | `G` | Grab pane vertical (fzf) | **G**rab |
 | `w` | Grab window from other session (tree) | **w**indow |
 
-### Swap / Move
+### Move / Swap
 | Key | Description | Mnemonic |
 |-----|-------------|----------|
-| `h` | Swap with previous pane | vim left |
-| `l` | Swap with next pane | vim right |
+| `h` `j` `k` `l` | Move pane ←/↓/↑/→ (spatial, repeatable) | vim dirs |
+| `{` `}` | Swap prev / next (index order) | tmux-native |
 | `s` | Swap by number (shows pane overlay) | **s**wap |
 | `r` | Rotate all panes | **r**otate |
 

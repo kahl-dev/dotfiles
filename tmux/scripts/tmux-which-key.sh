@@ -95,15 +95,21 @@ show_panes() {
         "  [_] Full-width vertical"      "_" "split-window -fv" \
         "" \
         "Structure" "" "" \
-        "  [j] Join pane (tree)"         "j" "choose-tree -Z 'join-pane -h -s \"%%\"'" \
+        "  [e] Join pane (tree)"         "e" "choose-tree -Z 'join-pane -h -s \"%%\"'" \
         "  [b] Break pane out"           "b" "break-pane -d" \
         "  [g] Grab pane ─ (fzf)"       "g" "display-popup -E -w 80% -h 60% 'bash ~/.dotfiles/tmux/scripts/tmux-grab-pane.sh h'" \
         "  [G] Grab pane │ (fzf)"       "G" "display-popup -E -w 80% -h 60% 'bash ~/.dotfiles/tmux/scripts/tmux-grab-pane.sh v'" \
         "  [w] Grab window (tree)"      "w" "choose-tree -Z 'move-window -d -s \"%%\"'" \
         "" \
+        "Move (directional)" "" "" \
+        "  [h] Move left  ←"  "h" "swap-pane -d -t '{left-of}'" \
+        "  [j] Move down  ↓"  "j" "swap-pane -d -t '{down-of}'" \
+        "  [k] Move up  ↑"    "k" "swap-pane -d -t '{up-of}'" \
+        "  [l] Move right  →" "l" "swap-pane -d -t '{right-of}'" \
+        "" \
         "Swap" "" "" \
-        "  [h] Swap prev"                "h" "swap-pane -U" \
-        "  [l] Swap next"                "l" "swap-pane -D" \
+        "  [{] Swap prev"                "{" "swap-pane -U" \
+        "  [}] Swap next"                "}" "swap-pane -D" \
         "  [s] Swap by number"           "s" "display-panes 'swap-pane -t \"%%\"'" \
         "" \
         "Manage" "" "" \
