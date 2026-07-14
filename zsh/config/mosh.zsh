@@ -144,9 +144,15 @@ sm() {
         if ! _sm_tunnel_alive "$pid_file"; then
             rm -f "$pid_file"
 
+            # ExitOnForwardFailure: without it, ssh silently continues when the
+            # remote port is still held by a stale sshd (e.g. after a reboot
+            # that never closed the old TCP connection) — the tunnel then runs
+            # uselessly forever. With it, ssh exits and autossh retries until
+            # the port frees up.
             AUTOSSH_PIDFILE="$pid_file" autossh -M 0 -f -T \
                 -o "ServerAliveInterval=10" \
                 -o "ServerAliveCountMax=2" \
+                -o "ExitOnForwardFailure=yes" \
                 "$host_argument" "tail -f /dev/null"
 
             # autossh -f backgrounds immediately (GATETIME=0), always returns 0.

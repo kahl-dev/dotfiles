@@ -113,6 +113,13 @@ echo "test" | rclip
   without a loaded vault (vault picker after reboot/background launch). Since
   obsidian plugin v1.3.0 the bridge and `robsidian` force-load the registered
   vault automatically; if it still fails, open the vault in Obsidian manually.
+- Tunnel process alive but remote port dead (`curl localhost:$REMOTE_BRIDGE_PORT`
+  fails on the server while `sm-status` looks fine): the RemoteForward failed at
+  connect time — typically a stale sshd from before a reboot still held the
+  port. `sm` now passes `ExitOnForwardFailure=yes` so autossh retries until the
+  port frees; force a restart with `sm-kill <host>` and a new `sm <host>`.
+  When diagnosing from the Mac, always use `ssh -o ClearAllForwardings=yes` —
+  a plain `ssh` brings its own RemoteForward and masks the dead tunnel.
 
 ### Configuration
 
