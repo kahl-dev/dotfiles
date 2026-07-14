@@ -6,11 +6,12 @@ const path = require('path');
 const OBSIDIAN_BINARY = findObsidianBinary();
 
 function findObsidianBinary() {
-  // Try common locations
+  // obsidian-cli is the dedicated CLI binary since Obsidian 1.12.7 — the GUI
+  // binary launches a second app instance when Obsidian is not running
   const candidates = [
-    '/Applications/Obsidian.app/Contents/MacOS/obsidian',
-    '/usr/local/bin/obsidian',
+    '/Applications/Obsidian.app/Contents/MacOS/obsidian-cli',
     '/opt/homebrew/bin/obsidian',
+    '/usr/local/bin/obsidian',
   ];
 
   for (const candidate of candidates) {
@@ -100,22 +101,68 @@ function parseArguments(commandString) {
 }
 
 /**
- * Get the vault path from the obsidian CLI.
+ * Query the vault path from the running Obsidian instance.
+ * Returns null when no vault is loaded — the CLI then answers
+ * "Vault not found." on stdout with exit code 0.
  */
-let cachedVaultPath = null;
-function getVaultPath() {
-  if (cachedVaultPath) return cachedVaultPath;
+function queryLoadedVaultPath() {
   try {
     const output = execFileSync(OBSIDIAN_BINARY, ['vault'], { encoding: 'utf-8', timeout: 5000 });
-    const pathMatch = output.match(/path\t(.+)/);
-    if (pathMatch) {
-      cachedVaultPath = pathMatch[1].trim();
-      return cachedVaultPath;
-    }
+    const pathMatch = output.match(/^path\t(.+)$/m);
+    return pathMatch ? pathMatch[1].trim() : null;
   } catch {
-    // fallback
+    return null;
   }
-  return null;
+}
+
+/**
+ * Read the vault registry Obsidian maintains on disk.
+ */
+function getRegisteredVault() {
+  const registryPath = path.join(os.homedir(), 'Library', 'Application Support', 'obsidian', 'obsidian.json');
+  let registry;
+  try {
+    registry = JSON.parse(fs.readFileSync(registryPath, 'utf-8'));
+  } catch (error) {
+    throw new Error(`Cannot read Obsidian vault registry ${registryPath}: ${error.message}`);
+  }
+
+  const vaults = Object.values(registry.vaults || {});
+  if (vaults.length === 0) {
+    throw new Error(`No vaults registered in ${registryPath}`);
+  }
+
+  const vault = vaults.find((entry) => entry.open) || (vaults.length === 1 ? vaults[0] : null);
+  if (!vault) {
+    throw new Error(`Multiple vaults registered in ${registryPath} and none marked open — open the desired vault in Obsidian once`);
+  }
+  return { name: path.basename(vault.path), path: vault.path };
+}
+
+/**
+ * Ensure the running Obsidian instance has a vault loaded.
+ * After a background launch (reboot, `open -g`) Obsidian can sit on the
+ * vault picker; every unscoped CLI command then fails with "Vault not
+ * found." — targeting the vault with an explicit vault= selector loads it
+ * without user interaction.
+ */
+function ensureVaultLoaded() {
+  const loadedPath = queryLoadedVaultPath();
+  if (loadedPath) return loadedPath;
+
+  const vault = getRegisteredVault();
+  console.log(`Obsidian has no vault loaded — force-loading "${vault.name}" via CLI`);
+  try {
+    execFileSync(OBSIDIAN_BINARY, [`vault=${vault.name}`, 'version'], { stdio: 'ignore', timeout: 15000 });
+  } catch {
+    // the re-probe below delivers the actual verdict
+  }
+
+  const reloadedPath = queryLoadedVaultPath();
+  if (!reloadedPath) {
+    throw new Error(`Could not load vault "${vault.name}" (${vault.path}) via Obsidian CLI — open it in Obsidian manually`);
+  }
+  return reloadedPath;
 }
 
 /**
@@ -124,12 +171,7 @@ function getVaultPath() {
  * so for create/append/prepend with --stdin, we write the file directly
  * and skip the CLI for the content part.
  */
-function handleStdinCommand(arguments_, stdinData) {
-  const vaultPath = getVaultPath();
-  if (!vaultPath) {
-    throw new Error('Could not determine vault path for direct file write');
-  }
-
+function handleStdinCommand(arguments_, stdinData, vaultPath) {
   // Extract command and path from arguments
   const command = arguments_[0]; // create, append, prepend
   let filePath = null;
@@ -208,7 +250,7 @@ function stripStdinFlags(arguments_) {
 
 module.exports = {
   name: 'obsidian',
-  version: '1.2.0',
+  version: '1.3.0',
 
   endpoints: [
     {
@@ -230,11 +272,18 @@ module.exports = {
           return response.status(503).json({ error: startupError.message });
         }
 
+        let vaultPath;
+        try {
+          vaultPath = ensureVaultLoaded();
+        } catch (vaultError) {
+          return response.status(503).json({ error: vaultError.message });
+        }
+
         // For write commands with stdin: bypass CLI, write directly to vault
         if (stdinData && isStdinWriteCommand(arguments_)) {
           try {
             const cleanArgs = stripStdinFlags(arguments_);
-            const result = handleStdinCommand(cleanArgs, stdinData);
+            const result = handleStdinCommand(cleanArgs, stdinData, vaultPath);
             return response.json(result);
           } catch (writeError) {
             return response.status(500).json({ error: writeError.message });

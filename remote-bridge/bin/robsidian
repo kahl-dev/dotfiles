@@ -81,6 +81,36 @@ ensure_obsidian_running() {
     return 1
 }
 
+# Ensure a vault is loaded (local mode only) — after a background launch
+# Obsidian can sit on the vault picker; every unscoped CLI command then
+# answers "Vault not found." on stdout with exit code 0. Targeting the vault
+# with an explicit vault= selector loads it without user interaction.
+ensure_vault_loaded() {
+    if obsidian vault 2>/dev/null | grep -q $'^path\t'; then
+        return 0
+    fi
+
+    local registry="$HOME/Library/Application Support/obsidian/obsidian.json"
+    local vault_path vault_name
+    vault_path=$(jq -r '(.vaults | to_entries | map(.value)) as $v
+        | (($v | map(select(.open)) | first) // (if ($v | length) == 1 then $v[0] else null end))
+        | .path // empty' "$registry" 2>/dev/null)
+
+    if [ -z "$vault_path" ]; then
+        echo "Error: No unambiguous vault in $registry — open the desired vault in Obsidian manually" >&2
+        return 1
+    fi
+    vault_name=$(basename "$vault_path")
+
+    echo "Loading vault ${vault_name}..." >&2
+    obsidian "vault=${vault_name}" version >/dev/null 2>&1 || true
+
+    if ! obsidian vault 2>/dev/null | grep -q $'^path\t'; then
+        echo "Error: Could not load vault \"${vault_name}\" via Obsidian CLI — open it in Obsidian manually" >&2
+        return 1
+    fi
+}
+
 # Extract --stdin and --content-file from arguments
 STDIN_MODE=false
 CONTENT_FILE=""
@@ -216,8 +246,9 @@ if [ -n "$BRIDGE_PORT" ] && [ "$(uname)" != "Darwin" ]; then
     exit "$EXIT_CODE"
 fi
 
-# Local mode: ensure Obsidian is running, then exec
+# Local mode: ensure Obsidian is running with a loaded vault, then exec
 ensure_obsidian_running
+ensure_vault_loaded
 
 if [ -n "$STDIN_CONTENT" ]; then
     # Write stdin content to temp file, inject as content= argument

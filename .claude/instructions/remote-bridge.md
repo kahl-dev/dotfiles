@@ -109,6 +109,10 @@ echo "test" | rclip
 - SSH tunnel not configured: Check `RemoteForward` in SSH config
 - Empty input: rclip shows warning and exits cleanly
 - Nvim clipboard: Ensure `"+y` is used (not just `y`)
+- `robsidian` answers `Vault not found.` (exit code 0): Obsidian is running
+  without a loaded vault (vault picker after reboot/background launch). Since
+  obsidian plugin v1.3.0 the bridge and `robsidian` force-load the registered
+  vault automatically; if it still fails, open the vault in Obsidian manually.
 
 ### Configuration
 
