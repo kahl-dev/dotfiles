@@ -13,6 +13,51 @@ BRIDGE_URL="http://localhost:${BRIDGE_PORT}/time-tracking"
 
 TOKEN="$(require_bridge_token)" || exit 1
 
+# Check if Remote Bridge is available
+check_bridge() {
+    curl -sf --connect-timeout 0.5 --max-time 2 "${BRIDGE_URL%/time-tracking}/health" >/dev/null 2>&1
+}
+
+require_bridge() {
+    if ! check_bridge; then
+        echo "Error: Remote Bridge is not available on port $BRIDGE_PORT" >&2
+        echo "Make sure:" >&2
+        echo "1. Remote Bridge service is running on your local machine" >&2
+        echo "2. SSH tunnel is active (RemoteForward $BRIDGE_PORT localhost:$BRIDGE_PORT)" >&2
+        exit 1
+    fi
+}
+
+# Surface a server-reported error distinctly from a connection failure — a
+# 400 for malformed --dates (validated server-side) otherwise looks
+# identical to a dead bridge. Also covers a rate-limited (429) response,
+# whose body is plain text, not JSON: the status code, not the body shape,
+# decides success. Splits the trailing %{http_code} line curl appended and
+# leaves the JSON body in RESPONSE_BODY for the caller. Calls `exit`
+# directly (not `return`) because callers invoke it un-subshelled — wrapping
+# it in $(...) would trap the exit in that subshell instead of ending the
+# script.
+check_response_error() {
+    local response="$1"
+    local http_code
+    http_code=$(printf '%s' "$response" | tail -n1)
+    RESPONSE_BODY=$(printf '%s' "$response" | sed '$d')
+
+    if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
+        local error
+        # `|| true` matters under set -o pipefail: jq exits non-zero when
+        # $RESPONSE_BODY isn't valid JSON (e.g. express-rate-limit's
+        # plain-text 429), and check_response_error runs un-subshelled at
+        # top level here (not inside an if-tested call) — an unguarded
+        # pipeline failure would trip errexit and kill the script before
+        # the "Error: ..." message below ever runs.
+        error=$(printf '%s' "$RESPONSE_BODY" | jq -r '.error // empty' 2>/dev/null || true)
+        [ -z "$error" ] && error="HTTP $http_code: $RESPONSE_BODY"
+        echo "Error: $error" >&2
+        exit 1
+    fi
+}
+
 show_help() {
     cat << EOF
 rtime - Fetch time tracking data from Remote Bridge
@@ -43,10 +88,14 @@ fetch_dates() {
     local dates="$1"
     local output_dir="${2:-}"
 
-    response=$(curl -sf -H "Authorization: Bearer $TOKEN" "${BRIDGE_URL}?dates=${dates}" 2>/dev/null) || {
+    require_bridge
+
+    response=$(curl -sS --connect-timeout 0.5 --max-time 5 -H "Authorization: Bearer $TOKEN" "${BRIDGE_URL}?dates=${dates}" -w '\n%{http_code}' 2>/dev/null) || {
         echo "Error: Cannot connect to Remote Bridge on port ${BRIDGE_PORT}" >&2
         exit 1
     }
+    check_response_error "$response"
+    response="$RESPONSE_BODY"
 
     if [ -n "$output_dir" ]; then
         mkdir -p "$output_dir"
@@ -62,10 +111,18 @@ fetch_dates() {
 }
 
 list_dates() {
-    curl -sf -H "Authorization: Bearer $TOKEN" "${BRIDGE_URL}/dates" 2>/dev/null || {
+    local response
+
+    require_bridge
+
+    response=$(curl -sS --connect-timeout 0.5 --max-time 5 -H "Authorization: Bearer $TOKEN" "${BRIDGE_URL}/dates" -w '\n%{http_code}' 2>/dev/null) || {
         echo "Error: Cannot connect to Remote Bridge on port ${BRIDGE_PORT}" >&2
         exit 1
     }
+    check_response_error "$response"
+    response="$RESPONSE_BODY"
+
+    echo "$response"
 }
 
 generate_date_list() {

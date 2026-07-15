@@ -11,6 +11,15 @@ const { createAuthMiddleware } = require('./middleware/auth');
 const rateLimitMiddleware = require('./middleware/rate-limit');
 const validationMiddleware = require('./middleware/validation');
 
+// Shared by every error path that turns a caught error into an HTTP
+// response (wrapHandler, /history, the generic Express error middleware).
+// Errors below 500 (e.g. a plugin's validation throw) surface their own
+// message; 500s are masked to avoid leaking internals to the client.
+function respondWithError(res, err) {
+  const status = err.status || err.statusCode || 500;
+  res.status(status).json({ error: status < 500 ? err.message : 'Internal server error' });
+}
+
 class RemoteBridgeServer {
   constructor() {
     this.app = express();
@@ -137,7 +146,7 @@ class RemoteBridgeServer {
       } catch (error) {
         this.logger.error(`Handler error: ${error.message}`, { error, path: req.path });
         if (!res.headersSent) {
-          res.status(500).json({ error: error.message });
+          respondWithError(res, error);
         }
       }
     };
@@ -176,7 +185,8 @@ class RemoteBridgeServer {
         const history = await this.logger.getHistory(limit);
         res.json(history);
       } catch (error) {
-        res.status(500).json({ error: error.message });
+        this.logger.error(`History error: ${error.message}`, { error });
+        respondWithError(res, error);
       }
     });
     
@@ -188,7 +198,7 @@ class RemoteBridgeServer {
     // Error handler
     this.app.use((err, req, res, next) => {
       this.logger.error('Unhandled error:', err);
-      res.status(500).json({ error: 'Internal server error' });
+      respondWithError(res, err);
     });
   }
 

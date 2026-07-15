@@ -134,11 +134,6 @@ for arg in "$@"; do
     esac
 done
 
-# Re-add --stdin flag for remote mode (server needs it to detect stdin write)
-if [ "$STDIN_MODE" = true ] || [ -n "$CONTENT_FILE" ]; then
-    FILTERED_ARGS+=("--stdin")
-fi
-
 # Read content from stdin or file
 STDIN_CONTENT=""
 if [ "$STDIN_MODE" = true ]; then
@@ -155,9 +150,18 @@ elif [ -n "$CONTENT_FILE" ]; then
     STDIN_CONTENT=$(cat "$CONTENT_FILE")
 fi
 
+# Re-add --stdin for the remote payload only — the server needs it to
+# detect stdin content. FILTERED_ARGS itself must stay clean: the local
+# mode below execs it directly against the real obsidian CLI, which has
+# no --stdin flag of its own.
+COMMAND_ARGS=("${FILTERED_ARGS[@]}")
+if [ "$STDIN_MODE" = true ] || [ -n "$CONTENT_FILE" ]; then
+    COMMAND_ARGS+=("--stdin")
+fi
+
 # Build command from filtered args, preserving values with spaces
 COMMAND=""
-for arg in "${FILTERED_ARGS[@]}"; do
+for arg in "${COMMAND_ARGS[@]}"; do
     if [[ "$arg" == *=* ]]; then
         # key=value arg — quote the value to preserve spaces
         # Escape embedded " in value to prevent premature quote closure
@@ -175,7 +179,7 @@ done
 # Remote mode: proxy through bridge (skip if running on macOS — local Obsidian is available)
 if [ -n "$BRIDGE_PORT" ] && [ "$(uname)" != "Darwin" ]; then
     # Check if bridge is available
-    if ! curl -sf "http://localhost:${BRIDGE_PORT}/health" >/dev/null 2>&1; then
+    if ! curl -sf --connect-timeout 0.5 --max-time 2 "http://localhost:${BRIDGE_PORT}/health" >/dev/null 2>&1; then
         echo "Error: Remote Bridge is not available on port $BRIDGE_PORT" >&2
         echo "Make sure:" >&2
         echo "1. Remote Bridge service is running on your local machine" >&2
@@ -217,10 +221,11 @@ if [ -n "$BRIDGE_PORT" ] && [ "$(uname)" != "Darwin" ]; then
     fi
 
     # Send request
-    RESPONSE=$(curl -sS -X POST "$BRIDGE_URL" \
+    RESPONSE=$(curl -sS --connect-timeout 0.5 --max-time 5 -X POST "$BRIDGE_URL" \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer $TOKEN" \
         -d "$PAYLOAD" \
+        -w '\n%{http_code}' \
         2>&1)
 
     CURL_EXIT=$?
@@ -230,17 +235,27 @@ if [ -n "$BRIDGE_PORT" ] && [ "$(uname)" != "Darwin" ]; then
         exit 1
     fi
 
-    # Check for HTTP-level errors
-    if echo "$RESPONSE" | jq -e '.error' >/dev/null 2>&1; then
-        ERROR=$(echo "$RESPONSE" | jq -r '.error')
+    # A rate-limited (429) response body is plain text, not JSON — the
+    # status code, not the body shape, decides success. Split off the
+    # %{http_code} line curl appended and hard-fail on any non-2xx.
+    HTTP_CODE=$(printf '%s' "$RESPONSE" | tail -n1)
+    BODY=$(printf '%s' "$RESPONSE" | sed '$d')
+
+    if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+        # `|| true` matters under set -o pipefail: jq exits non-zero when
+        # $BODY isn't valid JSON (e.g. express-rate-limit's plain-text 429),
+        # and an unguarded pipeline failure here would trip errexit and kill
+        # the script before the "Error: ..." message below ever runs.
+        ERROR=$(printf '%s' "$BODY" | jq -r '.error // empty' 2>/dev/null || true)
+        [ -z "$ERROR" ] && ERROR="HTTP $HTTP_CODE: $BODY"
         echo "Error: $ERROR" >&2
         exit 1
     fi
 
     # Extract wrapped response
-    STDOUT=$(echo "$RESPONSE" | jq -r '.stdout // ""')
-    STDERR=$(echo "$RESPONSE" | jq -r '.stderr // ""')
-    EXIT_CODE=$(echo "$RESPONSE" | jq -r '.exitCode // 0')
+    STDOUT=$(echo "$BODY" | jq -r '.stdout // ""')
+    STDERR=$(echo "$BODY" | jq -r '.stderr // ""')
+    EXIT_CODE=$(echo "$BODY" | jq -r '.exitCode // 0')
 
     # Output stdout
     [ -n "$STDOUT" ] && echo -n "$STDOUT"

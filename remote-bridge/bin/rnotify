@@ -163,7 +163,7 @@ fi
 
 # Check if Remote Bridge is available
 check_bridge() {
-    curl -sf "${BRIDGE_URL%/notify}/health" >/dev/null 2>&1
+    curl -sf --connect-timeout 0.5 --max-time 2 "${BRIDGE_URL%/notify}/health" >/dev/null 2>&1
 }
 
 if ! check_bridge; then
@@ -226,23 +226,35 @@ JSON_PAYLOAD=$(jq -n \
     '{data: $data, metadata: $metadata, options: $options}')
 
 # Send request
-RESPONSE=$(curl -sS -X POST "$BRIDGE_URL" \
+RESPONSE=$(curl -sS --connect-timeout 0.5 --max-time 5 -X POST "$BRIDGE_URL" \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $TOKEN" \
     -d "$JSON_PAYLOAD" \
+    -w '\n%{http_code}' \
     2>&1)
 
 EXIT_CODE=$?
 
-if [ $EXIT_CODE -eq 0 ]; then
-    # Check if response contains error
-    if echo "$RESPONSE" | jq -e '.error' >/dev/null 2>&1; then
-        ERROR=$(echo "$RESPONSE" | jq -r '.error')
-        echo "Error: $ERROR" >&2
-        exit 1
-    fi
-    echo "✓ Notification sent"
-else
+if [ $EXIT_CODE -ne 0 ]; then
     echo "Failed to send notification: $RESPONSE" >&2
     exit 1
 fi
+
+# A rate-limited (429) response body is plain text, not JSON — the status
+# code, not the body shape, decides success. Split off the %{http_code}
+# line curl appended and hard-fail on any non-2xx.
+HTTP_CODE=$(printf '%s' "$RESPONSE" | tail -n1)
+BODY=$(printf '%s' "$RESPONSE" | sed '$d')
+
+if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+    # `|| true` matters under set -o pipefail: jq exits non-zero when $BODY
+    # isn't valid JSON (e.g. express-rate-limit's plain-text 429), and an
+    # unguarded pipeline failure here would trip errexit and kill the script
+    # before the "Error: ..." message below ever runs.
+    ERROR=$(printf '%s' "$BODY" | jq -r '.error // empty' 2>/dev/null || true)
+    [ -z "$ERROR" ] && ERROR="HTTP $HTTP_CODE: $BODY"
+    echo "Error: $ERROR" >&2
+    exit 1
+fi
+
+echo "✓ Notification sent"

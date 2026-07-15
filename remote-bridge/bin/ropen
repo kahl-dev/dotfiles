@@ -81,7 +81,7 @@ done
 
 # Check if Remote Bridge is available
 check_bridge() {
-    curl -sf "${BRIDGE_URL%/browser}/health" >/dev/null 2>&1
+    curl -sf --connect-timeout 0.5 --max-time 2 "${BRIDGE_URL%/browser}/health" >/dev/null 2>&1
 }
 
 # Send URL via Remote Bridge
@@ -104,7 +104,7 @@ send_url() {
     [ -n "$APP" ] && options="{\"app\": \"$APP\"}"
     
     # Send request
-    local response=$(curl -sS -X POST "$BRIDGE_URL" \
+    local response=$(curl -sS --connect-timeout 0.5 --max-time 5 -X POST "$BRIDGE_URL" \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer $TOKEN" \
         -d "$(jq -n \
@@ -159,7 +159,7 @@ fi
 failed=0
 for url in "${URLS[@]}"; do
     if ! send_url "$url"; then
-        ((failed++))
+        failed=$((failed + 1))
     fi
 done
 
