@@ -23,10 +23,9 @@ Usage:
     rclip "text to copy"             # Copy text directly
     echo "text" | rclip              # Pipe text to clipboard
     rclip < file.txt                 # Send file contents
-    cat image.png | rclip --type image  # Send binary data
 
 Options:
-    --type <type>    Content type (text, image, etc.)
+    --type <type>    Content type (text, etc.)
     --tag <tag>      Add a tag to the clipboard entry
     --json           Input is already base64 encoded JSON
     -h, --help       Show this help message
@@ -37,20 +36,20 @@ Environment:
 Examples:
     # Copy text directly
     rclip "Hello World"
-    
+
     # Copy command output
     ls -la | rclip
-    
+
     # Copy file contents
     rclip < ~/.ssh/id_rsa.pub
-    
+
     # Copy with metadata
     rclip "important data" --tag work
-    
-    # Copy image
-    cat screenshot.png | rclip --type image
 
-If Remote Bridge is not available, falls back to OSC52 escape sequence.
+If the Remote Bridge is unreachable: outside tmux in a real terminal, rclip
+falls back to OSC52 itself. Inside tmux, tmux's own set-clipboard delivers
+OSC52 natively instead, so rclip fails honestly rather than emitting escape
+bytes into a copy-pipe. Text only - binary input is rejected.
 EOF
 }
 
@@ -100,17 +99,54 @@ if [ -t 0 ] && [ ${#ARGS[@]} -eq 0 ]; then
     exit 1
 fi
 
-# Get input from arguments or stdin
 if [ ${#ARGS[@]} -gt 0 ]; then
-    # Join arguments with spaces
+    # Join arguments with spaces. Argv strings cannot contain NUL bytes (C
+    # string limitation), so arg-mode input needs no binary check.
     INPUT="${ARGS[*]}"
 else
-    # Read from stdin
-    INPUT=$(cat)
+    # NUL-safe stdin capture via temp file: $(cat) silently strips embedded
+    # NULs AND trailing newlines, corrupting binary-looking input and losing
+    # exact byte content that a real clipboard payload may depend on.
+    INPUT_FILE="$(mktemp)"
+    trap 'rm -f "$INPUT_FILE"' EXIT
+    cat > "$INPUT_FILE"
+
+    original_size=$(wc -c < "$INPUT_FILE")
+    stripped_size=$(tr -d '\0' < "$INPUT_FILE" | wc -c)
+    if [ "$original_size" != "$stripped_size" ]; then
+        echo "Error: binary input not supported (clipboard is text-only)" >&2
+        exit 1
+    fi
 fi
 
+# Input accessors: arg-mode keeps INPUT as a plain string, stdin-mode reads
+# from INPUT_FILE so trailing newlines and exact bytes survive.
+input_base64() {
+    if [ -n "${INPUT_FILE:-}" ]; then
+        base64 < "$INPUT_FILE" | tr -d '\n'
+    else
+        printf '%s' "$INPUT" | base64 | tr -d '\n'
+    fi
+}
+
+input_raw() {
+    if [ -n "${INPUT_FILE:-}" ]; then
+        cat "$INPUT_FILE"
+    else
+        printf '%s' "$INPUT"
+    fi
+}
+
+input_is_empty() {
+    if [ -n "${INPUT_FILE:-}" ]; then
+        [ ! -s "$INPUT_FILE" ]
+    else
+        [ -z "$INPUT" ]
+    fi
+}
+
 # Check for empty input
-if [ -z "$INPUT" ]; then
+if input_is_empty; then
     echo "Warning: Empty input - nothing to copy" >&2
     exit 0
 fi
@@ -120,30 +156,32 @@ check_bridge() {
     curl -sf --connect-timeout 0.5 --max-time 2 "${BRIDGE_URL%/clipboard}/health" >/dev/null 2>&1
 }
 
-# Send via Remote Bridge
+# Send via Remote Bridge. Any failure here is a real error (bridge answered
+# the health check but then failed the actual send, or rejected it with
+# 401/4xx/5xx) - callers must NOT fall back to OSC52 on failure, since that
+# would silently mask a misconfiguration (e.g. a bad token) as success.
 send_via_bridge() {
-    local data="$1"
-    
-    # Base64 encode if not in JSON mode
+    local data
     if [ "$JSON_MODE" = false ]; then
-        data=$(echo -n "$data" | base64 -w0 2>/dev/null || echo -n "$data" | base64)
+        data=$(input_base64)
+    else
+        data=$(input_raw)
     fi
-    
-    # Build metadata
-    local metadata=$(jq -n \
+
+    local metadata
+    metadata=$(jq -n \
         --arg host "$(hostname -s)" \
         --arg session "${TMUX_PANE:-$$}" \
         --arg user "$USER" \
         --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
         '$ARGS.named')
-    
-    # Build options
+
     local options="{\"type\": \"$CONTENT_TYPE\""
     [ -n "$TAG" ] && options="$options, \"tag\": \"$TAG\""
     options="$options}"
-    
-    # Send request
-    local response=$(curl -sS --connect-timeout 0.5 --max-time 5 -X POST "$BRIDGE_URL" \
+
+    local response
+    if ! response=$(curl -sS --connect-timeout 0.5 --max-time 5 -X POST "$BRIDGE_URL" \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer $TOKEN" \
         -d "$(jq -n \
@@ -151,53 +189,81 @@ send_via_bridge() {
             --argjson metadata "$metadata" \
             --argjson options "$options" \
             '{data: $data, metadata: $metadata, options: $options}')" \
-        2>&1)
-    
-    local exit_code=$?
-    
-    if [ $exit_code -eq 0 ]; then
-        # Check if response contains error
-        if echo "$response" | jq -e '.error' >/dev/null 2>&1; then
-            local error=$(echo "$response" | jq -r '.error')
-            echo "Error: $error" >&2
-            return 1
-        fi
-        return 0
-    else
-        echo "Failed to send to Remote Bridge: $response" >&2
+        -w '\n%{http_code}' \
+        2>&1); then
+        echo "Error: Remote Bridge unreachable during send: $response" >&2
         return 1
     fi
+
+    # A rate-limited (429) response body is plain text, not JSON — the status
+    # code, not the body shape, decides success. Split off the %{http_code}
+    # line curl appended and hard-fail on any non-2xx.
+    local http_code body
+    http_code=$(printf '%s' "$response" | tail -n1)
+    body=$(printf '%s' "$response" | sed '$d')
+
+    if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
+        local error
+        # `|| true` matters under set -o pipefail: jq exits non-zero when
+        # $body isn't valid JSON (e.g. express-rate-limit's plain-text 429),
+        # and an unguarded pipeline failure here would trip errexit and kill
+        # the script before the "Error: ..." message below ever runs.
+        error=$(printf '%s' "$body" | jq -r '.error // empty' 2>/dev/null || true)
+        [ -z "$error" ] && error="HTTP $http_code: $body"
+        echo "Error: $error" >&2
+        return 1
+    fi
+
+    return 0
 }
 
-# Fallback to OSC52
+# Fallback to OSC52 - only called when interactive and NOT inside tmux (see
+# main logic below). Guards against oversized payloads since terminals cap
+# the OSC52 escape sequence length.
 send_via_osc52() {
-    local data="$1"
-    local encoded=$(echo -n "$data" | base64 | tr -d '\n')
-    
-    # Use screen/tmux aware OSC52
-    if [ -n "$TMUX" ]; then
-        # tmux
-        printf "\033Ptmux;\033\033]52;c;%s\007\033\\" "$encoded"
-    elif [ "$TERM" = "screen" ]; then
+    local encoded
+    encoded=$(input_base64)
+
+    local encoded_size=${#encoded}
+    if [ "$encoded_size" -gt 72000 ]; then
+        echo "Error: input too large for OSC52 fallback (${encoded_size} bytes); start the Remote Bridge" >&2
+        return 1
+    fi
+
+    # tmux never reaches this function — the sole caller only invokes it when
+    # `${TMUX:-}` is unset (tmux.conf's set-clipboard on already delivers
+    # OSC52 natively from the copy-pipe in that case).
+    if [ "$TERM" = "screen" ]; then
         # screen
         printf "\033P\033]52;c;%s\007\033\\" "$encoded"
     else
         # regular terminal
         printf "\033]52;c;%s\007" "$encoded"
     fi
-    
-    echo "(Sent via OSC52 - Remote Bridge not available)" >&2
+
+    echo "(sent via OSC52 — Remote Bridge unavailable)" >&2
+    return 0
 }
 
 # Main logic
 if check_bridge; then
-    if send_via_bridge "$INPUT"; then
+    if send_via_bridge; then
         echo "✓ Clipboard updated"
-    else
-        # Fallback to OSC52
-        send_via_osc52 "$INPUT"
+        exit 0
     fi
-else
-    # Direct OSC52 fallback
-    send_via_osc52 "$INPUT"
+    exit 1
 fi
+
+# Bridge unreachable. Only fall back to OSC52 when interactive and not inside
+# tmux: inside tmux, set-clipboard on (tmux.conf) already delivers OSC52
+# natively from the copy-pipe, so rclip must fail honestly instead of
+# emitting escape bytes that would do nothing useful there. When stdout is
+# not a tty (e.g. nvim's systemlist capture), OSC52 bytes have no
+# destination either.
+if [ -z "${TMUX:-}" ] && [ -t 1 ]; then
+    send_via_osc52
+    exit $?
+fi
+
+echo "Error: Remote Bridge unavailable" >&2
+exit 1

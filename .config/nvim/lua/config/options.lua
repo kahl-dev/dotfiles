@@ -15,8 +15,10 @@ vim.g.clipboard = {
   },
   paste = {
     ["+"] = function()
-      -- For now, fallback to system clipboard for paste
-      -- TODO: Add paste support to rclip if needed
+      -- Remote Bridge is write-only by design (rclip has no paste command).
+      -- On local macOS, pbpaste covers paste. On hosts without pbpaste
+      -- (e.g. remote/Linux), return empty - paste there goes through the
+      -- terminal's own Cmd+V (bracketed paste) instead.
       if vim.fn.executable("pbpaste") == 1 then
         local handle = io.popen("pbpaste")
         if handle then
