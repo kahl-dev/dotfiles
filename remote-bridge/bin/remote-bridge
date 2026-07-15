@@ -3,14 +3,37 @@
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 const { spawn, exec } = require('child_process');
+const { promisify } = require('util');
+const { existsSync } = require('fs');
 const fs = require('fs').promises;
 const path = require('path');
 const os = require('os');
+
+const execAsync = promisify(exec);
 
 const SERVICE_NAME = 'com.kahl-dev.remote-bridge';
 const PLIST_PATH = path.join(os.homedir(), 'Library', 'LaunchAgents', `${SERVICE_NAME}.plist`);
 const SERVER_PATH = path.join(__dirname, '..', 'src', 'server.js');
 const LOG_DIR = path.join(os.homedir(), '.local', 'share', 'remote-bridge');
+
+// Prefer the mise shim over process.execPath: process.execPath is whatever
+// node binary happened to run `remote-bridge install` (e.g. a
+// version-pinned fnm/mise install path), which breaks the moment that
+// specific version is pruned or upgraded. The mise shim resolves the active
+// node version at runtime on every launch and works under launchd's minimal
+// env (no shell init required), so the plist survives node version changes
+// without ever needing to be regenerated for that reason.
+const MISE_NODE_SHIM = path.join(os.homedir(), '.local', 'share', 'mise', 'shims', 'node');
+
+// launchd's StandardOutPath/StandardErrorPath are raw redirects with no
+// built-in rotation (winston only rotates activity.log, not these). Rotate
+// them ourselves before the service (re)starts writing to them.
+const MAX_SERVICE_LOG_BYTES = 5 * 1024 * 1024; // 5MB
+
+// The server always binds to config.service.port (8377) on this machine —
+// REMOTE_BRIDGE_PORT is the per-user *remote* tunnel port. Mirrors
+// lib/bridge-port.sh's resolve_bridge_port(): explicit env wins, else 8377.
+const PORT = process.env.REMOTE_BRIDGE_PORT || 8377;
 
 yargs(hideBin(process.argv))
   .command('start', 'Start the Remote Bridge service', {}, startService)
@@ -39,39 +62,156 @@ yargs(hideBin(process.argv))
   .alias('help', 'h')
   .parse();
 
-async function startService() {
+async function loadLaunchAgent() {
+  await execAsync(`launchctl load -w ${PLIST_PATH}`);
+}
+
+async function unloadLaunchAgent() {
+  await execAsync(`launchctl unload ${PLIST_PATH}`);
+}
+
+// Renames logPath to logPath.1 (overwriting a previous .1) and truncates
+// logPath once it crosses MAX_SERVICE_LOG_BYTES. No-op if the log doesn't
+// exist yet or is still under the threshold. Minimal, dependency-free — no
+// sudo/logrotate available for these launchd-owned files.
+async function rotateLogIfLarge(logPath) {
+  let stats;
   try {
-    await exec(`launchctl load -w ${PLIST_PATH}`, (error) => {
-      if (error) {
-        console.error('Failed to start service:', error.message);
-        process.exit(1);
-      }
-      console.log('Remote Bridge service started');
-    });
+    stats = await fs.stat(logPath);
+  } catch {
+    return; // Doesn't exist yet — nothing to rotate.
+  }
+
+  if (stats.size <= MAX_SERVICE_LOG_BYTES) {
+    return;
+  }
+
+  await fs.rename(logPath, `${logPath}.1`);
+  await fs.writeFile(logPath, '');
+}
+
+async function rotateServiceLogs() {
+  await rotateLogIfLarge(path.join(LOG_DIR, 'service.log'));
+  await rotateLogIfLarge(path.join(LOG_DIR, 'service.error.log'));
+}
+
+// launchctl's unload exits non-zero both for a real failure (bad plist,
+// permission denied) and for the benign "job isn't loaded" case (e.g.
+// after a crash, or before the first install). Only the latter is safe to
+// swallow — anything else must surface, or callers would silently proceed
+// to a no-op load while a real problem (and possibly the old process)
+// stays in place.
+const NOT_LOADED_PATTERN = /not (loaded|find)|could not find/i;
+
+function isNotLoadedError(error) {
+  return NOT_LOADED_PATTERN.test(`${error.message}\n${error.stderr || ''}`);
+}
+
+async function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function isServiceUp() {
+  try {
+    await execAsync(`curl -sf --connect-timeout 0.5 --max-time 1 http://localhost:${PORT}/health`);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Polls `check` every `intervalMs` until it returns true or `timeoutMs`
+// elapses. Never throws on timeout — a slow bind is expected behavior
+// (launchd's ThrottleInterval), not a hard failure, so callers report the
+// final state rather than aborting.
+async function pollUntil(check, timeoutMs, intervalMs = 500) {
+  const deadline = Date.now() + timeoutMs;
+  while (true) {
+    if (await check()) {
+      return true;
+    }
+    if (Date.now() >= deadline) {
+      return false;
+    }
+    await sleep(intervalMs);
+  }
+}
+
+async function startService() {
+  await rotateServiceLogs();
+
+  try {
+    await loadLaunchAgent();
   } catch (error) {
-    console.error('Error:', error.message);
+    console.error('Failed to start service:', error.message);
     process.exit(1);
+  }
+
+  const serviceUp = await pollUntil(isServiceUp, 15000);
+  if (serviceUp) {
+    console.log('Remote Bridge service started');
+  } else {
+    console.log(
+      "Remote Bridge start dispatched; the service may take up to ThrottleInterval (~30s) to bind if the port was busy — check 'remote-bridge status'"
+    );
   }
 }
 
 async function stopService() {
   try {
-    await exec(`launchctl unload ${PLIST_PATH}`, (error) => {
-      if (error) {
-        console.error('Failed to stop service:', error.message);
-        process.exit(1);
-      }
-      console.log('Remote Bridge service stopped');
-    });
+    await unloadLaunchAgent();
+    console.log('Remote Bridge service stopped');
   } catch (error) {
-    console.error('Error:', error.message);
+    console.error('Failed to stop service:', error.message);
     process.exit(1);
   }
 }
 
 async function restartService() {
-  await stopService();
-  setTimeout(() => startService(), 1000);
+  // Unload and wait for it to actually finish before loading again.
+  // launchctl unload/load are synchronous CLI calls, but the previous
+  // implementation used `await exec(...)` — exec() returns a ChildProcess,
+  // not a Promise, so that await did not wait for launchctl to finish — and
+  // papered over it with a fixed setTimeout, racing the real unload.
+  try {
+    await unloadLaunchAgent();
+  } catch (error) {
+    if (!isNotLoadedError(error)) {
+      throw error;
+    }
+    // Not currently loaded (e.g. after a crash) — restart's job is to end
+    // up running, so a failed unload here isn't fatal.
+    console.log('Service was not running, starting fresh...');
+  }
+
+  // `launchctl unload` returns before the old process has actually exited
+  // and released port 8377 — loading immediately here would race it (the
+  // new process hits EADDRINUSE, exits, and launchd only retries after
+  // ThrottleInterval). Wait for /health to stop responding, which means
+  // the port is actually free.
+  await pollUntil(async () => !(await isServiceUp()), 10000);
+
+  // Rotate only now that the old process is confirmed dead: while it was
+  // still holding the log file's fd, a rename wouldn't sever it on macOS
+  // (launchd keeps writing to the renamed file, and the new service.log
+  // stays empty).
+  await rotateServiceLogs();
+
+  try {
+    await loadLaunchAgent();
+  } catch (error) {
+    console.error('Failed to restart service:', error.message);
+    process.exit(1);
+  }
+
+  const serviceUp = await pollUntil(isServiceUp, 15000);
+  if (serviceUp) {
+    console.log('Remote Bridge service restarted');
+  } else {
+    console.log(
+      "Remote Bridge restart dispatched; the service may take up to ThrottleInterval (~30s) to bind if the port was busy — check 'remote-bridge status'"
+    );
+  }
 }
 
 async function checkStatus() {
@@ -80,17 +220,17 @@ async function checkStatus() {
       console.log('Service is not running');
       return;
     }
-    
+
     const parts = stdout.trim().split('\t');
     const pid = parts[0];
     const status = parts[1];
-    
+
     console.log(`Service is running (PID: ${pid}, Status: ${status})`);
-    
+
     // Check if service is responding
-    exec('curl -s http://localhost:8377/health', (error, stdout) => {
+    exec(`curl -s --connect-timeout 0.5 --max-time 2 http://localhost:${PORT}/health`, (error, stdout) => {
       if (error) {
-        console.log('Service is not responding on port 8377');
+        console.log(`Service is not responding on port ${PORT}`);
       } else {
         try {
           const health = JSON.parse(stdout);
@@ -107,14 +247,14 @@ async function checkStatus() {
 
 async function viewLogs(argv) {
   const logFile = path.join(LOG_DIR, 'activity.log');
-  
+
   try {
     await fs.access(logFile);
   } catch {
     console.error('Log file not found:', logFile);
     return;
   }
-  
+
   if (argv.follow) {
     spawn('tail', ['-f', logFile], { stdio: 'inherit' });
   } else {
@@ -123,10 +263,19 @@ async function viewLogs(argv) {
 }
 
 async function installService() {
+  // No log rotation here: install only writes the plist and never unloads
+  // the service, so if it's currently running, launchd still holds the fd
+  // on service.log. A rename wouldn't sever that fd on macOS — launchd
+  // would keep writing to the renamed .1 file and the new service.log
+  // would stay empty. startService/restartService rotate instead, where
+  // the process is confirmed dead first.
+
   // Create directories
   await fs.mkdir(LOG_DIR, { recursive: true });
   await fs.mkdir(path.dirname(PLIST_PATH), { recursive: true });
-  
+
+  const nodeExecutable = existsSync(MISE_NODE_SHIM) ? MISE_NODE_SHIM : process.execPath;
+
   // Create plist file
   const plistContent = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -136,13 +285,15 @@ async function installService() {
     <string>${SERVICE_NAME}</string>
     <key>ProgramArguments</key>
     <array>
-        <string>${process.execPath}</string>
+        <string>${nodeExecutable}</string>
         <string>${SERVER_PATH}</string>
     </array>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
     <true/>
+    <key>ThrottleInterval</key>
+    <integer>30</integer>
     <key>StandardOutPath</key>
     <string>${path.join(LOG_DIR, 'service.log')}</string>
     <key>StandardErrorPath</key>
@@ -151,7 +302,7 @@ async function installService() {
     <string>${path.join(__dirname, '..')}</string>
 </dict>
 </plist>`;
-  
+
   await fs.writeFile(PLIST_PATH, plistContent);
   console.log('Service installed successfully');
   console.log(`LaunchAgent created at: ${PLIST_PATH}`);
@@ -160,11 +311,13 @@ async function installService() {
 
 async function uninstallService() {
   try {
-    // Stop service first
-    await new Promise((resolve) => {
-      exec(`launchctl unload ${PLIST_PATH}`, () => resolve());
-    });
-    
+    // Stop service first — ignore failure (e.g. not currently loaded).
+    try {
+      await unloadLaunchAgent();
+    } catch {
+      // Not loaded — nothing to unload.
+    }
+
     // Remove plist
     await fs.unlink(PLIST_PATH);
     console.log('Service uninstalled successfully');
@@ -179,7 +332,7 @@ function runDev() {
     stdio: 'inherit',
     env: { ...process.env, NODE_ENV: 'development' }
   });
-  
+
   process.on('SIGINT', () => {
     server.kill('SIGTERM');
     process.exit(0);
@@ -188,17 +341,17 @@ function runDev() {
 
 async function testTunnel() {
   console.log('Testing SSH tunnel connectivity...');
-  
-  exec('curl -s http://localhost:8377/health', (error, stdout) => {
+
+  exec(`curl -s --connect-timeout 0.5 --max-time 2 http://localhost:${PORT}/health`, (error, stdout) => {
     if (error) {
-      console.log('❌ Service not accessible on localhost:8377');
+      console.log(`❌ Service not accessible on localhost:${PORT}`);
       console.log('\nMake sure:');
       console.log('1. The service is running: remote-bridge status');
-      console.log('2. SSH config includes: RemoteForward 8377 localhost:8377');
+      console.log(`2. SSH config includes: RemoteForward ${PORT} localhost:${PORT}`);
       console.log('3. You are connected via SSH with the tunnel active');
     } else {
-      console.log('✅ Service is accessible on localhost:8377');
-      
+      console.log(`✅ Service is accessible on localhost:${PORT}`);
+
       try {
         const health = JSON.parse(stdout);
         console.log(`\nService Details:`);
@@ -211,4 +364,3 @@ async function testTunnel() {
     }
   });
 }
-

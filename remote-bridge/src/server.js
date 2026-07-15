@@ -105,7 +105,11 @@ class RemoteBridgeServer {
     // Load user plugins
     const userPlugins = await loadPlugins(this.config.plugins);
     for (const plugin of userPlugins) {
-      await this.registerPlugin(plugin);
+      try {
+        await this.registerPlugin(plugin);
+      } catch (error) {
+        this.logger.error(`Failed to load user plugin ${plugin.name}:`, error);
+      }
     }
   }
 
@@ -204,16 +208,31 @@ class RemoteBridgeServer {
 
   async start() {
     const port = this.config.service.port || 8377;
-    
-    return new Promise((resolve, reject) => {
-      this.server = this.app.listen(port, 'localhost', (err) => {
-        if (err) {
-          this.logger.error('Failed to start server:', err);
-          reject(err);
-        } else {
-          this.logger.info(`Remote Bridge Server listening on localhost:${port}`);
-          resolve();
-        }
+
+    return new Promise((resolve) => {
+      this.server = this.app.listen(port, 'localhost', () => {
+        this.logger.info(`Remote Bridge Server listening on localhost:${port}`);
+        resolve();
+      });
+
+      // http.Server reports bind failures (e.g. EADDRINUSE) via the 'error'
+      // event, not the listen() callback — that callback never receives an
+      // error argument. Without this handler, a bind failure throws
+      // uncaught, and under launchd's KeepAlive=true that's a crash-loop.
+      this.server.on('error', (err) => {
+        const message = err.code === 'EADDRINUSE'
+          ? `Port ${port} already in use — another instance running?`
+          : 'Failed to start server';
+        // logger.error() (winston's File transport) writes asynchronously
+        // and is not guaranteed to flush before process.exit() below —
+        // verified empirically: the message never reached activity.log.
+        // console.error() writes synchronously to stderr when the
+        // destination is a file or TTY (true here: launchd redirects
+        // stderr to service.error.log), so it's what actually survives for
+        // a crash-loop postmortem when nobody is watching the console.
+        this.logger.error(message, { error: err.message });
+        console.error(`Remote Bridge: ${message}: ${err.message}`);
+        process.exit(1);
       });
     });
   }

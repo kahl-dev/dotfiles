@@ -14,12 +14,20 @@
     - description: Setting up Remote Bridge service
       command: |
         if [[ "$(uname)" == "Darwin" ]]; then
-          # Only install service on macOS
-          if ! launchctl list | grep -q "com.kahl-dev.remote-bridge"; then
-            ./remote-bridge/bin/remote-bridge install
-            echo "Remote Bridge service installed. Run 'remote-bridge start' to activate."
+          # `install` only (re)writes the plist to disk — it never calls
+          # launchctl, so it's safe to re-run on every provisioning even
+          # while the service is already loaded and running. This is what
+          # picks up plist changes (node path, ThrottleInterval, etc.)
+          # across reprovisions instead of only on first install.
+          already_running=false
+          launchctl list | grep -q "com.kahl-dev.remote-bridge" && already_running=true
+
+          ./remote-bridge/bin/remote-bridge install
+
+          if [[ "$already_running" == "true" ]]; then
+            echo "Remote Bridge service plist regenerated. Run 'remote-bridge restart' to apply changes to the running service."
           else
-            echo "Remote Bridge service already installed."
+            echo "Remote Bridge service installed. Run 'remote-bridge start' to activate."
           fi
         else
           echo "Remote Bridge service is macOS only. CLI tools are available."

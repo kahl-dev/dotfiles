@@ -42,7 +42,13 @@ async function loadConfig() {
       console.log(`Loaded config from: ${configPath}`);
       break;
     } catch (error) {
-      // Continue to next path
+      // ENOENT (file not found) is expected — try the next candidate path
+      // silently. Any other error (e.g. a YAML syntax error) means a config
+      // file exists but is broken, which would otherwise silently fall back
+      // to defaults (dropping plugins etc.) without any indication why.
+      if (error.code !== 'ENOENT') {
+        console.error(`Remote Bridge: failed to parse config ${configPath}: ${error.message}`);
+      }
     }
   }
   
