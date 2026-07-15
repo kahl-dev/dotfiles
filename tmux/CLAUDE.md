@@ -265,7 +265,8 @@ Status bar background changes to `colour24` when nested mode is active (outer tm
 **Global clipboard command**: `rclip` — NOT pbcopy/xclip. Works across local, SSH, and nested sessions.
 
 - `set -s copy-command 'rclip'` — rclip is the primary copy path for every binding
-- `set -s set-clipboard on` + `set -s allow-passthrough on` — tmux-native OSC52 is the sanctioned fallback when the Remote Bridge is down (rclip's own OSC52 path is now interactive-non-tmux only; inside tmux or when stdout isn't a tty, rclip fails honestly instead of emitting escape bytes into a copy-pipe)
+- `set -s set-clipboard on` + `set -s allow-passthrough on` — harmless, helps plain-SSH sessions and in-pane OSC52; NOT a fallback over mosh (mosh only relays OSC52 that carries the `c;` selection-type option, and tmux doesn't emit it by default, so tmux's OSC52 is silently dropped over `sm`/mosh)
+- Over mosh, the Remote Bridge is the clipboard path, full stop — when the tunnel is down, rclip fails honestly (error, non-zero exit) instead of falsely reporting success (rclip's own OSC52 path is interactive-non-tmux only; inside tmux or when stdout isn't a tty, rclip also fails honestly instead of emitting escape bytes into a copy-pipe)
 - All copy-mode bindings (vi AND emacs) route through rclip:
   - `v` = begin-selection, `y` = copy, `Y` = copy line, `Enter` = copy
   - `o` = switch selection ends (other-end)

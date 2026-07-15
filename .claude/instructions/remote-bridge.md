@@ -5,7 +5,7 @@ Remote Bridge is a unified clipboard and URL handling system that works seamless
 - **Clipboard sync** via `rclip` command
 - **URL opening** via `ropen` command  
 - **Notifications** via `rnotify` command
-- Automatic fallback to OSC52 when tunnel unavailable
+- `rclip` falls back to OSC52 for interactive non-tmux plain-SSH shells when the tunnel is unavailable; over mosh there is no fallback (mosh drops tmux's OSC52 unless it carries the `c;` selection-type option) — the bridge is the sole clipboard path
 - Plugin system for extensibility
 
 ### Architecture
@@ -79,9 +79,10 @@ Configured in `tmux/tmux.conf`:
    - `rclip` → SSH tunnel → Remote Bridge → local clipboard
    - `ropen` → SSH tunnel → Remote Bridge → local browser
 
-3. **Remote session without tunnel**:
-   - `rclip` → Falls back to OSC52 escape sequences
+3. **Remote session without tunnel, plain SSH**:
+   - `rclip` → Falls back to OSC52 escape sequences (interactive non-tmux shells only)
    - `ropen` → Copies URL to clipboard via OSC52
+   - Over mosh (`sm`), there is no OSC52 fallback: mosh only relays OSC52 sequences carrying the `c;` selection-type option, and tmux doesn't emit it by default, so tmux's OSC52 is silently dropped (worse with nested tmux: remote-tmux → mosh → local-tmux → terminal). If the tunnel is down during a mosh session, `rclip` fails honestly (error, non-zero exit) instead of reporting false success.
 
 ### Troubleshooting
 
