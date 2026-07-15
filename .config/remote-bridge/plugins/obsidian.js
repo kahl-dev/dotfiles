@@ -77,6 +77,10 @@ function ensureObsidianRunning() {
   });
 }
 
+function stripArgQuotes(value) {
+  return value.replace(/^["']|["']$/g, '');
+}
+
 function parseArguments(commandString) {
   const arguments_ = [];
   let current = '';
@@ -166,6 +170,26 @@ function ensureVaultLoaded() {
 }
 
 /**
+ * Guard against a client-supplied path escaping the vault directory.
+ * path.resolve collapses any ../ segments before we compare against
+ * vaultPath, so a value like "../../escape.md" is caught here rather than
+ * silently writing outside the vault — or, for non-stdin commands, being
+ * passed straight through to the obsidian CLI as a path=/to= argument.
+ * The vault root itself is also rejected: no note-level operation
+ * (create/append/prepend/delete/move/rename/read) legitimately targets the
+ * vault directory, so allowing resolved === vaultPath through is never
+ * correct and previously let `create path=.` escape into the bridge's
+ * working directory.
+ */
+function assertPathInVault(vaultPath, filePath) {
+  const resolved = path.resolve(vaultPath, filePath);
+  if (!resolved.startsWith(vaultPath + path.sep)) {
+    throw new Error(`Path escapes vault: ${filePath}`);
+  }
+  return resolved;
+}
+
+/**
  * Handle stdin content by writing directly to the vault file system.
  * The obsidian CLI's content= arg breaks with multiline content via execFile,
  * so for create/append/prepend with --stdin, we write the file directly
@@ -178,7 +202,7 @@ function handleStdinCommand(arguments_, stdinData, vaultPath) {
 
   for (const argument of arguments_) {
     if (argument.startsWith('path=')) {
-      filePath = argument.slice(5).replace(/^["']|["']$/g, '');
+      filePath = stripArgQuotes(argument.slice(5));
     }
   }
 
@@ -186,7 +210,7 @@ function handleStdinCommand(arguments_, stdinData, vaultPath) {
     throw new Error('No path= argument found for stdin content');
   }
 
-  const fullPath = path.join(vaultPath, filePath);
+  const fullPath = assertPathInVault(vaultPath, filePath);
   const directory = path.dirname(fullPath);
 
   // Ensure directory exists
@@ -252,6 +276,11 @@ module.exports = {
   name: 'obsidian',
   version: '1.3.0',
 
+  // Exported for unit testing the path-traversal guard directly, without
+  // going through the Obsidian CLI/vault startup dance.
+  handleStdinCommand,
+  assertPathInVault,
+
   endpoints: [
     {
       path: '/obsidian/exec',
@@ -288,6 +317,22 @@ module.exports = {
           } catch (writeError) {
             return response.status(500).json({ error: writeError.message });
           }
+        }
+
+        // Every other command (delete/move/rename/read, and non-stdin
+        // create) reaches the obsidian CLI below with client-supplied
+        // path=/to= arguments unchanged — apply the same vault-escape guard
+        // used for stdin writes before any of them run.
+        try {
+          for (const argument of arguments_) {
+            const match = argument.match(/^(path|to)=(.*)$/);
+            if (match) {
+              const value = stripArgQuotes(match[2]);
+              assertPathInVault(vaultPath, value);
+            }
+          }
+        } catch (pathError) {
+          return response.status(400).json({ error: pathError.message });
         }
 
         execFile(OBSIDIAN_BINARY, arguments_, { maxBuffer: 50 * 1024 * 1024 }, (error, stdout, stderr) => {

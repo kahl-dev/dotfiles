@@ -5,9 +5,14 @@
 
 set -euo pipefail
 
+# shellcheck source=../lib/bridge-token.sh
+source "$(dirname "$0")/../lib/bridge-token.sh"
+
 # Configuration
 BRIDGE_PORT="${REMOTE_BRIDGE_PORT:-8377}"
 BRIDGE_URL="http://localhost:${BRIDGE_PORT}/clipboard"
+
+TOKEN="$(require_bridge_token)" || exit 1
 
 # Help text
 show_help() {
@@ -140,6 +145,7 @@ send_via_bridge() {
     # Send request
     local response=$(curl -sS -X POST "$BRIDGE_URL" \
         -H "Content-Type: application/json" \
+        -H "Authorization: Bearer $TOKEN" \
         -d "$(jq -n \
             --arg data "$data" \
             --argjson metadata "$metadata" \

@@ -5,9 +5,14 @@
 
 set -euo pipefail
 
+# shellcheck source=../lib/bridge-token.sh
+source "$(dirname "$0")/../lib/bridge-token.sh"
+
 # Configuration
 BRIDGE_PORT="${REMOTE_BRIDGE_PORT:-8377}"
 BRIDGE_URL="http://localhost:${BRIDGE_PORT}/browser"
+
+TOKEN="$(require_bridge_token)" || exit 1
 
 # Help text
 show_help() {
@@ -21,7 +26,6 @@ Usage:
     ropen --batch < urls.txt        # Read URLs from file
 
 Options:
-    --no-validate    Skip URL validation
     --app <name>     Open in specific application
     --batch          Read URLs from stdin (one per line)
     -h, --help       Show this help message
@@ -32,13 +36,10 @@ Environment:
 Examples:
     # Open website
     ropen "https://example.com"
-    
+
     # Open in specific browser
     ropen --app "Google Chrome" "https://example.com"
-    
-    # Open local development URL
-    ropen --no-validate "http://localhost:3000"
-    
+
     # Open multiple URLs
     ropen "https://github.com" "https://google.com"
     
@@ -48,17 +49,12 @@ EOF
 }
 
 # Parse arguments
-NO_VALIDATE=false
 APP=""
 BATCH_MODE=false
 URLS=()
 
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --no-validate)
-            NO_VALIDATE=true
-            shift
-            ;;
         --app)
             APP="$2"
             shift 2
@@ -104,13 +100,13 @@ send_url() {
         '$ARGS.named')
     
     # Build options
-    local options="{\"noValidate\": $NO_VALIDATE"
-    [ -n "$APP" ] && options="$options, \"app\": \"$APP\""
-    options="$options}"
+    local options="{}"
+    [ -n "$APP" ] && options="{\"app\": \"$APP\"}"
     
     # Send request
     local response=$(curl -sS -X POST "$BRIDGE_URL" \
         -H "Content-Type: application/json" \
+        -H "Authorization: Bearer $TOKEN" \
         -d "$(jq -n \
             --arg data "$encoded_url" \
             --argjson metadata "$metadata" \

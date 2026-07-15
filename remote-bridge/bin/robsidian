@@ -183,6 +183,13 @@ if [ -n "$BRIDGE_PORT" ] && [ "$(uname)" != "Darwin" ]; then
         exit 1
     fi
 
+    # Sourced here rather than at the top of the file — local mode (the
+    # common case on macOS) execs obsidian directly and never needs a token.
+    # shellcheck source=../lib/bridge-token.sh
+    source "$(dirname "$0")/../lib/bridge-token.sh"
+
+    TOKEN="$(require_bridge_token)" || exit 1
+
     # Base64 encode the command (no line wrapping for JSON safety)
     ENCODED_COMMAND=$(printf '%s' "$COMMAND" | base64 -w0 2>/dev/null || printf '%s' "$COMMAND" | base64)
 
@@ -212,6 +219,7 @@ if [ -n "$BRIDGE_PORT" ] && [ "$(uname)" != "Darwin" ]; then
     # Send request
     RESPONSE=$(curl -sS -X POST "$BRIDGE_URL" \
         -H "Content-Type: application/json" \
+        -H "Authorization: Bearer $TOKEN" \
         -d "$PAYLOAD" \
         2>&1)
 

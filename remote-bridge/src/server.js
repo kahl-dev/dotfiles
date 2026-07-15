@@ -2,12 +2,12 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const path = require('path');
-const fs = require('fs').promises;
 const { loadConfig } = require('./utils/config');
 const { createLogger } = require('./utils/logger');
 const { loadPlugins } = require('./utils/plugin-loader');
+const { resolveExpectedToken } = require('./utils/token');
 const base64Middleware = require('./middleware/base64');
+const { createAuthMiddleware } = require('./middleware/auth');
 const rateLimitMiddleware = require('./middleware/rate-limit');
 const validationMiddleware = require('./middleware/validation');
 
@@ -24,18 +24,34 @@ class RemoteBridgeServer {
     // Load configuration
     this.config = await loadConfig();
     this.logger = createLogger(this.config.logging);
-    
+
     this.logger.info('Starting Remote Bridge Server...');
-    
+
+    // Fail closed: refuse to start unauthenticated when no token is available.
+    // A whitespace-only token is treated the same as an unset one — it's not
+    // a usable secret (an atuin var set to blank/padded content resolves to
+    // one), so starting the server "authenticated" on it would be misleading.
+    const { token, error: tokenError } = resolveExpectedToken();
+    if (tokenError) {
+      // Distinguishes "atuin not authenticated" / "atuin missing" from a
+      // plain unset var — never logs the token value itself.
+      this.logger.error('Token resolution via atuin failed', { error: tokenError.message });
+    }
+    this.expectedToken = token;
+    if (!this.expectedToken || !this.expectedToken.trim()) {
+      this.logger.error('REMOTE_BRIDGE_TOKEN not found (env or atuin) — run: atuin dotfiles var set REMOTE_BRIDGE_TOKEN <value>');
+      process.exit(1);
+    }
+
     // Setup middleware
     this.setupMiddleware();
-    
+
     // Load plugins
     await this.loadPlugins();
-    
+
     // Setup core routes
     this.setupRoutes();
-    
+
     // Start server
     await this.start();
   }
@@ -43,6 +59,7 @@ class RemoteBridgeServer {
   setupMiddleware() {
     this.app.use(bodyParser.json({ limit: '10mb' }));
     this.app.use(base64Middleware);
+    this.app.use(createAuthMiddleware(this.expectedToken));
     this.app.use(rateLimitMiddleware(this.config.rateLimit));
     this.app.use(validationMiddleware);
     

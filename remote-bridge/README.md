@@ -89,9 +89,6 @@ ropen --app "Firefox" "https://example.com"
 
 # Open multiple URLs
 ropen "https://github.com" "https://google.com"
-
-# Skip validation for local URLs
-ropen --no-validate "http://localhost:3000"
 ```
 
 ### rnotify - Notification Tool

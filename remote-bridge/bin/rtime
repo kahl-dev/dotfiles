@@ -5,8 +5,13 @@
 
 set -euo pipefail
 
+# shellcheck source=../lib/bridge-token.sh
+source "$(dirname "$0")/../lib/bridge-token.sh"
+
 BRIDGE_PORT="${REMOTE_BRIDGE_PORT:-8377}"
 BRIDGE_URL="http://localhost:${BRIDGE_PORT}/time-tracking"
+
+TOKEN="$(require_bridge_token)" || exit 1
 
 show_help() {
     cat << EOF
@@ -38,7 +43,7 @@ fetch_dates() {
     local dates="$1"
     local output_dir="${2:-}"
 
-    response=$(curl -sf "${BRIDGE_URL}?dates=${dates}" 2>/dev/null) || {
+    response=$(curl -sf -H "Authorization: Bearer $TOKEN" "${BRIDGE_URL}?dates=${dates}" 2>/dev/null) || {
         echo "Error: Cannot connect to Remote Bridge on port ${BRIDGE_PORT}" >&2
         exit 1
     }
@@ -57,7 +62,7 @@ fetch_dates() {
 }
 
 list_dates() {
-    curl -sf "${BRIDGE_URL}/dates" 2>/dev/null || {
+    curl -sf -H "Authorization: Bearer $TOKEN" "${BRIDGE_URL}/dates" 2>/dev/null || {
         echo "Error: Cannot connect to Remote Bridge on port ${BRIDGE_PORT}" >&2
         exit 1
     }

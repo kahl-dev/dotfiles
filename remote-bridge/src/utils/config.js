@@ -15,8 +15,7 @@ async function loadConfig() {
     },
     rateLimit: {
       windowMs: 60000,
-      maxRequests: 60,
-      maxPerHost: 20
+      maxRequests: 60
     },
     logging: {
       file: '~/.local/share/remote-bridge/activity.log',

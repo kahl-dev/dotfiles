@@ -44,7 +44,6 @@ notifications:
 rateLimit:
   windowMs: 60000      # 1 minute window
   maxRequests: 60      # Max total requests per window
-  maxPerHost: 20       # Max requests per host per window
 
 # Logging configuration
 logging:
