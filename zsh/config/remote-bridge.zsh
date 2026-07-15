@@ -1,22 +1,11 @@
 # Remote Bridge Integration
 # Provides SSH tunnel configuration and utilities
 
-# Compute per-user bridge port from a username
-# Deterministic: same username always produces the same port (POSIX cksum)
-# Range: 49152–65534 (dynamic/private ports, avoids well-known services)
-_remote_bridge_user_port() {
-    local username="$1"
-    echo $(( 49152 + $(printf '%s' "$username" | cksum | cut -d' ' -f1) % 16383 ))
-}
-
-# Export port for CLI tools
-# Remote SSH sessions: unique port per user (prevents cross-talk on shared servers)
-# Local machine: fixed port 8377 (where the bridge service listens)
-if [[ -n "${SSH_CLIENT:-}" ]]; then
-    export REMOTE_BRIDGE_PORT=$(_remote_bridge_user_port "$USER")
-else
-    export REMOTE_BRIDGE_PORT=8377
-fi
+# Shared per-user port formula (also sourced by .zshenv and the bash clients).
+# REMOTE_BRIDGE_PORT itself is already exported by .zshenv (runs for every
+# shell, interactive or not) — this file only needs bridge_user_port() below
+# for remote-bridge-ssh-config.
+[[ -f "$DOTFILES/remote-bridge/lib/bridge-port.sh" ]] && source "$DOTFILES/remote-bridge/lib/bridge-port.sh"
 
 # Propagate to tmux global environment so popups and subprocesses inherit it.
 # Same pattern as tmux.remote.conf does for SSH_AUTH_SOCK.
@@ -116,7 +105,7 @@ remote-bridge-ssh-config() {
         remote_user="$USER"
     fi
 
-    remote_port=$(_remote_bridge_user_port "$remote_user")
+    remote_port=$(bridge_user_port "$remote_user")
 
     echo "# Remote Bridge SSH config"
     echo "# Remote user: ${remote_user}"

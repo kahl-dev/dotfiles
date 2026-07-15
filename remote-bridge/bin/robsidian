@@ -6,7 +6,10 @@
 
 set -euo pipefail
 
-BRIDGE_PORT="${REMOTE_BRIDGE_PORT:-}"
+# shellcheck source=../lib/bridge-port.sh
+source "$(dirname "$0")/../lib/bridge-port.sh"
+
+BRIDGE_PORT="$(resolve_bridge_port)"
 BRIDGE_URL="http://localhost:${BRIDGE_PORT}/obsidian/exec"
 
 show_help() {
@@ -25,7 +28,8 @@ Options:
     -h, --help           Show this help message
 
 Environment:
-    REMOTE_BRIDGE_PORT    If set, proxy through Remote Bridge (default: local exec)
+    REMOTE_BRIDGE_PORT    Override the auto-resolved bridge port (macOS = local
+                          exec; other OS = proxy through the bridge)
 
 Content Modes:
     1. Inline:   robsidian create path="X" content="simple text"
@@ -177,7 +181,7 @@ for arg in "${COMMAND_ARGS[@]}"; do
 done
 
 # Remote mode: proxy through bridge (skip if running on macOS — local Obsidian is available)
-if [ -n "$BRIDGE_PORT" ] && [ "$(uname)" != "Darwin" ]; then
+if [ "$(uname)" != "Darwin" ]; then
     # Check if bridge is available
     if ! curl -sf --connect-timeout 0.5 --max-time 2 "http://localhost:${BRIDGE_PORT}/health" >/dev/null 2>&1; then
         echo "Error: Remote Bridge is not available on port $BRIDGE_PORT" >&2

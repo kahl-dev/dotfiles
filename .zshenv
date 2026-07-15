@@ -9,6 +9,17 @@ export DOTFILES="$HOME/.dotfiles"
 
 source $DOTFILES/zsh/utils.zsh
 
+# Remote Bridge port — resolved by machine (macOS bridge host = 8377, remote
+# host = per-user derived port), env-first so an inherited value (e.g. from
+# tmux's global environment) is preserved. Set in .zshenv (not .zshrc) so
+# non-interactive shells get it too. uname-based, NOT an SSH_CLIENT gate:
+# SSH_CLIENT-unset does not imply "local Mac" — it can be cron/boot on a REMOTE
+# host, where hardcoding 8377 would be wrong.
+if [[ -f "$DOTFILES/remote-bridge/lib/bridge-port.sh" ]]; then
+  source "$DOTFILES/remote-bridge/lib/bridge-port.sh"
+  export REMOTE_BRIDGE_PORT="$(resolve_bridge_port)"
+fi
+
 # Set ZDOTDIR to point to the .dotfiles zsh directory
 export ZDOTDIR="$DOTFILES/zsh"
 
