@@ -70,8 +70,8 @@ local asRightColumn = {
     title = "Workspace",
     color = colors.blue,
     bindings = {
-      { key = "alt 1..9", desc = "Switch to workspace" },
-      { key = "alt shift 1..9", desc = "Move window to ws" },
+      { key = "alt 1..9, 0", desc = "Switch to ws (0 = iPad)" },
+      { key = "alt shift 1..9, 0", desc = "Move window to ws" },
       { key = "alt n/p",  desc = "Next/prev workspace" },
       { key = "alt tab",  desc = "Back and forth" },
     }

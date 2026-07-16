@@ -10,8 +10,8 @@ after-startup-command = []
 # Start AeroSpace at login
 start-at-login = true
 
-# Sticky windows — move Wispr Flow to current workspace on every switch
-exec-on-workspace-change = ['/bin/bash', '/Users/kahl-dev/.config/aerospace/sticky-wispr.sh']
+# Reload config automatically when the file is saved (0.21.0+)
+auto-reload-config = true
 
 # Normalizations
 # See: https://nikitabobko.github.io/AeroSpace/guide#normalization
@@ -69,11 +69,6 @@ run = ['layout floating']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.reminders'
-run = ['layout floating']
-
-[[on-window-detected]]
-if.app-id = 'com.electron.wispr-flow.accessibility-mac-app'
-check-further-callbacks = true
 run = ['layout floating']
 
 # ╔══════════════════════════════════════════════════════════════╗
@@ -143,6 +138,7 @@ alt-6 = 'workspace 6'
 alt-7 = 'workspace 7'
 alt-8 = 'workspace 8'
 alt-9 = 'workspace 9'
+alt-0 = 'workspace 10'
 alt-n = 'workspace next --wrap-around'
 alt-p = 'workspace prev --wrap-around'
 
@@ -156,6 +152,7 @@ alt-shift-6 = 'move-node-to-workspace 6'
 alt-shift-7 = 'move-node-to-workspace 7'
 alt-shift-8 = 'move-node-to-workspace 8'
 alt-shift-9 = 'move-node-to-workspace 9'
+alt-shift-0 = 'move-node-to-workspace 10'
 
 # Workspace navigation
 alt-tab = 'workspace-back-and-forth'
@@ -179,19 +176,21 @@ alt-shift-slash = '''exec-and-forget /opt/homebrew/bin/hs -c "require('modules.u
 # ╚══════════════════════════════════════════════════════════════╝
 
 [workspace-to-monitor-force-assignment]
-# Primary workspaces (home: LG HDR 4K | work: LG Ultra HD)
+# Patterns are case-insensitive substring matches; first match in the array wins.
+# Primary workspaces → main external (LG HDR 4K when present, else LG Ultra HD, else MacBook)
 1 = ['LG HDR 4K', 'LG Ultra HD', 'main']
 2 = ['LG HDR 4K', 'LG Ultra HD', 'main']
 3 = ['LG HDR 4K', 'LG Ultra HD', 'main']
 4 = ['LG HDR 4K', 'LG Ultra HD', 'main']
 5 = ['LG HDR 4K', 'LG Ultra HD', 'main']
-# Secondary workspaces (home: LG Ultra HD | work: HP Z24i)
-# HP Z24i only exists at work, so falls through to LG Ultra HD at home
+# Secondary workspaces → second external (work: HP Z24i | both LGs connected: LG Ultra HD)
 6 = ['HP Z24i', 'LG Ultra HD', 'secondary', 'main']
 7 = ['HP Z24i', 'LG Ultra HD', 'secondary', 'main']
-# Tertiary workspaces → MacBook (chat/music/monitoring)
+# Tertiary workspaces → MacBook (chat/music/monitoring); 'secondary' covers clamshell mode
 8 = ['Built-in Retina Display', 'secondary', 'main']
 9 = ['Built-in Retina Display', 'secondary', 'main']
+# iPad workspace (alt-0) → Sidecar/AirPlay display; falls back to MacBook without iPad
+10 = ['Sidecar', 'Built-in Retina Display', 'secondary', 'main']
 
 # ╔══════════════════════════════════════════════════════════════╗
 # ║  Service Mode (hyper+;)                                       ║
