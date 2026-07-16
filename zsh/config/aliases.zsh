@@ -550,19 +550,13 @@ alias astatus='atuin status'
 # Remote Bridge Clipboard Aliases
 # ############################## #
 
-# Make clipboard tools use rclip for remote compatibility
+# Make pbcopy use rclip so macOS's clipboard command works over the bridge on
+# remote hosts too. The xclip/xsel/wl-copy aliases were removed — the bin/xclip
+# and bin/wl-copy PATH shims already route those commands (and any tool that
+# execs them by name, e.g. lazygit) through rclip to the bridge, and unlike an
+# alias they also reach non-interactive callers.
 if command_exists rclip; then
-  # Common clipboard commands mapped to rclip
-  alias xclip='rclip'
-  alias xsel='rclip'
-  alias wl-copy='rclip'
   alias pbcopy='rclip'
-  
-  # For commands that expect stdin by default
-  alias 'xclip -selection clipboard'='rclip'
-  alias 'xclip -sel clip'='rclip'
-  alias 'xsel --clipboard'='rclip'
-  alias 'xsel -b'='rclip'
 fi
 
 # ############################## #

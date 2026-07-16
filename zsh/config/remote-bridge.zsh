@@ -13,11 +13,6 @@ if [[ -n "${TMUX:-}" ]]; then
     tmux set-environment -g REMOTE_BRIDGE_PORT "$REMOTE_BRIDGE_PORT" 2>/dev/null
 fi
 
-# Add Remote Bridge CLI tools to PATH
-if [[ -d "$DOTFILES/remote-bridge/bin" ]]; then
-    export PATH="$DOTFILES/remote-bridge/bin:$PATH"
-fi
-
 # Helper function to check if Remote Bridge is available
 remote-bridge-check() {
     # Fast timeout to not block shell startup

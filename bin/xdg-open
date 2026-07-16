@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# xdg-open shim — route browser-opening to the local machine via the Remote
+# Bridge. On a headless remote host there is no local browser and no file
+# associations worth honoring, so only http(s) URLs are forwarded to the Mac's
+# browser through ropen; anything else fails loudly instead of silently doing
+# nothing.
+set -euo pipefail
+
+# URL schemes are case-insensitive (RFC 3986 §3.1), so match them that way —
+# otherwise HTTP://… / HTTPS://… would fall through to the reject branch.
+shopt -s nocasematch
+
+case "${1:-}" in
+    http://*|https://*)
+        exec ropen "$@"
+        ;;
+    *)
+        echo "xdg-open shim: only http(s) URLs are routed to the local browser (headless host)" >&2
+        exit 1
+        ;;
+esac

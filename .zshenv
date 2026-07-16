@@ -20,6 +20,15 @@ if [[ -f "$DOTFILES/remote-bridge/lib/bridge-port.sh" ]]; then
   export REMOTE_BRIDGE_PORT="$(resolve_bridge_port)"
 fi
 
+# On a headless remote host (non-macOS), route browser-opening through the
+# Remote Bridge to the local Mac's browser. $OSTYPE (a zsh builtin: no fork,
+# and resolvable before the PATH array below is built) rather than an
+# SSH_CLIENT gate — an unset SSH_CLIENT does not imply "local Mac" (could be
+# cron/boot on a remote host), same reasoning as resolve_bridge_port.
+if [[ "$OSTYPE" != darwin* ]]; then
+  export BROWSER=ropen
+fi
+
 # Set ZDOTDIR to point to the .dotfiles zsh directory
 export ZDOTDIR="$DOTFILES/zsh"
 
@@ -41,6 +50,7 @@ export SAVEHIST=$HISTSIZE
 typeset -U path
 path=(
   "$DOTFILES/bin"
+  "$DOTFILES/remote-bridge/bin"
   ${(s.:.)PATH}  # This expands the current PATH into an array in Zsh
 )
 
