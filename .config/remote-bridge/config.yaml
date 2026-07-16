@@ -7,26 +7,14 @@ service:
 # Notification rules
 notifications:
   rules:
-    # Claude notifications - high priority with interaction
-    - type: "claude-hook"
-      requiresInteraction: true
+    # Claude Code hook notifications (types sent by idle-notify.sh)
+    - type: "claude-idle_prompt"
       sound: "Glass"
-      priority: "high"
-    
-    # Build/CI notifications
-    - type: "build-success"
+    - type: "claude-permission_prompt"
       sound: "Ping"
-      priority: "normal"
-    
-    - type: "build-error"
+    # Generic error convention (rnotify --type error)
+    - type: "error"
       sound: "Basso"
-      priority: "high"
-    
-    # Test notifications
-    - type: "test-*"
-      sound: "Pop"
-      priority: "normal"
-  
   defaultSound: "Pop"
 
 # Rate limits

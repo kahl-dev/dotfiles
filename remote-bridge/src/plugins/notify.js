@@ -61,10 +61,6 @@ module.exports = {
             sound: options.sound || rule?.sound || this.config.defaultSound,
             subtitle: options.subtitle || (metadata.session.startsWith('%') ? metadata.host : `Session: ${metadata.session}`),
             timeout: options.timeout || 10,
-            closeLabel: 'Close',
-            actions: options.actions,
-            dropdownLabel: options.dropdownLabel,
-            reply: rule?.requiresInteraction || options.reply
           };
           
           // Add custom data if provided

@@ -8,36 +8,14 @@ service:
 # Notification rules - matched in order
 notifications:
   rules:
-    # Claude hook notifications
-    - type: "claude-hook"
-      requiresInteraction: true
+    # Claude Code hook notifications (types sent by idle-notify.sh)
+    - type: "claude-idle_prompt"
       sound: "Glass"
-      priority: "high"
-    
-    # Build notifications
-    - type: "build-success"
+    - type: "claude-permission_prompt"
       sound: "Ping"
-      priority: "normal"
-    
-    - type: "build-error"
-      sound: "Sosumi"
-      priority: "high"
-    
-    # Test notifications
-    - type: "test-pass"
-      sound: "Pop"
-      priority: "normal"
-      
-    - type: "test-fail"
+    # Generic error convention (rnotify --type error)
+    - type: "error"
       sound: "Basso"
-      priority: "high"
-    
-    # Deployment notifications
-    - type: "deployment-*"
-      sound: "Hero"
-      priority: "high"
-  
-  # Default sound for unmatched notifications
   defaultSound: "Pop"
 
 # Rate limiting configuration

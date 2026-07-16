@@ -60,7 +60,7 @@ cat file.txt | rclip
 ropen "https://github.com"
 
 # Send notification
-rnotify "Build complete" --type build-success
+rnotify "Build complete"
 ```
 
 ## CLI Tools
@@ -98,15 +98,15 @@ ropen "https://github.com" "https://google.com"
 rnotify "Task complete"
 
 # With title and type
-rnotify "Tests passed" --title "CI Status" --type test-pass
+rnotify "Tests passed" --title "CI Status"
 
 # Claude hook example
 rnotify "Permission denied" \
-  --type claude-hook \
+  --type claude-permission_prompt \
   --data '{"tool": "bash", "command": "rm -rf /"}'
 
 # With custom sound
-rnotify "Deploy complete" --sound Hero --type deployment
+rnotify "Deploy complete" --sound Hero
 ```
 
 ## Configuration
@@ -122,15 +122,12 @@ service:
 
 notifications:
   rules:
-    - type: "claude-hook"
-      requiresInteraction: true
+    - type: "claude-idle_prompt"
       sound: "Glass"
-      priority: "high"
-    
-    - type: "build-*"
+    - type: "claude-permission_prompt"
       sound: "Ping"
-      priority: "normal"
-  
+    - type: "error"
+      sound: "Basso"
   defaultSound: "Pop"
 
 plugins:

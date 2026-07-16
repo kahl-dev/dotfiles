@@ -35,20 +35,16 @@ Options:
     --data <json>        Attach JSON data (or use --json for stdin)
     --data-file=<file>   Read JSON data from file (safe for complex content)
     --json               Read JSON data from stdin
-    --reply              Enable reply/interaction
     -h, --help           Show this help message
 
 Environment:
     REMOTE_BRIDGE_PORT    Port for Remote Bridge (default: 8377)
 
-Notification Types:
-    claude-hook          Claude hook notifications
-    build-success        Build completed successfully
-    build-error          Build failed
-    test-pass            Tests passed
-    test-fail            Tests failed
-    deployment           Deployment notifications
-    custom               Custom notifications
+Notification Types (types with a configured sound rule; any other
+type uses the default sound):
+    claude-idle_prompt        Claude Code idle prompt (Glass)
+    claude-permission_prompt  Claude Code permission prompt (Ping)
+    error                     Generic error (Basso)
 
 macOS Sounds:
     Basso, Blow, Bottle, Frog, Funk, Glass, Hero, Morse, Ping,
@@ -59,18 +55,14 @@ Examples:
     rnotify "Build complete"
     
     # With title and type
-    rnotify "All tests passed" --title "Test Suite" --type test-pass
-    
-    # Claude hook with interaction
-    rnotify "Permission denied" --type claude-hook --reply \\
-        --data '{"tool": "bash", "command": "rm -rf /"}'
-    
+    rnotify "Build failed" --title "CI" --type error
+
     # From command output
     make test 2>&1 | tail -n 1 | rnotify --title "Test Results"
     
     # With JSON data from stdin
     echo '{"errors": 5, "warnings": 2}' | \\
-        rnotify "Build completed with issues" --type build-error --json
+        rnotify "Build completed with issues" --type error --json
 EOF
 }
 
@@ -83,7 +75,6 @@ SOUND=""
 TIMEOUT=""
 DATA=""
 JSON_MODE=false
-REPLY=false
 
 # First, check for piped input
 if [ ! -t 0 ]; then
@@ -127,10 +118,6 @@ while [[ $# -gt 0 ]]; do
             ;;
         --json)
             JSON_MODE=true
-            shift
-            ;;
-        --reply)
-            REPLY=true
             shift
             ;;
         -h|--help)
@@ -209,7 +196,6 @@ add_option "subtitle" "$SUBTITLE"
 add_option "type" "$TYPE"
 add_option "sound" "$SOUND"
 add_option "timeout" "$TIMEOUT"
-add_option "reply" "$REPLY"
 
 # Add data if provided
 if [ -n "$DATA" ]; then

@@ -130,10 +130,11 @@ Example for custom notification rules:
 ```yaml
 notifications:
   rules:
+    - type: "claude-idle_prompt"
+      sound: "Glass"
+    - type: "claude-permission_prompt"
+      sound: "Ping"
     - type: "error"
       sound: "Basso"
-      priority: "high"
-    - type: "success"
-      sound: "Glass"
   defaultSound: "Pop"
 ```
