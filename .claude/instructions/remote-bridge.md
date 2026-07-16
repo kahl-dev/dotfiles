@@ -36,7 +36,13 @@ Remote Bridge is a unified clipboard and URL handling system that works seamless
    ```
    The remote port (60190) is unique to your username. The local destination is always 8377 (the bridge service).
 
-3. **Usage from anywhere**:
+3. **Set the auth token**:
+   The server fail-closes at startup without a token — every request (except `GET /health`) requires `Authorization: Bearer $REMOTE_BRIDGE_TOKEN`. Clients resolve it env-first, then from atuin. Set it once:
+   ```bash
+   atuin dotfiles var set REMOTE_BRIDGE_TOKEN "$(openssl rand -hex 32)"
+   ```
+
+4. **Usage from anywhere**:
    ```bash
    # Clipboard operations
    echo "text" | rclip          # Copy text
@@ -54,10 +60,8 @@ Remote Bridge is a unified clipboard and URL handling system that works seamless
 
 #### Neovim Clipboard
 Configured in `.config/nvim/lua/config/options.lua`:
-- Uses `rclip` for all clipboard operations
-- Copy with `"+y` in normal/visual mode
-- Paste with `"+p` or `"+P`
-- Works identically on local and remote sessions
+- Copy with `"+y` in normal/visual mode uses `rclip`
+- The bridge is write-only by design (`rclip` has no paste counterpart), so `"+p` / `"+P` do NOT go through the bridge: locally it falls back to `pbpaste`, remotely there is no bridge paste path — use the terminal's own paste (bracketed paste, e.g. Cmd+V) instead
 
 #### Tmux Clipboard
 Configured in `tmux/tmux.conf`:
@@ -78,6 +82,7 @@ Configured in `tmux/tmux.conf`:
 2. **Remote session with tunnel**:
    - `rclip` → SSH tunnel → Remote Bridge → local clipboard
    - `ropen` → SSH tunnel → Remote Bridge → local browser
+   - On non-macOS hosts, `.zshenv` exports `BROWSER=ropen` and `bin/xdg-open` routes `http(s)` opens through `ropen` (rejecting other schemes) — so nvim's `gx` or any other caller that shells out to `xdg-open` reaches the Mac's browser automatically
 
 3. **Remote session without tunnel, plain SSH**:
    - `rclip` → Falls back to OSC52 escape sequences (interactive non-tmux shells only)
@@ -96,7 +101,7 @@ curl http://localhost:${REMOTE_BRIDGE_PORT}/health
 ```bash
 remote-bridge logs -f
 # or directly:
-tail -f ~/.config/remote-bridge/logs/remote-bridge-*.log
+tail -f ~/.local/share/remote-bridge/activity.log
 ```
 
 **Test clipboard**:

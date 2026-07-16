@@ -8,7 +8,7 @@ A bidirectional communication system for remote SSH sessions to interact with yo
 - 🌐 **URL Opening**: Open URLs in your local browser from remote sessions
 - 🔔 **Smart Notifications**: Configurable notifications with sounds and rules
 - 🔌 **Plugin System**: Extend functionality with custom JavaScript plugins
-- 🔒 **Secure**: Only accessible through SSH reverse tunnels
+- 🔒 **Secure**: Localhost-bound, per-user SSH tunnel, and mandatory Bearer-token auth on every request
 - 📊 **Logging**: Comprehensive activity logging with rotation
 
 ## Quick Start
@@ -46,6 +46,14 @@ Host myserver
 ```
 
 The remote port is derived from your username. The local destination is always `localhost:8377` (the bridge service).
+
+### Authentication
+
+Every request needs `Authorization: Bearer $REMOTE_BRIDGE_TOKEN` — `GET /health` is the only exempt route. The server fail-closes at startup if no token is configured. Clients resolve the token env-first, then from atuin's synced dotfiles vars. Set it once:
+
+```bash
+atuin dotfiles var set REMOTE_BRIDGE_TOKEN "$(openssl rand -hex 32)"
+```
 
 ### Basic Usage
 
@@ -108,6 +116,48 @@ rnotify "Permission denied" \
 # With custom sound
 rnotify "Deploy complete" --sound Hero
 ```
+
+### rtime - Time Tracking Tool
+
+```bash
+# Fetch specific dates
+rtime fetch --dates 2026-03-25,2026-03-24
+
+# Fetch last 7 days / today only
+rtime fetch --week
+rtime fetch --today
+
+# Save JSONL files to a directory instead of stdout JSON
+rtime fetch --today --output ~/time-tracking
+
+# List available dates
+rtime dates
+```
+
+### robsidian - Obsidian CLI Wrapper
+
+Local: execs the `obsidian` CLI directly. Remote: proxies the same command through Remote Bridge.
+
+```bash
+# Run any obsidian CLI command
+robsidian vault
+robsidian search query="daily notes" format=json
+
+# Create/append a note inline
+robsidian create path="notes/test.md" content="Hello"
+
+# Create/append from stdin or a file — bypasses shell escaping issues
+# (backticks, $variables, unicode, etc.)
+cat research.md | robsidian create path="notes/research.md" --stdin
+robsidian append path="notes/log.md" --content-file=/tmp/entry.md
+```
+
+### PATH Shims
+
+Drop-in replacements in `bin/` (dotfiles root, ahead of `/usr/bin` on `PATH`) so tools that shell out to Linux-native commands transparently hit the bridge instead:
+
+- `xclip`, `wl-copy` — route to `rclip`, so anything that execs them (e.g. lazygit) reaches the local clipboard
+- `xdg-open` — routes `http(s)` opens through `ropen` and rejects other schemes; paired with `BROWSER=ropen` (exported non-macOS in `.zshenv`) so nvim's `gx` and friends reach the Mac's browser
 
 ## Configuration
 
@@ -228,7 +278,7 @@ remote-bridge test-tunnel  # Test SSH tunnel
 - **Local Service**: Node.js/Express server on port 8377
 - **Per-user port isolation**: Each developer gets a unique remote port derived from username (`cksum` hash). Prevents cross-talk on shared servers
 - **Communication**: Base64-encoded JSON over HTTP
-- **Security**: Localhost-only binding + SSH tunnel with per-user port
+- **Security**: Localhost-only binding + SSH tunnel with per-user port + mandatory Bearer-token auth (server fail-closes without `REMOTE_BRIDGE_TOKEN`; `GET /health` exempt)
 - **Extensibility**: JavaScript plugin system
 - **Logging**: Winston with rotation
 

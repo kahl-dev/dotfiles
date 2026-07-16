@@ -329,7 +329,7 @@ This repo has three documentation layers (see global CLAUDE.md for general polic
 - **`README.md`** (root) — Human-facing: features, installation, screenshots
 - **`CLAUDE.md`** (root) — AI-facing: architecture, file paths, commands
 - **Topic READMEs** (`tmux/`, `remote-bridge/`, `meta/`, `.hammerspoon/`) — Component-specific
-- **`docs/`** — Long-form guides (`tmux.md`, `universal-clipboard.md`)
+- **`docs/`** — Long-form guides (`tmux.md`)
 
 Update all affected layers in the same commit when changing documented functionality.
 
