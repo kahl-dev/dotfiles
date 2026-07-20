@@ -580,6 +580,17 @@ alias mcc='make clearcache'
 alias cc='claude -c'
 alias ccu='npx ccusage'
 
+# Session-only model switch. /model has no session-only mode locally — it always
+# persists the pick into settings.json and rewrites the whole file from a cache
+# that may be stale, which silently reverts unrelated edits. --model sets the
+# model for the session without touching the file.
+alias cf='claude --model fable'
+alias co='claude --model opus'
+alias cs='claude --model sonnet'
+
+# Subcommands
+alias ca='claude agents'
+
 # YOLO mode wrappers — auto mode is Claude's new default, so prompt before
 # skipping permissions to keep the bypass deliberate (muscle memory retraining).
 # Drop any pre-existing aliases so the function definitions below parse cleanly
