@@ -2,15 +2,21 @@
 
 ROBSIDIAN="$BATS_TEST_DIRNAME/../bin/robsidian"
 
+require_darwin() {
+  [ "$(uname)" = "Darwin" ] || skip "Local Obsidian mode requires macOS"
+}
+
 @test "local mode: returns vault info" {
-  unset REMOTE_BRIDGE_PORT
+  require_darwin
+  unset REMOTE_BRIDGE_SOCKET
   run "$ROBSIDIAN" vault
   [ "$status" -eq 0 ]
   [[ "$output" =~ "kahl_dev" ]]
 }
 
 @test "local mode: suppresses stderr noise" {
-  unset REMOTE_BRIDGE_PORT
+  require_darwin
+  unset REMOTE_BRIDGE_SOCKET
   run "$ROBSIDIAN" version
   [ "$status" -eq 0 ]
   # Should have clean output, no loader noise
@@ -36,28 +42,32 @@ ROBSIDIAN="$BATS_TEST_DIRNAME/../bin/robsidian"
 }
 
 @test "remote mode: error when bridge unavailable" {
-  export REMOTE_BRIDGE_PORT=19999
+  export REMOTE_BRIDGE_SOCKET=/nonexistent/remote-bridge.sock
   run "$ROBSIDIAN" vault
   [ "$status" -ne 0 ]
   [[ "$output" =~ "not available" ]] || [[ "$output" =~ "Remote Bridge" ]]
 }
 
 @test "local mode: handles quoted arguments" {
-  unset REMOTE_BRIDGE_PORT
+  require_darwin
+  unset REMOTE_BRIDGE_SOCKET
   run "$ROBSIDIAN" search query="daily" format=json
   [ "$status" -eq 0 ]
 }
 
 @test "local mode: propagates exit code" {
-  unset REMOTE_BRIDGE_PORT
+  require_darwin
+  unset REMOTE_BRIDGE_SOCKET
   run "$ROBSIDIAN" vault
   [ "$status" -eq 0 ]
 }
 
 # Integration test — only runs when bridge is available
 @test "remote mode: returns vault info through bridge" {
-  curl -sf http://localhost:8377/health >/dev/null 2>&1 || skip "Remote Bridge not running"
-  export REMOTE_BRIDGE_PORT=8377
+  socket="$HOME/.ssh/remote-bridge.sock"
+  [ -S "$socket" ] || skip "Remote Bridge socket not present"
+  curl -sf --unix-socket "$socket" http://localhost/health >/dev/null 2>&1 || skip "Remote Bridge not running"
+  export REMOTE_BRIDGE_SOCKET="$socket"
   run "$ROBSIDIAN" vault
   [ "$status" -eq 0 ]
   [[ "$output" =~ "kahl_dev" ]]
@@ -65,8 +75,9 @@ ROBSIDIAN="$BATS_TEST_DIRNAME/../bin/robsidian"
 
 # Auto-start tests — fast path (Obsidian already running)
 @test "local mode: succeeds quickly when Obsidian is already running" {
+  require_darwin
   pgrep -x Obsidian >/dev/null 2>&1 || skip "Obsidian not running"
-  unset REMOTE_BRIDGE_PORT
+  unset REMOTE_BRIDGE_SOCKET
   # Should complete in under 3 seconds (no startup wait)
   run "$ROBSIDIAN" vault
   [ "$status" -eq 0 ]
@@ -75,8 +86,10 @@ ROBSIDIAN="$BATS_TEST_DIRNAME/../bin/robsidian"
 
 @test "remote mode: succeeds quickly when Obsidian is already running" {
   pgrep -x Obsidian >/dev/null 2>&1 || skip "Obsidian not running"
-  curl -sf http://localhost:8377/health >/dev/null 2>&1 || skip "Remote Bridge not running"
-  export REMOTE_BRIDGE_PORT=8377
+  socket="$HOME/.ssh/remote-bridge.sock"
+  [ -S "$socket" ] || skip "Remote Bridge socket not present"
+  curl -sf --unix-socket "$socket" http://localhost/health >/dev/null 2>&1 || skip "Remote Bridge not running"
+  export REMOTE_BRIDGE_SOCKET="$socket"
   run "$ROBSIDIAN" vault
   [ "$status" -eq 0 ]
   [[ "$output" =~ "kahl_dev" ]]

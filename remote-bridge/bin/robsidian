@@ -6,11 +6,11 @@
 
 set -euo pipefail
 
-# shellcheck source=../lib/bridge-port.sh
-source "$(dirname "$0")/../lib/bridge-port.sh"
+# shellcheck source=../lib/bridge-endpoint.sh
+source "$(dirname "$0")/../lib/bridge-endpoint.sh"
 
-BRIDGE_PORT="$(resolve_bridge_port)"
-BRIDGE_URL="http://localhost:${BRIDGE_PORT}/obsidian/exec"
+resolve_bridge_endpoint
+BRIDGE_URL="${BRIDGE_BASE_URL}/obsidian/exec"
 
 show_help() {
     cat << EOF
@@ -28,9 +28,10 @@ Options:
     -h, --help           Show this help message
 
 Environment:
-    REMOTE_BRIDGE_PORT    Override the auto-resolved bridge port (macOS = local
-                          exec; other OS = proxy through the bridge)
-
+    REMOTE_BRIDGE_SOCKET  Override the Unix socket path (default:
+                          ~/.ssh/remote-bridge.sock, non-Darwin only). On
+                          macOS this tool always execs Obsidian locally;
+                          elsewhere it proxies through the Remote Bridge.
 Content Modes:
     1. Inline:   robsidian create path="X" content="simple text"
     2. Stdin:    cat note.md | robsidian create path="X" --stdin
@@ -182,14 +183,9 @@ done
 
 # Remote mode: proxy through bridge (skip if running on macOS — local Obsidian is available)
 if [ "$(uname)" != "Darwin" ]; then
-    # Check if bridge is available
-    if ! curl -sf --connect-timeout 0.5 --max-time 2 "http://localhost:${BRIDGE_PORT}/health" >/dev/null 2>&1; then
-        echo "Error: Remote Bridge is not available on port $BRIDGE_PORT" >&2
-        echo "Make sure:" >&2
-        echo "1. Remote Bridge service is running on your local machine" >&2
-        echo "2. SSH tunnel is active (RemoteForward $BRIDGE_PORT localhost:$BRIDGE_PORT)" >&2
-        exit 1
-    fi
+    require_bridge_socket || exit 1
+
+    require_bridge_reachable || exit 1
 
     # Sourced here rather than at the top of the file — local mode (the
     # common case on macOS) execs obsidian directly and never needs a token.
@@ -225,16 +221,12 @@ if [ "$(uname)" != "Darwin" ]; then
     fi
 
     # Send request
-    RESPONSE=$(curl -sS --connect-timeout 0.5 --max-time 5 -X POST "$BRIDGE_URL" \
+    if ! RESPONSE=$(bridge_curl -sS --connect-timeout 0.5 --max-time 5 -X POST "$BRIDGE_URL" \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer $TOKEN" \
         -d "$PAYLOAD" \
         -w '\n%{http_code}' \
-        2>&1)
-
-    CURL_EXIT=$?
-
-    if [ $CURL_EXIT -ne 0 ]; then
+        2>&1); then
         echo "Error: Failed to connect to Remote Bridge: $RESPONSE" >&2
         exit 1
     fi

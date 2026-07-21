@@ -12,7 +12,7 @@ This tmux configuration provides:
 
 ## Configuration Structure
 
-```
+```text
 tmux/
 ├── tmux.conf              # Main configuration file
 ├── custom-status.conf     # Single-line status bar configuration
@@ -137,7 +137,7 @@ separate OS process with its own cwd, but the tmux pane is owned by the
 agent-view supervisor whose cwd is fixed at launch. Therefore the four
 `Prefix + a → G/Y/B/M` popups (which use `#{pane_current_path}`) always
 open in the supervisor's launch dir, not in the directory of the agent
-the user is currently viewing.
+the user is viewing.
 
 `Prefix + a → c` opens a two-stage picker. Stage 1 is an `fzf-tmux` popup
 listing every live session from `claude agents --json` (documented since
@@ -184,7 +184,6 @@ inside the menu commands.
 | Key | Action | Description |
 |-----|--------|-------------|
 | `Ctrl+]` | Toggle nested mode | Enable/disable outer tmux for nested sessions |
-| `r` | Reload config | Source tmux.conf and display message |
 
 #### Window Management
 | Key | Action | Description |
@@ -310,19 +309,17 @@ When connecting via SSH, `tmux.remote.conf` is automatically loaded:
 
 **Features:**
 - OSC52 clipboard integration enabled
-- SSH agent socket management
+- Constant SSH agent socket forwarded by the `sm` tunnel
 - Dynamic environment updates
 - Status position adjustment for remote context
 
-### SSH Agent Management
+### SSH Agent
 
-**Automatic refresh hooks:**
-- Session creation, client attachment, pane focus events
-- Maintains persistent SSH agent connection
-- Uses symlinked socket at `~/.ssh/ssh_auth_sock`
-
-**Manual refresh:**
-- `Prefix + R`: Find working SSH agent and refresh connection (remote only)
+The `sm` tunnel forwards the Mac's SSH agent to a constant path,
+`~/.ssh/agent-tunnel.sock`, on the remote host. `tmux.remote.conf` points the
+tmux global environment `SSH_AUTH_SOCK` at that same path — a fixed path never
+goes stale across reconnects, so there is no discovery, refresh hook, or
+manual refresh binding. Health (bridge + agent) is checked with `rb-status`.
 
 ### Nested Session Handling
 
@@ -430,11 +427,11 @@ git clone https://github.com/tmux-plugins/tpm ~/.dotfiles/tmux/plugins/tpm
 
 **SSH agent not working:**
 ```bash
-# Manual refresh
-tmux send-prefix \; send-keys R
+# Check agent + bridge health
+rb-status
 
 # Check socket
-ls -la ~/.ssh/ssh_auth_sock
+ls -la ~/.ssh/agent-tunnel.sock
 ```
 
 **Clipboard not syncing:**

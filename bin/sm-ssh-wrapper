@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# sm SSH wrapper — invoked by autossh (via AUTOSSH_PATH) instead of ssh directly.
+#
+# WHY: autossh restarts ssh on every retry; sshd never removes stale unix
+# socket files, StreamLocalBindUnlink is unavailable server-side, and .ssh/rc
+# runs after bind — so cleanup must happen client-side before every attempt
+# for retries to self-heal.
+#
+# WHY a separate connection (reviewed and confirmed, not just a style choice):
+# a remote command only runs after forwarding setup completes, and with
+# ExitOnForwardFailure a failed bind means the command never runs at all — so
+# cleanup folded into the main autossh connection could never heal the very
+# stale socket that is blocking that bind (OpenSSH bug 2601: nothing
+# client-controlled runs server-side before bind).
+
+set -euo pipefail
+
+if [[ -n "${SM_CLEANUP_HOST:-}" ]]; then
+    ssh -o ClearAllForwardings=yes -o BatchMode=yes -o ConnectTimeout=10 \
+        "$SM_CLEANUP_HOST" "rm -f ${SM_REMOTE_SOCKETS:-}"
+fi
+
+exec ssh "$@"

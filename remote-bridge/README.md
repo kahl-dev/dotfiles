@@ -2,18 +2,31 @@
 
 A bidirectional communication system for remote SSH sessions to interact with your local macOS system.
 
+## Table of Contents
+
+- [Features](#features)
+- [Install](#install)
+- [SSH Configuration](#ssh-configuration)
+- [Authentication](#authentication)
+- [Usage](#usage)
+- [CLI Tools](#cli-tools)
+- [Configuration](#configuration)
+- [Plugin Development](#plugin-development)
+- [Service Management](#service-management)
+- [Troubleshooting](#troubleshooting)
+- [Architecture](#architecture)
+- [License](#license)
+
 ## Features
 
 - 📋 **Clipboard Sync**: Send text and images from remote to local clipboard
 - 🌐 **URL Opening**: Open URLs in your local browser from remote sessions
 - 🔔 **Smart Notifications**: Configurable notifications with sounds and rules
 - 🔌 **Plugin System**: Extend functionality with custom JavaScript plugins
-- 🔒 **Secure**: Localhost-bound, per-user SSH tunnel, and mandatory Bearer-token auth on every request
+- 🔒 **Secure**: Localhost-bound service, per-user Unix sockets, and mandatory Bearer-token auth on every request
 - 📊 **Logging**: Comprehensive activity logging with rotation
 
-## Quick Start
-
-### Installation
+## Install
 
 ```bash
 # Install dependencies
@@ -30,24 +43,23 @@ pnpm install
 ./bin/remote-bridge status
 ```
 
-### SSH Configuration
+## SSH Configuration
 
-Generate the per-user `RemoteForward` line for each host:
+Opt each bridge-enabled host in with an SSH tag:
 
-```bash
-remote-bridge-ssh-config <hostname>   # Computes unique port from remote username
-```
-
-Add the output to your `~/.ssh/config`. Each developer gets a unique port (prevents cross-talk on shared servers):
-
-```
+```sshconfig
 Host myserver
-    RemoteForward 60190 localhost:8377
+    Tag remote-bridge
 ```
 
-The remote port is derived from your username. The local destination is always `localhost:8377` (the bridge service).
+`sm myserver` detects the tag through `ssh -G`, starts autossh, and creates two sockets on the remote host:
 
-### Authentication
+- `~/.ssh/remote-bridge.sock` forwards to the Mac service at `localhost:8377`.
+- `~/.ssh/agent-tunnel.sock` forwards to the Mac's `SSH_AUTH_SOCK`.
+
+Do not add static `RemoteForward` entries. Plain SSH sessions would compete with the autossh tunnel for the same socket paths. `Tag` requires OpenSSH 9.2 or newer on the Mac.
+
+## Authentication
 
 Every request needs `Authorization: Bearer $REMOTE_BRIDGE_TOKEN` — `GET /health` is the only exempt route. The server fail-closes at startup if no token is configured. Clients resolve the token env-first, then from atuin's synced dotfiles vars. Set it once:
 
@@ -55,9 +67,9 @@ Every request needs `Authorization: Bearer $REMOTE_BRIDGE_TOKEN` — `GET /healt
 atuin dotfiles var set REMOTE_BRIDGE_TOKEN "$(openssl rand -hex 32)"
 ```
 
-### Basic Usage
+## Usage
 
-From any SSH session:
+From a bridge-enabled `sm` session:
 
 ```bash
 # Copy to clipboard
@@ -247,24 +259,31 @@ remote-bridge logs -n 100  # Last 100 lines
 
 # Development
 remote-bridge dev        # Run in foreground
-remote-bridge test-tunnel  # Test SSH tunnel
+remote-bridge test-tunnel  # Test the local service endpoint
 ```
 
 ## Troubleshooting
 
 ### Service not accessible
 
-1. Check service status: `remote-bridge status`
-2. Check logs: `remote-bridge logs`
-3. Test tunnel: `remote-bridge test-tunnel`
-4. Verify SSH config includes `RemoteForward <port> localhost:8377` (run `remote-bridge-ssh-config <host>` to get the correct port)
+1. On the Mac, check the service: `remote-bridge status`.
+2. On the Mac, check logs: `remote-bridge logs`.
+3. Confirm the host is tagged: `ssh -G <host> | grep '^tag remote-bridge$'`.
+4. Restart the tunnel: `sm-kill <host>`, then `sm <host>`.
 
 ### Commands not working
 
-1. Check if tunnel is active: `curl http://localhost:${REMOTE_BRIDGE_PORT}/health`
-2. Verify `REMOTE_BRIDGE_PORT` environment variable
-3. Check service logs for errors
-4. Fallback to OSC52 should work for clipboard
+Run `rb-status` on the remote host. To probe the bridge directly:
+
+```bash
+curl -sf --unix-socket ~/.ssh/remote-bridge.sock http://localhost/health
+SSH_AUTH_SOCK=~/.ssh/agent-tunnel.sock ssh-add -l
+```
+
+- **Socket absent**: Start a tagged host with `sm <host>` from the Mac.
+- **Socket exists but is unresponsive**: Run `sm-kill <host>` and reconnect with `sm <host>`.
+- **Tag missing**: Add `Tag remote-bridge` to the host block; do not add `RemoteForward`.
+- **Clipboard only**: `rclip` can fall back to OSC52 in an interactive, non-tmux plain-SSH shell. It fails honestly in tmux and over mosh when the bridge is unavailable.
 
 ### Notifications not appearing
 
@@ -276,9 +295,10 @@ remote-bridge test-tunnel  # Test SSH tunnel
 ## Architecture
 
 - **Local Service**: Node.js/Express server on port 8377
-- **Per-user port isolation**: Each developer gets a unique remote port derived from username (`cksum` hash). Prevents cross-talk on shared servers
+- **Remote transport**: autossh forwards `~/.ssh/remote-bridge.sock` and `~/.ssh/agent-tunnel.sock`
+- **Per-user isolation**: Socket paths live below each remote user's home directory
 - **Communication**: Base64-encoded JSON over HTTP
-- **Security**: Localhost-only binding + SSH tunnel with per-user port + mandatory Bearer-token auth (server fail-closes without `REMOTE_BRIDGE_TOKEN`; `GET /health` exempt)
+- **Security**: Localhost-only binding + SSH Unix sockets + mandatory Bearer-token auth (server fail-closes without `REMOTE_BRIDGE_TOKEN`; `GET /health` exempt)
 - **Extensibility**: JavaScript plugin system
 - **Logging**: Winston with rotation
 

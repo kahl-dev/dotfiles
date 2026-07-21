@@ -1,5 +1,9 @@
 # Plan: Per-User Remote Bridge Port
 
+> Superseded by [`remote-bridge-unix-sockets.md`](remote-bridge-unix-sockets.md).
+> The port formula, static `RemoteForward` entries, and config helper described
+> below are historical and no longer exist in live code.
+
 > Source PRD: Design session (grill-me) 2026-03-20 — shared server port conflict resolution
 
 ## Architectural decisions

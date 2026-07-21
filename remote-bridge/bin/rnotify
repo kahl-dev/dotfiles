@@ -7,14 +7,12 @@ set -euo pipefail
 
 # shellcheck source=../lib/bridge-token.sh
 source "$(dirname "$0")/../lib/bridge-token.sh"
-# shellcheck source=../lib/bridge-port.sh
-source "$(dirname "$0")/../lib/bridge-port.sh"
+# shellcheck source=../lib/bridge-endpoint.sh
+source "$(dirname "$0")/../lib/bridge-endpoint.sh"
 
 # Configuration
-BRIDGE_PORT="$(resolve_bridge_port)"
-BRIDGE_URL="http://localhost:${BRIDGE_PORT}/notify"
-
-TOKEN="$(require_bridge_token)" || exit 1
+resolve_bridge_endpoint
+BRIDGE_URL="${BRIDGE_BASE_URL}/notify"
 
 # Help text
 show_help() {
@@ -38,8 +36,8 @@ Options:
     -h, --help           Show this help message
 
 Environment:
-    REMOTE_BRIDGE_PORT    Port for Remote Bridge (default: 8377)
-
+    REMOTE_BRIDGE_SOCKET  Override the Unix socket path (default:
+                          ~/.ssh/remote-bridge.sock, non-Darwin only)
 Notification Types (types with a configured sound rule; any other
 type uses the default sound):
     claude-idle_prompt        Claude Code idle prompt (Glass)
@@ -150,18 +148,9 @@ elif [ -z "$MESSAGE" ]; then
     exit 1
 fi
 
-# Check if Remote Bridge is available
-check_bridge() {
-    curl -sf --connect-timeout 0.5 --max-time 2 "${BRIDGE_URL%/notify}/health" >/dev/null 2>&1
-}
-
-if ! check_bridge; then
-    echo "Error: Remote Bridge is not available on port $BRIDGE_PORT" >&2
-    echo "Make sure:" >&2
-    echo "1. Remote Bridge service is running on your local machine" >&2
-    echo "2. SSH tunnel is active (RemoteForward $BRIDGE_PORT localhost:$BRIDGE_PORT)" >&2
-    exit 1
-fi
+require_bridge_socket || exit 1
+TOKEN="$(require_bridge_token)" || exit 1
+require_bridge_reachable || exit 1
 
 # Base64 encode message
 ENCODED_MESSAGE=$(echo -n "$MESSAGE" | base64)
@@ -214,16 +203,12 @@ JSON_PAYLOAD=$(jq -n \
     '{data: $data, metadata: $metadata, options: $options}')
 
 # Send request
-RESPONSE=$(curl -sS --connect-timeout 0.5 --max-time 5 -X POST "$BRIDGE_URL" \
+if ! RESPONSE=$(bridge_curl -sS --connect-timeout 0.5 --max-time 5 -X POST "$BRIDGE_URL" \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $TOKEN" \
     -d "$JSON_PAYLOAD" \
     -w '\n%{http_code}' \
-    2>&1)
-
-EXIT_CODE=$?
-
-if [ $EXIT_CODE -ne 0 ]; then
+    2>&1); then
     echo "Failed to send notification: $RESPONSE" >&2
     exit 1
 fi
@@ -245,4 +230,4 @@ if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
     exit 1
 fi
 
-echo "✓ Notification sent"
+echo "Notification sent"

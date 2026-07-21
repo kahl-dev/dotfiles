@@ -7,27 +7,16 @@ set -euo pipefail
 
 # shellcheck source=../lib/bridge-token.sh
 source "$(dirname "$0")/../lib/bridge-token.sh"
-# shellcheck source=../lib/bridge-port.sh
-source "$(dirname "$0")/../lib/bridge-port.sh"
+# shellcheck source=../lib/bridge-endpoint.sh
+source "$(dirname "$0")/../lib/bridge-endpoint.sh"
 
-BRIDGE_PORT="$(resolve_bridge_port)"
-BRIDGE_URL="http://localhost:${BRIDGE_PORT}/time-tracking"
-
-TOKEN="$(require_bridge_token)" || exit 1
-
-# Check if Remote Bridge is available
-check_bridge() {
-    curl -sf --connect-timeout 0.5 --max-time 2 "${BRIDGE_URL%/time-tracking}/health" >/dev/null 2>&1
-}
+resolve_bridge_endpoint
+BRIDGE_URL="${BRIDGE_BASE_URL}/time-tracking"
 
 require_bridge() {
-    if ! check_bridge; then
-        echo "Error: Remote Bridge is not available on port $BRIDGE_PORT" >&2
-        echo "Make sure:" >&2
-        echo "1. Remote Bridge service is running on your local machine" >&2
-        echo "2. SSH tunnel is active (RemoteForward $BRIDGE_PORT localhost:$BRIDGE_PORT)" >&2
-        exit 1
-    fi
+    require_bridge_socket || exit 1
+    TOKEN="$(require_bridge_token)" || exit 1
+    require_bridge_reachable || exit 1
 }
 
 # Surface a server-reported error distinctly from a connection failure — a
@@ -78,7 +67,8 @@ Options:
     -h, --help       Show this help message
 
 Environment:
-    REMOTE_BRIDGE_PORT    Port for Remote Bridge (default: 8377)
+    REMOTE_BRIDGE_SOCKET  Override the Unix socket path (default:
+                          ~/.ssh/remote-bridge.sock, non-Darwin only)
 
 Output:
     JSON with hostname and per-date JSONL content.
@@ -92,8 +82,8 @@ fetch_dates() {
 
     require_bridge
 
-    response=$(curl -sS --connect-timeout 0.5 --max-time 5 -H "Authorization: Bearer $TOKEN" "${BRIDGE_URL}?dates=${dates}" -w '\n%{http_code}' 2>/dev/null) || {
-        echo "Error: Cannot connect to Remote Bridge on port ${BRIDGE_PORT}" >&2
+    response=$(bridge_curl -sS --connect-timeout 0.5 --max-time 5 -H "Authorization: Bearer $TOKEN" "${BRIDGE_URL}?dates=${dates}" -w '\n%{http_code}' 2>/dev/null) || {
+        echo "Error: Cannot connect to Remote Bridge at ${BRIDGE_BASE_URL}" >&2
         exit 1
     }
     check_response_error "$response"
@@ -117,8 +107,8 @@ list_dates() {
 
     require_bridge
 
-    response=$(curl -sS --connect-timeout 0.5 --max-time 5 -H "Authorization: Bearer $TOKEN" "${BRIDGE_URL}/dates" -w '\n%{http_code}' 2>/dev/null) || {
-        echo "Error: Cannot connect to Remote Bridge on port ${BRIDGE_PORT}" >&2
+    response=$(bridge_curl -sS --connect-timeout 0.5 --max-time 5 -H "Authorization: Bearer $TOKEN" "${BRIDGE_URL}/dates" -w '\n%{http_code}' 2>/dev/null) || {
+        echo "Error: Cannot connect to Remote Bridge at ${BRIDGE_BASE_URL}" >&2
         exit 1
     }
     check_response_error "$response"

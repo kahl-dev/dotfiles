@@ -1,5 +1,5 @@
 # sm — mosh with auto Remote Bridge tunnel via autossh
-# Detects RemoteForward in SSH config and manages tunnel lifecycle automatically.
+# Detects `Tag remote-bridge` in SSH config and manages tunnel lifecycle.
 # Tunnel starts before mosh, cleaned up when last session exits.
 #
 # Commands:
@@ -9,15 +9,17 @@
 
 # --- Internal helpers ---
 
-# Detect first RemoteForward port from ssh -G output
-# Handles bind-address syntax: "remoteforward 0.0.0.0:60190 localhost:8377"
-_sm_detect_bridge_port() {
+# Detect the side-effect-free Remote Bridge opt-in from ssh -G output.
+_sm_host_has_remote_bridge_tag() {
     local ssh_config="$1"
-    echo "$ssh_config" | awk '/^remoteforward /{
-        port = $2
-        if (index(port, ":")) sub(/.*:/, "", port)
-        print port; exit
-    }'
+    printf '%s\n' "$ssh_config" | awk '
+        /^tag / {
+            for (field = 2; field <= NF; field++) {
+                if ($field == "remote-bridge") found = 1
+            }
+        }
+        END { exit !found }
+    '
 }
 
 # Extract host argument from mosh-style arguments (preserves user@ prefix)
@@ -74,6 +76,18 @@ _sm_tunnel_alive() {
     pid=$(cat "$pid_file")
     [[ -n "$pid" ]] || return 1
     kill -0 "$pid" 2>/dev/null && _sm_is_autossh "$pid"
+}
+
+# End-to-end health check: process aliveness alone can't tell a working
+# tunnel from one whose forwards silently died server-side (stale sshd,
+# roamed network). Runs the health probe over a forwarding-free exec
+# connection so it never depends on the tunnel it's checking. $HOME must
+# expand REMOTELY, hence the single-quoted remote command.
+_sm_tunnel_healthy() {
+    local host_argument="$1"
+    ssh -o ClearAllForwardings=yes -o BatchMode=yes -o ConnectTimeout=5 \
+        "$host_argument" 'curl -sf -m 2 --unix-socket "$HOME/.ssh/remote-bridge.sock" http://localhost/health' \
+        >/dev/null 2>&1
 }
 
 # Remove stale session markers (dead PIDs)
@@ -165,9 +179,13 @@ _sm_start_or_reuse_tunnel() {
     local host="$1"
     local pid_file="$2"
     local host_argument="$3"
-    local bridge_port="$4"
-    local session_pid="$5"
+    local session_pid="$4"
     local state_directory="/tmp/sm-${host}"
+
+    if [[ ! -S "${SSH_AUTH_SOCK:-}" ]]; then
+        echo "sm: a valid local SSH_AUTH_SOCK is required for tagged host ${host}" >&2
+        return 1
+    fi
 
     # Claim this session's marker as the FIRST locked action, so the marker
     # write and a concurrent teardown's count (also under this host's lock)
@@ -179,34 +197,68 @@ _sm_start_or_reuse_tunnel() {
     _sm_prune_stale_markers "$state_directory"
 
     if _sm_tunnel_alive "$pid_file"; then
-        echo "tunnel: reusing (${bridge_port})" >&2
-        return 0
+        if _sm_tunnel_healthy "$host_argument"; then
+            echo "tunnel: reusing (Unix sockets)" >&2
+            return 0
+        fi
+        echo "tunnel: alive but unhealthy for ${host}, restarting" >&2
+        _sm_stop_tunnel_process "$host"
     fi
 
     rm -f "$pid_file"
 
-    # ExitOnForwardFailure: without it, ssh silently continues when the
-    # remote port is still held by a stale sshd (e.g. after a reboot
-    # that never closed the old TCP connection) — the tunnel then runs
-    # uselessly forever. With it, ssh exits and autossh retries until
-    # the port frees up.
-    AUTOSSH_PIDFILE="$pid_file" autossh -M 0 -f -T \
-        -o "ServerAliveInterval=10" \
-        -o "ServerAliveCountMax=2" \
-        -o "ExitOnForwardFailure=yes" \
-        "$host_argument" "tail -f /dev/null"
-
-    # autossh -f backgrounds immediately (GATETIME=0), always returns 0.
-    # Verify the tunnel actually started by checking PID after brief delay.
-    sleep 1
-    if ! _sm_tunnel_alive "$pid_file"; then
-        echo "sm: tunnel failed to start for ${host}" >&2
-        rm -f "$pid_file"
+    # Pre-flight over a forwarding-free exec connection: capture the remote
+    # $HOME needed to build absolute -R socket paths below. Stale-socket
+    # cleanup does NOT happen here — sm-ssh-wrapper already removes the
+    # sockets before every autossh attempt, including this first one, so a
+    # second rm here would just be a duplicate remote roundtrip.
+    local remote_home
+    if ! remote_home=$(ssh -o ClearAllForwardings=yes -o BatchMode=yes -o ConnectTimeout=10 \
+        "$host_argument" 'printf %s "$HOME"'); then
+        echo "sm: pre-flight \$HOME lookup for ${host} failed" >&2
+        _sm_teardown_if_last "$host" "$session_pid"
         return 1
     fi
 
-    echo "tunnel: started (${bridge_port})" >&2
-    return 0
+    # ExitOnForwardFailure prevents a tunnel from running without both socket
+    # forwards. The wrapper removes stale socket files before every retry.
+    #
+    # Remote command is a 30s heartbeat instead of `tail -f /dev/null`:
+    # server-originated traffic makes a half-dead TCP connection hit the
+    # retransmission timeout (tcp_retries2) so the stale sshd
+    # self-destructs, where `tail -f /dev/null` sends nothing and lives
+    # forever. Heartbeat output is discarded client-side.
+    #
+    # AUTOSSH_PATH points autossh at sm-ssh-wrapper, which repeats the
+    # pre-flight cleanup before every retry so reconnects self-heal.
+    AUTOSSH_PIDFILE="$pid_file" \
+    AUTOSSH_PATH="$DOTFILES/bin/sm-ssh-wrapper" \
+    SM_CLEANUP_HOST="$host_argument" \
+    SM_REMOTE_SOCKETS=".ssh/remote-bridge.sock .ssh/agent-tunnel.sock" \
+        autossh -M 0 -f -T \
+        -o "ServerAliveInterval=10" \
+        -o "ServerAliveCountMax=2" \
+        -o "ExitOnForwardFailure=yes" \
+        -R "${remote_home}/.ssh/remote-bridge.sock:localhost:8377" \
+        -R "${remote_home}/.ssh/agent-tunnel.sock:${SSH_AUTH_SOCK}" \
+        "$host_argument" "while :; do echo heartbeat; sleep 30; done" \
+        >/dev/null
+
+    # autossh -f backgrounds immediately (GATETIME=0), so its own exit status
+    # cannot prove that either remote forward is usable.
+    local attempt
+    for attempt in 1 2 3 4 5; do
+        sleep 1
+        if _sm_tunnel_alive "$pid_file" && _sm_tunnel_healthy "$host_argument"; then
+            echo "tunnel: started (Unix sockets)" >&2
+            return 0
+        fi
+    done
+
+    echo "sm: tunnel for ${host} did not become healthy" >&2
+    _sm_stop_tunnel_process "$host"
+    _sm_teardown_if_last "$host" "$session_pid"
+    return 1
 }
 
 # Remove this session's marker and, if it was the last one, tear down the
@@ -228,16 +280,23 @@ _sm_teardown_if_last() {
     fi
 }
 
-# Kill tunnel and remove all state for a host
-_sm_cleanup_tunnel() {
+# Stop the tunnel without changing session ownership state.
+_sm_stop_tunnel_process() {
     local host="$1"
     local pid_file="/tmp/sm-${host}.pid"
-    local state_directory="/tmp/sm-${host}"
 
     if _sm_tunnel_alive "$pid_file"; then
         kill "$(cat "$pid_file")" 2>/dev/null
     fi
     rm -f "$pid_file"
+}
+
+# Kill tunnel and remove all state for a host
+_sm_cleanup_tunnel() {
+    local host="$1"
+    local state_directory="/tmp/sm-${host}"
+
+    _sm_stop_tunnel_process "$host"
     rm -rf "$state_directory"
 }
 
@@ -263,15 +322,13 @@ sm() {
 
     local host="${host_argument#*@}"
 
-    # Resolve SSH config once (used by detection)
+    # Resolve SSH config once for the side-effect-free host opt-in.
     local ssh_config
     ssh_config=$(ssh -G "$host" 2>/dev/null)
 
-    local bridge_port
-    bridge_port=$(_sm_detect_bridge_port "$ssh_config")
     local tunneled=false
 
-    if [[ -n "$bridge_port" ]]; then
+    if _sm_host_has_remote_bridge_tag "$ssh_config"; then
         if ! command_exists autossh; then
             echo "sm: autossh not found (brew install autossh)" >&2
             return 1
@@ -284,14 +341,13 @@ sm() {
         # just records that this invocation owns a session to tear down on exit.
         tunneled=true
 
-        if ! _sm_with_host_lock "$host" _sm_start_or_reuse_tunnel "$host" "$pid_file" "$host_argument" "$bridge_port" "$$"; then
+        if ! _sm_with_host_lock "$host" _sm_start_or_reuse_tunnel "$host" "$pid_file" "$host_argument" "$$"; then
             return 1
         fi
     fi
 
-    # When tunnel is active, prevent mosh's bootstrap SSH from also trying
-    # RemoteForward (port conflict). ClearAllForwardings disables all forwards
-    # for the bootstrap connection only — autossh handles forwarding.
+    # Keep the mosh bootstrap connection forwarding-free. autossh owns both
+    # Unix socket forwards for the lifetime of the mosh session.
     if $tunneled; then
         mosh --ssh="ssh -o ClearAllForwardings=yes" "$@"
     else
@@ -315,12 +371,6 @@ sm() {
 sm-status() {
     local pid_file
     local found=false
-    # Declared once here rather than as a bare `local bridge_port` inside
-    # the loop below: re-declaring an already-set local on a later loop
-    # iteration makes zsh print "bridge_port=<previous host's value>" to
-    # stdout as a side effect, corrupting the status listing whenever 2+
-    # tunnels are active.
-    local bridge_port
 
     # Read-only: report live tunnels, never mutate. Cleanup of dead pid files
     # and stale markers is owned by _sm_start_or_reuse_tunnel / _sm_teardown_if_last
@@ -335,8 +385,7 @@ sm-status() {
             found=true
             local tunnel_pid=$(cat "$pid_file")
             local session_count=$(_sm_session_count "/tmp/sm-${host}")
-            bridge_port=$(_sm_detect_bridge_port "$(ssh -G "$host" 2>/dev/null)")
-            echo "${host}: pid=${tunnel_pid} port=${bridge_port:-?} sessions=${session_count}"
+            echo "${host}: pid=${tunnel_pid} transport=unix-sockets sessions=${session_count}"
         fi
     done
 

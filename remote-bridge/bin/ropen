@@ -7,14 +7,12 @@ set -euo pipefail
 
 # shellcheck source=../lib/bridge-token.sh
 source "$(dirname "$0")/../lib/bridge-token.sh"
-# shellcheck source=../lib/bridge-port.sh
-source "$(dirname "$0")/../lib/bridge-port.sh"
+# shellcheck source=../lib/bridge-endpoint.sh
+source "$(dirname "$0")/../lib/bridge-endpoint.sh"
 
 # Configuration
-BRIDGE_PORT="$(resolve_bridge_port)"
-BRIDGE_URL="http://localhost:${BRIDGE_PORT}/browser"
-
-TOKEN="$(require_bridge_token)" || exit 1
+resolve_bridge_endpoint
+BRIDGE_URL="${BRIDGE_BASE_URL}/browser"
 
 # Help text
 show_help() {
@@ -33,8 +31,8 @@ Options:
     -h, --help       Show this help message
 
 Environment:
-    REMOTE_BRIDGE_PORT    Port for Remote Bridge (default: 8377)
-
+    REMOTE_BRIDGE_SOCKET  Override the Unix socket path (default:
+                          ~/.ssh/remote-bridge.sock, non-Darwin only)
 Examples:
     # Open website
     ropen "https://example.com"
@@ -81,20 +79,17 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Check if Remote Bridge is available
-check_bridge() {
-    curl -sf --connect-timeout 0.5 --max-time 2 "${BRIDGE_URL%/browser}/health" >/dev/null 2>&1
-}
-
 # Send URL via Remote Bridge
 send_url() {
     local url="$1"
     
     # Base64 encode URL
-    local encoded_url=$(echo -n "$url" | base64)
+    local encoded_url
+    encoded_url=$(printf '%s' "$url" | base64)
     
     # Build metadata
-    local metadata=$(jq -n \
+    local metadata
+    metadata=$(jq -n \
         --arg host "$(hostname -s)" \
         --arg session "${TMUX_PANE:-$$}" \
         --arg user "$USER" \
@@ -106,7 +101,8 @@ send_url() {
     [ -n "$APP" ] && options="{\"app\": \"$APP\"}"
     
     # Send request
-    local response=$(curl -sS --connect-timeout 0.5 --max-time 5 -X POST "$BRIDGE_URL" \
+    local response
+    if ! response=$(bridge_curl -sS --connect-timeout 0.5 --max-time 5 -X POST "$BRIDGE_URL" \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer $TOKEN" \
         -d "$(jq -n \
@@ -114,27 +110,22 @@ send_url() {
             --argjson metadata "$metadata" \
             --argjson options "$options" \
             '{data: $data, metadata: $metadata, options: $options}')" \
-        2>&1)
-    
-    local exit_code=$?
-    
-    if [ $exit_code -eq 0 ]; then
-        # Check if response contains error
-        if echo "$response" | jq -e '.error' >/dev/null 2>&1; then
-            local error=$(echo "$response" | jq -r '.error')
-            echo "Error opening $url: $error" >&2
-            return 1
-        fi
-        echo "✓ Opened: $url"
-        return 0
-    else
+        2>&1); then
         echo "Failed to open $url: $response" >&2
         return 1
     fi
+
+    if echo "$response" | jq -e '.error' >/dev/null 2>&1; then
+        local error
+        error=$(echo "$response" | jq -r '.error')
+        echo "Error opening $url: $error" >&2
+        return 1
+    fi
+    echo "Opened: $url"
 }
 
 # Collect URLs
-if [ "$BATCH_MODE" = true ] || ([ ${#URLS[@]} -eq 0 ] && [ ! -t 0 ]); then
+if [ "$BATCH_MODE" = true ] || { [ ${#URLS[@]} -eq 0 ] && [ ! -t 0 ]; }; then
     # Read from stdin
     while IFS= read -r url; do
         [ -n "$url" ] && URLS+=("$url")
@@ -148,14 +139,9 @@ if [ ${#URLS[@]} -eq 0 ]; then
     exit 1
 fi
 
-# Check bridge availability
-if ! check_bridge; then
-    echo "Error: Remote Bridge is not available on port $BRIDGE_PORT" >&2
-    echo "Make sure:" >&2
-    echo "1. Remote Bridge service is running on your local machine" >&2
-    echo "2. SSH tunnel is active (RemoteForward $BRIDGE_PORT localhost:$BRIDGE_PORT)" >&2
-    exit 1
-fi
+require_bridge_socket || exit 1
+TOKEN="$(require_bridge_token)" || exit 1
+require_bridge_reachable || exit 1
 
 # Process URLs
 failed=0

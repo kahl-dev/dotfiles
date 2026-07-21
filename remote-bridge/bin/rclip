@@ -7,12 +7,12 @@ set -euo pipefail
 
 # shellcheck source=../lib/bridge-token.sh
 source "$(dirname "$0")/../lib/bridge-token.sh"
-# shellcheck source=../lib/bridge-port.sh
-source "$(dirname "$0")/../lib/bridge-port.sh"
+# shellcheck source=../lib/bridge-endpoint.sh
+source "$(dirname "$0")/../lib/bridge-endpoint.sh"
 
 # Configuration
-BRIDGE_PORT="$(resolve_bridge_port)"
-BRIDGE_URL="http://localhost:${BRIDGE_PORT}/clipboard"
+resolve_bridge_endpoint
+BRIDGE_URL="${BRIDGE_BASE_URL}/clipboard"
 
 TOKEN="$(require_bridge_token)" || exit 1
 
@@ -33,8 +33,8 @@ Options:
     -h, --help       Show this help message
 
 Environment:
-    REMOTE_BRIDGE_PORT    Port for Remote Bridge (default: 8377)
-
+    REMOTE_BRIDGE_SOCKET  Override the Unix socket path (default:
+                          ~/.ssh/remote-bridge.sock, non-Darwin only)
 Examples:
     # Copy text directly
     rclip "Hello World"
@@ -153,11 +153,6 @@ if input_is_empty; then
     exit 0
 fi
 
-# Check if Remote Bridge is available
-check_bridge() {
-    curl -sf --connect-timeout 0.5 --max-time 2 "${BRIDGE_URL%/clipboard}/health" >/dev/null 2>&1
-}
-
 # Send via Remote Bridge. Any failure here is a real error (bridge answered
 # the health check but then failed the actual send, or rejected it with
 # 401/4xx/5xx) - callers must NOT fall back to OSC52 on failure, since that
@@ -183,7 +178,7 @@ send_via_bridge() {
     options="$options}"
 
     local response
-    if ! response=$(curl -sS --connect-timeout 0.5 --max-time 5 -X POST "$BRIDGE_URL" \
+    if ! response=$(bridge_curl -sS --connect-timeout 0.5 --max-time 5 -X POST "$BRIDGE_URL" \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer $TOKEN" \
         -d "$(jq -n \
@@ -248,9 +243,9 @@ send_via_osc52() {
 }
 
 # Main logic
-if check_bridge; then
+if check_bridge_health; then
     if send_via_bridge; then
-        echo "✓ Clipboard updated"
+        echo "Clipboard updated"
         exit 0
     fi
     exit 1
@@ -267,5 +262,6 @@ if [ -z "${TMUX:-}" ] && [ -t 1 ]; then
     exit $?
 fi
 
-echo "Error: Remote Bridge unavailable" >&2
+require_bridge_socket || exit 1
+report_bridge_unreachable
 exit 1

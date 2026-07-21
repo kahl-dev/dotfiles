@@ -151,24 +151,23 @@ Backward-compatible aliases still work: `brewup`, `brewdump`, `zsh-reload`, `dot
 
 ### sm (ssh-mosh) — Mosh with auto tunnel
 
-`sm` wraps mosh with automatic autossh tunnel management for hosts with `RemoteForward` configured in SSH config. Provides SSH agent forwarding (for git) and Remote Bridge port forwarding.
+`sm` wraps mosh with an autossh tunnel for hosts opted in through `Tag remote-bridge` in SSH config. The tunnel forwards Remote Bridge and the Mac SSH agent through per-user Unix sockets on the remote host.
 
 ```bash
-sm t3                           # Mosh + auto tunnel (detects RemoteForward via ssh -G)
+sm t3                           # Mosh + auto tunnel (detects Tag via ssh -G)
 sm user@t3                      # Works with user@ prefix
 sm --ssh="ssh -p 2222" t3       # All mosh args pass through
-sm plainserver                  # No RemoteForward = plain mosh (no autossh needed)
-sm-status                       # List active tunnels with PID, port, session count
+sm plainserver                  # No tag = plain mosh (no autossh needed)
+sm-status                       # List active tunnels with PID, transport, session count
 sm-kill t3                      # Force-kill tunnel for a host
 sm-kill                         # Kill all active tunnels
 ```
 
-**Workflow**: `sm t3` → tunnel starts → mosh connects → `prefix + R` in remote tmux refreshes SSH agent → git works. On mosh exit, tunnel killed when last session closes.
+**Workflow**: `sm t3` starts the socket tunnel before mosh connects. Remote clients use `~/.ssh/remote-bridge.sock`; git and other SSH clients use `~/.ssh/agent-tunnel.sock`. Both paths remain constant across autossh reconnects, so tmux needs no refresh hooks or keybinding. The tunnel is removed when the last mosh session closes.
 
-**Per-user port isolation**: On shared servers, each developer gets a unique Remote Bridge port derived from their username (`cksum` hash, range 49152–65534). This prevents cross-talk. The port is computed identically on both sides:
-- **Remote** (`remote-bridge.zsh`): `REMOTE_BRIDGE_PORT` computed from `$USER` in SSH sessions
-- **Local** (`ssh-config`): `RemoteForward <port> localhost:8377` per host (use `remote-bridge-ssh-config <host>` to generate)
-- **sm**: detects any `RemoteForward` from `ssh -G` — no hardcoded port
+**Host opt-in**: Add `Tag remote-bridge` to each bridge-enabled host in the private SSH config. Do not add `RemoteForward`; `sm` owns both forwards so plain SSH sessions cannot replace a live tunnel. This requires OpenSSH 9.2 or newer on the Mac.
+
+**Self-healing**: Before every autossh attempt, `bin/sm-ssh-wrapper` removes stale remote socket files over a forwarding-free SSH connection. Tunnel reuse requires a successful end-to-end `/health` check, and a 30-second heartbeat eventually destroys half-dead server connections after network roaming.
 
 ### Future `dot` CLI Enhancements
 

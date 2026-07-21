@@ -8,6 +8,3 @@
 
 - create:
     - ~/.config
-
-- link:
-    ~/.ssh/rc: ./.ssh/rc

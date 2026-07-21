@@ -9,22 +9,19 @@ export DOTFILES="$HOME/.dotfiles"
 
 source $DOTFILES/zsh/utils.zsh
 
-# Remote Bridge port — resolved by machine (macOS bridge host = 8377, remote
-# host = per-user derived port), env-first so an inherited value (e.g. from
-# tmux's global environment) is preserved. Set in .zshenv (not .zshrc) so
-# non-interactive shells get it too. uname-based, NOT an SSH_CLIENT gate:
-# SSH_CLIENT-unset does not imply "local Mac" — it can be cron/boot on a REMOTE
-# host, where hardcoding 8377 would be wrong.
-if [[ -f "$DOTFILES/remote-bridge/lib/bridge-port.sh" ]]; then
-  source "$DOTFILES/remote-bridge/lib/bridge-port.sh"
-  export REMOTE_BRIDGE_PORT="$(resolve_bridge_port)"
+# SSH agent socket — the sm tunnel forwards the Mac's agent to this constant
+# path on remote hosts. Set in .zshenv (not .zshrc) so non-interactive shells
+# (git hooks, cron) get it too. When the socket is absent, SSH_AUTH_SOCK is
+# left alone so a plain ssh session's own forwarded agent keeps working.
+if [[ "$OSTYPE" != darwin* && -S "$HOME/.ssh/agent-tunnel.sock" ]]; then
+  export SSH_AUTH_SOCK="$HOME/.ssh/agent-tunnel.sock"
 fi
 
 # On a headless remote host (non-macOS), route browser-opening through the
 # Remote Bridge to the local Mac's browser. $OSTYPE (a zsh builtin: no fork,
 # and resolvable before the PATH array below is built) rather than an
 # SSH_CLIENT gate — an unset SSH_CLIENT does not imply "local Mac" (could be
-# cron/boot on a remote host), same reasoning as resolve_bridge_port.
+# cron/boot on a remote host).
 if [[ "$OSTYPE" != darwin* ]]; then
   export BROWSER=ropen
 fi

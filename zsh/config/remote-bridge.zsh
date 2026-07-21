@@ -1,45 +1,86 @@
 # Remote Bridge Integration
 # Provides SSH tunnel configuration and utilities
 
-# Shared per-user port formula (also sourced by .zshenv and the bash clients).
-# REMOTE_BRIDGE_PORT itself is already exported by .zshenv (runs for every
-# shell, interactive or not) — this file only needs bridge_user_port() below
-# for remote-bridge-ssh-config.
-[[ -f "$DOTFILES/remote-bridge/lib/bridge-port.sh" ]] && source "$DOTFILES/remote-bridge/lib/bridge-port.sh"
+# Shared endpoint resolution (also sourced by the bash clients: rclip, ropen,
+# rnotify, rtime, robsidian). Sets BRIDGE_BASE_URL (and
+# BRIDGE_SOCKET_PATH on non-Darwin) — see lib/bridge-endpoint.sh for the
+# contract. A constant socket path needs no tmux environment propagation.
+[[ -f "$DOTFILES/remote-bridge/lib/bridge-endpoint.sh" ]] && source "$DOTFILES/remote-bridge/lib/bridge-endpoint.sh"
 
-# Propagate to tmux global environment so popups and subprocesses inherit it.
-# Same pattern as tmux.remote.conf does for SSH_AUTH_SOCK.
-if [[ -n "${TMUX:-}" ]]; then
-    tmux set-environment -g REMOTE_BRIDGE_PORT "$REMOTE_BRIDGE_PORT" 2>/dev/null
-fi
+resolve_bridge_endpoint
 
-# Helper function to check if Remote Bridge is available
+# Helper function to check if Remote Bridge is available.
 remote-bridge-check() {
     # Fast timeout to not block shell startup
-    curl -sf --connect-timeout 0.5 --max-time 1 "http://localhost:${REMOTE_BRIDGE_PORT}/health" >/dev/null 2>&1
+    bridge_curl -sf --connect-timeout 0.5 --max-time 1 "${BRIDGE_BASE_URL}/health" >/dev/null 2>&1
+}
+
+# Probes the agent-tunnel Unix socket independently of the bridge socket:
+# responsive (agent answers), unresponsive (socket file present but nothing
+# listening — a stale tunnel), or absent (socket file does not exist at all).
+remote-bridge-agent-status() {
+    local agent_socket="$HOME/.ssh/agent-tunnel.sock"
+
+    if [[ ! -S "$agent_socket" ]]; then
+        echo "absent"
+        return 0
+    fi
+
+    if SSH_AUTH_SOCK="$agent_socket" timeout 1 ssh-add -l >/dev/null 2>&1; then
+        echo "responsive"
+    else
+        local exit_code=$?
+        case $exit_code in
+            1) echo "responsive" ;;
+            *) echo "unresponsive" ;;
+        esac
+    fi
 }
 
 # Status function for Remote Bridge
 remote-bridge-status() {
     echo "=== Remote Bridge Status ==="
-    
+    if [[ -n "${BRIDGE_SOCKET_PATH:-}" ]]; then
+        echo "Socket path: $BRIDGE_SOCKET_PATH"
+    fi
+
     if remote-bridge-check; then
-        echo "✅ Remote Bridge is accessible on port $REMOTE_BRIDGE_PORT"
-        
+        echo "[ok] Remote Bridge is accessible"
+
         # Get health info
-        local health=$(curl -s "http://localhost:${REMOTE_BRIDGE_PORT}/health")
+        local health
+        health=$(bridge_curl -s "${BRIDGE_BASE_URL}/health")
         if [[ -n "$health" ]]; then
             echo "$health" | jq -r '"Version: \(.version)\nStatus: \(.status)\nUptime: \(.uptime)s"' 2>/dev/null || echo "Service is responding"
         fi
     else
-        echo "❌ Remote Bridge is not accessible on port $REMOTE_BRIDGE_PORT"
+        echo "[error] Remote Bridge is not accessible"
         echo
+        if [[ -n "${BRIDGE_SOCKET_PATH:-}" && ! -S "$BRIDGE_SOCKET_PATH" ]]; then
+            echo "Socket file does not exist."
+        fi
         echo "Possible causes:"
         echo "1. Service not running on local machine"
-        echo "2. SSH tunnel not configured (add 'RemoteForward $REMOTE_BRIDGE_PORT localhost:8377' to SSH config)"
-        echo "3. Connected without tunnel forwarding"
+        echo "2. Tunnel not active — start it from the Mac: sm <host>"
+        echo "3. Host not opted in — add 'Tag remote-bridge' to its SSH config"
     fi
-    
+
+    if [[ "$BRIDGE_ON_DARWIN" != "1" ]]; then
+        echo
+        echo "=== Agent Tunnel Status ==="
+        case "$(remote-bridge-agent-status)" in
+            responsive)
+                echo "[ok] Agent socket is responsive ($HOME/.ssh/agent-tunnel.sock)"
+                ;;
+            unresponsive)
+                echo "[warning] Agent socket exists but is unresponsive: $HOME/.ssh/agent-tunnel.sock"
+                ;;
+            absent)
+                echo "[error] Agent socket not present: $HOME/.ssh/agent-tunnel.sock"
+                ;;
+        esac
+    fi
+
     # Check if we're in SSH session
     if [[ -n "${SSH_CLIENT:-}" ]]; then
         echo
@@ -57,65 +98,30 @@ remote-bridge-test() {
     echo "=== Testing Remote Bridge Features ==="
     
     if ! remote-bridge-check; then
-        echo "❌ Remote Bridge not available"
+        echo "[error] Remote Bridge not available"
         return 1
     fi
-    
-    echo "✅ Service is accessible"
+
+    echo "[ok] Service is accessible"
     
     # Test clipboard
     echo -n "Testing clipboard... "
     if echo "Remote Bridge test at $(date)" | rclip >/dev/null 2>&1; then
-        echo "✅"
+        echo "ok"
     else
-        echo "❌"
+        echo "failed"
     fi
     
     # Test notification
     echo -n "Testing notifications... "
     if rnotify "Remote Bridge test notification" --type test >/dev/null 2>&1; then
-        echo "✅"
+        echo "ok"
     else
-        echo "❌"
+        echo "failed"
     fi
     
     echo
     echo "To test URL opening, run: ropen 'https://github.com'"
-}
-
-# SSH config helper — outputs RemoteForward line with per-user port
-# Usage: remote-bridge-ssh-config [hostname]
-#   With hostname: resolves remote username from ssh -G
-#   Without: uses $USER
-remote-bridge-ssh-config() {
-    local remote_user remote_port host="$1"
-
-    if [[ -n "$host" ]]; then
-        remote_user=$(ssh -G "$host" 2>/dev/null | awk '/^user /{print $2}')
-        if [[ -z "$remote_user" ]]; then
-            echo "remote-bridge-ssh-config: could not resolve user for ${host}" >&2
-            return 1
-        fi
-    else
-        remote_user="$USER"
-    fi
-
-    remote_port=$(bridge_user_port "$remote_user")
-
-    echo "# Remote Bridge SSH config"
-    echo "# Remote user: ${remote_user}"
-    echo "# Bridge port: ${remote_port} (derived from username)"
-    echo "#"
-    if [[ -n "$host" ]]; then
-        echo "# Add to your SSH config for host ${host}:"
-        echo ""
-        echo "Host ${host}"
-        echo "    RemoteForward ${remote_port} localhost:8377"
-    else
-        echo "# Add to your SSH config per host:"
-        echo ""
-        echo "RemoteForward ${remote_port} localhost:8377"
-    fi
 }
 
 # Info message for interactive sessions
@@ -127,7 +133,7 @@ if [[ -o interactive ]] && [[ -n "${SSH_CLIENT:-}" ]]; then
     else
         # Only show message if tools exist
         if command -v rclip >/dev/null 2>&1; then
-            echo "💡 Remote Bridge not detected. Add tunnel to SSH config: remote-bridge-ssh-config"
+            echo "Remote Bridge not detected. Start the tunnel from the Mac: sm <host>"
         fi
     fi
 fi

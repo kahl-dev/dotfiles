@@ -1,5 +1,9 @@
 # Plan: sm (ssh-mosh) — Mosh with Auto Remote Bridge Tunnel
 
+> Superseded by [`remote-bridge-unix-sockets.md`](remote-bridge-unix-sockets.md).
+> The current implementation uses tagged hosts and Unix-socket forwards; the
+> port-forward design below is retained as implementation history.
+
 > Source: Design session (grill-me) 2026-03-20
 
 ## Architectural decisions
