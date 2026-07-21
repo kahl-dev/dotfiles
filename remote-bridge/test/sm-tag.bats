@@ -2,6 +2,7 @@
 
 DOTFILES_ROOT="$BATS_TEST_DIRNAME/../.."
 MOSH_CONFIG="$DOTFILES_ROOT/zsh/config/mosh.zsh"
+ZSH_CONFIG="$DOTFILES_ROOT/zsh/.zshrc"
 
 teardown() {
   if [ -n "${AGENT_SOCKET_PID:-}" ]; then
@@ -13,6 +14,12 @@ teardown() {
   if [ -n "${TEST_HOST:-}" ]; then
     rm -rf "/tmp/sm-${TEST_HOST}" "/tmp/sm-${TEST_HOST}.pid"
   fi
+}
+
+@test "zsh startup does not source the removed SSH agent config" {
+  run grep -F 'config/ssh-agent.zsh' "$ZSH_CONFIG"
+
+  [ "$status" -ne 0 ]
 }
 
 make_agent_socket() {

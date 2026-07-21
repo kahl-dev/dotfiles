@@ -78,9 +78,9 @@ tunnel down and starts fresh.
 
 ### Acceptance criteria
 
-- [ ] After `sm <host>`: both sockets exist on the server with mode 0600
-- [ ] On the server: `curl -sf --unix-socket ~/.ssh/remote-bridge.sock http://localhost/health` succeeds
-- [ ] On the server: `SSH_AUTH_SOCK=~/.ssh/agent-tunnel.sock ssh-add -l` lists the Mac's keys
+- [x] After `sm <host>`: both sockets exist on the server with mode 0600
+- [x] On the server: `curl -sf --unix-socket ~/.ssh/remote-bridge.sock http://localhost/health` succeeds
+- [x] On the server: `SSH_AUTH_SOCK=~/.ssh/agent-tunnel.sock ssh-add -l` lists the Mac's keys
 - [ ] Kill the server-side tunnel sshd manually → autossh reconnects and both sockets work again without any manual cleanup (wrapper cleanup proven)
 - [ ] Stale socket files present before `sm` start do not prevent the tunnel from establishing
 - [x] `sm` on a broken-but-process-alive tunnel does not print "reusing" — it restarts and recovers
