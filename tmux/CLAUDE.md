@@ -29,7 +29,6 @@ tmux/
     ├── mem-simple.sh              # RAM usage % (bare integer)
     ├── disk-simple.sh             # Disk usage % (bare integer)
     ├── uptime-simple.sh           # Compact uptime (18d0h, 5h32m, 12m)
-    ├── claude-usage.sh            # Claude Code OAuth quota (5h|7d|budget|pace)
     ├── host-icon.sh               # OS-specific Nerd Font icon
     ├── hostname-display.sh        # Machine name (empty on primary Mac)
     ├── lit-info-urls.sh           # TYPO3 project URL opener (Prefix+U)
@@ -55,10 +54,7 @@ tmux/
 | Disk | 󰋊 | nf-md-harddisk | `$BLUE` |
 | Uptime | 󰅐 | nf-md-clock-outline | `$DIM` |
 | Sessions | 󰘔 | nf-md-monitor-multiple | `$DIM` |
-| Claude | 󰚩 | nf-md-robot | `$DIM` |
 | Update | 󰚰 | nf-md-update | per-count color |
-| 5h window | 󰥔 | nf-md-clock-fast | per-value color |
-| 7d window | 󰃭 | nf-md-calendar-week | per-value color |
 | Zoom | 󰍉 | nf-md-magnify | — |
 | macOS |  | nf-fa-apple | `$BLUE` |
 | Linux | (distro-specific) | nf-linux-* | `$BLUE` |
@@ -75,7 +71,7 @@ Colors are exported as `TMUX_*` environment variables in `custom-status.conf`. S
 
 ### Color Thresholds
 
-Used for CPU, RAM, Disk, and Claude usage percentages:
+Used for CPU, RAM, and Disk percentages:
 
 | Value | Color | Meaning |
 |-------|-------|---------|
@@ -95,20 +91,17 @@ Active pane: solid bar in Catppuccin Surface1 (`#45475a`), inactive: thin dim li
 
 `status-line-main.sh` receives `#{client_width}` from tmux and adapts:
 
-| Width | Resources | Environment | Claude | Update | Hostname |
-|-------|-----------|-------------|--------|--------|----------|
-| **≥120** (wide) | CPU/RAM/Disk | Uptime + Sessions | Full (with pace) | If stale | Yes |
-| **90-119** (medium) | CPU/RAM/Disk | Hidden | Full (with pace) | If stale | If ≥100 |
-| **<90** (narrow) | CPU/RAM only | Hidden | Compact (% only) | If stale | Hidden |
-
-**Full Claude**: `󰚩 󰥔6%/󰃭44% ▲28%/d`
-**Compact Claude**: `󰥔6%/󰃭44%`
+| Width | Resources | Environment | Update | Hostname |
+|-------|-----------|-------------|--------|----------|
+| **≥120** (wide) | CPU/RAM/Disk | Uptime + Sessions | If stale | Yes |
+| **90-119** (medium) | CPU/RAM/Disk | Hidden | If stale | If ≥100 |
+| **<90** (narrow) | CPU/RAM only | Hidden | If stale | Hidden |
 
 Config passes width: `#(~/.dotfiles/tmux/scripts/status-line-main.sh #{client_width})`
 
 **Status bar layout** (single line, position top):
 ```
-[host-icon] session_name [windows...]          ...right-aligned: [resources │ env │ claude │ update │ hostname]
+[host-icon] session_name [windows...]          ...right-aligned: [resources │ env │ update │ hostname]
 ```
 
 ## 🔑 Keybindings
@@ -118,7 +111,6 @@ Config passes width: `#(~/.dotfiles/tmux/scripts/status-line-main.sh #{client_wi
 | Key | Action |
 |-----|--------|
 | `Prefix + r` | Reload tmux config |
-| `Prefix + C` | Toggle Claude usage display on/off |
 | `Prefix + D` | Update status detail popup (brew/mise/tpm/repos staleness) |
 | `Prefix + ?` | Which-key menu (all bindings, nested submenus) |
 
@@ -346,28 +338,9 @@ write_cache "$CACHE_FILE" "$result"
 | mem-simple.sh | 5s | Changes rapidly |
 | disk-simple.sh | 30s | Changes slowly |
 | uptime-simple.sh | 60s | Changes slowly |
-| claude-usage.sh | 60s | API rate limiting |
 | host-icon.sh | 3600s | Never changes at runtime |
 | hostname-display.sh | 300s | Never changes at runtime |
 | update-check.sh | 60s | Checks timestamp ages only |
-
-## 🤖 Claude Usage Segment
-
-Uses Anthropic OAuth API — no Python, no browser cookies, no Cloudflare bypass.
-
-**Credential sources:**
-- macOS: Keychain → `security find-generic-password -s "Claude Code-credentials" -w` → `.claudeAiOauth.accessToken`
-- Linux: `~/.claude/.credentials.json` → same jq path
-
-**API**: `curl` to `api.anthropic.com/api/oauth/usage` with header `anthropic-beta: oauth-2025-04-20`
-
-**Output format**: `5h_pct|7d_pct|daily_budget|days_left|workdays_left|pace`
-
-**Pace calculation**: `daily_budget = remaining% / days_left`, compared to ideal 14%/day (100/7). Under = `▲` green, over = `▼` peach/red (red if budget < 8%).
-
-**Token expiry**: 401 → jq fails → silent exit → segment vanishes. Refreshes automatically when Claude Code runs next.
-
-**Toggle**: `Prefix + C` flips `@show-claude-usage` on/off.
 
 ## 󰚰 Update Staleness Indicator
 

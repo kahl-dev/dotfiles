@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Check toggle (mirrors claude-usage.sh pattern)
+# Check toggle
 show_check="on"
 if command -v tmux >/dev/null 2>&1; then
   show_check=$(tmux show -gqv @show-update-check 2>/dev/null)

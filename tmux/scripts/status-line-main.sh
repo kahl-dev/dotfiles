@@ -61,50 +61,6 @@ if [[ $width -ge 120 ]]; then
   [[ -n "$env_meta" ]] && env_meta+="#[fg=$TEXT]"
 fi
 
-# Block 3: Claude usage (silent on failure)
-# Format from script: 5h_pct|7d_pct|daily_budget|days_left|workdays_left|pace
-claude_segment=""
-claude_raw=$(~/.dotfiles/tmux/scripts/claude-usage.sh 2>/dev/null || true)
-if [[ -n "$claude_raw" ]]; then
-  IFS='|' read -r five_hour seven_day daily_budget days_left workdays_left pace <<< "$claude_raw"
-
-  # Guard: ensure numeric fields are valid integers
-  if [[ "$five_hour" =~ ^[0-9]+$ && "$seven_day" =~ ^[0-9]+$ && "$daily_budget" =~ ^[0-9]+$ ]]; then
-    # Color each percentage individually
-    five_hour_color=$(color_by_threshold "$five_hour")
-    seven_day_color=$(color_by_threshold "$seven_day")
-
-    # Pace arrow and color (budget thresholds for granular feedback)
-    if [[ "$pace" == "under" ]]; then
-      pace_arrow="▲"
-      pace_color="$GREEN"
-    else
-      pace_arrow="▼"
-      if [[ $daily_budget -lt 8 ]]; then
-        pace_color="$RED"
-      else
-        pace_color="$PEACH"
-      fi
-    fi
-
-    if [[ $width -ge 90 ]]; then
-      # Full: 󰚩 󰥔55%/󰃭43% ▲12%/d
-      claude_segment="${sep}#[fg=$DIM]󰚩 "
-      claude_segment+="#[fg=$five_hour_color]󰥔${five_hour}%"
-      claude_segment+="#[fg=$DIM]/"
-      claude_segment+="#[fg=$seven_day_color]󰃭${seven_day}%"
-      claude_segment+=" #[fg=$pace_color]${pace_arrow}${daily_budget}%/d"
-      claude_segment+="#[fg=$TEXT]"
-    else
-      # Compact: 󰥔6%/󰃭44%
-      claude_segment="${sep}#[fg=$five_hour_color]󰥔${five_hour}%"
-      claude_segment+="#[fg=$DIM]/"
-      claude_segment+="#[fg=$seven_day_color]󰃭${seven_day}%"
-      claude_segment+="#[fg=$TEXT]"
-    fi
-  fi
-fi
-
 # Block 4: Update staleness (silent when everything fresh)
 update_val=$(~/.dotfiles/tmux/scripts/update-check.sh 2>/dev/null || true)
 update_segment=""
@@ -122,10 +78,9 @@ fi
 # Get hostname display
 hostname_display="$(~/.dotfiles/tmux/scripts/hostname-display.sh 2>/dev/null || true)"
 
-# Build status line: resources [│ env] [│ claude] [│ update] [│ hostname]
+# Build status line: resources [│ env] [│ update] [│ hostname]
 status_line="${resources}"
 [[ -n "$env_meta" ]] && status_line+="${sep}${env_meta}"
-status_line+="${claude_segment}"
 status_line+="${update_segment}"
 if [[ -n "$hostname_display" ]] && [[ $width -ge 100 ]]; then
   status_line+="${sep}#[fg=$DIM]${hostname_display}#[fg=$TEXT]"
