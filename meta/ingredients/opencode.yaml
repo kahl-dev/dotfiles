@@ -1,0 +1,31 @@
+- defaults:
+    link:
+      relink: true
+      create: true
+      force: true
+    shell:
+      quiet: false
+      stderr: true
+
+- clean: []
+
+- shell:
+    - description: "Ensure the private agent configuration repository exists"
+      command: |
+        REPO_DIR="$HOME/repos/claude-config"
+        REPO_URL="git@github.com:kahl-dev/claude-config.git"
+
+        if [ ! -d "$REPO_DIR/.git" ]; then
+          if ! git clone "$REPO_URL" "$REPO_DIR"; then
+            echo "ERROR: Failed to clone $REPO_URL" >&2
+            echo "Ensure the GitHub SSH key has access to the private repository." >&2
+            exit 1
+          fi
+        fi
+
+- create:
+    - ~/.config/opencode
+
+- link:
+    ~/.config/opencode/opencode.jsonc: ~/repos/claude-config/opencode/opencode.jsonc
+    ~/.config/opencode/agents: ~/repos/claude-config/opencode/agents
