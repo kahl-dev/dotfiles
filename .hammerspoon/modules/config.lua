@@ -11,13 +11,6 @@ M.privatePath = os.getenv("HOME") .. "/.hammerspoon/config/private.json"
 M.defaults = {
     usb = {
         devices = {
-            stream_deck = {
-                vendor_id = 4057,
-                product_ids = {134, 128, 96, 108, 109, 143, 144},
-                app_bundle_id = "com.elgato.StreamDeck",
-                app_name = "Elgato Stream Deck",
-                launch_hidden = true
-            },
             wave3_audio = {
                 vendor_id = 4057,
                 product_ids = {102, 103, 112, 113},
@@ -25,9 +18,6 @@ M.defaults = {
             }
         },
         settings = {
-            launch_delay = 2.0,
-            hide_delay = 2.0,
-            notifications = false,
             debounce_delay = 2.0
         }
     },

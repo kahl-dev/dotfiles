@@ -1,23 +1,17 @@
 -- USB Device Manager Module
--- Automatically manages applications based on USB device connections
+-- Watches USB devices and starts/stops the audio-manager with the Wave:3.
 
 local M = {}
 
 -- Module state
 M.state = {
-    managedApps = {},
-    deviceStates = {},
-    manuallyQuit = {},
-    userShowedApp = {},
-    appWatchers = {}
+    deviceStates = {}
 }
 
 -- Configuration (loaded from config module)
 M.config = {
     devices = {},
     settings = {
-        launch_delay = 2.0,
-        notifications = false,
         debounce_delay = 2.0
     }
 }
@@ -39,119 +33,15 @@ function M.isDeviceConnected(deviceConfig)
     return false
 end
 
--- Hide an app
-function M.hideApp(app)
-    if not app then return end
-    app:hide()
-end
-
--- Launch an application
-function M.launchApp(bundleId, appName, deviceConfig)
-    -- Check if already running
-    local app = hs.application.get(bundleId)
-    if app and app:isRunning() then
-        if deviceConfig.launch_hidden and not M.state.userShowedApp[bundleId] then
-            M.hideApp(app)
-        end
-        return true
-    end
-
-    -- Check if user manually quit
-    if M.state.manuallyQuit[bundleId] then
-        return false
-    end
-
-    -- Launch the app in background using --runinbk flag (Elgato apps support this)
-    hs.task.new("/usr/bin/open", function(exitCode)
-        if exitCode == 0 then
-            M.state.managedApps[bundleId] = true
-            M.setupAppWatcher(bundleId, appName)
-        end
-    end, {"-b", bundleId, "--args", "--runinbk"}):start()
-
-    return true
-end
-
--- Quit an application
-function M.quitApp(bundleId, appName)
-    local app = hs.application.get(bundleId)
-
-    if not app or not app:isRunning() then
-        return true
-    end
-
-    -- Only quit if we're managing it
-    if not M.state.managedApps[bundleId] then
-        return false
-    end
-
-    app:kill()
-    M.state.managedApps[bundleId] = nil
-    M.state.manuallyQuit[bundleId] = nil
-
-    return true
-end
-
--- Monitor app for manual quits
-function M.setupAppWatcher(bundleId, appName)
-    -- Reuse existing watcher when rebuilding state
-    if M.state.appWatchers[bundleId] then
-        M.state.appWatchers[bundleId]:stop()
-        M.state.appWatchers[bundleId] = nil
-    end
-
-    local watcher = hs.application.watcher.new(function(name, event, app)
-        local matchesManagedApp = false
-
-        if app and app:bundleID() == bundleId then
-            matchesManagedApp = true
-        elseif not app and appName and name == appName then
-            matchesManagedApp = true
-        end
-
-        if matchesManagedApp then
-            if event == hs.application.watcher.terminated then
-                -- Check if device is still connected
-                for deviceKey, deviceConfig in pairs(M.config.devices) do
-                    if deviceConfig.app_bundle_id == bundleId then
-                        if M.isDeviceConnected(deviceConfig) and M.state.managedApps[bundleId] then
-                            -- User manually quit while device connected
-                            M.state.manuallyQuit[bundleId] = true
-                            M.state.managedApps[bundleId] = nil
-                        end
-                        break
-                    end
-                end
-            end
-        end
-    end)
-
-    watcher:start()
-    M.state.appWatchers[bundleId] = watcher
-end
-
 -- Handle device connection
 function M.handleDeviceConnection(deviceKey, deviceConfig)
     M.state.deviceStates[deviceKey] = true
-    if deviceConfig.app_bundle_id then
-        M.state.manuallyQuit[deviceConfig.app_bundle_id] = nil
-    end
 
-    -- Audio coordination: activate immediately (no delay)
     if deviceConfig.coordinate_audio then
         local audioManager = package.loaded["modules.audio-manager"]
         if audioManager then
             audioManager.init()
         end
-    end
-
-    -- Launch app after delay (skip if no app configured)
-    if deviceConfig.app_bundle_id then
-        hs.timer.doAfter(M.config.settings.launch_delay, function()
-            if M.isDeviceConnected(deviceConfig) then
-                M.launchApp(deviceConfig.app_bundle_id, deviceConfig.app_name, deviceConfig)
-            end
-        end)
     end
 end
 
@@ -159,21 +49,11 @@ end
 function M.handleDeviceDisconnection(deviceKey, deviceConfig)
     M.state.deviceStates[deviceKey] = false
 
-    -- Audio coordination: deactivate immediately
     if deviceConfig.coordinate_audio then
         local audioManager = package.loaded["modules.audio-manager"]
         if audioManager then
             audioManager.stop()
         end
-    end
-
-    -- Quit app after short delay (skip if no app configured)
-    if deviceConfig.app_bundle_id then
-        hs.timer.doAfter(1.0, function()
-            if not M.isDeviceConnected(deviceConfig) then
-                M.quitApp(deviceConfig.app_bundle_id, deviceConfig.app_name)
-            end
-        end)
     end
 end
 
@@ -193,55 +73,16 @@ function M.checkAllDevices()
 end
 
 -- USB watcher callback with debouncing
-function M.usbCallback(device)
-    -- Cancel pending check
+function M.usbCallback(_)
     if pendingCheck then
         pendingCheck:stop()
         pendingCheck = nil
     end
 
-    -- Schedule new check after debounce delay
     pendingCheck = hs.timer.doAfter(M.config.settings.debounce_delay, function()
         M.checkAllDevices()
         pendingCheck = nil
     end)
-end
-
--- Toggle visibility of managed apps
-function M.toggleManagedApps()
-    for bundleId, _ in pairs(M.state.managedApps) do
-        local app = hs.application.get(bundleId)
-        if app then
-            local windows = app:visibleWindows()
-            if #windows == 0 then
-                -- Show the app
-                app:unhide()
-                app:activate()
-                M.state.userShowedApp[bundleId] = true
-            else
-                -- Hide the app
-                M.hideApp(app)
-                M.state.userShowedApp[bundleId] = nil
-            end
-        end
-    end
-end
-
--- Check for orphaned apps (running without USB device connected)
-function M.checkForOrphanedApps()
-    for deviceKey, deviceConfig in pairs(M.config.devices) do
-        local app = hs.application.get(deviceConfig.app_bundle_id)
-
-        if app and app:isRunning() then
-            -- App is running, check if device is connected
-            if not M.isDeviceConnected(deviceConfig) then
-                -- App is running but device not connected - force quit it
-                app:kill()
-                M.state.manuallyQuit[deviceConfig.app_bundle_id] = true
-                M.state.managedApps[deviceConfig.app_bundle_id] = nil
-            end
-        end
-    end
 end
 
 -- Initialize module
@@ -252,33 +93,12 @@ function M.init()
         M.config = configModule.usb or M.config
     end
 
-    -- Check for orphaned apps first (before device check)
-    M.checkForOrphanedApps()
-
     -- Initial device check
     M.checkAllDevices()
 
     -- Start USB watcher
     M.usbWatcher = hs.usb.watcher.new(M.usbCallback)
     M.usbWatcher:start()
-
-    -- Single essential hotkey for visibility toggle
-    hs.hotkey.bind({ "cmd", "alt" }, "V", function()
-        M.toggleManagedApps()
-    end)
-end
-
--- Stop module
-function M.stop()
-    if M.usbWatcher then
-        M.usbWatcher:stop()
-        M.usbWatcher = nil
-    end
-
-    for bundleId, watcher in pairs(M.state.appWatchers) do
-        watcher:stop()
-        M.state.appWatchers[bundleId] = nil
-    end
 end
 
 return M

@@ -1,10 +1,5 @@
 -- Hammerspoon Configuration
--- Manages Elgato devices automatically
-
--- Manual reload hotkey in unified overlay (alt+? → R)
--- hs.hotkey.bind({ "cmd", "alt" }, "R", function()
---     hs.reload()
--- end)
+-- Manages audio, displays and presence automatically. No hotkeys.
 
 -- Auto-reload on config file changes
 local function reloadConfig(files)
@@ -22,16 +17,19 @@ end
 hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", reloadConfig):start()
 hs.alert.show("Hammerspoon loaded")
 
--- Enable IPC for hs CLI (used by AeroSpace to trigger unified overlay)
+-- Enable IPC for hs CLI. Required: Raycast scripts drive audio-manager and
+-- presence-keeper via `hs -c "require('modules.<name>')..."`.
 require("hs.ipc")
 
 -- Load modules
 local config = require("modules.config")
-local audioManager = require("modules.audio-manager")
 local usbManager = require("modules.usb-device-manager")
 local displayManager = require("modules.display-manager")
 local presenceKeeper = require("modules.presence-keeper")
-require("modules.unified-overlay") -- loaded for hs CLI access from AeroSpace (alt+?)
+
+-- Required for its side effect only: usb-device-manager reaches the module via
+-- package.loaded when the Wave:3 connects, so it must be loaded up front.
+require("modules.audio-manager")
 
 -- Initialize configuration
 config.init()
@@ -41,7 +39,3 @@ config.init()
 usbManager.init()
 displayManager.init()
 presenceKeeper.init()
-
--- TEMPORARY: Comprehensive watcher tests
--- Uncomment the line below to test all watchers, then press Ctrl+Cmd+Shift+Alt+T to stop
--- require("test-all-watchers")
