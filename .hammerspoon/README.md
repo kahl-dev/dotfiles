@@ -4,6 +4,17 @@ Background automation for audio, displays and presence. Event-driven, no hotkeys
 no menu bar UI. Everything reacts to USB, display and camera events, or to Raycast
 scripts calling in over `hs -c`.
 
+## Table of Contents
+
+- [Features](#features)
+- [Install](#install)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [File Structure](#file-structure)
+- [How It Works](#how-it-works)
+- [Troubleshooting](#troubleshooting)
+- [Design Philosophy](#design-philosophy)
+
 ## Features
 
 ### Audio
@@ -25,7 +36,24 @@ scripts calling in over `hs -c`.
 - **Idle prevention** — pulses F15 so Teams and Slack do not go idle-yellow.
   Auto-enables while video plays, toggleable from Raycast.
 
-## Quick Start
+## Install
+
+Hammerspoon itself comes from the Brewfile. The configuration is symlinked by
+dotbot, so there is no separate install step:
+
+```bash
+./install-standalone macos_general   # links ~/.hammerspoon -> ./.hammerspoon/
+./install-standalone private-macos   # links the two config/*.json from dotfiles-private
+```
+
+Both ingredients are part of the `macos` recipe, so a full
+`./install-profile macos` covers them.
+
+Grant Hammerspoon the Accessibility permission on first launch — `presence-keeper`
+synthesizes an F15 keypress through `hs.eventtap`, which macOS refuses without it.
+The USB, audio, display and camera watchers work without additional permissions.
+
+## Usage
 
 There are no keyboard shortcuts. The configuration reloads itself whenever a `.lua`
 or `.json` file below `~/.hammerspoon/` changes (`hs.pathwatcher` in `init.lua`).
@@ -99,7 +127,7 @@ Use the external display's UUID for `display_uuid` and the built-in one for
 
 ## File Structure
 
-```
+```text
 .hammerspoon/
 ├── init.lua                     # Entry point: pathwatcher, IPC, module init
 ├── modules/
