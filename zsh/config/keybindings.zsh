@@ -6,7 +6,7 @@
 # Vi keybindings
 bindkey -v
 bindkey 'jk' vi-cmd-mode
-export KEYTIMEOUT=0.5
+export KEYTIMEOUT=20
 
 # Use vim keys in tab complete menu:
 bindkey -M menuselect '^h' vi-backward-char

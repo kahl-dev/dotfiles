@@ -304,6 +304,19 @@ Project-agnostic worktree management with zero configuration. Auto-detects paths
 - **zsh**: Modular config in `zsh/config/` with automatic sourcing
 - **starship**: Prompt config in `.config/starship.toml`
 
+### Keybindings — read the docs first
+
+**Before changing any keyboard shortcut, read `docs/keybindings.md`.** Bindings
+are layered (Karabiner → AeroSpace → Ghostty → tmux → TUIs) and an upper layer
+silently swallows keys the layers below need — the failure is invisible in the
+file you are editing. That document holds the layer model, the rule for which
+modifier each layer owns, a register of deliberate deviations with their
+reasons, and the diagnosis recipe for a key that stopped working.
+
+The complete list of files carrying keybindings lives in that document's "Files
+that carry keybindings" table — it spans two repositories and is easy to
+under-count, so use the table rather than a list kept here.
+
 ### Development Tools
 - **atuin**: Shell history sync/search in `zsh/config/atuin.zsh` (auto-installs if missing)
 - **mise**: Polyglot runtime manager in `zsh/config/mise.zsh`, config in `~/.config/mise/config.toml`
