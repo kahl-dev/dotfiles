@@ -14,6 +14,7 @@
       ~/.tmux.conf: ./tmux/tmux.conf
 
       ~/.gitignore_global: ./git/gitignore_global
+      ~/.gitattributes_global: ./git/gitattributes_global
       ~/.gitconfig: ./git/gitconfig
       ~/.gittemplate: ./git/template
 

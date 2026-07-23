@@ -24,6 +24,7 @@ followTags = true
 [core]
 pager = delta
 excludesfile = ~/.gitignore_global
+attributesFile = ~/.gitattributes_global
 editor = "if command -v 'nvim' >/dev/null 2>&1; then ED='nvim'; else ED='vim'; fi; $ED"
 compression = 0
 

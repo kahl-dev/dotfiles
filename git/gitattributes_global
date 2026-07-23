@@ -1,0 +1,24 @@
+# Global gitattributes (wired via core.attributesFile in git/gitconfig).
+#
+# `-diff` makes git treat a path as binary for diffing: it reports
+# "Binary files differ" instead of emitting the text hunks. The file still
+# shows as changed in every tool — only the line-by-line content is
+# suppressed. This keeps diff viewers (hunk, delta, git) from choking on
+# machine-generated files that pack whole bundles onto a single line.
+
+# Minified assets and source maps
+*.min.js    -diff
+*.min.css   -diff
+*-min.js    -diff
+*-min.css   -diff
+*.map       -diff
+
+# Hash-suffixed client build bundles (Vite/Nuxt CustomElements emit
+# <name>.client-<hash>.js — a single minified line up to ~1 MB)
+*.client-*.js   -diff
+
+# Dependency lockfiles: large, machine-generated, never hand-read as a diff
+yarn.lock           -diff
+package-lock.json   -diff
+pnpm-lock.yaml      -diff
+composer.lock       -diff
