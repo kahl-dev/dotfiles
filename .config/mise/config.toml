@@ -11,6 +11,7 @@ legacy_version_file = true
 "npm:vercel" = "latest"
 "npm:prettier" = "latest"
 "npm:diff-so-fancy" = "latest"
+"npm:hunkdiff" = "latest"        # hunk — review-first terminal diff viewer (hunk.dev)
 "npm:serve" = "latest"
 "npm:browser-sync" = "latest"
 "npm:neovim" = "latest"
