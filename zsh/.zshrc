@@ -109,6 +109,7 @@ zmodload zsh/complist                # Load the complist module for advanced com
 source "$ZDOTDIR/config/ngrok.zsh"
 source "$ZDOTDIR/config/keybindings.zsh"
 source "$ZDOTDIR/config/aliases.zsh"
+source "$ZDOTDIR/config/opencode.zsh"
 source "$ZDOTDIR/config/worktree.zsh"
 # source "$ZDOTDIR/config/claude-store.zsh"
 source "$ZDOTDIR/config/remote-bridge.zsh"

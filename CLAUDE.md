@@ -218,6 +218,7 @@ The zsh setup uses modular configuration files in `zsh/config/`:
 - `neovim.zsh` - Neovim configuration
 - `ngrok.zsh` - Ngrok tunnel integration
 - `node.zsh` - Node.js version management (fnm fallback) and npm aliases
+- `opencode.zsh` - OpenCode aliases and fzf session picker (`oc`, `occ`, `ocs`, `ocu`)
 - `plugins.zsh` - Plugin management via zinit
 - `prompt.zsh` - Starship prompt configuration
 - `mosh.zsh` - `sm` command: mosh with auto Remote Bridge tunnel via autossh (`sm`, `sm-status`, `sm-kill`)

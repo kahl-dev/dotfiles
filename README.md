@@ -62,6 +62,17 @@ cd ~/.dotfiles && git remote set-url origin git@github.com:kahl-dev/dotfiles.git
 - **bat** - Syntax highlighting with Catppuccin theme
 - **fzf** - Fuzzy finder integration throughout the system
 
+### OpenCode Shell Helpers
+
+| Helper | Action |
+|---|---|
+| `oc` | Start OpenCode. |
+| `occ` | Continue the most recent OpenCode session. |
+| `ocs` | Select a session to resume. Enter resumes it; Ctrl+F starts a fork; Esc cancels. |
+| `ocu` | Show OpenCode usage statistics. |
+
+`ocs` requires `opencode`, `jq`, and `fzf` on PATH.
+
 ### macOS Integration
 - **Homebrew** - Comprehensive package management via Brewfiles
 - **Karabiner-Elements** - Custom keyboard remapping

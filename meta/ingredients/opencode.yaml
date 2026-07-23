@@ -29,3 +29,4 @@
 - link:
     ~/.config/opencode/opencode.jsonc: ~/repos/claude-config/opencode/opencode.jsonc
     ~/.config/opencode/agents: ~/repos/claude-config/opencode/agents
+    ~/.config/opencode/commands: ~/repos/claude-config/opencode/commands
