@@ -27,6 +27,7 @@
       ~/.config/btop: ./.config/btop/
       ~/.config/glow: ./.config/glow/
       ~/.config/lazygit: ./.config/lazygit/
+      ~/.config/hunk: ./.config/hunk/
       ~/.config/gh-copilot: ./.config/gh-copilot/
       ~/.config/.nuxtrc: ./.config/.nuxtrc
       ~/.config/nvim: ./.config/nvim/

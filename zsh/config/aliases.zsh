@@ -370,7 +370,11 @@ alias gco='git checkout'
 alias gcol="git checkout @{-1}" # checkout the last branch
 alias gr='_git_recent'
 
-alias gd='git diff'
+# gd opens the working-tree diff in hunk (TUI) when run interactively. It falls
+# back to plain `git diff` when hunk is not installed OR when stdout is not a
+# terminal, so `gd | grep`, `gd > patch.diff`, and `$(gd)` still yield text
+# (see bin/hunk-diff). Use `gdnolock` (below) to exclude lockfiles.
+alias gd='hunk-diff'
 
 function _gdnolock() {
   git diff "$@" ":(exclude)package-lock.json" ":(exclude)*.lock"

@@ -62,12 +62,14 @@ show_apps() {
         "  [y] Yazi"                   "y" "new-window -n yazi -c '#{pane_current_path}' 'yazi'" \
         "  [b] btop"                   "b" "new-window -n btop 'btop'" \
         "  [m] glow"                   "m" "new-window -n glow -c '#{pane_current_path}' 'glow'" \
+        "  [h] Hunk"                   "h" "new-window -n hunk -c '#{pane_current_path}' 'mise exec -- hunk diff'" \
         "" \
         "Popup (floating overlay)" "" "" \
         "  [G] Lazygit"                "G" "display-popup -E -w 90% -h 90% -d '#{pane_current_path}' 'lazygit'" \
         "  [Y] Yazi"                   "Y" "display-popup -E -w 90% -h 90% -d '#{pane_current_path}' 'yazi'" \
         "  [B] btop"                   "B" "display-popup -E -w 90% -h 90% -d '#{pane_current_path}' 'btop'" \
         "  [M] glow"                   "M" "display-popup -E -w 90% -h 90% -d '#{pane_current_path}' 'glow'" \
+        "  [H] Hunk"                   "H" "display-popup -E -w 90% -h 90% -d '#{pane_current_path}' 'mise exec -- hunk diff'" \
         "" \
         "Picker (pick agent's cwd, then app)" "" "" \
         "  [c] 󰚩 Claude Agents"        "c" "run-shell -b \"bash $SCRIPT_DIR/tmux-claude-agents-picker.sh \\\"#{pane_current_path}\\\"\"" \

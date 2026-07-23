@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Open a diff in hunk (hunk.dev) when it is available; fall back to plain git
+# otherwise. This keeps the `gd` alias, `git review`, and the hunk difftool
+# working on machines where hunk is not installed yet (fresh clone before
+# `mise install`, install failure, or non-mise hosts).
+#
+# Usage:
+#   hunk-diff [git-diff-args...]                 # working-tree review
+#   hunk-diff --difftool LOCAL REMOTE MERGED     # git difftool per-file pair
+#
+# hunk is a mise-managed tool and is not always on PATH, so resolve it directly
+# first, then via mise, then give up and use git.
+set -euo pipefail
+
+if command -v hunk >/dev/null 2>&1; then
+  hunk_cmd=(hunk)
+elif command -v mise >/dev/null 2>&1 && mise which hunk >/dev/null 2>&1; then
+  hunk_cmd=(mise exec -- hunk)
+else
+  hunk_cmd=()
+fi
+
+if [ "${1:-}" = "--difftool" ]; then
+  shift
+  if [ ${#hunk_cmd[@]} -gt 0 ]; then
+    exec "${hunk_cmd[@]}" difftool "$@"
+  fi
+  # No hunk: show the pair with git's own diff (no pager, no index).
+  exec git --no-pager diff --no-index -- "${1:-}" "${2:-}"
+fi
+
+# Only launch the TUI when stdout is a real terminal. Piped, redirected, or
+# scripted use (`gd | grep`, `gd > patch.diff`, `$(gd)`) gets plain git diff so
+# those keep producing unified-diff text instead of a full-screen viewer.
+if [ ${#hunk_cmd[@]} -gt 0 ] && [ -t 1 ]; then
+  exec "${hunk_cmd[@]}" diff "$@"
+fi
+exec git diff "$@"

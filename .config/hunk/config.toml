@@ -1,0 +1,16 @@
+# hunk (hunk.dev) — global config. Linked to ~/.config/hunk via meta/ingredients/base.yaml.
+# Valid keys read by hunk's config loader: mode, vcs, theme, watch,
+# exclude_untracked, line_numbers, wrap_lines, hunk_headers, menu_bar,
+# agent_notes, copy_decorations, transparent_background, color_moved.
+# Per-command overrides go in [diff] / [show] / [pager] tables.
+
+# Catppuccin Mocha — matches tmux, bat, btop, nvim, lazygit, ghostty, fzf.
+theme = "Catppuccin Mocha"
+
+# Let the terminal background show through, consistent with the repo's
+# transparent-background convention for terminal apps.
+transparent_background = true
+
+line_numbers = true    # line numbers on by default when reviewing diffs
+color_moved = true     # distinguish moved code from real additions/deletions
+agent_notes = true     # show [agent] review notes inline by default (they're the point)

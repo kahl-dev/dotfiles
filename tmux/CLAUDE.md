@@ -138,6 +138,7 @@ Enters a custom key table with app launchers. **Convention**: lowercase = new wi
 | `y` / `Y` | yazi | yazi popup | File manager |
 | `b` / `B` | btop | btop popup | System monitor |
 | `m` / `M` | glow | glow popup | Markdown viewer |
+| `h` / `H` | hunk | hunk popup | Diff review (`hunk diff`) of working tree |
 | `c` | — | picker | 󰚩 Claude Agents — filter + pick agent (fzf), then pick app in a small menu |
 | `Escape` | — | — | Exit apps table |
 
@@ -161,6 +162,7 @@ Two-stage flow — the picker keeps fzf's typing free for filtering, then mirror
 | 2 — `display-menu` | `y` | Open yazi |
 | 2 — `display-menu` | `b` | Open btop |
 | 2 — `display-menu` | `m` | Open glow |
+| 2 — `display-menu` | `h` | Open hunk (`hunk diff` review) |
 | 2 — `display-menu` | `Esc` | Cancel |
 
 The two-stage split is deliberate: a single-stage `--expect='g,y,b,m'` would make those letters trigger actions and prevent the user from typing them in the filter (you couldn't search for `marketplace` by typing `m`). Stage 2 reuses the apps-menu mnemonics so muscle memory is preserved.

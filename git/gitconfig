@@ -8,6 +8,7 @@ cleanup = git-cleanup
 	pullup = pull --rebase --autostash
 	ours = "!f() { git checkout --ours \"$@\" && git add \"$@\"; }; f"
 	theirs = "!f() { git checkout --theirs \"$@\" && git add \"$@\"; }; f"
+	review = "!hunk-diff"
 
 [user]
 name = Patrick Kahl
@@ -65,7 +66,13 @@ ff = false
 [diff]
 colorMoved = default
 renameLimit = 999999
-# tool = vimdiff
+tool = hunk
+
+# `git difftool` opens hunk per file; `git diff` still uses the delta pager.
+[difftool]
+prompt = false
+[difftool "hunk"]
+cmd = hunk-diff --difftool \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
 
 [help]
 autocorrect = 10

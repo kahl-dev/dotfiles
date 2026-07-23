@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # tmux-claude-agents-picker.sh — Pick a live Claude Code agent, then launch
-# lazygit / yazi / btop / glow in that agent's cwd. Wired into the apps
+# lazygit / yazi / btop / glow / hunk in that agent's cwd. Wired into the apps
 # key-table as `Prefix + a → c`.
 #
 # Background: Claude Code's "Agent View" (`claude agents`) runs each
@@ -214,5 +214,6 @@ tmux display-menu -xC -yC -T " 󰚩 #{@cc_picker_name} " \
     "  [y] Yazi"     "y"  "display-popup -E -w 90% -h 90% -d \"#{@cc_picker_cwd}\" 'yazi'" \
     "  [b] btop"     "b"  "display-popup -E -w 90% -h 90% -d \"#{@cc_picker_cwd}\" 'btop'" \
     "  [m] glow"     "m"  "display-popup -E -w 90% -h 90% -d \"#{@cc_picker_cwd}\" 'glow'" \
+    "  [h] Hunk"     "h"  "display-popup -E -w 90% -h 90% -d \"#{@cc_picker_cwd}\" 'mise exec -- hunk diff'" \
     "" \
     "  [Esc] Cancel" "Escape" ""

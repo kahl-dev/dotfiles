@@ -115,6 +115,7 @@ Press `<prefix> a` to enter apps mode, then:
 | `y` / `Y` | new window | overlay | Yazi (file manager) |
 | `b` / `B` | new window | overlay | Btop (system monitor) |
 | `m` / `M` | new window | overlay | Glow (markdown viewer) |
+| `h` / `H` | new window | overlay | Hunk (diff review of working tree) |
 | `c` | — | picker | 󰚩 Claude Agents (filter+pick agent, then pick app) |
 | `Escape` | - | - | Cancel |
 

@@ -126,7 +126,7 @@ Enter panes mode with `Prefix + v`, then press a key:
 | `/` | Fuzzback | Fuzzy search scrollback buffer with preview |
 | `*` | Cowboy | Kill hung process in current pane |
 | `U` | TYPO3 URLs | Open project URLs via lit-info (conditional) |
-| `a` | Apps layer | g/y/b/m = window, G/Y/B/M = popup (lazygit, yazi, btop, glow), c = Claude Agents picker |
+| `a` | Apps layer | g/y/b/m/h = window, G/Y/B/M/H = popup (lazygit, yazi, btop, glow, hunk), c = Claude Agents picker |
 | `v` | Panes layer | Layouts, splits, swap, structure (see Panes Layer section) |
 | `t` | TPM layer | i = install, u = update, x = clean |
 
@@ -160,6 +160,7 @@ table:
 | `y`                 | Open yazi                                 |
 | `b`                 | Open btop                                 |
 | `m`                 | Open glow                                 |
+| `h`                 | Open hunk diff review                     |
 | `Esc`               | Cancel                                    |
 
 The two-stage split is deliberate: binding `g`/`y`/`b`/`m` as fzf exit
