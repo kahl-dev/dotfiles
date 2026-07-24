@@ -594,6 +594,7 @@ alias cs='claude --model sonnet'
 
 # Subcommands
 alias ca='claude agents'
+alias cb='claude --bg'
 
 # YOLO mode wrappers — auto mode is Claude's new default, so prompt before
 # skipping permissions to keep the bypass deliberate (muscle memory retraining).
