@@ -1,0 +1,28 @@
+- defaults:
+    link:
+      relink: true
+      create: true
+      force: true
+      relative: false
+    shell:
+      quiet: true
+      stdout: true
+      stderr: true
+
+# The binary itself comes from mise (.config/mise/config.toml).
+# Linked per file, not as a whole directory: atuin also writes server.toml and
+# atuin-receipt.json into ~/.config/atuin, and neither belongs in a public repo.
+- link:
+    ~/.config/atuin/config.toml: .config/atuin/config.toml
+    ~/.config/atuin/themes: .config/atuin/themes/
+
+- shell:
+    - description: "Check for legacy atuin installation"
+      command: |
+        if [ -d "$HOME/.atuin" ]; then
+          echo "Legacy atuin install found at ~/.atuin - now managed by mise."
+          echo "It shadows the mise shim via PATH. Remove it:"
+          echo "  rm -rf ~/.atuin && hash -r"
+        else
+          echo "No legacy atuin install - mise is the single source of truth."
+        fi

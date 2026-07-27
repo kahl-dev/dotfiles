@@ -8,6 +8,7 @@ const path = require('path');
 // locations first, then fall back to `which` for anything else.
 function resolveAtuinBinary({ homedir = os.homedir, execFileSync = realExecFileSync } = {}) {
   const candidates = [
+    path.join(homedir(), '.local', 'share', 'mise', 'shims', 'atuin'),
     path.join(homedir(), '.atuin', 'bin', 'atuin'),
     '/opt/homebrew/bin/atuin',
     '/usr/local/bin/atuin',

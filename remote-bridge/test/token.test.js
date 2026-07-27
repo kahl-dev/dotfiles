@@ -1,8 +1,44 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 const { resolveExpectedToken } = require('../src/utils/token');
 
 describe('resolveExpectedToken', () => {
+  // Guards the launchd failure mode: the LaunchAgent plist defines no PATH, so
+  // `which atuin` cannot resolve the mise shim. If the candidate list ever goes
+  // stale again, this fails instead of the bridge silently fail-closing.
+  it('prefers the mise shim over legacy install locations and never falls back to which', () => {
+    const home = fs.mkdtempSync(path.join(os.tmpdir(), 'token-shim-'));
+    const shim = path.join(home, '.local', 'share', 'mise', 'shims', 'atuin');
+    const legacy = path.join(home, '.atuin', 'bin', 'atuin');
+
+    for (const binary of [shim, legacy]) {
+      fs.mkdirSync(path.dirname(binary), { recursive: true });
+      fs.writeFileSync(binary, '#!/bin/sh\n', { mode: 0o755 });
+    }
+
+    const invoked = [];
+    const execFileSync = (file, args) => {
+      invoked.push(file);
+      if (file === 'which') {
+        throw new Error('which must not be reached while an executable candidate exists');
+      }
+      assert.deepEqual(args, ['dotfiles', 'var', 'list']);
+      return 'export REMOTE_BRIDGE_TOKEN=shim-token\n';
+    };
+
+    try {
+      const result = resolveExpectedToken({ env: {}, execFileSync, homedir: () => home });
+
+      assert.deepEqual(result, { token: 'shim-token', error: null });
+      assert.deepEqual(invoked, [shim], 'the mise shim must win over the legacy curl install');
+    } finally {
+      fs.rmSync(home, { recursive: true, force: true });
+    }
+  });
+
   it('returns the env var token without consulting atuin, even when atuin would also resolve one', () => {
     const execFileSync = () => {
       throw new Error('execFileSync must not be called when the env var is set');

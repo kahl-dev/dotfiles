@@ -208,7 +208,7 @@ make help                       # Show available targets
 
 The zsh setup uses modular configuration files in `zsh/config/`:
 - `aliases.zsh` - Command aliases and shortcuts
-- `atuin.zsh` - Atuin shell history integration (auto-installs if missing)
+- `atuin.zsh` - Atuin shell history integration (init only; binary comes from mise)
 - `check_git_cleanup.zsh` - Git branch cleanup reminders
 - `claude-config.zsh` - Claude Code scripts PATH setup (`~/repos/claude-config/scripts`)
 - `fzf.zsh` - Fuzzy finder integration
@@ -319,7 +319,7 @@ that carry keybindings" table — it spans two repositories and is easy to
 under-count, so use the table rather than a list kept here.
 
 ### Development Tools
-- **atuin**: Shell history sync/search in `zsh/config/atuin.zsh` (auto-installs if missing)
+- **atuin**: Shell history sync/search. Installed via mise (`.config/mise/config.toml`), config in `.config/atuin/` linked by `meta/ingredients/atuin.yaml`, shell init in `zsh/config/atuin.zsh`. Never source `~/.atuin/bin/env` — the legacy curl install shadows the mise shim via PATH.
 - **mise**: Polyglot runtime manager in `zsh/config/mise.zsh`, config in `~/.config/mise/config.toml`
 - **fnm**: Node.js version manager fallback in `zsh/config/node.zsh` (used when mise is absent)
 - **neovim**: Full configuration in `.config/nvim/`
@@ -382,6 +382,7 @@ All applications use **Catppuccin Mocha** flavor for consistent dark theme exper
 - **Starship**: Catppuccin Macchiato palette (`~/.config/starship.toml`)
 - **fzf**: Catppuccin Mocha colors (`zsh/config/fzf.zsh`)
 - **lazygit**: Catppuccin Mocha theme (`~/.config/lazygit/config.yml`)
+- **atuin**: Catppuccin Mocha theme (`.config/atuin/themes/catppuccin-mocha.toml`, selected via `[theme] name`)
 
 **Color Palette (Mocha):**
 - Background: `#1e1e2e`

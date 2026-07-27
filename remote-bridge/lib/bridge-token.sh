@@ -6,7 +6,9 @@
 
 # Resolve the Bearer token: env var first, then atuin's synced dotfiles vars.
 # launchd's minimal PATH means `atuin` may not be resolvable by name, so probe
-# known install locations before falling back to `which`.
+# known install locations before falling back to `which`. The mise shim comes
+# first: atuin is installed via mise, and the LaunchAgent plist defines no PATH,
+# so neither the shim directory nor /opt/homebrew is reachable by name there.
 #
 # Callers run under `set -euo pipefail`. The atuin lookup below legitimately
 # exits non-zero when atuin isn't installed or has no matching var, and each
@@ -23,7 +25,11 @@ resolve_bridge_token() {
     fi
 
     local atuin_bin=""
-    for candidate in "${HOME}/.atuin/bin/atuin" "/opt/homebrew/bin/atuin" "/usr/local/bin/atuin"; do
+    for candidate in \
+        "${HOME}/.local/share/mise/shims/atuin" \
+        "${HOME}/.atuin/bin/atuin" \
+        "/opt/homebrew/bin/atuin" \
+        "/usr/local/bin/atuin"; do
         if [ -x "$candidate" ]; then
             atuin_bin="$candidate"
             break

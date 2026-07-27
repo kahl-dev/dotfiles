@@ -30,6 +30,9 @@ bun = "latest"
 rust = "latest"
 uv = "latest"
 
+# 🐚 Shell tooling
+atuin = "latest"                 # shell history — replaces the curl installer in ~/.atuin/bin
+
 # 🔍 Linters & formatters
 shellcheck = "latest"
 stylua = "latest"

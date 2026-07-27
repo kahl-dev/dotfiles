@@ -5,6 +5,7 @@ bat
 tmux
 sesh
 mise
+atuin
 fnm_build
 fzf_build
 lazygit_build
