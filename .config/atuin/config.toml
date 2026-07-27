@@ -1,0 +1,65 @@
+# Atuin client configuration.
+# Linked by meta/ingredients/atuin.yaml. Full option reference: atuin default-config
+#
+# Only deviations from upstream defaults are listed here. Everything else is
+# intentionally left at its default so upstream changes are picked up.
+
+## Enter runs the selected command; Tab puts it on the prompt for editing.
+enter_accept = true
+
+## Up arrow filters to commands run in the current directory, shown in the full
+## TUI. Ctrl+R is unaffected and still starts global.
+filter_mode_shell_up_key_binding = "directory"
+
+## Scope commands to the surrounding git repository tree rather than the exact
+## cwd. Complements the worktree helpers in zsh/config/worktree.zsh; atuin
+## resolves a worktree back to its main repo since 18.14.0.
+workspaces = true
+
+## Adopt the shell's keymap inside the TUI. keybindings.zsh binds atuin-search
+## in both viins and vicmd, so without this the active vi mode is invisible
+## once the search opens.
+keymap_mode = "auto"
+keymap_cursor = { emacs = "blink-block", vim_insert = "blink-block", vim_normal = "steady-block" }
+
+## secrets_filter is on by default but only knows AWS, GitHub, Slack and Stripe
+## formats. These patterns cover the token-handling commands this setup runs.
+## Unanchored unless ^ or $ is given.
+history_filter = [
+  "^atuin dotfiles var set",
+  "^(av|avs|avset) ",
+  "REMOTE_BRIDGE_TOKEN",
+]
+
+[search]
+## Scopes cycled by repeated Ctrl+R, in order. First entry is the default.
+## "workspace" is skipped automatically outside a git repository.
+filters = ["global", "workspace", "directory", "host", "session"]
+
+[ui]
+## host is not in the default column set, but history is synced across mac, pi
+## and several servers - without it there is no way to tell where a command ran.
+columns = ["duration", "time", "host", "command"]
+
+[tmux]
+## Ctrl+R opens in a tmux popup instead of taking over the prompt line.
+## Requires tmux >= 3.2.
+enabled = true
+
+[theme]
+name = "catppuccin-mocha"
+
+[dotfiles]
+enabled = true
+
+[sync]
+records = true
+
+# [daemon]
+## Deliberately disabled. Upstream describes the daemon as primarily a workaround
+## for ZFS/SQLite performance problems, states it brings little benefit on other
+## filesystems, keeps it flagged experimental, and considers deprecating it once
+## the ZFS issue is resolved upstream. Every host here runs apfs or ext4.
+## Enable both keys if a ZFS or btrfs host is ever added to the fleet.
+# enabled = true
+# autostart = true

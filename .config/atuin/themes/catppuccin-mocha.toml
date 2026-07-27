@@ -1,0 +1,18 @@
+# Catppuccin Mocha for Atuin.
+# Keys are atuin's semantic "meanings", not UI elements - the mapping below
+# follows the built-in default theme's semantics (error=red, warn=yellow,
+# info=green, guidance=blue, annotation/muted=greys).
+
+[theme]
+name = "catppuccin-mocha"
+
+[colors]
+AlertError = "#f38ba8"  # Red
+AlertWarn = "#f9e2af"   # Yellow
+AlertInfo = "#a6e3a1"   # Green
+Annotation = "#6c7086"  # Overlay0
+Base = "#cdd6f4"        # Text
+Guidance = "#89b4fa"    # Blue
+Important = "#cba6f7"   # Mauve
+Title = "#b4befe"       # Lavender
+Muted = "#585b70"       # Surface2
