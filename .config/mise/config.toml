@@ -15,6 +15,7 @@ legacy_version_file = true
 "npm:serve" = "latest"
 "npm:browser-sync" = "latest"
 "npm:neovim" = "latest"
+"npm:@earendil-works/pi-coding-agent" = "latest"  # pi — minimal AI coding agent harness (pi.dev)
 
 # 🧠 Claude Code LSP servers
 "npm:typescript-language-server" = "latest"
