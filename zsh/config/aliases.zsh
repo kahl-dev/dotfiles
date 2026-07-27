@@ -502,7 +502,8 @@ _avset() {
   
   echo "Setting environment variable:"
   echo "  Key: $key"
-  echo "  Value: ${value:0:20}${#value -gt 20 && echo "..."}"
+  # Never echo the value itself - this function exists to set secrets
+  echo "  Value: (${#value} characters)"
   read -q "REPLY?Continue? (y/n): "
   echo
   
