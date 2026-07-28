@@ -26,3 +26,17 @@
         else
           echo "No legacy atuin install - mise is the single source of truth."
         fi
+
+    # Sync is opt-in per machine and needs a one-time login. Show the exact
+    # command only when this host is not yet authenticated, so it does not nag
+    # on already-configured machines. No credentials here - they live in 1Password.
+    - description: "Hint at the sync login when not authenticated"
+      command: |
+        atuin_bin="$(command -v atuin 2>/dev/null || echo "$HOME/.local/share/mise/shims/atuin")"
+        if [ -x "$atuin_bin" ] && ! "$atuin_bin" doctor 2>/dev/null | grep -q 'Hub (authenticated)'; then
+          echo "atuin: history sync is not configured on this machine."
+          echo "  Run:  atuin login"
+          echo "  Username + password are in 1Password."
+          echo "  At the encryption-key prompt: leave blank to reuse this machine's"
+          echo "  key, or paste the output of 'atuin key' from an already-synced host."
+        fi
