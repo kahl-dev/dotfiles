@@ -60,6 +60,12 @@ path=(
 # too late for both. At prompt time activate still takes precedence over shims.
 [[ -d "$XDG_DATA_HOME/mise/shims" ]] && path=("$XDG_DATA_HOME/mise/shims" "${path[@]}")
 
+# ~/.local/bin universally, not only via .zprofile (login shells): native
+# installers (claude, mise itself) live there, and non-login shells — herdr
+# panes on Linux, ssh commands — never source .zprofile. Appended like
+# .zprofile did, so system binaries keep winning name conflicts.
+[[ -d "$HOME/.local/bin" ]] && path+=("$HOME/.local/bin")
+
 # Re-export the PATH from the path array
 export PATH="${(j.:.)path}"
 
