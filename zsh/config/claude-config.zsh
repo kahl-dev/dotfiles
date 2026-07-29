@@ -25,4 +25,4 @@ fi
 # aliases behave as expected).
 # -----------------------------------------------------------------------------
 
-export ANTHROPIC_MODEL='claude-fable-5[1m]'
+export ANTHROPIC_MODEL='claude-opus-5'
