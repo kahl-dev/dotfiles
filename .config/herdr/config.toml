@@ -14,7 +14,8 @@ prefix = "ctrl+s"
 # Nacktes Ctrl+h/j/k/l = Pane-Fokus, wie die tmux-Bindings (tmux.conf:317-320).
 # ACHTUNG Regression: die tmux-Variante leitet an Vim weiter, wenn Vim im Pane
 # läuft — herdr kennt keine Bedingungen. In Neovim-Panes sind C-h/j/k/l damit
-# von herdr geschluckt. Kandidat: Community-Plugin "herdr-navigator" (unauditiert).
+# von herdr geschluckt. Kandidaten: vim-herdr-navigation (vim-tmux-navigator-
+# Port, koexistiert mit ihm) oder herdr-splits.nvim — beide unauditiert.
 focus_pane_left = "ctrl+h"
 focus_pane_down = "ctrl+j"
 focus_pane_up = "ctrl+k"

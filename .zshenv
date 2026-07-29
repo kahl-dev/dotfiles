@@ -66,6 +66,15 @@ path=(
 # .zprofile did, so system binaries keep winning name conflicts.
 [[ -d "$HOME/.local/bin" ]] && path+=("$HOME/.local/bin")
 
+# Linuxbrew for every shell, not only login (.zprofile/brew shellenv):
+# codex, opencode, sesh, lazygit, bat, and nvim live there on Linux hosts.
+# Inserted AFTER the mise-shims element so mise stays the single source of
+# truth in non-login shells; login shells keep their .zprofile order because
+# brew shellenv re-prepends and typeset -U keeps the frontmost occurrence.
+if [[ "$OSTYPE" != darwin* && -d /home/linuxbrew/.linuxbrew/bin ]]; then
+  path=("${path[@]:0:1}" /home/linuxbrew/.linuxbrew/bin /home/linuxbrew/.linuxbrew/sbin "${path[@]:1}")
+fi
+
 # Re-export the PATH from the path array
 export PATH="${(j.:.)path}"
 
