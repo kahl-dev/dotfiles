@@ -72,6 +72,26 @@ module.exports = {
         }
       },
     },
+    // v2 contract (Claude subset, Phase 1): strict query validation, explicit
+    // present/absent file descriptors, structured session metadata and health
+    // records, never an empty-string stand-in for a read failure. See
+    // ./time-tracking-v2.js and claude-config
+    // plans/multi-harness-time-tracking.md ("Remote Bridge v2 contract").
+    //
+    // Required lazily, at request time: a top-level require here would pull
+    // in zod at plugin-load time, and a load failure (e.g. a deploy host
+    // missing zod) would throw during require('./plugins/time-tracking'),
+    // which server.js's loadPlugins() core-plugin loop catches by never
+    // registering the plugin at all — taking down /time-tracking (the v1
+    // rollback path) together with /time-tracking/v2. Lazy require confines
+    // a v2 load failure to this one endpoint.
+    {
+      path: '/time-tracking/v2',
+      method: 'GET',
+      handler: async function (req, res) {
+        return require('./time-tracking-v2').handler.call(this, req, res);
+      },
+    },
   ],
 
   initialize: function (server) {

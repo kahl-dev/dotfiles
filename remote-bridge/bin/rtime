@@ -12,6 +12,8 @@ source "$(dirname "$0")/../lib/bridge-endpoint.sh"
 
 resolve_bridge_endpoint
 BRIDGE_URL="${BRIDGE_BASE_URL}/time-tracking"
+BRIDGE_URL_V2="${BRIDGE_BASE_URL}/time-tracking/v2"
+RTIME_DIR="$(dirname "$0")"
 
 require_bridge() {
     require_bridge_socket || exit 1
@@ -58,21 +60,32 @@ Usage:
     rtime fetch --week                           # Fetch last 7 days
     rtime fetch --today                          # Fetch today
     rtime dates                                  # List available dates
+    rtime fetch-v2 --dates <csv> --harnesses <csv> [--output <new-empty-dir>]
 
 Options:
-    --dates <dates>  Comma-separated dates (YYYY-MM-DD)
-    --week           Last 7 days
-    --today          Today only
-    --output <dir>   Save JSONL files to directory (default: stdout JSON)
-    -h, --help       Show this help message
+    --dates <dates>       Comma-separated sorted dates (YYYY-MM-DD)
+    --harnesses <list>    Comma-separated sorted harnesses (fetch-v2 only;
+                          Phase 1 supports only "claude")
+    --week                Last 7 days (fetch only)
+    --today                Today only (fetch only)
+    --output <dir>        Save data to directory (default: stdout JSON).
+                          fetch: individual YYYY-MM-DD.jsonl files.
+                          fetch-v2: exact event basenames plus
+                          source-result.json; requires a new directory.
+                          Written even when the response carries source
+                          errors (see source-result.json's "errors" array);
+                          fetch-v2 then exits non-zero.
+    -h, --help             Show this help message
 
 Environment:
     REMOTE_BRIDGE_SOCKET  Override the Unix socket path (default:
                           ~/.ssh/remote-bridge.sock, non-Darwin only)
-
 Output:
-    JSON with hostname and per-date JSONL content.
-    With --output, writes individual YYYY-MM-DD.jsonl files to the directory.
+    fetch:    JSON with hostname and per-date JSONL content (legacy v1).
+    fetch-v2: strict versioned JSON per the v2 contract (schema_version 2):
+              requested/installed harnesses, collector_versions, one file
+              descriptor per requested harness/date (present/sha256/content),
+              session_metadata, health, and errors.
 EOF
 }
 
@@ -102,6 +115,174 @@ fetch_dates() {
     fi
 }
 
+# Refuses every pre-existing destination. Creation is deliberately deferred
+# until the complete response passes the shared protocol validator.
+assert_empty_output_dir() {
+    local output_dir="$1"
+
+    if [ -e "$output_dir" ]; then
+        if [ ! -d "$output_dir" ]; then
+            echo "Error: --output path exists and is not a directory: $output_dir" >&2
+            exit 1
+        fi
+        echo "Error: --output directory already exists; provide a new path: $output_dir" >&2
+        exit 1
+    elif [ ! -d "$(dirname "$output_dir")" ]; then
+        echo "Error: --output parent directory does not exist: $(dirname "$output_dir")" >&2
+        exit 1
+    fi
+}
+
+# Validates response *shape* only (schema plus requested-scope match) —
+# never rejects on a schema-valid response that merely carries source
+# errors. A partial response (present files plus a non-empty errors array)
+# is exactly what --output is for: see fetch_v2's post-write error check,
+# which surfaces those errors with a non-zero exit instead of discarding the
+# already-fetched data.
+validate_v2_response() {
+    local response="$1"
+    local dates="$2"
+    local harnesses="$3"
+
+    if ! printf '%s' "$response" | node -e '
+const validator = require(process.argv[1]);
+const [dates, harnesses] = process.argv.slice(2);
+let payload = "";
+process.stdin.setEncoding("utf8");
+process.stdin.on("data", (chunk) => { payload += chunk; });
+process.stdin.on("end", () => {
+  try {
+    validator.validateResponse(JSON.parse(payload), { dates: dates.split(","), harnesses: harnesses.split(",") });
+  } catch (error) {
+    process.stderr.write("Error: invalid Remote Bridge v2 response\n");
+    process.exitCode = 1;
+  }
+});
+' "$RTIME_DIR/../src/plugins/time-tracking-v2.js" "$dates" "$harnesses" >/dev/null; then
+        exit 1
+    fi
+}
+
+# GNU coreutils base64 decodes with -d; macOS/BSD base64 rejects -d outright
+# and uses -D instead — detected once per invocation via a real round-trip
+# decode of a known string (not a `uname` branch), so it works regardless of
+# which base64 implementation is actually installed on $PATH.
+detect_base64_decode_flag() {
+    if printf 'aGVsbG8=' | base64 -d >/dev/null 2>&1; then
+        printf -- '-d'
+    elif printf 'aGVsbG8=' | base64 -D >/dev/null 2>&1; then
+        printf -- '-D'
+    else
+        echo "Error: no supported base64 decode flag found (tried -d, -D)" >&2
+        return 1
+    fi
+}
+
+# Writes every present file plus source-result.json from a single jq pass
+# over the (up to ~60MB) response, instead of one jq invocation per present
+# file plus separate hostname/error-count passes: jq emits a TSV "meta" row
+# (hostname, error count) and one TSV "file" row per present file, each
+# carrying its content base64-encoded (jq's @base64 never wraps lines, so
+# each row is exactly one line regardless of content size) — safe to move
+# through a line-oriented `read` loop with embedded tabs, NULs, or multibyte
+# UTF-8 that would otherwise break line-based parsing. Sets V2_HOSTNAME and
+# V2_ERROR_COUNT as a side effect for the caller.
+write_v2_output() {
+    local response="$1"
+    local output_dir="$2"
+    local parent_dir
+    local decode_flag
+    local tag field2 field3
+
+    decode_flag=$(detect_base64_decode_flag) || exit 1
+
+    parent_dir="$(dirname "$output_dir")"
+    # stage_dir is deliberately NOT `local`: under `set -u`, a trap that
+    # fires after `set -e` has already torn down this function's local
+    # scope (see below) cannot see a local variable — referencing it would
+    # itself fail with "unbound variable" and skip the cleanup entirely.
+    stage_dir=$(mktemp -d "$parent_dir/.rtime-v2.XXXXXX")
+    # A RETURN trap only fires on a normal or explicit `return` — it does
+    # NOT fire when `set -e` aborts the whole shell mid-loop (e.g. the
+    # base64 decode below hitting ENOSPC), so a write failure used to leave
+    # the already-decoded, potentially sensitive staging directory behind
+    # on disk. An EXIT trap fires in both cases; it is cleared below once
+    # the directory has been published successfully.
+    trap 'rm -rf -- "$stage_dir"' EXIT
+    chmod 700 "$stage_dir"
+    while IFS=$'\t' read -r tag field2 field3; do
+        case "$tag" in
+            meta)
+                V2_HOSTNAME="$field2"
+                V2_ERROR_COUNT="$field3"
+                ;;
+            file)
+                printf '%s' "$field3" | base64 "$decode_flag" > "$stage_dir/$field2"
+                chmod 600 "$stage_dir/$field2"
+                ;;
+        esac
+    done < <(printf '%s' "$response" | jq -r '
+        (["meta", .hostname, (.errors | length | tostring)] | @tsv),
+        (.files[] | select(.present == true) | ["file", .basename, (.content | @base64)] | @tsv)
+    ')
+    printf '%s\n' "$response" > "$stage_dir/source-result.json"
+    chmod 600 "$stage_dir/source-result.json"
+
+    # Publish the whole staging directory in a single rename: stage_dir was
+    # created in output_dir's own parent, so on a normal setup this is on
+    # the same filesystem and the rename is atomic — --output is either
+    # fully absent or fully populated, never half-written. Uses Node's
+    # fs.renameSync (already a hard dependency; see validate_v2_response)
+    # instead of the `mv` command: `mv` itself decides to "move into an
+    # existing directory" whenever the destination already exists, even as
+    # a symlink pointing at one, and neither GNU nor BSD mv offers a
+    # portable way to disable that. renameSync calls rename(2) directly,
+    # which refuses (ENOTDIR) to rename a directory onto an existing
+    # non-directory path — including a symlink that merely points at a
+    # directory — instead of silently following it. That is exactly what
+    # protects against the destination being replaced between
+    # assert_empty_output_dir's earlier check and this call. Modes (0700
+    # dir, 0600 files) are already set above and carry over unchanged
+    # through the rename.
+    if ! node -e 'require("fs").renameSync(process.argv[1], process.argv[2])' -- "$stage_dir" "$output_dir" 2>/dev/null; then
+        echo "Error: --output directory was created before publish: $output_dir" >&2
+        return 1
+    fi
+    trap - EXIT
+}
+
+fetch_v2() {
+    local dates="$1"
+    local harnesses="$2"
+    local output_dir="${3:-}"
+
+    [ -n "$output_dir" ] && assert_empty_output_dir "$output_dir"
+
+    require_bridge
+
+    response=$(bridge_curl -sS --connect-timeout 0.5 --max-time 10 -H "Authorization: Bearer $TOKEN" "${BRIDGE_URL_V2}?dates=${dates}&harnesses=${harnesses}" -w '\n%{http_code}' 2>/dev/null) || {
+        echo "Error: Cannot connect to Remote Bridge at ${BRIDGE_BASE_URL}" >&2
+        exit 1
+    }
+    check_response_error "$response"
+    response="$RESPONSE_BODY"
+    validate_v2_response "$response" "$dates" "$harnesses"
+
+    if [ -n "$output_dir" ]; then
+        write_v2_output "$response" "$output_dir"
+        hostname="$V2_HOSTNAME"
+        error_count="$V2_ERROR_COUNT"
+        if [ "$error_count" -gt 0 ]; then
+            echo "Warning: response included ${error_count} source error(s); see ${output_dir}/source-result.json" >&2
+            echo "Fetched v2 from: ${hostname} (partial)" >&2
+            exit 1
+        fi
+        echo "Fetched v2 from: ${hostname}" >&2
+    else
+        echo "$response"
+    fi
+}
+
 list_dates() {
     local response
 
@@ -125,7 +306,7 @@ generate_date_list() {
             ;;
         week)
             for i in $(seq 0 6); do
-                date -u -v-${i}d +%Y-%m-%d 2>/dev/null || date -u -d "-${i} days" +%Y-%m-%d
+                date -u -v-"${i}"d +%Y-%m-%d 2>/dev/null || date -u -d "-${i} days" +%Y-%m-%d
             done | paste -sd, -
             ;;
     esac
@@ -157,6 +338,23 @@ case "$COMMAND" in
         [ -z "$DATES" ] && { echo "Error: specify --dates, --week, or --today" >&2; exit 1; }
         fetch_dates "$DATES" "$OUTPUT_DIR"
         ;;
+    fetch-v2)
+        DATES=""
+        HARNESSES=""
+        OUTPUT_DIR=""
+        while [ $# -gt 0 ]; do
+            case "$1" in
+                --dates) DATES="$2"; shift 2 ;;
+                --harnesses) HARNESSES="$2"; shift 2 ;;
+                --output) OUTPUT_DIR="$2"; shift 2 ;;
+                -h|--help) show_help; exit 0 ;;
+                *) echo "Unknown option: $1" >&2; exit 1 ;;
+            esac
+        done
+        [ -z "$DATES" ] && { echo "Error: --dates is required" >&2; exit 1; }
+        [ -z "$HARNESSES" ] && { echo "Error: --harnesses is required" >&2; exit 1; }
+        fetch_v2 "$DATES" "$HARNESSES" "$OUTPUT_DIR"
+        ;;
     dates)
         list_dates
         ;;
@@ -164,7 +362,7 @@ case "$COMMAND" in
         show_help
         ;;
     *)
-        echo "Unknown command: $COMMAND (use 'fetch' or 'dates')" >&2
+        echo "Unknown command: $COMMAND (use 'fetch', 'fetch-v2', or 'dates')" >&2
         exit 1
         ;;
 esac

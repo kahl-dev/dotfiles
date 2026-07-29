@@ -16,46 +16,30 @@
 const { describe, it, beforeEach, afterEach } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('fs');
-const os = require('os');
 const path = require('path');
 const { execFile } = require('child_process');
 const { promisify } = require('util');
-const express = require('express');
 const bodyParser = require('body-parser');
 
 const execFileAsync = promisify(execFile);
 
 const base64Middleware = require('../src/middleware/base64');
 const { createAuthMiddleware } = require('../src/middleware/auth');
+const { mkTempDir, stopTestBridge, startTestBridge: startBridge } = require('./support');
 
 const RCLIP_BIN = path.join(__dirname, '..', 'bin', 'rclip');
 const TEST_TOKEN = 'client-socket-success-test-token';
 
-function mkTempDir(prefix) {
-  return fs.mkdtempSync(path.join(os.tmpdir(), prefix));
-}
-
 function startTestBridge(socketPath, received) {
-  const app = express();
-  app.use(bodyParser.json({ limit: '10mb' }));
-  app.get('/health', (req, res) => res.json({ status: 'ok' }));
-  app.use(createAuthMiddleware(TEST_TOKEN));
-  app.use(base64Middleware);
-  app.post('/clipboard', (req, res) => {
-    received.push({ data: req.decodedData, options: req.body.options, metadata: req.metadata });
-    res.json({ success: true, length: req.decodedData.length });
+  return startBridge(socketPath, (app) => {
+    app.use(bodyParser.json({ limit: '10mb' }));
+    app.use(createAuthMiddleware(TEST_TOKEN));
+    app.use(base64Middleware);
+    app.post('/clipboard', (req, res) => {
+      received.push({ data: req.decodedData, options: req.body.options, metadata: req.metadata });
+      res.json({ success: true, length: req.decodedData.length });
+    });
   });
-
-  return new Promise((resolve) => {
-    const server = app.listen(socketPath, () => resolve(server));
-  });
-}
-
-function stopTestBridge(server, socketPath) {
-  return new Promise((resolve) => server.close(() => {
-    fs.rmSync(socketPath, { force: true });
-    resolve();
-  }));
 }
 
 describe('bridge clients over a Unix socket (rclip end-to-end)', () => {

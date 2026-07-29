@@ -144,6 +144,10 @@ rtime fetch --today --output ~/time-tracking
 
 # List available dates
 rtime dates
+
+# Fetch the strict v2 payload. The output path must be new; rtime
+# validates the complete response before writing 0700/0600 local artifacts.
+rtime fetch-v2 --dates 2026-03-25 --harnesses claude --output ~/time-tracking-v2
 ```
 
 ### robsidian - Obsidian CLI Wrapper
