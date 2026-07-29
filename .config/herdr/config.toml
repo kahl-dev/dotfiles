@@ -38,6 +38,9 @@ previous_agent = "prefix+k"
 next_workspace = "prefix+shift+j"
 previous_workspace = "prefix+shift+k"
 
+# Detach auf d wie in tmux (herdr-Default ist prefix+q).
+detach = "prefix+d"
+
 # ---- Apps-Layer: tmux-Nachbau. Prefix+a oeffnet ein Popup-Menue, das genau
 # ein Zeichen liest (g/y/b/m/h wie tmux.conf:136-152) und die App im selben
 # Popup startet. herdr kennt keine Key-Tables — das Menue-Skript ersetzt sie.
