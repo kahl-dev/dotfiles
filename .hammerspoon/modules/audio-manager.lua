@@ -133,6 +133,10 @@ M.state = {
     userExplicitOutput = nil,
     -- Device NAME the user explicitly chose as INPUT (Raycast). nil = strict Wave:3 default.
     userExplicitInput = nil,
+    -- The pick each pending announcement displaced, so a switch that fails after being announced
+    -- can be reverted to it (see noteExplicit/revertExplicit).
+    displacedExplicitOutput = nil,
+    displacedExplicitInput = nil,
     -- True while the daemon performs its own output/input switch, to ignore the resulting event.
     switchInProgress = false,
     inputSwitchInProgress = false,
@@ -188,6 +192,13 @@ function M.setInput(device)
     M.state.inputSwitchInProgress = true
     local ok = device:setDefaultInputDevice()
     hs.timer.doAfter(M.config.selfEventSuppression, function() M.state.inputSwitchInProgress = false end)
+    -- Only claim the switch on screen when CoreAudio actually accepted it (see setOutput's WHY
+    -- comment about false success alerts). setInput is only called from the daemon's own
+    -- arbitration (guard enforce / pick restore); a deliberate Raycast pick switches CoreAudio
+    -- directly. The two can still overlap: Raycast announces the pick before its switch lands, so
+    -- a debounced check firing in that window enforces the pick here and alerts alongside
+    -- Raycast's own toast. Rare, self-correcting, and better than staying silent about a switch.
+    if ok then M.showFeedback("Input: " .. device:name()) end
     return ok
 end
 
@@ -286,13 +297,16 @@ function M.resume()
     end
 end
 
+-- Pausing/resuming while undocked is legal and persists until the next dock (init() honors
+-- M.state.paused across redock). M.state.active is only true while docked, so the _UNDOCKED
+-- suffix lets the UI say honestly that the toggle took effect but arbitration isn't running yet.
 function M.togglePause()
     if M.state.paused then
         M.resume()
-        return "ACTIVE"
+        return M.state.active and "ACTIVE" or "ACTIVE_UNDOCKED"
     end
     M.pause()
-    return "PAUSED"
+    return M.state.active and "PAUSED" or "PAUSED_UNDOCKED"
 end
 
 function M.isPaused()
@@ -314,7 +328,7 @@ function M.setOutput(device, label)
     hs.timer.doAfter(M.config.selfEventSuppression, function() M.state.switchInProgress = false end)
     -- Only claim the switch on screen when CoreAudio actually accepted it; a false success
     -- alert would tell the user the output was corrected when it was not.
-    if ok and label then M.showFeedback(label) end
+    if ok and label then M.showFeedback("Output: " .. label) end
     return ok
 end
 
@@ -355,24 +369,58 @@ end
 
 -- Record an explicit user choice pushed from Raycast (via hs -c).
 -- name is the actual macOS device name, matched plainly elsewhere.
+-- Raycast announces the pick BEFORE it switches CoreAudio (so the intent beats the daemon's
+-- debounced evaluation), which means a switch can still fail afterwards — the pick it displaced
+-- is kept here so revertExplicit can put it back instead of dropping the user into AUTO.
 function M.noteExplicit(kind, name)
     -- Trust boundary: name arrives from Raycast via hs -c. An empty name would make the
     -- MANUAL "pick is active" check trivially true and freeze the daemon on a phantom pick.
     if not name or name == "" then return end
     if kind == "output" then
+        M.state.displacedExplicitOutput = M.state.userExplicitOutput
         M.state.userExplicitOutput = name
     elseif kind == "input" then
+        M.state.displacedExplicitInput = M.state.userExplicitInput
         M.state.userExplicitInput = name
     end
 end
 
--- Clear a recorded explicit pick (e.g. when the Raycast switch it was recorded for failed).
-function M.clearExplicit(kind)
+-- Undo the last noteExplicit: the announced switch never landed, so restore the pick it displaced
+-- rather than clearing outright. Clearing would silently demote a still-valid pick to AUTO and let
+-- the next hardware event arbitrate the user off a device they never left.
+function M.revertExplicit(kind)
     if kind == "output" then
-        M.state.userExplicitOutput = nil
+        M.state.userExplicitOutput = M.state.displacedExplicitOutput
+        M.state.displacedExplicitOutput = nil
     elseif kind == "input" then
-        M.state.userExplicitInput = nil
+        M.state.userExplicitInput = M.state.displacedExplicitInput
+        M.state.displacedExplicitInput = nil
     end
+end
+
+-- Return the OUTPUT to AUTO and arbitrate immediately: clear the pick and settle onto the best
+-- available device now instead of waiting for the next device event (none may come for hours).
+-- Deliberately bypasses evaluateOutputState — its no-hardware-event branch would adopt the
+-- current output as a fresh pick, the opposite of returning to AUTO.
+function M.followPriority()
+    -- Gate BEFORE touching the pick: while paused (or undocked) the daemon leaves existing picks
+    -- alone, so dropping one here would silently rewrite state the pause is supposed to freeze.
+    if not M.state.active or M.state.paused then return end
+    M.state.userExplicitOutput = nil
+    local best, label = M.selectHighestPriorityOutput()
+    local currentOutput = hs.audiodevice.defaultOutputDevice()
+    if best and (not currentOutput or best:name() ~= currentOutput:name()) then
+        M.setOutput(best, label)
+    end
+end
+
+-- Return the INPUT to the strict guard and enforce it immediately: with the pick cleared,
+-- evaluateInputState forces Wave:3 when present (the input path has no adopt fallback).
+function M.resetInputToGuard()
+    -- Same gate-before-mutate rule as followPriority: paused/undocked keeps picks frozen.
+    if not M.state.active or M.state.paused then return end
+    M.state.userExplicitInput = nil
+    M.evaluateInputState()
 end
 
 -- Switch to a specific device by pattern (Stream Deck / hotkeys / .app bundles).
@@ -551,17 +599,10 @@ function M.init()
     -- daemon (paused survives redock by design). While paused we leave the current output/input and
     -- the existing picks untouched; resume() re-establishes the baseline from whatever is current.
     if not M.state.paused then
-        -- Fresh dock = AUTO output, strict Wave:3 input, no explicit picks yet.
-        M.state.userExplicitOutput = nil
-        M.state.userExplicitInput = nil
-        -- Settle input onto Wave:3 immediately.
-        M.evaluateInputState()
-        -- Settle output onto the best available device (AUTO state).
-        local best, label = M.selectHighestPriorityOutput()
-        local currentOutput = hs.audiodevice.defaultOutputDevice()
-        if best and (not currentOutput or best:name() ~= currentOutput:name()) then
-            M.setOutput(best, label)
-        end
+        -- Fresh dock = strict Wave:3 input, AUTO output — the same clear-pick-and-arbitrate
+        -- primitives Raycast's mode actions use.
+        M.resetInputToGuard()
+        M.followPriority()
     end
 
     -- Capture the current input gain as the mute-restore baseline (data only; safe while paused).
