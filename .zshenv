@@ -54,6 +54,12 @@ path=(
 # Prepend zinit polaris/bin if it exists (not present on all systems)
 [[ -d "$ZINIT_ROOT/polaris/bin" ]] && path=("$ZINIT_ROOT/polaris/bin" "${path[@]}")
 
+# mise shims first: tools must resolve while .zshrc is still sourcing (fzf.zsh
+# evals `fzf --zsh`) and in non-interactive shells (herdr panes, ssh commands,
+# git hooks). `mise activate` alone injects PATH only at the first prompt —
+# too late for both. At prompt time activate still takes precedence over shims.
+[[ -d "$XDG_DATA_HOME/mise/shims" ]] && path=("$XDG_DATA_HOME/mise/shims" "${path[@]}")
+
 # Re-export the PATH from the path array
 export PATH="${(j.:.)path}"
 

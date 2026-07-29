@@ -54,7 +54,7 @@
 
         # ── Brew duplicates ──────────────────────────────────────────────────
         if command -v brew >/dev/null 2>&1; then
-          brew_mise_overlap="go pnpm python@3.10 python@3.11 pipx shellcheck uv yamllint"
+          brew_mise_overlap="fzf go pnpm python@3.10 python@3.11 pipx shellcheck uv yamllint"
           for pkg in $brew_mise_overlap; do
             if brew list "$pkg" >/dev/null 2>&1; then
               echo "  ⚠️  brew: $pkg → now managed by mise"
@@ -79,7 +79,7 @@
         fi
 
         # ── System/other installations ────────────────────────────────────────
-        mise_binaries="go deno bun shellcheck stylua shfmt yamllint"
+        mise_binaries="fzf go deno bun shellcheck stylua shfmt yamllint"
         for bin in $mise_binaries; do
           bin_path=$(command -v "$bin" 2>/dev/null) || continue
           case "$bin_path" in
