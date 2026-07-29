@@ -1,2 +1,0 @@
-#!/bin/bash
-/opt/homebrew/bin/hs -c "require('modules.audio-manager').switchToEdifier()"

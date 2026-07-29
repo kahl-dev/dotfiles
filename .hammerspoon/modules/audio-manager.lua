@@ -1,6 +1,6 @@
 -- Audio Device Manager Module
 -- Direct macOS switching, intent-aware (no Wave Link in signal path).
--- Output = two-state machine: AUTO follows priority; a user pick (Raycast/Stream Deck) is sacred.
+-- Output = two-state machine: AUTO follows priority; a user pick (from Raycast) is sacred.
 -- Input = strict guard: the default is the inputGuard device (Wave:3); only a Raycast input pick
 --   (userExplicitInput) overrides it, and any other change is reverted back to Wave:3.
 -- Only active when Wave:3 is USB-connected (managed by usb-device-manager).
@@ -16,10 +16,9 @@ local SHARED_CONFIG_PATH = os.getenv("HOME") .. "/.config/audio-manager/config.j
 
 -- Default configuration (used when shared config is missing or invalid)
 M.config = {
+    -- Guarded input device (overridden by config.json's inputGuard).
     wave3Name = "Wave:3",
-    edifierName = "EDIFIER M60",
-    airpodsPattern = "AirPods",
-    sonyPattern = "WH-1000XM6",
+    -- Final output fallback when nothing in outputPriority is connected.
     macbookPattern = "MacBook",
     builtInPattern = "Built-in",
     outputPriority = {
@@ -129,7 +128,7 @@ M.state = {
     -- All automatic arbitration paused (Raycast toggle). Module-scope and NOT reset by init(), so
     -- it survives undock/redock; clears only on a Hammerspoon reload or Mac restart.
     paused = false,
-    -- Device NAME the user explicitly chose (Raycast/Stream Deck). nil = AUTO state.
+    -- Device NAME the user explicitly chose in Raycast. nil = AUTO state.
     userExplicitOutput = nil,
     -- Device NAME the user explicitly chose as INPUT (Raycast). nil = strict Wave:3 default.
     userExplicitInput = nil,
@@ -153,16 +152,6 @@ M.state = {
     configWatcher = nil,
     pendingConfigReload = nil,
 }
-
--- Find an output device by name (plain substring match — used for config patterns)
-function M.findOutputDevice(name)
-    for _, device in ipairs(hs.audiodevice.allOutputDevices()) do
-        if string.find(device:name(), name, 1, true) then
-            return device
-        end
-    end
-    return nil
-end
 
 -- Find an output device by EXACT name — used for the user's explicit pick, which is a full
 -- device name. Substring matching here would let a superset name ("EDIFIER M60 Pro") satisfy a
@@ -421,42 +410,6 @@ function M.resetInputToGuard()
     if not M.state.active or M.state.paused then return end
     M.state.userExplicitInput = nil
     M.evaluateInputState()
-end
-
--- Switch to a specific device by pattern (Stream Deck / hotkeys / .app bundles).
--- This is an explicit user action, so it sets userExplicitOutput.
-function M.switchToDevice(pattern)
-    if not M.state.active then return false end
-    local device = M.findOutputDevice(pattern)
-    if device then
-        M.noteExplicit("output", device:name())
-        local ok = M.setOutput(device, device:name())
-        return ok
-    end
-    M.showFeedback("Device not found: " .. pattern)
-    return false
-end
-
--- Convenience switch functions (for Hammerspoon CLI / .app bundles)
-function M.switchToSony()
-    return M.switchToDevice(M.config.sonyPattern)
-end
-
-function M.switchToAirPods()
-    return M.switchToDevice(M.config.airpodsPattern)
-end
-
-function M.switchToEdifier()
-    return M.switchToDevice(M.config.edifierName)
-end
-
-function M.switchToWave3()
-    return M.switchToDevice(M.config.wave3Name)
-end
-
-function M.switchToMacBook()
-    return M.switchToDevice(M.config.macbookPattern)
-        or M.switchToDevice(M.config.builtInPattern)
 end
 
 -- Evaluate current output state and correct it according to the two-state model.
