@@ -32,6 +32,8 @@ uv = "latest"
 
 # 🐚 Shell tooling
 atuin = "latest"                 # shell history — replaces the curl installer in ~/.atuin/bin
+herdr = "latest"                 # agent-aware multiplexer — pin a version once it graduates
+                                 # from trial: v0.x, and mise.yaml installs unattended everywhere
 
 # 🔍 Linters & formatters
 shellcheck = "latest"

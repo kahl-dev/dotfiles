@@ -77,6 +77,7 @@ defaults read ~/Library/Preferences/com.apple.HIToolbox.plist \
 | `.config/aerospace/aerospace.toml` | window manager |
 | `.config/ghostty/config` | terminal |
 | `tmux/tmux.conf` | tmux |
+| `.config/herdr/config.toml` | herdr — same layer as tmux (alternative multiplexer, prefix `Ctrl+S`); when running herdr inside tmux, tmux swallows the shared prefix first |
 | `zsh/config/keybindings.zsh` | shell |
 | `.config/nvim/lua/config/keymaps.lua` + `lua/plugins/*.lua` | editor |
 | `.config/lazygit/config.yml` | lazygit `customCommands` (`N`, `Ctrl+C`, `Ctrl+T`) |

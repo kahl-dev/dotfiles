@@ -1,0 +1,32 @@
+- defaults:
+    link:
+      relink: true
+      create: true
+      force: true
+      relative: false
+    shell:
+      quiet: true
+      stdout: true
+      stderr: true
+
+# The binary itself comes from mise (.config/mise/config.toml).
+# Linked per file, not as a whole directory: herdr writes session.json, logs,
+# sockets, and .plugins.lock into ~/.config/herdr, and runtime state does not
+# belong in the repo.
+- link:
+    ~/.config/herdr/config.toml: .config/herdr/config.toml
+    ~/.config/herdr/apps-menu.sh: .config/herdr/apps-menu.sh
+
+- shell:
+    # A running server keeps the old config in memory; reload so the freshly
+    # linked config applies without requiring a manual prefix+shift+r.
+    - description: "Reload config on a running herdr server"
+      command: |
+        herdr_bin="$(command -v herdr 2>/dev/null || echo "$HOME/.local/share/mise/shims/herdr")"
+        if [ -x "$herdr_bin" ] && [ -S "$HOME/.config/herdr/herdr.sock" ]; then
+          "$herdr_bin" server reload-config >/dev/null 2>&1 \
+            && echo "herdr: running server reloaded the linked config." \
+            || echo "herdr: server reload failed - reload manually (prefix+shift+r)."
+        else
+          echo "herdr: no running server - config applies on next start."
+        fi

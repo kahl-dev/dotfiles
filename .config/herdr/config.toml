@@ -1,0 +1,68 @@
+onboarding = false
+# herdr config — tmux-Migrationsprofil (Trial)
+# Referenz: herdr.dev/docs/config-reference (v0.7.5) + `herdr --default-config`
+# Bewusst NICHT übernommen aus tmux: siehe Abschnitt "Abweichungen" am Ende.
+
+[theme]
+name = "catppuccin"
+
+[keys]
+# tmux-Prefix. herdr läuft hier direkt in Ghostty (nicht in tmux verschachtelt),
+# daher kein Konflikt mit dem tmux-Prefix Ctrl+S.
+prefix = "ctrl+s"
+
+# Nacktes Ctrl+h/j/k/l = Pane-Fokus, wie die tmux-Bindings (tmux.conf:317-320).
+# ACHTUNG Regression: die tmux-Variante leitet an Vim weiter, wenn Vim im Pane
+# läuft — herdr kennt keine Bedingungen. In Neovim-Panes sind C-h/j/k/l damit
+# von herdr geschluckt. Kandidat: Community-Plugin "herdr-navigator" (unauditiert).
+focus_pane_left = "ctrl+h"
+focus_pane_down = "ctrl+j"
+focus_pane_up = "ctrl+k"
+focus_pane_right = "ctrl+l"
+
+# Copy-Mode auf Enter wie in tmux (`bind Enter copy-mode`).
+# Default prefix+[ entfällt dadurch. Innen: hjkl, / Suche, v/Space Auswahl, y kopiert.
+copy_mode = "prefix+enter"
+
+# Side-by-side-Split auf | wie in tmux. Undokumentiert, aber der Parser nimmt
+# das literale | an (empirisch verifiziert via reload-Diagnostics; "prefix+pipe"
+# wird dagegen abgelehnt). Ersetzt den Default prefix+v.
+split_vertical = "prefix+|"
+
+# Schnelles Durchschalten — ab Werk sind diese Aktionen ALLE unbelegt.
+# prefix+j/k ist frei, weil Pane-Fokus auf nacktes Ctrl+h/j/k/l gewandert ist
+# (die prefix-Defaults wurden dadurch ersetzt). Vim-Logik: j/k = Agents
+# (kleine Schritte), Shift+J/K = Spaces (grosse Schritte).
+next_agent = "prefix+j"
+previous_agent = "prefix+k"
+next_workspace = "prefix+shift+j"
+previous_workspace = "prefix+shift+k"
+
+# ---- Apps-Layer: tmux-Nachbau. Prefix+a oeffnet ein Popup-Menue, das genau
+# ein Zeichen liest (g/y/b/m/h wie tmux.conf:136-152) und die App im selben
+# Popup startet. herdr kennt keine Key-Tables — das Menue-Skript ersetzt sie.
+
+[[keys.command]]
+key = "prefix+a"
+type = "popup"
+command = "bash ~/.config/herdr/apps-menu.sh"
+description = "apps layer (g/y/b/m/h)"
+width = "90%"
+height = "90%"
+
+[ui]
+agent_panel_sort = "spaces"
+
+# ---- Abweichungen von tmux (Stand Trial, bewusst offen gelassen) ----
+# Splits:   prefix+minus = gestapelt (== tmux `-`), prefix+| = nebeneinander (== tmux `|`).
+# Resize:   prefix+r öffnet Resize-Mode (statt tmux repeatable prefix+C-hjkl).
+# Reload:   prefix+shift+r (tmux: prefix+r).
+# Sessions: sesh/prefix+o -> herdr: prefix+g (Session-Navigator) / prefix+w (Workspaces).
+# rclip:    Copy-Mode kopiert in herdrs Clipboard, NICHT durch Remote Bridge.
+#           Lokal egal (pbcopy-Pfad), remote klaeren bevor der Server-Test startet.
+# Zoom prefix+z, neues Tab prefix+c, Hilfe prefix+?, Tabs 1..9, cwd-Vererbung:
+# alles herdr-Default, identisch zu deinem tmux.
+
+show_agent_labels_on_pane_borders = true
+[ui.toast]
+delivery = "system"
