@@ -73,7 +73,7 @@ pi
 /login
 ```
 
-Provider credentials, sessions, and caches remain machine-local and are not synchronized.
+Provider credentials, sessions, and caches remain machine-local and are not synchronized. When Herdr is installed, the Pi ingredient also installs Herdr's official lifecycle/session integration and enables the expanded Pi sidebar row.
 
 ### OpenCode Shell Helpers
 

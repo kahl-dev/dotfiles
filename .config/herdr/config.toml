@@ -69,16 +69,22 @@ height = 12
 agent_panel_sort = "spaces"
 show_agent_labels_on_pane_borders = true
 
-# Agent-Zeilen, 3 Reihen: Reihe 1 = Zustands-Icon + Session-Thema (plus die
-# ctx/idle-Metadata-Tokens von statusline.sh, sofern gemeldet), Reihe 2 =
-# Agent-Name, Reihe 3 = Workspace/Tab. Der Default fuehrt mit workspace/tab
-# in Reihe 1 — bei mehreren Agents im selben Ordner ergibt das N identische
-# Zeilen; der agent-Token traegt dagegen die eindeutigen Namen aus
-# `agent start <name>`.
-# terminal_title_stripped = Claude-Session-Thema ohne Spinner-Glyph.
+# Agent-Zeilen, 3 Reihen: Reihe 1 = Zustands-Icon + Session-Thema, Reihe 2 =
+# Agent-Name, Reihe 3 = Workspace/Tab. Claude ergänzt in Reihe 1 die ctx/idle-
+# Metadata-Tokens aus statusline.sh. Pi liefert über die offizielle Herdr-
+# Integration verlässliche Lifecycle- und Session-Daten; sein Terminal-Titel
+# enthält Projekt oder per `/name` gesetztes Session-Thema.
+# Der Default führt mit workspace/tab in Reihe 1 — bei mehreren Agents im
+# selben Ordner ergibt das N identische Zeilen; der agent-Token trägt dagegen
+# die eindeutigen Namen aus `agent start <name>`.
 [ui.sidebar.agents.rows_by_agent]
 claude = [
   ["state_icon", { token = "terminal_title_stripped", bold = true, fg = "#89b4fa" }, { token = "$ctx", fg = "#a6adc8" }, { token = "$ctx_warn", fg = "#ffd60a", bold = true }, { token = "$ctx_crit", fg = "#ff4d4d", bold = true }, { token = "$idle", fg = "#a6adc8" }, { token = "$idle_warn", fg = "#ffd60a", bold = true }, { token = "$idle_crit", fg = "#ff4d4d", bold = true }],
+  [{ token = "agent", fg = "#bac2de", dim = false }],
+  [{ token = "workspace", fg = "#bac2de", dim = false }, { token = "tab", fg = "#bac2de", dim = false }],
+]
+pi = [
+  ["state_icon", { token = "terminal_title_stripped", bold = true, fg = "#89b4fa" }],
   [{ token = "agent", fg = "#bac2de", dim = false }],
   [{ token = "workspace", fg = "#bac2de", dim = false }, { token = "tab", fg = "#bac2de", dim = false }],
 ]

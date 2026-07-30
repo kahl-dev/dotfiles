@@ -29,3 +29,12 @@
 - link:
     ~/.pi/agent/CLAUDE.md: ~/repos/claude-config/pi/GLOBAL.CLAUDE.md
     ~/.pi/agent/settings.json: ~/repos/claude-config/pi/settings.json
+
+- shell:
+    - description: "Install the official Herdr integration for Pi"
+      command: |
+        if command -v herdr >/dev/null 2>&1; then
+          herdr integration install pi
+        else
+          echo "herdr: not installed - skipping Pi integration."
+        fi
