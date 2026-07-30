@@ -302,7 +302,7 @@ Project-agnostic worktree management with zero configuration. Auto-detects paths
 
 ### Terminal & Shell
 - **tmux**: Advanced configuration in `tmux/` with responsive status bar, remote-friendly defaults, and curated plugin setup
-- **herdr**: Agent-aware terminal multiplexer, in trial alongside tmux. Binary via mise (`.config/mise/config.toml`), config in `.config/herdr/` linked per file by `meta/ingredients/herdr.yaml` (herdr writes runtime state — `session.json`, logs, sockets — into the same `~/.config/herdr`, so never link the whole directory). Keybindings mirror the tmux prefix/split/copy muscle memory; `apps-menu.sh` rebuilds the tmux `Prefix+a` apps layer as a popup. Claude Code integration (skill + hook) lives in the claude-config repo.
+- **herdr**: Agent-aware terminal multiplexer, in trial alongside tmux. Binary via mise (`.config/mise/config.toml`), config in `.config/herdr/` linked per file by `meta/ingredients/herdr.yaml` (herdr writes runtime state — `session.json`, logs, sockets — into the same `~/.config/herdr`, so never link the whole directory). Keybindings mirror the tmux prefix/split/copy muscle memory; `apps-menu.sh` rebuilds the tmux `Prefix+a` apps layer as a popup; `layout-menu.sh` rebuilds the tmux `Prefix+v` panes-layout layer (grid rearrange via `grid-layout.sh`). Claude Code integration (skill + hook) lives in the claude-config repo.
 - **zsh**: Modular config in `zsh/config/` with automatic sourcing
 - **starship**: Prompt config in `.config/starship.toml`
 

@@ -54,6 +54,17 @@ description = "apps layer (g/y/b/m/h)"
 width = "90%"
 height = "90%"
 
+# ---- Layout-Layer: Begruendung und Mechanik siehe layout-menu.sh (Header).
+# prefix+v ist frei: der herdr-Default split_vertical wurde oben durch
+# prefix+| ersetzt (Zeile "split_vertical").
+[[keys.command]]
+key = "prefix+v"
+type = "popup"
+command = "bash ~/.config/herdr/layout-menu.sh"
+description = "layout layer (1/2/3/t)"
+width = 44
+height = 12
+
 [ui]
 agent_panel_sort = "spaces"
 

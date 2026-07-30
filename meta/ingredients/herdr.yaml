@@ -16,6 +16,8 @@
 - link:
     ~/.config/herdr/config.toml: .config/herdr/config.toml
     ~/.config/herdr/apps-menu.sh: .config/herdr/apps-menu.sh
+    ~/.config/herdr/grid-layout.sh: .config/herdr/grid-layout.sh
+    ~/.config/herdr/layout-menu.sh: .config/herdr/layout-menu.sh
 
 - shell:
     # A running server keeps the old config in memory; reload so the freshly
