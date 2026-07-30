@@ -62,6 +62,19 @@ cd ~/.dotfiles && git remote set-url origin git@github.com:kahl-dev/dotfiles.git
 - **bat** - Syntax highlighting with Catppuccin theme
 - **fzf** - Fuzzy finder integration throughout the system
 
+### AI Coding Harnesses
+
+The macOS profile installs Claude Code, OpenCode, and Pi configuration. Shared private configuration is cloned to `~/repos/claude-config`; Dotbot links each harness to its corresponding files. Pi itself is installed through mise.
+
+After installing on a new machine, authenticate Pi interactively:
+
+```bash
+pi
+/login
+```
+
+Provider credentials, sessions, and caches remain machine-local and are not synchronized.
+
 ### OpenCode Shell Helpers
 
 | Helper | Action |
@@ -127,6 +140,7 @@ Manual steps after running `./install-profile macos`:
 - [ ] Create `~/.dotfiles-local/.zshenv` for machine-specific env vars
 - [ ] Create `~/.dotfiles-local/zshrc` for machine-specific shell config
 - [ ] Add shared iCloud accounts for Contacts sync (if needed)
+- [ ] Run `pi`, then `/login`, and authenticate the OpenAI Codex provider
 
 ### App Configuration
 - [ ] Bartender — configure menu bar items

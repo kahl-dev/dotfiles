@@ -6,9 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a comprehensive macOS dotfiles repository that uses **dotbot** for configuration management and a unified `dot` CLI for day-to-day operations. A bootstrap-only Makefile exists for fresh clones (before ZSH is configured). The repository follows a modular architecture with "ingredients" (individual configuration modules) and "recipes" (combined installation profiles).
 
-### Claude Code Configuration
+### AI Coding Harness Configuration
 
-Global Claude Code instructions and configuration are managed in a **private repository** (`~/repos/claude-config`) and automatically installed via the `claude` dotbot ingredient:
+Shared skills and harness-specific instructions are managed in a **private repository** (`~/repos/claude-config`). Dotbot installs and links each harness through its own ingredient:
+
+- `claude` → `~/.claude/`
+- `opencode` → `~/.config/opencode/`
+- `pi-coding-agent` → `~/.pi/agent/`
+
+Claude Code configuration is installed via the `claude` ingredient:
 
 - **Repository**: `github.com:kahl-dev/claude-config` (private)
 - **Location**: `~/repos/claude-config/`
@@ -21,6 +27,8 @@ The configuration includes:
 - Slash commands (experts, productivity, analysis)
 - Automation hooks (smart-lint, notifications)
 - MCP server configurations
+
+Pi keeps `GLOBAL.CLAUDE.md`, `settings.json`, and prompt templates under `~/repos/claude-config/pi/`. Its CLI is installed by mise from `.config/mise/config.toml`; authentication, sessions, and caches remain machine-local under `~/.pi/agent/`.
 
 This separation keeps agency-specific intellectual property private while allowing the public dotfiles to remain shareable.
 
