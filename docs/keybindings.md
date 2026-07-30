@@ -116,6 +116,7 @@ first unrelated edit.
 | Option | `ghostty/config` → `macos-option-as-alt` | `= right` | See the note below — the observed behaviour is broader than the setting suggests. |
 | homerow `a s d f j k l ;` | `karabiner.json` → `Home row mods` | hold produces a modifier | Thresholds: 180 ms hold, 200 ms tap. Side effect: holding these keys never repeats, so hold-to-scroll does not work in any app except Terminal.app and iTerm2, which are excluded. `l` = right Option is what supplies Alt on keyboards without a physical right Option. |
 | `Ctrl+Space` | `setup_defaults_write.sh` → `symbolichotkeys` | macOS input-source switcher disabled | Frees the key for editor completion. |
+| herdr `Prefix+A` / `Prefix+V` over `--remote` | `zsh/config/herdr.zsh` → `hr` | remote attach forces `--remote-keybindings server` | `herdr --remote` defaults to resolving keys on the local client, and in that mode `[[keys.command]]` popups never reach the server. The symptom is deceptive: both layers appear in the `Prefix+?` help panel, so the binding looks live, but no popup opens and the server logs no `pane.spawn`. Popups are panes and panes belong to the server, so nothing runs. Both machines take their config from these dotfiles, so server-side resolution yields identical bindings. Verified on herdr 0.7.5; retire `hr` once the client forwards custom commands. |
 
 ### Note on `macos-option-as-alt = right`
 

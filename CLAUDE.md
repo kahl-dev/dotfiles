@@ -222,6 +222,7 @@ The zsh setup uses modular configuration files in `zsh/config/`:
 - `plugins.zsh` - Plugin management via zinit
 - `prompt.zsh` - Starship prompt configuration
 - `mosh.zsh` - `sm` command: mosh with auto Remote Bridge tunnel via autossh (`sm`, `sm-status`, `sm-kill`)
+- `herdr.zsh` - `hr` command: bare `hr` starts herdr locally, `hr <host>` attaches remotely with `--remote-keybindings server`, without which the `[[keys.command]]` layers stay dead over `--remote`
 - `remote-bridge.zsh` - Remote Bridge clipboard/URL/notification integration
 - `ssh-agent.zsh` - SSH agent management
 - `zinit.zsh` - Zinit plugin manager initialization
