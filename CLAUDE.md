@@ -224,6 +224,7 @@ The zsh setup uses modular configuration files in `zsh/config/`:
 - `mosh.zsh` - `sm` command: mosh with auto Remote Bridge tunnel via autossh (`sm`, `sm-status`, `sm-kill`)
 - `herdr.zsh` - `hr` command: bare `hr` starts herdr locally, `hr <host>` attaches remotely with `--remote-keybindings server`, without which the `[[keys.command]]` layers stay dead over `--remote`
 - `remote-bridge.zsh` - Remote Bridge clipboard/URL/notification integration
+- `ssh-forward.zsh` - `sshl <host> <port>...` / `t3l <port>...`: SSH with 1:1 local port forwards for OAuth login callbacks
 - `ssh-agent.zsh` - SSH agent management
 - `zinit.zsh` - Zinit plugin manager initialization
 - `dot.zsh` - Unified `dot` CLI with fzf menu, update wizard, and tab completion
