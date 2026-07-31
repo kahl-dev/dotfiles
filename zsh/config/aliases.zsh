@@ -1,23 +1,5 @@
 #!/usr/bin/env zsh
 
-# Portable clipboard: macOS pbcopy, Linux xclip/xsel/wl-copy, Remote Bridge rclip
-_clipboard_copy() {
-  if command_exists rclip; then
-    rclip
-  elif is_macos; then
-    pbcopy
-  elif command_exists xclip; then
-    xclip -selection clipboard
-  elif command_exists xsel; then
-    xsel --clipboard --input
-  elif command_exists wl-copy; then
-    wl-copy
-  else
-    echo "(clipboard not available)" >&2
-    return 1
-  fi
-}
-
 _mkcd() {
   mkdir -p "$@" && cd "$_"
 }
@@ -313,34 +295,6 @@ function _grename() {
   fi
 }
 
-_gjirab() {
-  local branch_name=$(git branch --show-current)
-  local ticket_id=$(echo "$branch_name" | grep -oE '[A-Z]+-[0-9]+' | head -n 1)
-  if [[ -n "$ticket_id" ]]; then
-    local jira_url="${JIRA_WORKSPACE}/browse/${ticket_id}"
-    echo "$jira_url" | _clipboard_copy
-    echo "Copied: $jira_url"
-  else
-    echo "No JIRA ticket found in the branch name."
-  fi
-}
-
-_gjirac() {
-  local commit_hash=$(git log -10 --pretty='%h %s' | fzf-tmux ${FZF_TMUX_OPTS} --no-multi | awk '{print $1}')
-  if [[ -n "$commit_hash" ]]; then
-    local ticket_id=$(git log -1 --format=%B "$commit_hash" | grep -oE '([A-Z]+-[0-9]+)' | head -n 1)
-    if [[ -n "$ticket_id" ]]; then
-      local jira_url="${JIRA_WORKSPACE}/browse/${ticket_id}"
-      echo "$jira_url" | _clipboard_copy
-      echo "Copied: $jira_url"
-    else
-      echo "No JIRA ticket found in the commit message."
-    fi
-  else
-    echo "No commit selected."
-  fi
-}
-
 # Function to view diffs with preview and open selected files in the editor
 _gitdiffview() {
   local branch repo_root
@@ -426,9 +380,6 @@ alias gbrgone='git prune-gone'
 alias grename="_grename"
 
 unset git_version
-
-alias gjirab="_gjirab"
-alias gjirac="_gjirac"
 
 # Claude Code headless commit via lia-git-tools:commit skill
 alias ccommit='claude -p "/lia-git-tools:commit"'
