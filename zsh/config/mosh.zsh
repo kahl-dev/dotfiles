@@ -150,7 +150,7 @@ _sm_with_host_lock() {
         (
             : >| "$lock_file" 2>/dev/null
             if ! zsystem flock -t 10 "$lock_file" 2>/dev/null; then
-                echo "sm: lock timeout for ${host}" >&2
+                echo "remote-tunnel: lock timeout for ${host}" >&2
                 exit 3
             fi
             "$@"
@@ -164,7 +164,7 @@ _sm_with_host_lock() {
     # sm did before tunnel locking existed) after warning once, so sm still
     # works; only the rare same-host concurrent-transition race is unguarded.
     if [[ -z "$_sm_no_flock_warned" ]]; then
-        echo "sm: zsystem flock unavailable — tunnel operations are not serialized" >&2
+        echo "remote-tunnel: zsystem flock unavailable — tunnel operations are not serialized" >&2
         _sm_no_flock_warned=1
     fi
     "$@"
@@ -183,7 +183,7 @@ _sm_start_or_reuse_tunnel() {
     local state_directory="/tmp/sm-${host}"
 
     if [[ ! -S "${SSH_AUTH_SOCK:-}" ]]; then
-        echo "sm: a valid local SSH_AUTH_SOCK is required for tagged host ${host}" >&2
+        echo "remote-tunnel: a valid local SSH_AUTH_SOCK is required for tagged host ${host}" >&2
         return 1
     fi
 
@@ -215,7 +215,7 @@ _sm_start_or_reuse_tunnel() {
     local remote_home
     if ! remote_home=$(ssh -o ClearAllForwardings=yes -o BatchMode=yes -o ConnectTimeout=10 \
         "$host_argument" 'printf %s "$HOME"'); then
-        echo "sm: pre-flight \$HOME lookup for ${host} failed" >&2
+        echo "remote-tunnel: pre-flight \$HOME lookup for ${host} failed" >&2
         _sm_teardown_if_last "$host" "$session_pid"
         return 1
     fi
@@ -255,7 +255,7 @@ _sm_start_or_reuse_tunnel() {
         fi
     done
 
-    echo "sm: tunnel for ${host} did not become healthy" >&2
+    echo "remote-tunnel: tunnel for ${host} did not become healthy" >&2
     _sm_stop_tunnel_process "$host"
     _sm_teardown_if_last "$host" "$session_pid"
     return 1
@@ -300,6 +300,54 @@ _sm_cleanup_tunnel() {
     rm -rf "$state_directory"
 }
 
+# --- Shared tunnel lifecycle (consumed by sm here and by hr in herdr.zsh) ---
+
+# Ensure the Remote Bridge + SSH agent tunnel for a host that opted in via
+# `Tag remote-bridge`, and claim a session marker for the calling shell. Every
+# client that attaches to a tagged host must go through this, otherwise it can
+# land on a socket file left behind by a dead tunnel (present, but nothing
+# answering) — which is exactly how git over the forwarded agent starts failing
+# with "Permission denied (publickey)".
+#
+# Session markers are keyed by the caller's shell PID, so the caller must block
+# for the whole session (as sm and hr do). A client that backgrounds itself
+# would release the marker while its session is still live.
+#
+# Exit status: 0 = tunnel ready, caller MUST call _remote_tunnel_release on exit
+#              1 = host is not tagged, nothing to do
+#              2 = tunnel setup failed, caller should abort
+_remote_tunnel_ensure() {
+    local host_argument="$1"
+    local host="${host_argument#*@}"
+
+    local ssh_config
+    ssh_config=$(ssh -G "$host" 2>/dev/null)
+    _sm_host_has_remote_bridge_tag "$ssh_config" || return 1
+
+    if ! command_exists autossh; then
+        echo "remote-tunnel: autossh not found (brew install autossh)" >&2
+        return 2
+    fi
+
+    _sm_with_host_lock "$host" \
+        _sm_start_or_reuse_tunnel "$host" "/tmp/sm-${host}.pid" "$host_argument" "$$" \
+        || return 2
+}
+
+# Drop this shell's session marker and tear the tunnel down if it was the last.
+# Takes the same [user@]host argument as _remote_tunnel_ensure.
+_remote_tunnel_release() {
+    local host="${1#*@}"
+
+    if ! _sm_with_host_lock "$host" _sm_teardown_if_last "$host" "$$"; then
+        # Lock unavailable (timeout) — don't guess at teardown. Leave the
+        # tunnel and this session's marker for the next sm / hr / sm-status /
+        # sm-kill invocation to reconcile, rather than risk killing a tunnel a
+        # concurrent session might depend on.
+        echo "remote-tunnel: could not acquire lock for ${host}; leaving tunnel state as-is" >&2
+    fi
+}
+
 # --- Public commands ---
 
 sm() {
@@ -320,50 +368,35 @@ sm() {
         return 1
     fi
 
-    local host="${host_argument#*@}"
-
-    # Resolve SSH config once for the side-effect-free host opt-in.
-    local ssh_config
-    ssh_config=$(ssh -G "$host" 2>/dev/null)
-
+    # tunneled=true records that this invocation owns a session to tear down.
     local tunneled=false
 
-    if _sm_host_has_remote_bridge_tag "$ssh_config"; then
-        if ! command_exists autossh; then
-            echo "sm: autossh not found (brew install autossh)" >&2
-            return 1
-        fi
-        local pid_file="/tmp/sm-${host}.pid"
-
-        # The session marker is created inside _sm_start_or_reuse_tunnel, as
-        # its first action under the per-host lock, so the marker write and a
-        # concurrent teardown's count are mutually exclusive. tunneled=true
-        # just records that this invocation owns a session to tear down on exit.
-        tunneled=true
-
-        if ! _sm_with_host_lock "$host" _sm_start_or_reuse_tunnel "$host" "$pid_file" "$host_argument" "$$"; then
-            return 1
-        fi
-    fi
+    _remote_tunnel_ensure "$host_argument"
+    case $? in
+        0) tunneled=true ;;
+        1) ;;
+        *) return 1 ;;
+    esac
 
     # Keep the mosh bootstrap connection forwarding-free. autossh owns both
     # Unix socket forwards for the lifetime of the mosh session.
-    if $tunneled; then
-        mosh --ssh="ssh -o ClearAllForwardings=yes" "$@"
-    else
-        mosh "$@"
-    fi
-    local mosh_exit=$?
-
-    if $tunneled; then
-        if ! _sm_with_host_lock "$host" _sm_teardown_if_last "$host" "$$"; then
-            # Lock unavailable (timeout) — don't guess at teardown. Leave
-            # the tunnel and this session's marker for the next sm /
-            # sm-status / sm-kill invocation to reconcile, rather than risk
-            # killing a tunnel a concurrent session might depend on.
-            echo "sm: could not acquire lock for ${host}; leaving tunnel state as-is" >&2
+    #
+    # always-block, not a plain call: session markers are keyed by this shell's
+    # PID, which survives a SIGINT or a closed terminal, so a release that gets
+    # skipped strands the tunnel until the next sm-kill.
+    local mosh_exit=0
+    {
+        if $tunneled; then
+            mosh --ssh="ssh -o ClearAllForwardings=yes" "$@"
+        else
+            mosh "$@"
         fi
-    fi
+        mosh_exit=$?
+    } always {
+        if $tunneled; then
+            _remote_tunnel_release "$host_argument"
+        fi
+    }
 
     return $mosh_exit
 }

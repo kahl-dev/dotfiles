@@ -10,7 +10,7 @@ Remote Bridge is a unified clipboard and URL handling system that works seamless
 
 ### Architecture
 - **Local service**: Node.js/Express server on port 8377
-- **SSH tunnel**: `sm` owns two reverse Unix-socket forwards through autossh
+- **SSH tunnel**: `sm` (mosh) and `hr` (herdr remote attach) own two reverse Unix-socket forwards through autossh, via the shared helpers in `zsh/config/mosh.zsh`
 - **Bridge socket**: `~/.ssh/remote-bridge.sock` forwards to the Mac service at `localhost:8377`
 - **Agent socket**: `~/.ssh/agent-tunnel.sock` forwards to the Mac's `SSH_AUTH_SOCK`
 - **Isolation**: Socket paths live below each remote user's home directory

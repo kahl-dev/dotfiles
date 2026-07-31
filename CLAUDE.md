@@ -171,7 +171,9 @@ sm-kill t3                      # Force-kill tunnel for a host
 sm-kill                         # Kill all active tunnels
 ```
 
-**Workflow**: `sm t3` starts the socket tunnel before mosh connects. Remote clients use `~/.ssh/remote-bridge.sock`; git and other SSH clients use `~/.ssh/agent-tunnel.sock`. Both paths remain constant across autossh reconnects, so tmux needs no refresh hooks or keybinding. The tunnel is removed when the last mosh session closes.
+**Workflow**: `sm t3` starts the socket tunnel before mosh connects. Remote clients use `~/.ssh/remote-bridge.sock`; git and other SSH clients use `~/.ssh/agent-tunnel.sock`. Both paths remain constant across autossh reconnects, so tmux needs no refresh hooks or keybinding. The tunnel is removed when the last session closes.
+
+**Shared with `hr`**: `hr <host>` (herdr remote attach) goes through the same lifecycle helpers — `_remote_tunnel_ensure` / `_remote_tunnel_release` in `zsh/config/mosh.zsh` — and counts as a session. Any new remote client must use them too; the failure mode when one doesn't is documented in the `herdr.zsh` header comment.
 
 **Host opt-in**: Add `Tag remote-bridge` to each bridge-enabled host in the private SSH config. Do not add `RemoteForward`; `sm` owns both forwards so plain SSH sessions cannot replace a live tunnel. This requires OpenSSH 9.2 or newer on the Mac.
 
@@ -229,8 +231,8 @@ The zsh setup uses modular configuration files in `zsh/config/`:
 - `opencode.zsh` - OpenCode aliases and fzf session picker (`oc`, `occ`, `ocs`, `ocu`)
 - `plugins.zsh` - Plugin management via zinit
 - `prompt.zsh` - Starship prompt configuration
-- `mosh.zsh` - `sm` command: mosh with auto Remote Bridge tunnel via autossh (`sm`, `sm-status`, `sm-kill`)
-- `herdr.zsh` - `hr` command: bare `hr` starts herdr locally, `hr <host>` attaches remotely with `--remote-keybindings server`, without which the `[[keys.command]]` layers stay dead over `--remote`
+- `mosh.zsh` - `sm` command: mosh with auto Remote Bridge tunnel via autossh (`sm`, `sm-status`, `sm-kill`). Also owns the shared tunnel lifecycle (`_remote_tunnel_ensure` / `_remote_tunnel_release`) that `hr` reuses
+- `herdr.zsh` - `hr` command: bare `hr` starts herdr locally, `hr <host>` attaches remotely with `--remote-keybindings server`, without which the `[[keys.command]]` layers stay dead over `--remote`. Ensures the same tunnel as `sm` for the duration of the attach, so remote panes get a live SSH agent and Remote Bridge
 - `remote-bridge.zsh` - Remote Bridge clipboard/URL/notification integration
 - `ssh-forward.zsh` - `sshl <host> <port>...` / `t3l <port>...`: SSH with 1:1 local port forwards for OAuth login callbacks
 - `ssh-agent.zsh` - SSH agent management
