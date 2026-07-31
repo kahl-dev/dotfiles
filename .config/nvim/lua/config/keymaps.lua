@@ -26,30 +26,6 @@ wk.add({
   { "<leader>z", group = "quickfix" },
 })
 
--- Function to determine if Neovim is running locally or remotely
-local function is_remote()
-  return vim.env.SSH_CONNECTION ~= nil
-end
-
--- Only set these key mappings if Neovim is running locally
-if not is_remote() then
-  wk.add({
-    { mode = "n" },
-    "<leader>o",
-    {
-      desc = "Obsidian",
-    },
-  })
-
-  -- Key mappings specific to Obsidian features
-  map("n", "<leader>oS", "<cmd>lua require('lazy').load({plugins={'obsidian.nvim'}})<CR>", { desc = "Start Obsidian" })
-  map("n", "<leader>on", "<cmd>ObsidianNew<CR>", { desc = "New note" })
-  map("n", "<leader>os", "<cmd>ObsidianSearch<CR>", { desc = "Search notes" })
-else
-  -- Optionally, handle behavior if it's a remote connection
-  print("Remote environment detected. Skipping Obsidian mappings.")
-end
-
 wk.add({
   { "<leader>r", group = "reg", mode = "v" },
 })
