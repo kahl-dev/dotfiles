@@ -9,3 +9,5 @@ node_modules
 .tool-versions
 
 .playwright-mcp
+
+**/.claude/settings.local.json

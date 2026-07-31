@@ -61,5 +61,8 @@ logs
 # Yazi installed plugins (managed by ya pkg)
 .config/yazi/plugins/
 
+# Hunk runtime state (written because its config directory is linked here)
+.config/hunk/state.json
+
 # Per-machine profile lock (written by install-profile on success)
 .dotbot-profile
