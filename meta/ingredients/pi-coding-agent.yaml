@@ -1,4 +1,3 @@
----
 - defaults:
     link:
       relink: true
@@ -11,7 +10,7 @@
 - clean: []
 
 - shell:
-    - description: "Ensure the private agent configuration repository exists"
+    - description: 'Ensure the private agent configuration repository exists'
       command: |
         REPO_DIR="$HOME/repos/claude-config"
         REPO_URL="git@github.com:kahl-dev/claude-config.git"
@@ -38,7 +37,7 @@
     ~/.pi-lens/config.json: ~/repos/claude-config/pi/pi-lens/config.json
 
 - shell:
-    - description: "Install the official Herdr integration for Pi"
+    - description: 'Install the official Herdr integration for Pi'
       command: |
         if command -v herdr >/dev/null 2>&1; then
           herdr integration install pi

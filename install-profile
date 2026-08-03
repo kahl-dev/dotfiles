@@ -43,18 +43,23 @@ fi
 git -C "${BASE_DIR}" submodule sync --quiet
 git submodule update --init "${BASE_DIR}"
 
+CONFIGS=()
 while IFS= read -r config; do
-	CONFIGS+=" ${config}"
+	CONFIGS+=("$config")
 done <"${META_DIR}/${PROFILES_DIR}/$1"
 
 shift
 
-for config in ${CONFIGS} ${@}; do
+for config in "${CONFIGS[@]}" "$@"; do
 	echo -e "\nConfigure $config"
 	# create temporary file
 	configFile="$(mktemp)"
 	suffix="-sudo"
-	echo -e "$(<"${BASE_DIR}/${META_DIR}/${BASE_CONFIG}${CONFIG_SUFFIX}")\n$(<"${BASE_DIR}/${META_DIR}/${CONFIG_DIR}/${config%"$suffix"}${CONFIG_SUFFIX}")" >"$configFile"
+	{
+		cat "${BASE_DIR}/${META_DIR}/${BASE_CONFIG}${CONFIG_SUFFIX}"
+		printf '\n'
+		cat "${BASE_DIR}/${META_DIR}/${CONFIG_DIR}/${config%"$suffix"}${CONFIG_SUFFIX}"
+	} >"$configFile"
 
 	cmd=("${BASE_DIR}/${META_DIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASE_DIR}" -c "$configFile")
 
