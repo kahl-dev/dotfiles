@@ -25,10 +25,12 @@
 
 - create:
     - ~/.pi/agent
+    - ~/.pi-lens
 
 - link:
     ~/.pi/agent/CLAUDE.md: ~/repos/claude-config/pi/GLOBAL.CLAUDE.md
     ~/.pi/agent/settings.json: ~/repos/claude-config/pi/settings.json
+    ~/.pi-lens/config.json: ~/repos/claude-config/pi/pi-lens/config.json
 
 - shell:
     - description: "Install the official Herdr integration for Pi"
