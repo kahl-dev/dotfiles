@@ -1,3 +1,4 @@
+---
 - defaults:
     link:
       relink: true
@@ -18,17 +19,21 @@
         if [ ! -d "$REPO_DIR/.git" ]; then
           if ! git clone "$REPO_URL" "$REPO_DIR"; then
             echo "ERROR: Failed to clone $REPO_URL" >&2
-            echo "Ensure the GitHub SSH key has access to the private repository." >&2
+            printf '%s%s\n' \
+              "Ensure the GitHub SSH key has access to the private " \
+              "repository." >&2
             exit 1
           fi
         fi
 
 - create:
     - ~/.pi/agent
+    - ~/.pi/agent/extensions
     - ~/.pi-lens
 
 - link:
     ~/.pi/agent/CLAUDE.md: ~/repos/claude-config/pi/GLOBAL.CLAUDE.md
+    ~/.pi/agent/extensions/rtk.js: ~/repos/claude-config/pi/extensions/rtk.js
     ~/.pi/agent/settings.json: ~/repos/claude-config/pi/settings.json
     ~/.pi-lens/config.json: ~/repos/claude-config/pi/pi-lens/config.json
 
