@@ -37,31 +37,6 @@ if path_exists "/Applications/Obsidian.app/Contents/MacOS"; then
   export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
 fi
 
-# Remove git-up and git-sync binaries from PATH by creating shadow directory
-_setup_git_shadow() {
-  local shadow_dir="$HOME/.local/bin/git-shadow"
-  mkdir -p "$shadow_dir"
-  
-  # Create shadow scripts that use our git aliases instead
-  cat > "$shadow_dir/git-up" << 'EOF'
-#!/bin/bash
-exec git pull --rebase --autostash "$@"
-EOF
-  
-  cat > "$shadow_dir/git-sync" << 'EOF'
-#!/bin/bash
-exec git pull --rebase --autostash "$@"
-EOF
-  
-  chmod +x "$shadow_dir/git-up" "$shadow_dir/git-sync"
-  
-  # Add shadow directory to beginning of PATH
-  export PATH="$shadow_dir:$PATH"
-}
-
-# Setup git binary shadowing
-_setup_git_shadow
-
 # Source local zshrc in login shells
 if [ -f "$HOME/.dotfiles-local/zshrc" ]; then
   source "$HOME/.dotfiles-local/zshrc"

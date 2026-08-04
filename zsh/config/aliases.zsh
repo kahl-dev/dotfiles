@@ -348,8 +348,31 @@ alias glp="_git_log_prettily"
 
 alias gm='git merge'
 alias gml='git merge @{-1}'
-alias gdp='git up; git checkout $(_git_production_branch); git up; git merge --commit --no-edit $(_git_main_branch); git push; git checkout $(_git_main_branch)'
-alias gdpg='gdp; make glab-production'
+
+_gdp() {
+  local main_branch production_branch result
+
+  main_branch=$(_git_main_branch) || return
+  production_branch=$(_git_production_branch) || return
+
+  git pull --rebase --autostash || return
+  git checkout "$production_branch" || return
+
+  git pull --rebase --autostash \
+    && git merge --commit --no-edit "$main_branch" \
+    && git push
+  result=$?
+
+  git checkout "$main_branch" || return
+  return "$result"
+}
+
+_gdpg() {
+  _gdp && make glab-production
+}
+
+alias gdp='_gdp'
+alias gdpg='_gdpg'
 
 alias gp='git push'
 alias gpcc='git push -o ci.variable="CLEAR_CACHE=1"'
@@ -372,8 +395,7 @@ alias gsts='git stash show --text'
 alias groot='cd "$(git rev-parse --show-toplevel)"'
 alias cdgr='cd "$(git rev-parse --show-toplevel)"'
 
-alias gup='git up'
-alias gupdate='git update'
+alias gup='git pull --rebase --autostash'
 alias gbrclean='git fetch --prune && git branch -r | awk "{print \$1}" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk "{print \$1}" | xargs git branch -D'
 alias gbrgone='git prune-gone'
 

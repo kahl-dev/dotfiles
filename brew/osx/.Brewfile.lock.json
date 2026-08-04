@@ -2024,50 +2024,6 @@
           }
         }
       },
-      "pygitup": {
-        "version": "2.2.0_6",
-        "bottle": {
-          "rebuild": 1,
-          "root_url": "https://ghcr.io/v2/homebrew/core",
-          "files": {
-            "arm64_sonoma": {
-              "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pygitup/blobs/sha256:9c35855737998db174e1881211025f98056b88b317248d42a33357e5a1898139",
-              "sha256": "9c35855737998db174e1881211025f98056b88b317248d42a33357e5a1898139"
-            },
-            "arm64_ventura": {
-              "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pygitup/blobs/sha256:b0ecfc67c1a56c0bb8b55a838cfcc925423757b6313ea72a805db661dc899dd3",
-              "sha256": "b0ecfc67c1a56c0bb8b55a838cfcc925423757b6313ea72a805db661dc899dd3"
-            },
-            "arm64_monterey": {
-              "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pygitup/blobs/sha256:6a6160237c7def873073d438a0dc30e54783e00ec6aad65d234c810a43cb6aaf",
-              "sha256": "6a6160237c7def873073d438a0dc30e54783e00ec6aad65d234c810a43cb6aaf"
-            },
-            "sonoma": {
-              "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pygitup/blobs/sha256:cbe485e8436fbbc11e9511f13ceeec125f35ccad63847a6035127fbed0ddbbcc",
-              "sha256": "cbe485e8436fbbc11e9511f13ceeec125f35ccad63847a6035127fbed0ddbbcc"
-            },
-            "ventura": {
-              "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pygitup/blobs/sha256:a4a8bc36201c800b95a4c52eec4cc7ee6347a51370467b432670152b0f71a198",
-              "sha256": "a4a8bc36201c800b95a4c52eec4cc7ee6347a51370467b432670152b0f71a198"
-            },
-            "monterey": {
-              "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pygitup/blobs/sha256:b756cd6c5d2e6719f9b099d320946574deff4a4679b6fbaf0a65a12765c7288d",
-              "sha256": "b756cd6c5d2e6719f9b099d320946574deff4a4679b6fbaf0a65a12765c7288d"
-            },
-            "x86_64_linux": {
-              "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pygitup/blobs/sha256:9d7b54ea93c598ebbf629b278b47f9405661dad87bc78f99024298c58ab8ec58",
-              "sha256": "9d7b54ea93c598ebbf629b278b47f9405661dad87bc78f99024298c58ab8ec58"
-            }
-          }
-        }
-      },
       "python@3.11": {
         "version": "3.11.9_1",
         "bottle": {

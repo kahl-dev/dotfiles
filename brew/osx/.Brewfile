@@ -163,8 +163,6 @@ brew "postgresql@15", link: true
 brew "postgresql@17"
 # Object-relational database system
 brew "postgresql@18", restart_service: :changed
-# Nicer 'git pull'
-brew "pygitup"
 # Reattach process (e.g., tmux) to background
 brew "reattach-to-user-namespace"
 # Safe, concurrent, practical language
