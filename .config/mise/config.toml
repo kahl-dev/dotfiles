@@ -16,6 +16,7 @@ legacy_version_file = true
 "npm:browser-sync" = "latest"
 "npm:neovim" = "latest"
 "npm:@earendil-works/pi-coding-agent" = "latest"  # pi — minimal AI coding agent harness (pi.dev)
+"npm:@mermaid-js/mermaid-cli" = "latest"  # mmdc — render-verification for mermaid diagrams (mermaid/meta-skill workflow)
 
 # 🧠 Claude Code LSP servers
 "npm:typescript-language-server" = "latest"
