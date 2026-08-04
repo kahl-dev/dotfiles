@@ -363,7 +363,10 @@ _gdp() {
     && git push
   result=$?
 
-  git checkout "$main_branch" || return
+  if ! git checkout "$main_branch"; then
+    echo "gdp: aborted — still on ${production_branch}, likely due to an unresolved merge; run \`git status\` to see the current state." >&2
+    return 1
+  fi
   return "$result"
 }
 
