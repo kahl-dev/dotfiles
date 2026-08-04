@@ -81,12 +81,12 @@ show_agent_labels_on_pane_borders = true
 claude = [
   ["state_icon", { token = "terminal_title_stripped", bold = true, fg = "#89b4fa" }, { token = "$ctx", fg = "#a6adc8" }, { token = "$ctx_warn", fg = "#ffd60a", bold = true }, { token = "$ctx_crit", fg = "#ff4d4d", bold = true }, { token = "$idle", fg = "#a6adc8" }, { token = "$idle_warn", fg = "#ffd60a", bold = true }, { token = "$idle_crit", fg = "#ff4d4d", bold = true }],
   [{ token = "agent", fg = "#bac2de", dim = false }],
-  [{ token = "workspace", fg = "#bac2de", dim = false }, { token = "tab", fg = "#bac2de", dim = false }],
+  [{ token = "tab", fg = "#bac2de", dim = false }, { token = "workspace", fg = "#bac2de", dim = false }],
 ]
 pi = [
   ["state_icon", { token = "terminal_title_stripped", bold = true, fg = "#89b4fa" }],
   [{ token = "agent", fg = "#bac2de", dim = false }],
-  [{ token = "workspace", fg = "#bac2de", dim = false }, { token = "tab", fg = "#bac2de", dim = false }],
+  [{ token = "tab", fg = "#bac2de", dim = false }, { token = "workspace", fg = "#bac2de", dim = false }],
 ]
 
 # ---- Abweichungen von tmux (Stand Trial, bewusst offen gelassen) ----
