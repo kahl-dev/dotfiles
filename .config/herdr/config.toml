@@ -101,3 +101,9 @@ pi = [
 
 [ui.toast]
 delivery = "system"
+
+[experimental]
+# Pane-Bildschirminhalt ueber Server-Neustarts hinweg aufheben. Sicherheitsnetz
+# fuer den Fall, dass der native Agent-Resume die falsche oder keine Session
+# trifft (04.08.2026: camos-Session kam nach Reboot nirgends zurueck).
+pane_history = true
