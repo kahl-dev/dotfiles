@@ -1,6 +1,7 @@
 onboarding = false
 # herdr config — tmux-Migrationsprofil (Trial)
-# Referenz: herdr.dev/docs/config-reference (v0.7.5) + `herdr --default-config`
+# Referenz: herdr.dev/docs/config-reference (v0.8.0) + `herdr --default-config`
+# Gegen 0.8.0 mit `herdr config check` validiert (ok).
 # Bewusst NICHT übernommen aus tmux: siehe Abschnitt "Abweichungen" am Ende.
 
 [theme]

@@ -48,3 +48,12 @@ shfmt = "latest"
 
 # 🌐 Browser automation
 "npm:@playwright/cli" = "latest"
+
+[tool_alias]
+# herdr moved from the ogulcancelik org to herdrdev with v0.8.0. mise's bundled
+# registry still maps the name to the old org, and the aqua path it points at
+# (aqua-registry/pkgs/ogulcancelik/herdr) is already 404 upstream — resolution
+# survives only on the github fallback plus GitHub's rename redirect. Pin the
+# backend explicitly so neither crutch is load-bearing. Drop this once
+# `mise registry herdr` reports herdrdev on its own.
+herdr = "github:herdrdev/herdr"
