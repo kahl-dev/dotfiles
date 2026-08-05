@@ -162,33 +162,6 @@
         ln -sfn "$DOTFILES_RTK" "$RTK_CONFIG"
         echo "✓ RTK config linked: $RTK_CONFIG → $DOTFILES_RTK"
 
-    - description: "Install Claude Code plugins from settings"
-      command: |
-        CLAUDE="$HOME/.local/bin/claude"
-        if [ ! -x "$CLAUDE" ]; then
-          echo "⚠️  Claude Code CLI not found, skipping plugin setup"
-          exit 0
-        fi
-
-        if ! "$CLAUDE" plugin marketplace add openai/codex-plugin-cc; then
-          echo "⚠️  Failed to add codex marketplace, skipping plugin install"
-          exit 0
-        fi
-
-        if "$CLAUDE" plugin install codex@openai-codex; then
-          echo "✓ Claude Code plugins installed"
-        else
-          echo "⚠️  codex plugin install failed"
-        fi
-
-        # Builder.io skills (efficient-fable, quick-recap, visual-plan, ...) as managed plugin
-        # https://github.com/BuilderIO/skills — update via: claude plugin update builder-skills
-        if "$CLAUDE" plugin marketplace add BuilderIO/skills && "$CLAUDE" plugin install builder-skills@builder-skills; then
-          echo "✓ builder-skills plugin installed"
-        else
-          echo "⚠️  builder-skills plugin install failed"
-        fi
-
     - description: "Configure Claude Code MCP servers"
       command: |
         CLAUDE="$HOME/.local/bin/claude"
